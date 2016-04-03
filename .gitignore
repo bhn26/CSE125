@@ -1,0 +1,54 @@
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# VS
+*.sdf
+*.opendb
+.vs/
+
+# Output
+#Output/
+#Release/
+#Debug/
+
+# Vim
+*~
+*.swp
+*.swo
+
+*.txt
+
+# Ignore NuGet packages
+#*.nupkg
+# Ignore the packages folder
+#**/packages/*
+# except build/, which is used as an MSBuild target.
+#!**/packages/build/
+# Uncomment if necessary however generally it will be regenerated when needed
+#!**/packages/repositories.config
