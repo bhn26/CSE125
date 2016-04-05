@@ -13,5 +13,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\CSE125_TempName\Projects\packages.config" />
+    <None Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\Projects\packages.config" />
   </ItemGroup>
 </Project>
