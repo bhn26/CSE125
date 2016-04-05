@@ -154,6 +154,20 @@
   <ItemGroup>
     <None Include="..\..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\CSE125_TempName\Projects\packages.config" />
     <None Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\Projects\packages.config" />
+    <None Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\Source\Graphics\Shaders\basic_shader.frag" />
+    <None Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\Source\Graphics\Shaders\basic_shader.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\Source\client_main.cpp" />
+    <ClCompile Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\Source\Graphics\Objects\Cube.cpp" />
+    <ClCompile Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\Source\Graphics\shader.cpp" />
+    <ClCompile Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\Source\Graphics\Window.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\Source\client_main.h" />
+    <ClInclude Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\Source\Graphics\Objects\Cube.h" />
+    <ClInclude Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\Source\Graphics\shader.hpp" />
+    <ClInclude Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\Source\Graphics\Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
