@@ -42,6 +42,13 @@
 *.swp
 *.swo
 
+# Remove directories
+out/
+Client/
+Server/
+Release/
+Debug/
+
 *.txt
 
 # Ignore NuGet packages

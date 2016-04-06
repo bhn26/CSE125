@@ -6,10 +6,11 @@
 #include <GLFW/glfw3.h>
 #include "Objects/Cube.h"
 #include "shader.hpp"
+#include "shader.hpp"
 
 const char* window_title = "GLFW Starter Project";
 Cube* cube;
-GLint shaderProgram;
+//GLint shaderProgram;
 
 int Window::width;
 int Window::height;
@@ -17,13 +18,14 @@ int Window::height;
 void Window::initialize_objects()
 {
     cube = new Cube();
-    shaderProgram = LoadShaders("src/Graphics/Shaders/basic_shader.vert", "src/Graphics/Shaders/basic_shader.frag");
+    cube->shader.SetShaders("src/Graphics/Shaders/basic_shader.vert", "src/Graphics/Shaders/basic_shader.frag");
+    //shaderProgram = LoadShaders("src/Graphics/Shaders/basic_shader.vert", "src/Graphics/Shaders/basic_shader.frag");
 }
 
 void Window::clean_up()
 {
     delete(cube);
-    glDeleteProgram(shaderProgram);
+    //glDeleteProgram(shaderProgram);
 }
 
 GLFWwindow* Window::create_window(int width, int height)
@@ -83,10 +85,10 @@ void Window::display_callback(GLFWwindow* window)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Use the shader of programID
-    glUseProgram(shaderProgram);
+    //glUseProgram(shaderProgram);
 
     // Render the object drawPtr is pointing to
-    cube->draw(shaderProgram);
+    cube->draw();
 
     // Gets events, including input such as keyboard and mouse or window resizing
     glfwPollEvents();

@@ -82,15 +82,17 @@ Cube::~Cube()
     glDeleteBuffers(1, &EBO);
 }
 
-void Cube::draw(GLuint shaderProgram)
+void Cube::draw()
 {
+    shader.Use();
+
     glm::mat4 projection = glm::perspective((GLfloat)60.0f, (GLfloat)Window::width / (GLfloat)Window::height, 0.1f, 100.0f);
 
-    GLint modelLocation = glGetUniformLocation(shaderProgram, "model2world");
-    GLint projectionLocation = glGetUniformLocation(shaderProgram, "projections");
-    GLint objectColorLoc = glGetUniformLocation(shaderProgram, "objectColor");
-    GLint lightColorLoc = glGetUniformLocation(shaderProgram, "lightColor");
-    GLint lightPosLoc = glGetUniformLocation(shaderProgram, "lightPos");
+    GLint modelLocation = shader.GetUniform("model2world");
+    GLint projectionLocation = shader.GetUniform("projection");
+    GLint objectColorLoc = shader.GetUniform("objectColor");
+    GLint lightColorLoc = shader.GetUniform("lightColor");
+    GLint lightPosLoc = shader.GetUniform("lightPos");
     glUniformMatrix4fv(modelLocation, 1, false, glm::value_ptr(this->toWorld));
     glUniformMatrix4fv(projectionLocation, 1, false, glm::value_ptr(projection));
     glUniform3fv(objectColorLoc, 1, glm::value_ptr(this->color));
@@ -104,7 +106,7 @@ void Cube::draw(GLuint shaderProgram)
 
 void Cube::update()
 {
-    spin(0.5f);
+    spin(0.3f);
 }
 
 void Cube::spin(float deg)

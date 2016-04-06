@@ -6,6 +6,8 @@
 #include <glm/mat4x4.hpp> // glm::mat4
 #include <glm/vec3.hpp>
 
+#include "../shader.hpp"
+
 class Cube
 {
 public:
@@ -17,7 +19,9 @@ public:
     GLuint VBO, VAO, EBO;
     float angle;
 
-    void draw(GLuint);
+    Shader shader;
+
+    void draw();
     void update();
     void spin(float);
 };
