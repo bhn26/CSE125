@@ -28,7 +28,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -155,10 +155,20 @@
     <None Include="..\..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\CSE125_TempName\Projects\packages.config" />
     <None Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\Projects\packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\network\client\ClientGame.h" />
+    <ClInclude Include="..\src\network\client\ClientNetwork.h" />
+    <ClInclude Include="..\src\network\NetworkData.h" />
+    <ClInclude Include="..\src\network\NetworkServices.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\network\client\ClientGame.cpp" />
+    <ClCompile Include="..\src\network\client\ClientNetwork.cpp" />
+    <ClCompile Include="..\src\network\client\main.cpp" />
+    <ClCompile Include="..\src\network\NetworkServices.cpp" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
-    <Import Project="..\packages\nupengl.core.redist.0.1.0.1\build\native\nupengl.core.redist.targets" Condition="Exists('..\packages\nupengl.core.redist.0.1.0.1\build\native\nupengl.core.redist.targets')" />
-    <Import Project="..\packages\nupengl.core.0.1.0.1\build\native\nupengl.core.targets" Condition="Exists('..\packages\nupengl.core.0.1.0.1\build\native\nupengl.core.targets')" />
     <Import Project="..\packages\glm.0.9.7.1\build\native\glm.targets" Condition="Exists('..\packages\glm.0.9.7.1\build\native\glm.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

@@ -46,6 +46,11 @@
 
 *.txt
 
+
+#ignore directories
+packages/
+out/
+
 # Ignore NuGet packages
 #*.nupkg
 # Ignore the packages folder
