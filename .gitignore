@@ -44,6 +44,7 @@
 
 # Remove directories
 out/
+packages/
 Client/
 Server/
 Release/
