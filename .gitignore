@@ -31,6 +31,8 @@
 *.sdf
 *.opendb
 .vs/
+*.opensdf
+*.suo
 
 # Output
 #Output/
