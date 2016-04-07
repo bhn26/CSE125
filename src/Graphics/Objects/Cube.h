@@ -6,7 +6,7 @@
 #include <glm/mat4x4.hpp> // glm::mat4
 #include <glm/vec3.hpp>
 
-#include "../shader.hpp"
+#include "../Shader.h"
 
 class Cube
 {

@@ -29,6 +29,7 @@
     <None Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\Graphics\Shaders\basic_shader.vert">
       <Filter>Source Files\Graphics\Shaders</Filter>
     </None>
+    <None Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\prj\packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\Graphics\Objects\Cube.cpp">
@@ -43,19 +44,31 @@
     <ClCompile Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\client_main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\Graphics\Objects\Mesh.cpp">
+      <Filter>Source Files\Graphics\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\Graphics\Objects\Model.cpp">
+      <Filter>Source Files\Graphics\Objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\Graphics\Objects\Cube.h">
       <Filter>Source Files\Graphics\Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\Graphics\shader.hpp">
-      <Filter>Source Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\Graphics\Window.h">
       <Filter>Source Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\client_main.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\Graphics\Objects\Mesh.h">
+      <Filter>Source Files\Graphics\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Graphics\Shader.h">
+      <Filter>Source Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Graphics\Objects\Model.h">
+      <Filter>Source Files\Graphics\Objects</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
