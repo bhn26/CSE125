@@ -11,6 +11,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <SOIL.h>
+
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
@@ -87,7 +88,7 @@ Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
         }
         else
         {
-            vertex.TexCoords = glm::vec2(0.0f, 0.0f);
+            vertex.TexCoords = std::move(glm::vec2(0.0f, 0.0f));
         }
         vertices.push_back(vertex);
     }

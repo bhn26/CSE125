@@ -6,6 +6,8 @@
 // Std. Includes
 #include <string>
 #include <vector>
+#include <assimp/types.h>
+#include <assimp/scene.h>
 
 #include "Mesh.h"
 

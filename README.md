@@ -15,3 +15,5 @@ Packages to install:
 - GLEW
 - GLM
 - Assim
+- SOIL.lib
+

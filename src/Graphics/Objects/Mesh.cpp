@@ -1,5 +1,13 @@
 #include "Mesh.h"
 
+#include <fstream>
+#include <sstream>
+#include <iostream>
+
+// GL Includes
+#include <GL/glew.h> // Contains all the necessery OpenGL includes
+#include <glm/gtc/matrix_transform.hpp>
+
 Mesh::Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices, std::vector<Texture> textures)
 {
     this->vertices = vertices;
