@@ -2,7 +2,6 @@
 *.slo
 *.lo
 *.o
-*.obj
 
 # Precompiled Headers
 *.gch
@@ -64,3 +63,7 @@ Debug/
 
 # Maya Swatches
 *.swatch
+*.swatches 
+
+#xcode (ignore until xcode works)
+*.xcodeproj*
