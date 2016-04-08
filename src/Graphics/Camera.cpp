@@ -31,26 +31,38 @@ Camera::Camera()
     view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 }
 
-void Camera::MoveUp()
+void Camera::MoveForward()
 {
     cameraPos += cameraSpeed * cameraFront;
-    view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+    view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);       // Refactor
 }
 
-void Camera::MoveDown()
+void Camera::MoveBack()
 {
     cameraPos -= cameraSpeed * cameraFront;
-    view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+    view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);       // Refactor
 }
 
 void Camera::MoveRight()
 {
-    cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
-    view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+    cameraPos += cameraSpeed * cameraRight;
+    view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);       // Refactor
 }
 
 void Camera::MoveLeft()
 {
-    cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
-    view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+    cameraPos -= cameraSpeed * cameraRight;
+    view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);       // Refactor
+}
+
+void Camera::MoveUp()
+{
+    cameraPos += cameraSpeed * cameraUp;
+    view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);       // Refactor
+}
+
+void Camera::MoveDown()
+{
+    cameraPos -= cameraSpeed * cameraUp;
+    view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);       // Refactor
 }

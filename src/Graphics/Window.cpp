@@ -112,16 +112,22 @@ void Window::key_callback(GLFWwindow* window, int key, int scancode, int action,
                 break;
 
             case GLFW_KEY_W:
-                camera->MoveUp();
+                camera->MoveForward();
                 break;
             case GLFW_KEY_A:
                 camera->MoveLeft();
                 break;
             case GLFW_KEY_S:
-                camera->MoveDown();
+                camera->MoveBack();
                 break;
             case GLFW_KEY_D:
                 camera->MoveRight();
+                break;
+            case GLFW_KEY_SPACE:
+                camera->MoveUp();
+                break;
+            case GLFW_KEY_Z:
+                camera->MoveDown();
                 break;
             default:
                 break;

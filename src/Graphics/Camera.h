@@ -27,10 +27,12 @@ protected:
     
 public:
     Camera(); // Constructor
-    void MoveUp();
-    void MoveDown();
+    void MoveForward();
+    void MoveBack();
     void MoveLeft();
     void MoveRight();
+    void MoveUp();
+    void MoveDown();
 
     glm::mat4 View() { return this->view; }
 };
