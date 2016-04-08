@@ -82,18 +82,21 @@ Cube::~Cube()
     glDeleteBuffers(1, &EBO);
 }
 
-void Cube::draw()
+void Cube::draw(glm::mat4 C)
 {
     shader.Use();
 
     glm::mat4 projection = glm::perspective((GLfloat)60.0f, (GLfloat)Window::width / (GLfloat)Window::height, 0.1f, 100.0f);
 
+    GLint viewLoc = shader.GetUniform("view");
     GLint modelLocation = shader.GetUniform("model2world");
     GLint normalMatrixLoc = shader.GetUniform("normalMatrix");
     GLint projectionLocation = shader.GetUniform("projection");
     GLint objectColorLoc = shader.GetUniform("objectColor");
     GLint lightColorLoc = shader.GetUniform("lightColor");
     GLint lightPosLoc = shader.GetUniform("lightPos");
+
+    glUniformMatrix4fv(viewLoc, 1, false, glm::value_ptr(C));
     glUniformMatrix4fv(modelLocation, 1, false, glm::value_ptr(this->toWorld));
     glUniformMatrix3fv(normalMatrixLoc, 1, false, glm::value_ptr(this->normalMatrix));
     glUniformMatrix4fv(projectionLocation, 1, false, glm::value_ptr(projection));

@@ -6,9 +6,11 @@
 #include <GLFW/glfw3.h>
 #include "Objects/Cube.h"
 #include "Shader.h"
+#include "Camera.h"
 
 const char* window_title = "GLFW Starter Project";
 Cube* cube;
+Camera* camera;
 //GLint shaderProgram;
 
 int Window::width;
@@ -17,6 +19,7 @@ int Window::height;
 void Window::initialize_objects()
 {
     cube = new Cube();
+    camera = new Camera();
     cube->shader.SetShaders("src/Graphics/Shaders/basic_shader.vert", "src/Graphics/Shaders/basic_shader.frag");
     //shaderProgram = LoadShaders("src/Graphics/Shaders/basic_shader.vert", "src/Graphics/Shaders/basic_shader.frag");
 }
@@ -87,7 +90,7 @@ void Window::display_callback(GLFWwindow* window)
     //glUseProgram(shaderProgram);
 
     // Render the object drawPtr is pointing to
-    cube->draw();
+    cube->draw(camera->View());
 
     // Gets events, including input such as keyboard and mouse or window resizing
     glfwPollEvents();
@@ -98,13 +101,30 @@ void Window::display_callback(GLFWwindow* window)
 void Window::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
     // Check for a key press
-    if (action == GLFW_PRESS)
+    if (action == GLFW_PRESS || action == GLFW_REPEAT)
     {
-        // Check if escape was pressed
-        if (key == GLFW_KEY_ESCAPE)
+        switch (key)
         {
-            // Close the window. This causes the program to also terminate.
-            glfwSetWindowShouldClose(window, GL_TRUE);
+            // Check if escape was pressed
+            case GLFW_KEY_ESCAPE:
+                // Close the window. This causes the program to also terminate.
+                glfwSetWindowShouldClose(window, GL_TRUE);
+                break;
+
+            case GLFW_KEY_W:
+                camera->MoveUp();
+                break;
+            case GLFW_KEY_A:
+                camera->MoveLeft();
+                break;
+            case GLFW_KEY_S:
+                camera->MoveDown();
+                break;
+            case GLFW_KEY_D:
+                camera->MoveRight();
+                break;
+            default:
+                break;
         }
     }
 }

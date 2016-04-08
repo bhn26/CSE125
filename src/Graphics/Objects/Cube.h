@@ -23,7 +23,7 @@ public:
 
     Shader shader;
 
-    void draw();
+    void draw(glm::mat4 C);
     void update();
     void spin(float);
 };

@@ -68,13 +68,13 @@ Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
         vector.x = mesh->mVertices[i].x;
         vector.y = mesh->mVertices[i].y;
         vector.z = mesh->mVertices[i].z;
-        vertex.Position = std::move(vector);
+        vertex.position = std::move(vector);
 
         // Normals
         vector.x = mesh->mNormals[i].x;
         vector.y = mesh->mNormals[i].y;
         vector.z = mesh->mNormals[i].z;
-        vertex.Normal = std::move(vector);
+        vertex.normal = std::move(vector);
 
         // Texture Coordinates
         if (mesh->mTextureCoords[0]) // Does the mesh contain texture coordinates?
@@ -84,11 +84,11 @@ Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
             // use models where a vertex can have multiple texture coordinates so we always take the first set (0).
             vec.x = mesh->mTextureCoords[0][i].x;
             vec.y = mesh->mTextureCoords[0][i].y;
-            vertex.TexCoords = std::move(vec);
+            vertex.texCoords = std::move(vec);
         }
         else
         {
-            vertex.TexCoords = std::move(glm::vec2(0.0f, 0.0f));
+            vertex.texCoords = std::move(glm::vec2(0.0f, 0.0f));
         }
         vertices.push_back(vertex);
     }

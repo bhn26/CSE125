@@ -164,6 +164,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\client_main.cpp" />
+    <ClCompile Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\Graphics\Camera.cpp" />
+    <ClCompile Include="..\src\Graphics\Nodes.cpp" />
     <ClCompile Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\Graphics\Objects\Cube.cpp" />
     <ClCompile Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\Graphics\Objects\Mesh.cpp" />
     <ClCompile Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\Graphics\Objects\Model.cpp" />
@@ -172,7 +174,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\client_main.h" />
+    <ClInclude Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\Graphics\Camera.h" />
     <ClInclude Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\Graphics\Objects\Cube.h" />
+    <ClInclude Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\Graphics\Scenegraph.h" />
+    <ClInclude Include="..\src\Graphics\Nodes.h" />
     <ClInclude Include="..\src\Graphics\Objects\Model.h" />
     <ClInclude Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\Graphics\Objects\Mesh.h" />
     <ClInclude Include="..\src\Graphics\Shader.h" />

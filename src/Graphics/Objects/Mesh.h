@@ -15,9 +15,9 @@
 
 struct Vertex
 {
-    glm::vec3 Position;     // Position
-    glm::vec3 Normal;       // Normal
-    glm::vec2 TexCoords;    // TexCoords
+    glm::vec3 position;     // Position
+    glm::vec3 normal;       // Normal
+    glm::vec2 texCoords;    // TexCoords
 };
 
 struct Texture
