@@ -14,8 +14,7 @@ out vec3 Normal;
 void main()
 {
     gl_Position = vec4(position, 1.0f);
+    FragPos = vec3(model2world * gl_Position);
     gl_Position = projection * view * model2world * gl_Position;
-    //gl_Position = model2world * gl_Position;
-    FragPos = vec3(model2world * vec4(position, 1.0f));
     Normal = normalMatrix * normal;
 }

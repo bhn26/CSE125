@@ -16,7 +16,7 @@ Camera* camera;
 int Window::width;
 int Window::height;
 
-void Window::initialize_objects()
+void Window::Initialize_objects()
 {
     cube = new Cube();
     camera = new Camera();
@@ -24,13 +24,13 @@ void Window::initialize_objects()
     //shaderProgram = LoadShaders("src/Graphics/Shaders/basic_shader.vert", "src/Graphics/Shaders/basic_shader.frag");
 }
 
-void Window::clean_up()
+void Window::Clean_up()
 {
     delete(cube);
     //glDeleteProgram(shaderProgram);
 }
 
-GLFWwindow* Window::create_window(int width, int height)
+GLFWwindow* Window::Create_window(int width, int height)
 {
     // Initialize GLFW
     if (!glfwInit())
@@ -60,12 +60,12 @@ GLFWwindow* Window::create_window(int width, int height)
     glfwSwapInterval(1);
 
     // Call the resize callback to make sure things get drawn immediately
-    Window::resize_callback(window, width, height);
+    Window::Resize_callback(window, width, height);
 
     return window;
 }
 
-void Window::resize_callback(GLFWwindow* window, int width, int height)
+void Window::Resize_callback(GLFWwindow* window, int width, int height)
 {
     Window::width = width;
     Window::height = height;
@@ -73,7 +73,7 @@ void Window::resize_callback(GLFWwindow* window, int width, int height)
     glViewport(0, 0, width, height);
 }
 
-void Window::idle_callback()
+void Window::Idle_callback()
 {
     // Call the update function of the current object drawPtr is pointing to
     // In this instance, drawPtr is pointing to a Cube object and is therefore
@@ -81,7 +81,7 @@ void Window::idle_callback()
     cube->update();
 }
 
-void Window::display_callback(GLFWwindow* window)
+void Window::Display_callback(GLFWwindow* window)
 {
     // Clear the color and depth buffers
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -98,7 +98,7 @@ void Window::display_callback(GLFWwindow* window)
     glfwSwapBuffers(window);
 }
 
-void Window::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+void Window::Key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
     // Check for a key press
     if (action == GLFW_PRESS || action == GLFW_REPEAT)

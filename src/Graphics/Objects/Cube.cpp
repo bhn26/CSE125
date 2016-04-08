@@ -7,18 +7,63 @@
 extern glm::vec3 lightPos;
 extern glm::vec3 lightColor;
 
-GLfloat vertices[] = 
+//GLfloat vertices[] = 
+//{
+//    // front
+//    -0.5, -0.5,  0.5, 0.0f, 0.0f, 1.0f,
+//    0.5, -0.5,  0.5, 0.0f, 0.0f, 1.0f,
+//    0.5,  0.5,  0.5, 0.0f, 0.0f, 1.0f,
+//    -0.5,  0.5,  0.5, 0.0f, 0.0f, 1.0f,
+//    // back
+//    -0.5, -0.5, -0.5, 0.0f, 0.0f, -1.0f,
+//    0.5, -0.5, -0.5, 0.0f, 0.0f, -1.0f,
+//    0.5,  0.5, -0.5, 0.0f, 0.0f, -1.0f,
+//    -0.5,  0.5, -0.5, 0.0f, 0.0f, -1.0f
+//};
+
+GLfloat vertices[] =
 {
-    // front
-    -0.5, -0.5,  0.5, 0.0f, 0.0f, 1.0f,
-    0.5, -0.5,  0.5, 0.0f, 0.0f, 1.0f,
-    0.5,  0.5,  0.5, 0.0f, 0.0f, 1.0f,
-    -0.5,  0.5,  0.5, 0.0f, 0.0f, 1.0f,
-    // back
-    -0.5, -0.5, -0.5, 0.0f, 0.0f, -1.0f,
-    0.5, -0.5, -0.5, 0.0f, 0.0f, -1.0f,
-    0.5,  0.5, -0.5, 0.0f, 0.0f, -1.0f,
-    -0.5,  0.5, -0.5, 0.0f, 0.0f, -1.0f
+    -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+    0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+    0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+    0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+
+    -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+    0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+    0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+    0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+
+    -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+    -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+    -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+    -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+    -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+    -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+
+    0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+    0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+    0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+    0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+    0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+    0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+
+    -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+    0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+    0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+    0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+
+    -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+    0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+    0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+    0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
 };
 
 GLuint indices[] =  // Note that we start from 0!
@@ -61,8 +106,8 @@ Cube::Cube()
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    //glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
     glEnableVertexAttribArray(0);
@@ -79,7 +124,7 @@ Cube::~Cube()
     // Properly de-allocate all resources once they've outlived their purpose
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
-    glDeleteBuffers(1, &EBO);
+    //glDeleteBuffers(1, &EBO);
 }
 
 void Cube::draw(glm::mat4 C)
@@ -106,7 +151,8 @@ void Cube::draw(glm::mat4 C)
     glUniform3fv(lightPosLoc, 1, glm::value_ptr(lightPos));
 
     glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+    //glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+    glDrawArrays(GL_TRIANGLES, 0, 36);
     glBindVertexArray(0);
 }
 
@@ -122,7 +168,7 @@ void Cube::spin(float deg)
         this->angle = 0.0f;
 
     // This creates the matrix to rotate the cube
-    this->toWorld = glm::rotate(glm::mat4(1.0f), this->angle / 180.0f * glm::pi<float>(), glm::vec3(0.0f, 1.0f, 0.0f));
+    this->toWorld = glm::rotate(glm::mat4(1.0f), glm::radians(this->angle), glm::vec3(0.0f, 1.0f, 0.0f));
     this->normalMatrix = glm::mat3(glm::transpose(glm::inverse(toWorld)));
 }
 

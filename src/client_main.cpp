@@ -2,26 +2,26 @@
 #include "glm/vec3.hpp"
 
 GLFWwindow* window;
-glm::vec3 lightPos(2.0f, 0.0f, -1.0f);
+glm::vec3 lightPos(3.0f, 2.0f, 2.0f);
 glm::vec3 lightColor(1.0f, 1.0f, 1.0f);
 
-void error_callback(int error, const char* description)
+void Error_callback(int error, const char* description)
 {
     // Print error
     fputs(description, stderr);
 }
 
-void setup_callbacks()
+void Setup_callbacks()
 {
     // Set the error callback
-    glfwSetErrorCallback(error_callback);
+    glfwSetErrorCallback(Error_callback);
     // Set the key callback
-    glfwSetKeyCallback(window, Window::key_callback);
+    glfwSetKeyCallback(window, Window::Key_callback);
     // Set the window resize callback
-    glfwSetWindowSizeCallback(window, Window::resize_callback);
+    glfwSetWindowSizeCallback(window, Window::Resize_callback);
 }
 
-void setup_glew()
+void Setup_glew()
 {
     // Initialize GLEW
     GLenum err = glewInit();
@@ -34,10 +34,10 @@ void setup_glew()
     fprintf(stdout, "Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
 }
 
-void setup_opengl_settings()
+void Setup_opengl_settings()
 {
     // Setup GLEW
-    setup_glew();
+    Setup_glew();
     // Enable depth buffering
     glEnable(GL_DEPTH_TEST);
     // Related to shaders and z value comparisons for the depth buffer
@@ -51,7 +51,7 @@ void setup_opengl_settings()
     glClearColor(0.2f, 0.2f, 0.5f, 1.0f);
 }
 
-void print_versions()
+void Print_versions()
 {
     // Get info of GPU and supported OpenGL version
     printf("Renderer: %s\n", glGetString(GL_RENDERER));
@@ -66,26 +66,26 @@ void print_versions()
 int main(void)
 {
     // Create the GLFW window
-    window = Window::create_window(640, 480);
+    window = Window::Create_window(640, 480);
     // Print OpenGL and GLSL versions
-    print_versions();
+    Print_versions();
     // Setup callbacks
-    setup_callbacks();
+    Setup_callbacks();
     // Setup OpenGL settings, including lighting, materials, etc.
-    setup_opengl_settings();
+    Setup_opengl_settings();
     // Initialize objects/pointers for rendering
-    Window::initialize_objects();
+    Window::Initialize_objects();
 
     // Loop while GLFW window should stay open
     while (!glfwWindowShouldClose(window))
     {
         // Main render display callback. Rendering of objects is done here.
-        Window::display_callback(window);
+        Window::Display_callback(window);
         // Idle callback. Updating objects, etc. can be done here.
-        Window::idle_callback();
+        Window::Idle_callback();
     }
 
-    Window::clean_up();
+    Window::Clean_up();
     // Destroy the window
     glfwDestroyWindow(window);
     // Terminate GLFW
