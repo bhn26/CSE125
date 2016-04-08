@@ -89,11 +89,13 @@ void Cube::draw()
     glm::mat4 projection = glm::perspective((GLfloat)60.0f, (GLfloat)Window::width / (GLfloat)Window::height, 0.1f, 100.0f);
 
     GLint modelLocation = shader.GetUniform("model2world");
+    GLint normalMatrixLoc = shader.GetUniform("normalMatrix");
     GLint projectionLocation = shader.GetUniform("projection");
     GLint objectColorLoc = shader.GetUniform("objectColor");
     GLint lightColorLoc = shader.GetUniform("lightColor");
     GLint lightPosLoc = shader.GetUniform("lightPos");
     glUniformMatrix4fv(modelLocation, 1, false, glm::value_ptr(this->toWorld));
+    glUniformMatrix3fv(normalMatrixLoc, 1, false, glm::value_ptr(this->normalMatrix));
     glUniformMatrix4fv(projectionLocation, 1, false, glm::value_ptr(projection));
     glUniform3fv(objectColorLoc, 1, glm::value_ptr(this->color));
     glUniform3fv(lightColorLoc, 1, glm::value_ptr(lightColor));
@@ -112,8 +114,11 @@ void Cube::update()
 void Cube::spin(float deg)
 {
     this->angle += deg;
-    if (this->angle > 360.0f || this->angle < -360.0f) this->angle = 0.0f;
+    if (this->angle > 360.0f || this->angle < -360.0f)
+        this->angle = 0.0f;
+
     // This creates the matrix to rotate the cube
     this->toWorld = glm::rotate(glm::mat4(1.0f), this->angle / 180.0f * glm::pi<float>(), glm::vec3(0.0f, 1.0f, 0.0f));
+    this->normalMatrix = glm::mat3(glm::transpose(glm::inverse(toWorld)));
 }
 

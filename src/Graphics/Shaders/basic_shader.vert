@@ -4,6 +4,7 @@ layout (location = 0) in vec3 position;
 layout (location = 1) in vec3 normal;
 
 uniform mat4 model2world;
+uniform mat3 normalMatrix;
 uniform mat4 projection;
 
 out vec3 FragPos;
@@ -15,5 +16,5 @@ void main()
     gl_Position = projection * model2world * gl_Position;
     //gl_Position = model2world * gl_Position;
     FragPos = vec3(model2world * vec4(position, 1.0f));
-    Normal = (model2world * vec4(normal, 1.0f)).xyz;
+    Normal = normalMatrix * normal;
 }
