@@ -1,0 +1,36 @@
+newmtl bark_col
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.39 0.39 0.39
+Tf 1.00 1.00 1.00
+map_Kd EA02brk.tif
+Ni 1.00
+Ks 0.00 0.00 0.00
+Ns 18.00
+newmtl bark_colour
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.32 0.32 0.32
+Tf 1.00 1.00 1.00
+map_Kd EA02brk.tif
+Ni 1.00
+Ks 0.00 0.00 0.00
+Ns 18.00
+newmtl leaf_colour
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.40 0.40 0.40
+Tf 1.00 1.00 1.00
+map_Kd EA02lef.tif
+Ni 1.00
+Ks 0.00 0.00 0.00
+Ns 18.00
+newmtl rulerSG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 1.00 1.00 1.00
+Tf 1.00 1.00 1.00
+map_Kd OMruler.tif
+Ni 1.00
+Ks 0.00 0.00 0.00
+Ns 18.00
