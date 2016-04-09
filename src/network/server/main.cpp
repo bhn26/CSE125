@@ -5,12 +5,23 @@
 
 // used for multi-threading
 #include <process.h>
+#include "ServerGame.h"
+#include <iostream>
 
+ServerGame * server;
 
+void serverLoop(void * arg)
+{
+    while (true)
+    {
+        server->update();
+    }
+}
 
 int main()
 {
+    server = new ServerGame();
 
-
+    serverLoop((void*)12);
 }
 

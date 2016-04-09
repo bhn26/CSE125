@@ -5,8 +5,22 @@
 
 // used for multi-threading
 #include <process.h>
+#include "ClientGame.h"
+
+ClientGame * client;
+
+void clientLoop()
+{
+    while (true)
+    {
+        //do game stuff
+        client->update();
+    }
+}
 
 int main()
 {
+    client = new ClientGame();
 
+    clientLoop();
 }
