@@ -1,8 +1,10 @@
 #include "Cube.h"
 #include "../Window.h"
+#include "../Camera.h"
 
 #include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale, glm::perspective
 #include <glm/gtc/type_ptr.hpp>
+#include <utility>
 
 extern glm::vec3 lightPos;
 extern glm::vec3 lightColor;
@@ -10,15 +12,15 @@ extern glm::vec3 lightColor;
 //GLfloat vertices[] = 
 //{
 //    // front
-//    -0.5, -0.5,  0.5, 0.0f, 0.0f, 1.0f,
-//    0.5, -0.5,  0.5, 0.0f, 0.0f, 1.0f,
-//    0.5,  0.5,  0.5, 0.0f, 0.0f, 1.0f,
-//    -0.5,  0.5,  0.5, 0.0f, 0.0f, 1.0f,
+//    -0.5, -0.5,  0.5, -1.0f, -1.0f, 1.0f,
+//    0.5, -0.5,  0.5, 1.0f, -1.0f, 1.0f,
+//    0.5,  0.5,  0.5, 1.0f, 1.0f, 1.0f,
+//    -0.5,  0.5,  0.5, -1.0f, 1.0f, 1.0f,
 //    // back
-//    -0.5, -0.5, -0.5, 0.0f, 0.0f, -1.0f,
-//    0.5, -0.5, -0.5, 0.0f, 0.0f, -1.0f,
-//    0.5,  0.5, -0.5, 0.0f, 0.0f, -1.0f,
-//    -0.5,  0.5, -0.5, 0.0f, 0.0f, -1.0f
+//    -0.5, -0.5, -0.5, -1.0f, -1.0f, -1.0f,
+//    0.5, -0.5, -0.5, 1.0f, -1.0f, -1.0f,
+//    0.5,  0.5, -0.5, 1.0f, 1.0f, -1.0f,
+//    -0.5,  0.5, -0.5, -1.0f, 1.0f, -1.0f
 //};
 
 GLfloat vertices[] =
@@ -127,7 +129,7 @@ Cube::~Cube()
     //glDeleteBuffers(1, &EBO);
 }
 
-void Cube::draw(glm::mat4 C)
+void Cube::Draw(glm::mat4 C)
 {
     shader.Use();
 
@@ -140,6 +142,7 @@ void Cube::draw(glm::mat4 C)
     GLint objectColorLoc = shader.GetUniform("objectColor");
     GLint lightColorLoc = shader.GetUniform("lightColor");
     GLint lightPosLoc = shader.GetUniform("lightPos");
+    GLint viewPosLoc = shader.GetUniform("viewPos");
 
     glUniformMatrix4fv(viewLoc, 1, false, glm::value_ptr(C));
     glUniformMatrix4fv(modelLocation, 1, false, glm::value_ptr(this->toWorld));
@@ -149,6 +152,7 @@ void Cube::draw(glm::mat4 C)
     glUniform3fv(objectColorLoc, 1, glm::value_ptr(this->color));
     glUniform3fv(lightColorLoc, 1, glm::value_ptr(lightColor));
     glUniform3fv(lightPosLoc, 1, glm::value_ptr(lightPos));
+    glUniform3fv(viewPosLoc, 1, glm::value_ptr(camera->Position()));
 
     glBindVertexArray(VAO);
     //glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
@@ -156,12 +160,12 @@ void Cube::draw(glm::mat4 C)
     glBindVertexArray(0);
 }
 
-void Cube::update()
+void Cube::Update()
 {
-    spin(0.3f);
+    Spin(0.3f);
 }
 
-void Cube::spin(float deg)
+void Cube::Spin(float deg)
 {
     this->angle += deg;
     if (this->angle > 360.0f || this->angle < -360.0f)

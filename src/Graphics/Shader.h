@@ -3,6 +3,7 @@
 
 #include <GL/glew.h>
 #include <algorithm>
+#include <utility>
 
 class Shader
 {
@@ -15,7 +16,8 @@ public:
     Shader(const Shader& rhs) { program = rhs.program; }
     ~Shader();
 
-    void operator=(Shader rhs) { std::swap(rhs.program, program); }
+    Shader& operator=(Shader rhs) { std::swap(rhs.program, program); return *this; }
+
 
     bool SetShaders(const char* vertex_file_path, const char* fragment_file_path);
     void Use() { glUseProgram(this->program); }
