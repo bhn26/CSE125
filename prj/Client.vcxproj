@@ -168,7 +168,7 @@
     <ClCompile Include="..\src\Graphics\Objects\Cube.cpp" />
     <ClCompile Include="..\src\Graphics\Objects\Mesh.cpp" />
     <ClCompile Include="..\src\Graphics\Objects\Model.cpp" />
-    <ClCompile Include="..\src\Graphics\shader.cpp" />
+    <ClCompile Include="..\src\Graphics\Shader.cpp" />
     <ClCompile Include="..\src\Graphics\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
