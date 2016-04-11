@@ -27,6 +27,7 @@ void Setup_callbacks()
 void Setup_glew()
 {
     // Initialize GLEW
+    glewExperimental = GL_TRUE;
     GLenum err = glewInit();
     if (GLEW_OK != err)
     {

@@ -36,9 +36,16 @@ GLFWwindow* Window::Create_window(int width, int height)
     if (!glfwInit())
     {
         fprintf(stderr, "Failed to initialize GLFW\n");
+        glfwTerminate();
         return NULL;
     }
 
+    // enable highest version supported by the OS
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+    
     // 4x antialiasing
     glfwWindowHint(GLFW_SAMPLES, 4);
 

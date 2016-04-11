@@ -15,6 +15,7 @@ namespace Scenegraph
     {
         virtual void Draw(glm::mat4 C) = 0;
         virtual void Update(glm::mat4 C) = 0;
+        virtual ~Node(){}; // TODO - virtual destructor
     };
 
     /* Group node. This node can hold multiple other nodes
