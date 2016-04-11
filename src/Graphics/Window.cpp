@@ -19,7 +19,7 @@ int Window::height;
 void Window::Initialize_objects()
 {
     cube = new Cube();
-    camera = new Camera();
+    camera = new Camera(glm::vec3(0.0f, 0.0f, 3.0f));
     cube->shader.SetShaders("src/Graphics/Shaders/basic_shader.vert", "src/Graphics/Shaders/basic_shader.frag");
     //shaderProgram = LoadShaders("src/Graphics/Shaders/basic_shader.vert", "src/Graphics/Shaders/basic_shader.frag");
 }
@@ -78,7 +78,7 @@ void Window::Idle_callback()
     // Call the update function of the current object drawPtr is pointing to
     // In this instance, drawPtr is pointing to a Cube object and is therefore
     // causing the cube to rotate via its spin function.
-    cube->update();
+    cube->Update();
 }
 
 void Window::Display_callback(GLFWwindow* window)
@@ -90,7 +90,7 @@ void Window::Display_callback(GLFWwindow* window)
     //glUseProgram(shaderProgram);
 
     // Render the object drawPtr is pointing to
-    cube->draw(camera->View());
+    cube->Draw(camera->GetViewMatrix());
 
     // Gets events, including input such as keyboard and mouse or window resizing
     glfwPollEvents();
@@ -112,25 +112,46 @@ void Window::Key_callback(GLFWwindow* window, int key, int scancode, int action,
                 break;
 
             case GLFW_KEY_W:
-                camera->MoveForward();
+                camera->ProcessKeyboard(Camera_Movement::FORWARD, 1);
                 break;
             case GLFW_KEY_A:
-                camera->MoveLeft();
+                camera->ProcessKeyboard(Camera_Movement::LEFT, 1);
                 break;
             case GLFW_KEY_S:
-                camera->MoveBack();
+                camera->ProcessKeyboard(Camera_Movement::BACKWARD, 1);
                 break;
             case GLFW_KEY_D:
-                camera->MoveRight();
+                camera->ProcessKeyboard(Camera_Movement::RIGHT, 1);
                 break;
             case GLFW_KEY_SPACE:
-                camera->MoveUp();
+                camera->ProcessKeyboard(Camera_Movement::UP, 1);
                 break;
             case GLFW_KEY_Z:
-                camera->MoveDown();
+                camera->ProcessKeyboard(Camera_Movement::DOWN, 1);
                 break;
             default:
                 break;
         }
     }
 }
+
+bool firstMouse = true;
+GLuint lastX = Window::width / 2;
+GLuint lastY = Window::height / 2;
+
+void Window::Mouse_callback(GLFWwindow* window, double xpos, double ypos)
+{
+    if (firstMouse)
+    {
+        lastX = xpos;
+        lastY = ypos;
+        firstMouse = false;
+    }
+
+    GLfloat xoffset = xpos - lastX;
+    GLfloat yoffset = lastY - ypos;
+    lastX = xpos;
+    lastY = ypos;
+    camera->ProcessMouseMovement(xoffset, yoffset);
+}
+

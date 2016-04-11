@@ -1,68 +1,84 @@
-//
-//  camera.cpp
-//  Homework3
-//
-//  Created by Michelle Wu on 10/21/14.
-//  Copyright (c) 2014 Michelle Wu. All rights reserved.
-//
+#include "Camera.h"
 
-#include "camera.h"
-
-#include <stdio.h>
-#include <glm/mat4x4.hpp>
-#include <glm/gtx/transform.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include "Objects/Model.h"
 
-Camera::Camera()
+Camera::Camera(glm::vec3 position, glm::vec3 up, GLfloat yaw, GLfloat pitch)
+    : front(glm::vec3(0.0f, 0.0f, -1.0f)), movementSpeed(SPEED), mouseSensitivity(SENSITIVTY), zoom(ZOOM)
 {
-    cameraSpeed = 0.1f;
-    // Position of the camera
-    cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
-    cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
-    // Where the camera is pointing at
-    cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
-    // Vector pointing towards camera's positive z-axis
-    cameraDirection = glm::normalize(cameraPos - cameraTarget);
-    // Positive x-axis of the camera space
-    up = glm::vec3(0.0f, 1.0f, 0.0f);
-    cameraRight = glm::normalize(glm::cross(up, cameraDirection));
-    cameraUp = glm::cross(cameraDirection, cameraRight);
-    view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+    this->position = position;
+    this->worldUp = up;
+    this->yaw = yaw;
+    this->pitch = pitch;
+    this->UpdateCameraVectors();
 }
 
-void Camera::MoveForward()
+Camera::Camera(GLfloat posX, GLfloat posY, GLfloat posZ, GLfloat upX, GLfloat upY, GLfloat upZ, GLfloat yaw, GLfloat pitch)
+    : front(glm::vec3(0.0f, 0.0f, -1.0f)), movementSpeed(SPEED), mouseSensitivity(SENSITIVTY), zoom(ZOOM)
 {
-    cameraPos += cameraSpeed * cameraFront;
-    view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);       // Refactor
+    this->position = glm::vec3(posX, posY, posZ);
+    this->worldUp = glm::vec3(upX, upY, upZ);
+    this->yaw = yaw;
+    this->pitch = pitch;
+    this->UpdateCameraVectors();
 }
 
-void Camera::MoveBack()
+void Camera::ProcessKeyboard(Camera_Movement direction, GLfloat deltaTime)
 {
-    cameraPos -= cameraSpeed * cameraFront;
-    view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);       // Refactor
+    GLfloat velocity = this->movementSpeed * deltaTime;
+    if (direction == FORWARD)
+        this->position += this->front * velocity;
+    if (direction == BACKWARD)
+        this->position -= this->front * velocity;
+    if (direction == LEFT)
+        this->position -= this->right * velocity;
+    if (direction == RIGHT)
+        this->position += this->right * velocity;
+    if (direction == UP)
+        this->position += this->up * velocity;
+    if (direction == DOWN)
+        this->position -= this->up * velocity;
 }
 
-void Camera::MoveRight()
+void Camera::ProcessMouseMovement(GLfloat xoffset, GLfloat yoffset, GLboolean constrainPitch)
 {
-    cameraPos += cameraSpeed * cameraRight;
-    view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);       // Refactor
+    xoffset *= this->mouseSensitivity;
+    yoffset *= this->mouseSensitivity;
+
+    this->yaw += xoffset;
+    this->pitch += yoffset;
+
+    // Make sure that when pitch is out of bounds, screen doesn't get flipped
+    if (constrainPitch)
+    {
+        if (this->pitch > 89.0f)
+            this->pitch = 89.0f;
+        if (this->pitch < -89.0f)
+            this->pitch = -89.0f;
+    }
+
+    // Update Front, Right and Up Vectors using the updated Eular angles
+    this->UpdateCameraVectors();
 }
 
-void Camera::MoveLeft()
+void Camera::ProcessMouseScroll(GLfloat yoffset)
 {
-    cameraPos -= cameraSpeed * cameraRight;
-    view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);       // Refactor
+    if (this->zoom >= 1.0f && this->zoom <= 45.0f)
+        this->zoom -= yoffset;
+    if (this->zoom <= 1.0f)
+        this->zoom = 1.0f;
+    if (this->zoom >= 45.0f)
+        this->zoom = 45.0f;
 }
 
-void Camera::MoveUp()
+void Camera::UpdateCameraVectors()
 {
-    cameraPos += cameraSpeed * cameraUp;
-    view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);       // Refactor
-}
-
-void Camera::MoveDown()
-{
-    cameraPos -= cameraSpeed * cameraUp;
-    view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);       // Refactor
+    // Calculate the new Front vector
+    glm::vec3 front;
+    front.x = cos(glm::radians(this->yaw)) * cos(glm::radians(this->pitch));
+    front.y = sin(glm::radians(this->pitch));
+    front.z = sin(glm::radians(this->yaw)) * cos(glm::radians(this->pitch));
+    this->front = glm::normalize(front);
+    // Also re-calculate the Right and Up vector
+    this->right = glm::normalize(glm::cross(this->front, this->worldUp));  // Normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
+    this->up = glm::normalize(glm::cross(this->right, this->front));
 }
