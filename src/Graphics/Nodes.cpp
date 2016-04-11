@@ -71,7 +71,7 @@ namespace Scenegraph
     */
     void Geode::Draw(glm::mat4 C)
     {
-        glm::mat4 glmatrix = C * model2world;
+        //glm::mat4 glmatrix = C * model2world;
         Render();
     }
 }

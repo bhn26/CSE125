@@ -10,7 +10,7 @@
 		CD214BC81CB6E60E00D7DFD6 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD214BC71CB6E60E00D7DFD6 /* OpenGL.framework */; };
 		CD214BE11CB7027C00D7DFD6 /* client_main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD214BD41CB7027C00D7DFD6 /* client_main.cpp */; };
 		CD214BE21CB7027C00D7DFD6 /* Cube.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD214BD81CB7027C00D7DFD6 /* Cube.cpp */; };
-		CD214BE31CB7027C00D7DFD6 /* shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD214BDA1CB7027C00D7DFD6 /* shader.cpp */; };
+		CD214BE31CB7027C00D7DFD6 /* Shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD214BDA1CB7027C00D7DFD6 /* Shader.cpp */; };
 		CD214BE41CB7027C00D7DFD6 /* Window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD214BDF1CB7027C00D7DFD6 /* Window.cpp */; };
 		CD9C3C3D1CBA1AD200F627D8 /* libglfw3.3.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CD9C3C3C1CBA1AD200F627D8 /* libglfw3.3.1.dylib */; };
 		CD9C3C3F1CBA1B0800F627D8 /* libGLEW.1.13.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CD9C3C3E1CBA1B0800F627D8 /* libGLEW.1.13.0.dylib */; };
@@ -38,7 +38,7 @@
 		CD214BD51CB7027C00D7DFD6 /* client_main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = client_main.h; sourceTree = "<group>"; };
 		CD214BD81CB7027C00D7DFD6 /* Cube.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Cube.cpp; sourceTree = "<group>"; };
 		CD214BD91CB7027C00D7DFD6 /* Cube.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Cube.h; sourceTree = "<group>"; };
-		CD214BDA1CB7027C00D7DFD6 /* shader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = shader.cpp; sourceTree = "<group>"; };
+		CD214BDA1CB7027C00D7DFD6 /* Shader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Shader.cpp; sourceTree = "<group>"; };
 		CD214BDD1CB7027C00D7DFD6 /* basic_shader.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = basic_shader.frag; sourceTree = "<group>"; };
 		CD214BDE1CB7027C00D7DFD6 /* basic_shader.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = basic_shader.vert; sourceTree = "<group>"; };
 		CD214BDF1CB7027C00D7DFD6 /* Window.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Window.cpp; sourceTree = "<group>"; };
@@ -106,7 +106,7 @@
 				CD9C3C431CBA1E9500F627D8 /* Nodes.cpp */,
 				CD9C3C441CBA1E9500F627D8 /* Nodes.h */,
 				CD9C3C471CBA1EAC00F627D8 /* Scenegraph.h */,
-				CD214BDA1CB7027C00D7DFD6 /* shader.cpp */,
+				CD214BDA1CB7027C00D7DFD6 /* Shader.cpp */,
 				CD9C3C481CBA1EC000F627D8 /* Shader.h */,
 				CD214BDF1CB7027C00D7DFD6 /* Window.cpp */,
 				CD214BE01CB7027C00D7DFD6 /* Window.h */,
@@ -199,7 +199,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CD214BE31CB7027C00D7DFD6 /* shader.cpp in Sources */,
+				CD214BE31CB7027C00D7DFD6 /* Shader.cpp in Sources */,
 				CD9C3C461CBA1E9500F627D8 /* Nodes.cpp in Sources */,
 				CD214BE21CB7027C00D7DFD6 /* Cube.cpp in Sources */,
 				CD9C3C451CBA1E9500F627D8 /* Camera.cpp in Sources */,
@@ -309,6 +309,7 @@
 					/usr/local/Cellar/assimp/3.2/lib,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SYMROOT = $PROJECT_DIR;
 			};
 			name = Debug;
 		};
@@ -329,6 +330,7 @@
 					/usr/local/Cellar/assimp/3.2/lib,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SYMROOT = $PROJECT_DIR;
 			};
 			name = Release;
 		};
