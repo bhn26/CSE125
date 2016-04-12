@@ -12,11 +12,18 @@
 		CD214BE21CB7027C00D7DFD6 /* Cube.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD214BD81CB7027C00D7DFD6 /* Cube.cpp */; };
 		CD214BE31CB7027C00D7DFD6 /* Shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD214BDA1CB7027C00D7DFD6 /* Shader.cpp */; };
 		CD214BE41CB7027C00D7DFD6 /* Window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD214BDF1CB7027C00D7DFD6 /* Window.cpp */; };
+		CD429FCF1CBC821F001BCE47 /* Scene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD429FCD1CBC821F001BCE47 /* Scene.cpp */; };
 		CD9C3C3D1CBA1AD200F627D8 /* libglfw3.3.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CD9C3C3C1CBA1AD200F627D8 /* libglfw3.3.1.dylib */; };
 		CD9C3C3F1CBA1B0800F627D8 /* libGLEW.1.13.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CD9C3C3E1CBA1B0800F627D8 /* libGLEW.1.13.0.dylib */; };
 		CD9C3C451CBA1E9500F627D8 /* Camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD9C3C411CBA1E9500F627D8 /* Camera.cpp */; };
 		CD9C3C461CBA1E9500F627D8 /* Nodes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD9C3C431CBA1E9500F627D8 /* Nodes.cpp */; };
 		CD9C3C4A1CBA1F3900F627D8 /* libassimp.3.2.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CD9C3C491CBA1F3900F627D8 /* libassimp.3.2.0.dylib */; };
+		CD9C3C4F1CBC670F00F627D8 /* Mesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD9C3C4B1CBC670F00F627D8 /* Mesh.cpp */; };
+		CD9C3C501CBC671000F627D8 /* Model.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD9C3C4D1CBC670F00F627D8 /* Model.cpp */; };
+		CD9C3C531CBC67CE00F627D8 /* Chicken.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD9C3C511CBC67CE00F627D8 /* Chicken.cpp */; };
+		CD9C3C5D1CBC75DD00F627D8 /* libSOIL.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CD9C3C5A1CBC73C000F627D8 /* libSOIL.a */; };
+		CD9C3C5F1CBC761F00F627D8 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD9C3C5E1CBC761F00F627D8 /* GLUT.framework */; };
+		CD9C3C611CBC763900F627D8 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD9C3C601CBC763900F627D8 /* CoreFoundation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -43,6 +50,8 @@
 		CD214BDE1CB7027C00D7DFD6 /* basic_shader.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = basic_shader.vert; sourceTree = "<group>"; };
 		CD214BDF1CB7027C00D7DFD6 /* Window.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Window.cpp; sourceTree = "<group>"; };
 		CD214BE01CB7027C00D7DFD6 /* Window.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Window.h; sourceTree = "<group>"; };
+		CD429FCD1CBC821F001BCE47 /* Scene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Scene.cpp; sourceTree = "<group>"; };
+		CD429FCE1CBC821F001BCE47 /* Scene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Scene.h; sourceTree = "<group>"; };
 		CD9C3C3C1CBA1AD200F627D8 /* libglfw3.3.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw3.3.1.dylib; path = /usr/local/Cellar/glfw3/3.1.2/lib/libglfw3.3.1.dylib; sourceTree = "<absolute>"; };
 		CD9C3C3E1CBA1B0800F627D8 /* libGLEW.1.13.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libGLEW.1.13.0.dylib; path = /usr/local/Cellar/glew/1.13.0/lib/libGLEW.1.13.0.dylib; sourceTree = "<absolute>"; };
 		CD9C3C411CBA1E9500F627D8 /* Camera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Camera.cpp; path = src/Graphics/Camera.cpp; sourceTree = SOURCE_ROOT; };
@@ -52,6 +61,18 @@
 		CD9C3C471CBA1EAC00F627D8 /* Scenegraph.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Scenegraph.h; path = src/Graphics/Scenegraph.h; sourceTree = SOURCE_ROOT; };
 		CD9C3C481CBA1EC000F627D8 /* Shader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Shader.h; sourceTree = "<group>"; };
 		CD9C3C491CBA1F3900F627D8 /* libassimp.3.2.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libassimp.3.2.0.dylib; path = ../../../../usr/local/Cellar/assimp/3.2/lib/libassimp.3.2.0.dylib; sourceTree = "<group>"; };
+		CD9C3C4B1CBC670F00F627D8 /* Mesh.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Mesh.cpp; sourceTree = "<group>"; };
+		CD9C3C4C1CBC670F00F627D8 /* Mesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mesh.h; sourceTree = "<group>"; };
+		CD9C3C4D1CBC670F00F627D8 /* Model.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Model.cpp; sourceTree = "<group>"; };
+		CD9C3C4E1CBC670F00F627D8 /* Model.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Model.h; sourceTree = "<group>"; };
+		CD9C3C511CBC67CE00F627D8 /* Chicken.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Chicken.cpp; sourceTree = "<group>"; };
+		CD9C3C521CBC67CE00F627D8 /* Chicken.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Chicken.h; sourceTree = "<group>"; };
+		CD9C3C541CBC6EED00F627D8 /* libSOIL.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSOIL.a; path = "lib/Simple OpenGL Image Library/lib/libSOIL.a"; sourceTree = "<group>"; };
+		CD9C3C561CBC71B300F627D8 /* libSOIL.lib */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSOIL.lib; path = "lib/Simple OpenGL Image Library/lib/libSOIL.lib"; sourceTree = "<group>"; };
+		CD9C3C581CBC735F00F627D8 /* libSOIL.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSOIL.a; path = lib/libSOIL.a; sourceTree = "<group>"; };
+		CD9C3C5A1CBC73C000F627D8 /* libSOIL.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSOIL.a; path = ../../../../usr/local/lib/libSOIL.a; sourceTree = "<group>"; };
+		CD9C3C5E1CBC761F00F627D8 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
+		CD9C3C601CBC763900F627D8 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,10 +80,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CD9C3C5D1CBC75DD00F627D8 /* libSOIL.a in Frameworks */,
 				CD9C3C4A1CBA1F3900F627D8 /* libassimp.3.2.0.dylib in Frameworks */,
 				CD9C3C3F1CBA1B0800F627D8 /* libGLEW.1.13.0.dylib in Frameworks */,
 				CD9C3C3D1CBA1AD200F627D8 /* libglfw3.3.1.dylib in Frameworks */,
+				CD9C3C5F1CBC761F00F627D8 /* GLUT.framework in Frameworks */,
 				CD214BC81CB6E60E00D7DFD6 /* OpenGL.framework in Frameworks */,
+				CD9C3C611CBC763900F627D8 /* CoreFoundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -101,15 +125,21 @@
 			children = (
 				CD214BD71CB7027C00D7DFD6 /* Objects */,
 				CD214BDC1CB7027C00D7DFD6 /* Shaders */,
+				CD214BDF1CB7027C00D7DFD6 /* Window.cpp */,
+				CD214BE01CB7027C00D7DFD6 /* Window.h */,
+				CD214BDA1CB7027C00D7DFD6 /* Shader.cpp */,
+				CD9C3C481CBA1EC000F627D8 /* Shader.h */,
 				CD9C3C411CBA1E9500F627D8 /* Camera.cpp */,
 				CD9C3C421CBA1E9500F627D8 /* Camera.h */,
 				CD9C3C431CBA1E9500F627D8 /* Nodes.cpp */,
 				CD9C3C441CBA1E9500F627D8 /* Nodes.h */,
+				CD429FCD1CBC821F001BCE47 /* Scene.cpp */,
+				CD429FCE1CBC821F001BCE47 /* Scene.h */,
 				CD9C3C471CBA1EAC00F627D8 /* Scenegraph.h */,
-				CD214BDA1CB7027C00D7DFD6 /* Shader.cpp */,
-				CD9C3C481CBA1EC000F627D8 /* Shader.h */,
-				CD214BDF1CB7027C00D7DFD6 /* Window.cpp */,
-				CD214BE01CB7027C00D7DFD6 /* Window.h */,
+				CD9C3C4B1CBC670F00F627D8 /* Mesh.cpp */,
+				CD9C3C4C1CBC670F00F627D8 /* Mesh.h */,
+				CD9C3C4D1CBC670F00F627D8 /* Model.cpp */,
+				CD9C3C4E1CBC670F00F627D8 /* Model.h */,
 			);
 			path = Graphics;
 			sourceTree = "<group>";
@@ -119,6 +149,8 @@
 			children = (
 				CD214BD81CB7027C00D7DFD6 /* Cube.cpp */,
 				CD214BD91CB7027C00D7DFD6 /* Cube.h */,
+				CD9C3C511CBC67CE00F627D8 /* Chicken.cpp */,
+				CD9C3C521CBC67CE00F627D8 /* Chicken.h */,
 			);
 			path = Objects;
 			sourceTree = "<group>";
@@ -135,6 +167,12 @@
 		CD9C3C401CBA1BE700F627D8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				CD9C3C601CBC763900F627D8 /* CoreFoundation.framework */,
+				CD9C3C5E1CBC761F00F627D8 /* GLUT.framework */,
+				CD9C3C5A1CBC73C000F627D8 /* libSOIL.a */,
+				CD9C3C581CBC735F00F627D8 /* libSOIL.a */,
+				CD9C3C561CBC71B300F627D8 /* libSOIL.lib */,
+				CD9C3C541CBC6EED00F627D8 /* libSOIL.a */,
 				CD9C3C491CBA1F3900F627D8 /* libassimp.3.2.0.dylib */,
 				CD9C3C3E1CBA1B0800F627D8 /* libGLEW.1.13.0.dylib */,
 				CD9C3C3C1CBA1AD200F627D8 /* libglfw3.3.1.dylib */,
@@ -202,8 +240,12 @@
 				CD214BE31CB7027C00D7DFD6 /* Shader.cpp in Sources */,
 				CD9C3C461CBA1E9500F627D8 /* Nodes.cpp in Sources */,
 				CD214BE21CB7027C00D7DFD6 /* Cube.cpp in Sources */,
+				CD9C3C501CBC671000F627D8 /* Model.cpp in Sources */,
+				CD9C3C4F1CBC670F00F627D8 /* Mesh.cpp in Sources */,
 				CD9C3C451CBA1E9500F627D8 /* Camera.cpp in Sources */,
+				CD9C3C531CBC67CE00F627D8 /* Chicken.cpp in Sources */,
 				CD214BE11CB7027C00D7DFD6 /* client_main.cpp in Sources */,
+				CD429FCF1CBC821F001BCE47 /* Scene.cpp in Sources */,
 				CD214BE41CB7027C00D7DFD6 /* Window.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -307,6 +349,8 @@
 					/usr/local/Cellar/glfw3/3.1.2/lib,
 					/usr/local/Cellar/glew/1.13.0/lib,
 					/usr/local/Cellar/assimp/3.2/lib,
+					"$(PROJECT_DIR)/lib/SOIL/lib",
+					"$(PROJECT_DIR)/lib",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SYMROOT = $PROJECT_DIR;
@@ -328,6 +372,8 @@
 					/usr/local/Cellar/glfw3/3.1.2/lib,
 					/usr/local/Cellar/glew/1.13.0/lib,
 					/usr/local/Cellar/assimp/3.2/lib,
+					"$(PROJECT_DIR)/lib/SOIL/lib",
+					"$(PROJECT_DIR)/lib",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SYMROOT = $PROJECT_DIR;

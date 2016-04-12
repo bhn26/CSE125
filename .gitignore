@@ -72,5 +72,6 @@ out/
 *.swatch
 *.swatches 
 
-#xcode (ignore until xcode works)
-#*.xcodeproj*
+#xcode
+*.xcbkptlist
+*.xcuserstate

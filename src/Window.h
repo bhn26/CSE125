@@ -19,7 +19,7 @@ public:
     static void Idle_callback();
     static void Display_callback(GLFWwindow*);
     static void Key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
-    static void Window::Mouse_callback(GLFWwindow* window, double xpos, double ypos);
+    static void Mouse_callback(GLFWwindow* window, double xpos, double ypos);
 };
 
 #endif
