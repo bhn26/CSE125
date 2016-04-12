@@ -18,7 +18,8 @@ void Setup_callbacks()
     // Set the key callback
     glfwSetKeyCallback(window, Window::Key_callback);
     // Set the window resize callback
-    glfwSetWindowSizeCallback(window, Window::Resize_callback);
+    //glfwSetWindowSizeCallback(window, Window::Resize_callback);
+    glfwSetFramebufferSizeCallback(window, Window::Resize_callback);
 }
 
 void Setup_glew()

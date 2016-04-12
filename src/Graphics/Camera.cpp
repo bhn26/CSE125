@@ -12,7 +12,7 @@
 #include <glm/mat4x4.hpp>
 #include <glm/gtx/transform.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include "Objects/Model.h"
+#include "Model.h"
 
 Camera::Camera()
 {

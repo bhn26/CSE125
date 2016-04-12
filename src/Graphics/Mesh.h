@@ -11,7 +11,7 @@
 #include <assimp/types.h>
 #include <glm/glm.hpp>
 
-#include "../Shader.h"
+#include "Shader.h"
 
 struct Vertex
 {

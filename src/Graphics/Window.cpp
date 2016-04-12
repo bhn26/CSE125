@@ -67,6 +67,7 @@ GLFWwindow* Window::Create_window(int width, int height)
     glfwSwapInterval(1);
 
     // Call the resize callback to make sure things get drawn immediately
+    glfwGetFramebufferSize(window, &width, &height);
     Window::Resize_callback(window, width, height);
 
     return window;
