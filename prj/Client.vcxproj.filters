@@ -19,6 +19,12 @@
     <Filter Include="Source Files\Graphics\Objects">
       <UniqueIdentifier>{9d78fb24-74ca-46ec-887b-e5124dd70425}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Network">
+      <UniqueIdentifier>{67d853c1-4103-4f93-b43e-9980b4a2edb9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Network\Client Specific">
+      <UniqueIdentifier>{8ded81f8-12d7-406f-92a8-f35836ce53c6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\src\Graphics\Shaders\basic_shader.frag">
@@ -36,12 +42,6 @@
     <ClCompile Include="..\src\Graphics\shader.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Graphics\Window.cpp">
-      <Filter>Source Files\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\client_main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\Graphics\Objects\Mesh.cpp">
       <Filter>Source Files\Graphics\Objects</Filter>
     </ClCompile>
@@ -57,16 +57,25 @@
     <ClCompile Include="..\src\Graphics\Scene.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\network\client\ClientNetwork.cpp">
+      <Filter>Source Files\Network\Client Specific</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\network\NetworkServices.cpp">
+      <Filter>Source Files\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\ClientGame.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\Window.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Graphics\Objects\Cube.h">
       <Filter>Source Files\Graphics\Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Graphics\Window.h">
-      <Filter>Source Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\client_main.h">
-      <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Graphics\Objects\Mesh.h">
       <Filter>Source Files\Graphics\Objects</Filter>
@@ -88,6 +97,21 @@
     </ClInclude>
     <ClInclude Include="..\src\Graphics\Scene.h">
       <Filter>Source Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\network\client\ClientNetwork.h">
+      <Filter>Source Files\Network\Client Specific</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\network\NetworkData.h">
+      <Filter>Source Files\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\network\NetworkServices.h">
+      <Filter>Source Files\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\ClientGame.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\Window.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

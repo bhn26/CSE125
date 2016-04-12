@@ -30,6 +30,8 @@
 *.sdf
 *.opendb
 .vs/
+*.opensdf
+*.suo
 
 # Output
 #Output/
@@ -51,6 +53,11 @@ Release/
 Debug/
 
 *.txt
+
+
+#ignore directories
+packages/
+out/
 
 # Ignore NuGet packages
 #*.nupkg

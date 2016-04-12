@@ -161,7 +161,11 @@
     <None Include="..\src\Graphics\Shaders\basic_shader.vert" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\client_main.cpp" />
+    <ClCompile Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\ClientGame.cpp" />
+    <ClCompile Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\main.cpp" />
+    <ClCompile Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\network\client\ClientNetwork.cpp" />
+    <ClCompile Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\network\NetworkServices.cpp" />
+    <ClCompile Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\Window.cpp" />
     <ClCompile Include="..\src\Graphics\Camera.cpp" />
     <ClCompile Include="..\src\Graphics\Scene.cpp" />
     <ClCompile Include="..\src\Graphics\Nodes.cpp" />
@@ -169,10 +173,13 @@
     <ClCompile Include="..\src\Graphics\Objects\Mesh.cpp" />
     <ClCompile Include="..\src\Graphics\Objects\Model.cpp" />
     <ClCompile Include="..\src\Graphics\Shader.cpp" />
-    <ClCompile Include="..\src\Graphics\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\client_main.h" />
+    <ClInclude Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\ClientGame.h" />
+    <ClInclude Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\network\client\ClientNetwork.h" />
+    <ClInclude Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\network\NetworkData.h" />
+    <ClInclude Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\network\NetworkServices.h" />
+    <ClInclude Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\Window.h" />
     <ClInclude Include="..\src\Graphics\Camera.h" />
     <ClInclude Include="..\src\Graphics\Objects\Cube.h" />
     <ClInclude Include="..\src\Graphics\Scene.h" />
@@ -181,7 +188,6 @@
     <ClInclude Include="..\src\Graphics\Objects\Model.h" />
     <ClInclude Include="..\src\Graphics\Objects\Mesh.h" />
     <ClInclude Include="..\src\Graphics\Shader.h" />
-    <ClInclude Include="..\src\Graphics\Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -4,9 +4,9 @@
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include "Objects/Cube.h"
-#include "Shader.h"
-#include "Camera.h"
+#include "Graphics/Objects/Cube.h"
+#include "Graphics/Shader.h"
+#include "Graphics/Camera.h"
 
 const char* window_title = "GLFW Starter Project";
 Cube* cube;
