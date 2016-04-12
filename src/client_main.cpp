@@ -1,5 +1,6 @@
 #include "client_main.h"
 #include "glm/vec3.hpp"
+#include "Graphics/Scene.h"
 
 GLFWwindow* window;
 glm::vec3 lightPos(3.0f, 2.0f, 2.0f);
@@ -17,6 +18,8 @@ void Setup_callbacks()
     glfwSetErrorCallback(Error_callback);
     // Set the key callback
     glfwSetKeyCallback(window, Window::Key_callback);
+
+    glfwSetCursorPosCallback(window, Window::Mouse_callback);
     // Set the window resize callback
     //glfwSetWindowSizeCallback(window, Window::Resize_callback);
     glfwSetFramebufferSizeCallback(window, Window::Resize_callback);
@@ -78,9 +81,24 @@ int main(void)
     // Initialize objects/pointers for rendering
     Window::Initialize_objects();
 
+    Scene::Setup();
+
+    double lastTime = glfwGetTime();
+    int nbFrames = 0;
+
     // Loop while GLFW window should stay open
     while (!glfwWindowShouldClose(window))
     {
+        // Measure speed
+        double currentTime = glfwGetTime();
+        nbFrames++;
+        if (currentTime - lastTime >= 5.0) // If last prinf() was more than 1 sec ago
+        {
+            printf("%f ms/frame\n", 5000.0/double(nbFrames));   // printf and reset timer
+            nbFrames = 0;
+            lastTime += 5.0;
+        }
+
         // Main render display callback. Rendering of objects is done here.
         Window::Display_callback(window);
         // Idle callback. Updating objects, etc. can be done here.

@@ -156,32 +156,32 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="..\..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\CSE125_TempName\Projects\packages.config" />
-    <None Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\prj\packages.config" />
-    <None Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\Projects\packages.config" />
-    <None Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\Graphics\Shaders\basic_shader.frag" />
-    <None Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\Graphics\Shaders\basic_shader.vert" />
+    <None Include="..\prj\packages.config" />
+    <None Include="..\src\Graphics\Shaders\basic_shader.frag" />
+    <None Include="..\src\Graphics\Shaders\basic_shader.vert" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\client_main.cpp" />
-    <ClCompile Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\Graphics\Camera.cpp" />
+    <ClCompile Include="..\src\client_main.cpp" />
+    <ClCompile Include="..\src\Graphics\Camera.cpp" />
+    <ClCompile Include="..\src\Graphics\Scene.cpp" />
     <ClCompile Include="..\src\Graphics\Nodes.cpp" />
-    <ClCompile Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\Graphics\Objects\Cube.cpp" />
-    <ClCompile Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\Graphics\Objects\Mesh.cpp" />
-    <ClCompile Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\Graphics\Objects\Model.cpp" />
-    <ClCompile Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\Graphics\shader.cpp" />
-    <ClCompile Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\Graphics\Window.cpp" />
+    <ClCompile Include="..\src\Graphics\Objects\Cube.cpp" />
+    <ClCompile Include="..\src\Graphics\Objects\Mesh.cpp" />
+    <ClCompile Include="..\src\Graphics\Objects\Model.cpp" />
+    <ClCompile Include="..\src\Graphics\Shader.cpp" />
+    <ClCompile Include="..\src\Graphics\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\client_main.h" />
-    <ClInclude Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\Graphics\Camera.h" />
-    <ClInclude Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\Graphics\Objects\Cube.h" />
-    <ClInclude Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\Graphics\Scenegraph.h" />
+    <ClInclude Include="..\src\client_main.h" />
+    <ClInclude Include="..\src\Graphics\Camera.h" />
+    <ClInclude Include="..\src\Graphics\Objects\Cube.h" />
+    <ClInclude Include="..\src\Graphics\Scene.h" />
+    <ClInclude Include="..\src\Graphics\Scenegraph.h" />
     <ClInclude Include="..\src\Graphics\Nodes.h" />
     <ClInclude Include="..\src\Graphics\Objects\Model.h" />
-    <ClInclude Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\Graphics\Objects\Mesh.h" />
+    <ClInclude Include="..\src\Graphics\Objects\Mesh.h" />
     <ClInclude Include="..\src\Graphics\Shader.h" />
-    <ClInclude Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\Graphics\Window.h" />
+    <ClInclude Include="..\src\Graphics\Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

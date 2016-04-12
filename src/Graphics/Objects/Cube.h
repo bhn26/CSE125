@@ -23,9 +23,9 @@ public:
 
     Shader shader;
 
-    void draw(glm::mat4 C);
-    void update();
-    void spin(float);
+    void Draw(glm::mat4 C);
+    void Update();
+    void Spin(float);
 };
 
 #endif
