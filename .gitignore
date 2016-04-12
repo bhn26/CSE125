@@ -2,7 +2,6 @@
 *.slo
 *.lo
 *.o
-*.obj
 
 # Precompiled Headers
 *.gch
@@ -44,6 +43,15 @@
 *.swp
 *.swo
 
+# Remove directories
+out/
+packages/
+packages.config
+Client/
+Server/
+Release/
+Debug/
+
 *.txt
 
 
@@ -59,3 +67,10 @@ out/
 #!**/packages/build/
 # Uncomment if necessary however generally it will be regenerated when needed
 #!**/packages/repositories.config
+
+# Maya Swatches
+*.swatch
+*.swatches 
+
+#xcode (ignore until xcode works)
+#*.xcodeproj*
