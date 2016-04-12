@@ -19,7 +19,7 @@ public:
     /*  Functions   */
     // Constructor, expects a filepath to a 3D model.
     // "assets/model
-    Model(GLchar* path)
+    Model(const GLchar* path)
     {
         this->LoadModel(path);
     }

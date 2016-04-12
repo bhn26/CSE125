@@ -10,6 +10,7 @@
 #define Chicken_h
 
 #include <stdio.h>
+#include <string>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <glm/mat4x4.hpp> // glm::mat4
@@ -23,7 +24,10 @@ public:
     Chicken();
     ~Chicken();
     
-    Model model;
+    Shader shader;
+    Model * model;
+    
+    void Draw(glm::mat4 C);
 };
 
 #endif /* Chicken_h */

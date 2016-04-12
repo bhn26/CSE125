@@ -6,6 +6,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <iostream>
-#include "Graphics/Window.h"
+#include "Window.h"
 
 #endif

@@ -5,11 +5,13 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include "Graphics/Objects/Cube.h"
+#include "Graphics/Objects/Chicken.h"
 #include "Graphics/Shader.h"
 #include "Graphics/Camera.h"
 
 const char* window_title = "GLFW Starter Project";
 Cube* cube;
+Chicken * chicken;
 Camera* camera;
 //GLint shaderProgram;
 
@@ -22,11 +24,14 @@ void Window::Initialize_objects()
     camera = new Camera(glm::vec3(0.0f, 0.0f, 3.0f));
     cube->shader.SetShaders("src/Graphics/Shaders/basic_shader.vert", "src/Graphics/Shaders/basic_shader.frag");
     //shaderProgram = LoadShaders("src/Graphics/Shaders/basic_shader.vert", "src/Graphics/Shaders/basic_shader.frag");
+    
+    chicken = new Chicken();
 }
 
 void Window::Clean_up()
 {
     delete(cube);
+    delete(chicken);
     //glDeleteProgram(shaderProgram);
 }
 
@@ -99,6 +104,7 @@ void Window::Display_callback(GLFWwindow* window)
 
     // Render the object drawPtr is pointing to
     cube->Draw(camera->GetViewMatrix());
+    chicken->Draw(camera->GetViewMatrix());
 
     // Gets events, including input such as keyboard and mouse or window resizing
     glfwPollEvents();
