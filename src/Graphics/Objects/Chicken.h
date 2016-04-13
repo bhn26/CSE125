@@ -13,11 +13,19 @@
 #include <string>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+
+// GLM Mathemtics
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 #include <glm/mat4x4.hpp> // glm::mat4
 #include <glm/mat3x3.hpp> // glm::mat3
 #include <glm/vec3.hpp>
 
+#include "../../Window.h"
 #include "../Model.h"
+#include "../Camera.h"
 
 class Chicken {
 public:
@@ -26,8 +34,14 @@ public:
     
     Shader shader;
     Model * model;
+
+    glm::mat4 toWorld;
+    glm::mat3 normalMatrix;
+    float angle;
     
-    void Draw(glm::mat4 C);
+    void Draw(Camera * camera);
+    void Update();
+    void Spin(float deg);
 };
 
 #endif /* Chicken_h */

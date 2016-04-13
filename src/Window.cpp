@@ -4,13 +4,12 @@
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include "Graphics/Objects/Cube.h"
 #include "Graphics/Objects/Chicken.h"
 #include "Graphics/Shader.h"
 #include "Graphics/Camera.h"
 
-const char* window_title = "GLFW Starter Project";
-Cube* cube;
+const char* window_title = "Egg Scramble!";
+
 Chicken * chicken;
 Camera* camera;
 //GLint shaderProgram;
@@ -20,17 +19,13 @@ int Window::height;
 
 void Window::Initialize_objects()
 {
-    cube = new Cube();
     camera = new Camera(glm::vec3(0.0f, 0.0f, 3.0f));
-    cube->shader.SetShaders("src/Graphics/Shaders/basic_shader.vert", "src/Graphics/Shaders/basic_shader.frag");
-    //shaderProgram = LoadShaders("src/Graphics/Shaders/basic_shader.vert", "src/Graphics/Shaders/basic_shader.frag");
     
     chicken = new Chicken();
 }
 
 void Window::Clean_up()
 {
-    delete(cube);
     delete(chicken);
     //glDeleteProgram(shaderProgram);
 }
@@ -91,7 +86,7 @@ void Window::Idle_callback()
     // Call the update function of the current object drawPtr is pointing to
     // In this instance, drawPtr is pointing to a Cube object and is therefore
     // causing the cube to rotate via its spin function.
-    cube->Update();
+    chicken->Update();
 }
 
 void Window::Display_callback(GLFWwindow* window)
@@ -103,8 +98,7 @@ void Window::Display_callback(GLFWwindow* window)
     //glUseProgram(shaderProgram);
 
     // Render the object drawPtr is pointing to
-    cube->Draw(camera->GetViewMatrix());
-    chicken->Draw(camera->GetViewMatrix());
+    chicken->Draw(camera);
 
     // Gets events, including input such as keyboard and mouse or window resizing
     glfwPollEvents();

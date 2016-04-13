@@ -64,6 +64,7 @@ public:
     void ProcessMouseScroll(GLfloat yoffset);
 
     glm::vec3 Position() { return this->position; }
+    GLfloat Zoom() { return this->zoom; }
 
 
 private:

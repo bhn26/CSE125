@@ -46,8 +46,6 @@
 		CD214BD81CB7027C00D7DFD6 /* Cube.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Cube.cpp; sourceTree = "<group>"; };
 		CD214BD91CB7027C00D7DFD6 /* Cube.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Cube.h; sourceTree = "<group>"; };
 		CD214BDA1CB7027C00D7DFD6 /* Shader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Shader.cpp; sourceTree = "<group>"; };
-		CD214BDD1CB7027C00D7DFD6 /* basic_shader.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = basic_shader.frag; sourceTree = "<group>"; };
-		CD214BDE1CB7027C00D7DFD6 /* basic_shader.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = basic_shader.vert; sourceTree = "<group>"; };
 		CD429FCD1CBC821F001BCE47 /* Scene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Scene.cpp; sourceTree = "<group>"; };
 		CD429FCE1CBC821F001BCE47 /* Scene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Scene.h; sourceTree = "<group>"; };
 		CD95AD141CBC890000BFC772 /* Window.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Window.cpp; sourceTree = "<group>"; };
@@ -126,7 +124,6 @@
 			isa = PBXGroup;
 			children = (
 				CD214BD71CB7027C00D7DFD6 /* Objects */,
-				CD214BDC1CB7027C00D7DFD6 /* Shaders */,
 				CD214BDA1CB7027C00D7DFD6 /* Shader.cpp */,
 				CD9C3C481CBA1EC000F627D8 /* Shader.h */,
 				CD9C3C411CBA1E9500F627D8 /* Camera.cpp */,
@@ -153,15 +150,6 @@
 				CD9C3C521CBC67CE00F627D8 /* Chicken.h */,
 			);
 			path = Objects;
-			sourceTree = "<group>";
-		};
-		CD214BDC1CB7027C00D7DFD6 /* Shaders */ = {
-			isa = PBXGroup;
-			children = (
-				CD214BDD1CB7027C00D7DFD6 /* basic_shader.frag */,
-				CD214BDE1CB7027C00D7DFD6 /* basic_shader.vert */,
-			);
-			path = Shaders;
 			sourceTree = "<group>";
 		};
 		CD9C3C401CBA1BE700F627D8 /* Frameworks */ = {
