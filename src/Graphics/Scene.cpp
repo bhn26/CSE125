@@ -27,10 +27,10 @@ void Scene::Dealloc()
 {
 }
 
-void Scene::Update()
+void Scene::Update(bool rotX, bool rotY, bool rotZ)
 {
     cube->Update();
-    chicken->Update();
+    chicken->Update(rotX, rotY, rotZ);
 }
 
 void Scene::Draw()

@@ -20,6 +20,13 @@ bool Window::firstMouse = true;
 GLuint Window::lastX = width / 2;
 GLuint Window::lastY = height / 2;
 
+float shiftVal = 0.5;
+float scaleVal = 0.9;
+float orbitAngle = 10;
+bool rotX = false;
+bool rotY = true;
+bool rotZ = false;
+
 void Window::Initialize_objects()
 {
     //chicken = new Chicken();
@@ -88,7 +95,7 @@ void Window::Idle_callback()
     // In this instance, drawPtr is pointing to a Cube object and is therefore
     // causing the cube to rotate via its spin function.
     //chicken->Update();
-    Scene::Update();
+    Scene::Update(rotX, rotY, rotZ);
 }
 
 void Window::Display_callback(GLFWwindow* window)
@@ -121,23 +128,47 @@ void Window::Key_callback(GLFWwindow* window, int key, int scancode, int action,
                 // Close the window. This causes the program to also terminate.
                 glfwSetWindowShouldClose(window, GL_TRUE);
                 break;
-
-            case GLFW_KEY_W:
-                Scene::camera->ProcessKeyboard(Camera_Movement::FORWARD, 1);
+            case GLFW_KEY_F1:
+                rotX = !rotX;
                 break;
-            case GLFW_KEY_A:
-                Scene::camera->ProcessKeyboard(Camera_Movement::LEFT, 1);
+            case GLFW_KEY_F2:
+                rotY = !rotY;
                 break;
-            case GLFW_KEY_S:
-                Scene::camera->ProcessKeyboard(Camera_Movement::BACKWARD, 1);
+            case GLFW_KEY_F3:
+                rotZ = !rotZ;
                 break;
-            case GLFW_KEY_D:
-                Scene::camera->ProcessKeyboard(Camera_Movement::RIGHT, 1);
+            case GLFW_KEY_X:
+                if (mods == GLFW_MOD_SHIFT) Scene::chicken->ShiftX(0.5);
+                else Scene::chicken->ShiftX(-0.5);
                 break;
-            case GLFW_KEY_SPACE:
-                Scene::camera->ProcessKeyboard(Camera_Movement::UP, 1);
+            case GLFW_KEY_Y:
+                if (mods == GLFW_MOD_SHIFT) Scene::chicken->ShiftY(shiftVal);
+                else Scene::chicken->ShiftY(-shiftVal);
                 break;
             case GLFW_KEY_Z:
+                if (mods == GLFW_MOD_SHIFT) Scene::chicken->ShiftZ(shiftVal);
+                else Scene::chicken->ShiftZ(-shiftVal);
+                break;
+            case GLFW_KEY_S:
+                if (mods == GLFW_MOD_SHIFT) Scene::chicken->Scale(1/scaleVal);
+                else Scene::chicken->Scale(scaleVal);
+                break;
+            case GLFW_KEY_F:
+                Scene::camera->ProcessKeyboard(Camera_Movement::FORWARD, 1);
+                break;
+            case GLFW_KEY_RIGHT:
+                Scene::camera->ProcessKeyboard(Camera_Movement::LEFT, 1);
+                break;
+            case GLFW_KEY_B:
+                Scene::camera->ProcessKeyboard(Camera_Movement::BACKWARD, 1);
+                break;
+            case GLFW_KEY_LEFT:
+                Scene::camera->ProcessKeyboard(Camera_Movement::RIGHT, 1);
+                break;
+            case GLFW_KEY_DOWN:
+                Scene::camera->ProcessKeyboard(Camera_Movement::UP, 1);
+                break;
+            case GLFW_KEY_UP:
                 Scene::camera->ProcessKeyboard(Camera_Movement::DOWN, 1);
                 break;
             default:
