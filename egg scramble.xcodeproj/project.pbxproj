@@ -56,7 +56,6 @@
 		CD9C3C421CBA1E9500F627D8 /* Camera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Camera.h; path = src/Graphics/Camera.h; sourceTree = SOURCE_ROOT; };
 		CD9C3C431CBA1E9500F627D8 /* Nodes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Nodes.cpp; path = src/Graphics/Nodes.cpp; sourceTree = SOURCE_ROOT; };
 		CD9C3C441CBA1E9500F627D8 /* Nodes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Nodes.h; path = src/Graphics/Nodes.h; sourceTree = SOURCE_ROOT; };
-		CD9C3C471CBA1EAC00F627D8 /* Scenegraph.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Scenegraph.h; path = src/Graphics/Scenegraph.h; sourceTree = SOURCE_ROOT; };
 		CD9C3C481CBA1EC000F627D8 /* Shader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Shader.h; sourceTree = "<group>"; };
 		CD9C3C491CBA1F3900F627D8 /* libassimp.3.2.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libassimp.3.2.0.dylib; path = ../../../../usr/local/Cellar/assimp/3.2/lib/libassimp.3.2.0.dylib; sourceTree = "<group>"; };
 		CD9C3C4B1CBC670F00F627D8 /* Mesh.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Mesh.cpp; sourceTree = "<group>"; };
@@ -132,7 +131,6 @@
 				CD9C3C441CBA1E9500F627D8 /* Nodes.h */,
 				CD429FCD1CBC821F001BCE47 /* Scene.cpp */,
 				CD429FCE1CBC821F001BCE47 /* Scene.h */,
-				CD9C3C471CBA1EAC00F627D8 /* Scenegraph.h */,
 				CD9C3C4B1CBC670F00F627D8 /* Mesh.cpp */,
 				CD9C3C4C1CBC670F00F627D8 /* Mesh.h */,
 				CD9C3C4D1CBC670F00F627D8 /* Model.cpp */,

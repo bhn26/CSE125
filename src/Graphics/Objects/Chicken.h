@@ -27,7 +27,9 @@
 #include "../Model.h"
 #include "../Camera.h"
 
-class Chicken {
+#include "Entity.h"
+
+class Chicken : public Entity {
 public:
     Chicken();
     ~Chicken();
