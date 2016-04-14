@@ -149,17 +149,24 @@ void Window::Key_callback(GLFWwindow* window, int key, int scancode, int action,
 
 void Window::Mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
-    if (firstMouse)
+    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_1) == 1)
     {
-        lastX = (GLuint) xpos;
-        lastY = (GLuint) ypos;
-        firstMouse = false;
-    }
+        if (firstMouse)
+        {
+            lastX = (GLuint) xpos;
+            lastY = (GLuint) ypos;
+            firstMouse = false;
+        }
 
-    GLfloat xoffset = (GLfloat) (xpos - lastX);
-    GLfloat yoffset = (GLfloat) (lastY - ypos);
-    lastX = (GLuint)xpos;
-    lastY = (GLuint)ypos;
-    Scene::camera->ProcessMouseMovement(xoffset, yoffset);
+        GLfloat xoffset = (GLfloat) (xpos - lastX);
+        GLfloat yoffset = (GLfloat) (lastY - ypos);
+        lastX = (GLuint)xpos;
+        lastY = (GLuint)ypos;
+        Scene::camera->ProcessMouseMovement(xoffset, yoffset);
+    }
+    else
+    {
+        firstMouse = true;
+    }
 }
 
