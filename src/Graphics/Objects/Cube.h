@@ -3,9 +3,8 @@
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include <glm/mat4x4.hpp> // glm::mat4
-#include <glm/mat3x3.hpp> // glm::mat3
-#include <glm/vec3.hpp>
+#include <glm/glm.hpp> // glm::mat4
+#include <memory>
 
 #include "../Shader.h"
 
@@ -21,7 +20,7 @@ public:
     GLuint VBO, VAO, EBO;
     float angle;
 
-    Shader shader;
+    std::shared_ptr<Shader> shader;
 
     void Draw(glm::mat4 C);
     void Update();

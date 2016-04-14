@@ -16,8 +16,8 @@ Chicken::Chicken()
     this->angle = 0.0f;
   
     model = new Model("assets/chickens/objects/chicken.obj");
-    shader.SetShaders("src/Graphics/Shaders/model_loading.vert",
-                      "src/Graphics/Shaders/model_loading.frag");
+    //shader.SetShaders("src/Graphics/Shaders/model_loading.vert",
+    //                  "src/Graphics/Shaders/model_loading.frag");
 }
 
 Chicken::~Chicken()
@@ -27,19 +27,18 @@ Chicken::~Chicken()
 
 void Chicken::Draw(Camera* camera)
 {
-    shader.Use();
-    glm::mat4 projection = glm::perspective(camera->Zoom(), (float)Window::width/(float)Window::height, 0.1f, 100.0f);
+    shader->Use();
+    glm::mat4 projection = glm::perspective(camera->Zoom(), (float)Window::width/(float)Window::height, 0.1f, 1000.0f);
     glm::mat4 view = camera->GetViewMatrix();
     
     // Draw the loaded model
-    
-    GLint viewLoc = shader.GetUniform("view");
-    GLint modelLocation = shader.GetUniform("model");
-    GLint normalMatrixLoc = shader.GetUniform("normalMatrix");
-    GLint projectionLocation = shader.GetUniform("projection");
-    GLint lightColorLoc = shader.GetUniform("lightColor");
-    GLint lightPosLoc = shader.GetUniform("lightPos");
-    GLint viewPosLoc = shader.GetUniform("viewPos");
+    GLint viewLoc = shader->GetUniform("view");
+    GLint modelLocation = shader->GetUniform("model");
+    GLint normalMatrixLoc = shader->GetUniform("normalMatrix");
+    GLint projectionLocation = shader->GetUniform("projection");
+    GLint lightColorLoc = shader->GetUniform("lightColor");
+    GLint lightPosLoc = shader->GetUniform("lightPos");
+    GLint viewPosLoc = shader->GetUniform("viewPos");
     
     glUniformMatrix4fv(viewLoc, 1, false, glm::value_ptr(view));
     glUniformMatrix4fv(modelLocation, 1, false, glm::value_ptr(this->toWorld));
@@ -49,8 +48,8 @@ void Chicken::Draw(Camera* camera)
     glUniform3fv(lightColorLoc, 1, glm::value_ptr(Scene::pLight->color));
     glUniform3fv(lightPosLoc, 1, glm::value_ptr(Scene::pLight->position));
     glUniform3fv(viewPosLoc, 1, glm::value_ptr(Scene::camera->Position()));
-    
-    model->Draw(shader);
+
+    model->Draw(shader.get());
 }
 
 void Chicken::Update()

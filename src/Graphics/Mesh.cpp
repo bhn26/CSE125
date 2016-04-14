@@ -18,9 +18,9 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices, std::vecto
     this->SetupMesh();
 }
 
-void Mesh::Draw(Shader shader)
+void Mesh::Draw(const Shader* shader)
 {
-    shader.Use(); 
+    shader->Use(); 
 
     // Bind appropriate textures
     GLuint diffuseNr = 1;
@@ -40,13 +40,13 @@ void Mesh::Draw(Shader shader)
             ss << specularNr++; // Transfer GLuint to stream
         number = ss.str();
         // Now set the sampler to the correct texture unit
-        glUniform1i(shader.GetUniform((name + number).c_str()), i);
+        glUniform1i(shader->GetUniform((name + number).c_str()), i);
         // And finally bind the texture
         glBindTexture(GL_TEXTURE_2D, this->textures[i].id);
     }
 
     // Also set each mesh's shininess property to a default value (if you want you could extend this to another mesh property and possibly change this value)
-    glUniform1f(shader.GetUniform("material.shininess"), 16.0f);
+    glUniform1f(shader->GetUniform("material.shininess"), 16.0f);
 
     // Draw mesh
     glBindVertexArray(this->VAO);

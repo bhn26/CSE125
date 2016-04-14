@@ -17,7 +17,7 @@ uniform vec3 viewPos;
 void main()
 {    
     color = vec4(texture(texture_diffuse1, TexCoords));
-
+     
     float ambientStrength = 0.1f;
     float specularStrength = 0.5f;
 
@@ -38,6 +38,6 @@ void main()
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), 1);
     vec3 specular = specularStrength * spec * lightColor;  
 
-    //vec3 result = (ambient + diffuse + specular) * objectColor;
+    vec3 result = (ambient + diffuse + specular) * objectColor;
     //color = vec4(result, 1.0f);
 }

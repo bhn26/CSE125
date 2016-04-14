@@ -2,6 +2,7 @@
 
 #include "Objects/Cube.h"
 #include "Objects/Chicken.h"
+#include "Objects/Ground.h"
 #include "Camera.h"
 #include "PointLight.h"
 
@@ -11,16 +12,22 @@ std::unique_ptr<Cube> Scene::cube;
 std::unique_ptr<Camera> Scene::camera;
 std::unique_ptr<Chicken> Scene::chicken;
 std::unique_ptr<PointLight> Scene::pLight;
+std::unique_ptr<Ground> Scene::ground;
 
 void Scene::Setup()
 {
-    camera = std::unique_ptr<Camera>(new Camera(glm::vec3(0.0f, 0.0f, 3.0f)));
-    pLight = std::unique_ptr<PointLight>(new PointLight(glm::vec3(3.0f, 2.0f, 2.0f), glm::vec3(1.0f, 1.0f, 1.0f)));
+    std::shared_ptr<Shader> basicShader = std::make_shared<Shader>("src/Graphics/Shaders/basic_shader.vert", "src/Graphics/Shaders/basic_shader.frag");
+    std::shared_ptr<Shader> modelShader = std::make_shared<Shader>("src/Graphics/Shaders/model_loading.vert", "src/Graphics/Shaders/model_loading.frag");
 
-    cube = std::unique_ptr<Cube>(new Cube);
-    cube->shader.SetShaders("src/Graphics/Shaders/basic_shader.vert",
-                            "src/Graphics/Shaders/basic_shader.frag");
+    camera = std::make_unique<Camera>(glm::vec3(0.0f, 4.0f, 4.0f));
+    pLight = std::make_unique<PointLight>(glm::vec3(3.0f, 2.0f, 2.0f), glm::vec3(1.0f, 1.0f, 1.0f));
     chicken = std::unique_ptr<Chicken>(new Chicken);
+    ground = std::unique_ptr<Ground>(new Ground);
+
+    cube = std::make_unique<Cube>();
+    cube->shader = basicShader;
+    ground->shader = basicShader;
+    chicken->shader = modelShader;
 }
 
 void Scene::Dealloc()
@@ -36,4 +43,6 @@ void Scene::Update()
 void Scene::Draw()
 {
     chicken->Draw(camera.get());
+    ground->Draw(camera->GetViewMatrix());
+    //cube->Draw(camera->GetViewMatrix());
 }

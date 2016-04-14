@@ -56,6 +56,8 @@ GLfloat vertices[] =
 
 Cube::Cube() : angle(0.0f), toWorld(glm::mat4(1.0f)), color(glm::vec3(1.0f, 0.2f, 0.1f))
 {
+    this->normalMatrix = glm::mat3(glm::transpose(glm::inverse(toWorld)));
+
     // Create buffers/arrays
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
@@ -88,7 +90,7 @@ void Cube::Draw(glm::mat4 C)
 {
     shader.Use();
 
-    glm::mat4 projection = glm::perspective((GLfloat)45.0f, (GLfloat)Window::width / (GLfloat)Window::height, 0.1f, 100.0f);
+    glm::mat4 projection = glm::perspective((GLfloat)45.0f, (GLfloat)Window::width / (GLfloat)Window::height, 0.1f, 1000.0f);
 
     GLint viewLoc = shader.GetUniform("view");
     GLint modelLocation = shader.GetUniform("model2world");
@@ -112,8 +114,6 @@ void Cube::Draw(glm::mat4 C)
     glBindVertexArray(VAO);
     glDrawArrays(GL_TRIANGLES, 0, 36);
     glBindVertexArray(0);
-
-    shader.Unuse();
 }
 
 void Cube::Update()
