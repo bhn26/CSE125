@@ -5,6 +5,8 @@
 // Group: can have children
 // MatrixTransform: specific type of group that transforms the children by a matrix
 // Geode: a type of node that should be derived from to draw objects
+//
+// May not use
 
 #include <glm/glm.hpp>
 #include <list>

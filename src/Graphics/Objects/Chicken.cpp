@@ -7,11 +7,11 @@
 //
 
 #include "Chicken.h"
+#include "../Scene.h"
+#include "../PointLight.h"
 
-extern glm::vec3 lightPos;
-extern glm::vec3 lightColor;
-
-Chicken::Chicken() {
+Chicken::Chicken()
+{
     this->toWorld = glm::mat4(1.0f);
     this->angle = 0.0f;
   
@@ -20,11 +20,13 @@ Chicken::Chicken() {
                       "src/Graphics/Shaders/model_loading.frag");
 }
 
-Chicken::~Chicken() {
+Chicken::~Chicken()
+{
     delete(model);
 }
 
-void Chicken::Draw(Camera * camera) {
+void Chicken::Draw(Camera* camera)
+{
     shader.Use();
     glm::mat4 projection = glm::perspective(camera->Zoom(), (float)Window::width/(float)Window::height, 0.1f, 100.0f);
     glm::mat4 view = camera->GetViewMatrix();
@@ -44,9 +46,9 @@ void Chicken::Draw(Camera * camera) {
     glUniformMatrix3fv(normalMatrixLoc, 1, false, glm::value_ptr(this->normalMatrix));
     glUniformMatrix4fv(projectionLocation, 1, false, glm::value_ptr(projection));
     
-    glUniform3fv(lightColorLoc, 1, glm::value_ptr(lightColor));
-    glUniform3fv(lightPosLoc, 1, glm::value_ptr(lightPos));
-    glUniform3fv(viewPosLoc, 1, glm::value_ptr(camera->Position()));
+    glUniform3fv(lightColorLoc, 1, glm::value_ptr(Scene::pLight->color));
+    glUniform3fv(lightPosLoc, 1, glm::value_ptr(Scene::pLight->position));
+    glUniform3fv(viewPosLoc, 1, glm::value_ptr(Scene::camera->Position()));
     
     model->Draw(shader);
 }

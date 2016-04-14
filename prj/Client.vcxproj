@@ -156,37 +156,42 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="..\src\Graphics\Shaders\model_loading.frag" />
+    <None Include="..\src\Graphics\Shaders\model_loading.vert" />
     <None Include="..\prj\packages.config" />
     <None Include="..\src\Graphics\Shaders\basic_shader.frag" />
     <None Include="..\src\Graphics\Shaders\basic_shader.vert" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\ClientGame.cpp" />
-    <ClCompile Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\main.cpp" />
-    <ClCompile Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\network\client\ClientNetwork.cpp" />
-    <ClCompile Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\network\NetworkServices.cpp" />
-    <ClCompile Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\Window.cpp" />
+    <ClCompile Include="..\src\ClientGame.cpp" />
+    <ClCompile Include="..\src\Graphics\Mesh.cpp" />
+    <ClCompile Include="..\src\Graphics\Model.cpp" />
+    <ClCompile Include="..\src\Graphics\Objects\Chicken.cpp" />
+    <ClCompile Include="..\src\main.cpp" />
+    <ClCompile Include="..\src\network\client\ClientNetwork.cpp" />
+    <ClCompile Include="..\src\network\NetworkServices.cpp" />
+    <ClCompile Include="..\src\Window.cpp" />
     <ClCompile Include="..\src\Graphics\Camera.cpp" />
     <ClCompile Include="..\src\Graphics\Scene.cpp" />
     <ClCompile Include="..\src\Graphics\Nodes.cpp" />
     <ClCompile Include="..\src\Graphics\Objects\Cube.cpp" />
-    <ClCompile Include="..\src\Graphics\Objects\Mesh.cpp" />
-    <ClCompile Include="..\src\Graphics\Objects\Model.cpp" />
     <ClCompile Include="..\src\Graphics\Shader.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\ClientGame.h" />
-    <ClInclude Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\network\client\ClientNetwork.h" />
-    <ClInclude Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\network\NetworkData.h" />
-    <ClInclude Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\network\NetworkServices.h" />
-    <ClInclude Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\Window.h" />
+    <ClInclude Include="..\src\ClientGame.h" />
+    <ClInclude Include="..\src\Graphics\Mesh.h" />
+    <ClInclude Include="..\src\Graphics\Model.h" />
+    <ClInclude Include="..\src\Graphics\Objects\Chicken.h" />
+    <ClInclude Include="..\src\Graphics\PointLight.h" />
+    <ClInclude Include="..\src\network\client\ClientNetwork.h" />
+    <ClInclude Include="..\src\network\NetworkData.h" />
+    <ClInclude Include="..\src\network\NetworkServices.h" />
+    <ClInclude Include="..\src\Window.h" />
     <ClInclude Include="..\src\Graphics\Camera.h" />
     <ClInclude Include="..\src\Graphics\Objects\Cube.h" />
     <ClInclude Include="..\src\Graphics\Scene.h" />
     <ClInclude Include="..\src\Graphics\Scenegraph.h" />
     <ClInclude Include="..\src\Graphics\Nodes.h" />
-    <ClInclude Include="..\src\Graphics\Objects\Model.h" />
-    <ClInclude Include="..\src\Graphics\Objects\Mesh.h" />
     <ClInclude Include="..\src\Graphics\Shader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

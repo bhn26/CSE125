@@ -21,6 +21,7 @@ public:
 
     bool SetShaders(const char* vertex_file_path, const char* fragment_file_path);
     void Use() { glUseProgram(this->program); }
+    void Unuse() { glUseProgram(0); }   // Not working, not sure why. Don't use
     GLint GetUniform(const char* var) { return glGetUniformLocation(this->program, var); }
 };
 

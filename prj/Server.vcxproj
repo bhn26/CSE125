@@ -150,16 +150,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\network\NetworkData.h" />
-    <ClInclude Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\network\NetworkServices.h" />
-    <ClInclude Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\network\server\ServerGame.h" />
-    <ClInclude Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\network\server\ServerNetwork.h" />
+    <ClInclude Include="..\src\network\NetworkData.h" />
+    <ClInclude Include="..\src\network\NetworkServices.h" />
+    <ClInclude Include="..\src\network\server\ServerGame.h" />
+    <ClInclude Include="..\src\network\server\ServerNetwork.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\network\NetworkServices.cpp" />
-    <ClCompile Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\network\server\main.cpp" />
-    <ClCompile Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\network\server\ServerGame.cpp" />
-    <ClCompile Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\network\server\ServerNetwork.cpp" />
+    <ClCompile Include="..\src\network\NetworkServices.cpp" />
+    <ClCompile Include="..\src\network\server\main.cpp" />
+    <ClCompile Include="..\src\network\server\ServerGame.cpp" />
+    <ClCompile Include="..\src\network\server\ServerNetwork.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

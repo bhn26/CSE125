@@ -12,13 +12,13 @@ class Window;
 class ClientGame
 {
 public:
-	ClientGame(void);
-	~ClientGame(void);
+    ClientGame(void);
+    ~ClientGame(void);
 
-	ClientNetwork* network;
+    ClientNetwork* network;
     GLFWwindow* window;
 
-	void sendActionPackets();
+    void sendActionPackets();
 
     char network_data[MAX_PACKET_SIZE];
 

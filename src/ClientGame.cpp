@@ -9,9 +9,6 @@
 #include "Window.h"
 #include "Graphics/Scene.h"
 
-glm::vec3 lightPos(3.0f, 2.0f, 2.0f);
-glm::vec3 lightColor(1.0f, 1.0f, 1.0f);
-
 ClientGame::ClientGame(void)
 {
     network = new ClientNetwork();
@@ -57,8 +54,7 @@ void ClientGame::update()
 
     if (data_length <= 0) 
     {
-        //no data recieved
-        return;
+        return;     //no data recieved
     }
 
     int i = 0;
@@ -67,20 +63,14 @@ void ClientGame::update()
         packet.deserialize(&(network_data[i]));
         i += sizeof(Packet);
 
-        switch (packet.packet_type) {
-
+        switch (packet.packet_type)
+        {
             case ACTION_EVENT:
-
                 printf("client received action event packet from server\n");
-
                 sendActionPackets();
-
                 break;
-
             default:
-
                 printf("error in packet types\n");
-
                 break;
         }
     }

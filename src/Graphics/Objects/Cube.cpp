@@ -1,27 +1,13 @@
 #include "Cube.h"
 #include "../../Window.h"
 #include "../Camera.h"
+#include "../PointLight.h"
 
 #include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale, glm::perspective
 #include <glm/gtc/type_ptr.hpp>
 #include <utility>
 
-extern glm::vec3 lightPos;
-extern glm::vec3 lightColor;
-
-//GLfloat vertices[] = 
-//{
-//    // front
-//    -0.5, -0.5,  0.5, -1.0f, -1.0f, 1.0f,
-//    0.5, -0.5,  0.5, 1.0f, -1.0f, 1.0f,
-//    0.5,  0.5,  0.5, 1.0f, 1.0f, 1.0f,
-//    -0.5,  0.5,  0.5, -1.0f, 1.0f, 1.0f,
-//    // back
-//    -0.5, -0.5, -0.5, -1.0f, -1.0f, -1.0f,
-//    0.5, -0.5, -0.5, 1.0f, -1.0f, -1.0f,
-//    0.5,  0.5, -0.5, 1.0f, 1.0f, -1.0f,
-//    -0.5,  0.5, -0.5, -1.0f, 1.0f, -1.0f
-//};
+#include "../Scene.h"
 
 GLfloat vertices[] =
 {
@@ -68,35 +54,8 @@ GLfloat vertices[] =
     -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
 };
 
-GLuint indices[] =  // Note that we start from 0!
+Cube::Cube() : angle(0.0f), toWorld(glm::mat4(1.0f)), color(glm::vec3(1.0f, 0.2f, 0.1f))
 {
-    // front
-    0, 1, 2,
-    2, 3, 0,
-    // top
-    1, 5, 6,
-    6, 2, 1,
-    // back
-    7, 6, 5,
-    5, 4, 7,
-    // bottom
-    4, 0, 3,
-    3, 7, 4,
-    // left
-    4, 5, 1,
-    1, 0, 4,
-    // right
-    3, 2, 6,
-    6, 7, 3
-};
-
-Cube::Cube()
-{
-    this->toWorld = glm::mat4(1.0f);
-    this->color = glm::vec3(1.0f, 0.2f, 0.1f);
-
-    this->angle = 0.0f;
-
     // Create buffers/arrays
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
@@ -107,9 +66,6 @@ Cube::Cube()
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    //glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
     glEnableVertexAttribArray(0);
@@ -126,7 +82,6 @@ Cube::~Cube()
     // Properly de-allocate all resources once they've outlived their purpose
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
-    //glDeleteBuffers(1, &EBO);
 }
 
 void Cube::Draw(glm::mat4 C)
@@ -150,14 +105,15 @@ void Cube::Draw(glm::mat4 C)
     glUniformMatrix4fv(projectionLocation, 1, false, glm::value_ptr(projection));
 
     glUniform3fv(objectColorLoc, 1, glm::value_ptr(this->color));
-    glUniform3fv(lightColorLoc, 1, glm::value_ptr(lightColor));
-    glUniform3fv(lightPosLoc, 1, glm::value_ptr(lightPos));
-    glUniform3fv(viewPosLoc, 1, glm::value_ptr(camera->Position()));
+    glUniform3fv(lightColorLoc, 1, glm::value_ptr(Scene::pLight->color));
+    glUniform3fv(lightPosLoc, 1, glm::value_ptr(Scene::pLight->position));
+    glUniform3fv(viewPosLoc, 1, glm::value_ptr(Scene::camera->Position()));
 
     glBindVertexArray(VAO);
-    //glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
     glDrawArrays(GL_TRIANGLES, 0, 36);
     glBindVertexArray(0);
+
+    shader.Unuse();
 }
 
 void Cube::Update()
