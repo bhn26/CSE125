@@ -156,6 +156,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="..\src\Graphics\Shaders\diffuse.frag" />
     <None Include="..\src\Graphics\Shaders\model_loading.frag" />
     <None Include="..\src\Graphics\Shaders\model_loading.vert" />
     <None Include="..\prj\packages.config" />
@@ -163,7 +164,7 @@
     <None Include="..\src\Graphics\Shaders\basic_shader.vert" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\Graphics\Objects\Ground.cpp" />
+    <ClCompile Include="..\src\Graphics\Objects\Ground.cpp" />
     <ClCompile Include="..\src\ClientGame.cpp" />
     <ClCompile Include="..\src\Graphics\Mesh.cpp" />
     <ClCompile Include="..\src\Graphics\Model.cpp" />
@@ -179,7 +180,7 @@
     <ClCompile Include="..\src\Graphics\Shader.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\Graphics\Objects\Ground.h" />
+    <ClInclude Include="..\src\Graphics\Objects\Ground.h" />
     <ClInclude Include="..\src\ClientGame.h" />
     <ClInclude Include="..\src\Graphics\Mesh.h" />
     <ClInclude Include="..\src\Graphics\Model.h" />

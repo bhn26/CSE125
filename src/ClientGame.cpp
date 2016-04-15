@@ -66,7 +66,7 @@ void ClientGame::update()
         switch (packet.packet_type)
         {
             case ACTION_EVENT:
-                printf("client received action event packet from server\n");
+                //printf("client received action event packet from server\n");
                 sendActionPackets();
                 break;
             default:
