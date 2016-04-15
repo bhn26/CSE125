@@ -18,6 +18,6 @@ namespace Scene
     void Setup();
     void Dealloc();
 
-    void Update();
+    void Update(bool rotX, bool rotY, bool rotZ);
     void Draw();
 }

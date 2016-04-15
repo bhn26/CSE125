@@ -27,9 +27,9 @@
 #include "../../Window.h"
 #include "../Model.h"
 #include "../Camera.h"
+#include "Entity.h"
 
-class Chicken
-{
+class Chicken : public Entity {
 public:
     Chicken();
     ~Chicken();
@@ -42,8 +42,16 @@ public:
     float angle;
     
     void Draw(Camera * camera);
-    void Update();
-    void Spin(float deg);
+    void Update(bool rotX, bool rotY, bool rotZ);
+    void SpinX(float deg);
+    void SpinY(float deg);
+    void SpinZ(float deg);
+    void ShiftX(float dist);
+    void ShiftY(float dist);
+    void ShiftZ(float dist);
+    void Scale(float scale);
+    void Orbit(float deg);
+    void Reset();
 };
 
 #endif /* Chicken_h */

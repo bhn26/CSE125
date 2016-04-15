@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A002105F1CC053DB00468EE4 /* client_main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A002105D1CC053DB00468EE4 /* client_main.cpp */; };
 		CD214BC81CB6E60E00D7DFD6 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD214BC71CB6E60E00D7DFD6 /* OpenGL.framework */; };
-		CD214BE11CB7027C00D7DFD6 /* client_main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD214BD41CB7027C00D7DFD6 /* client_main.cpp */; };
 		CD214BE21CB7027C00D7DFD6 /* Cube.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD214BD81CB7027C00D7DFD6 /* Cube.cpp */; };
 		CD214BE31CB7027C00D7DFD6 /* Shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD214BDA1CB7027C00D7DFD6 /* Shader.cpp */; };
 		CD429FCF1CBC821F001BCE47 /* Scene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD429FCD1CBC821F001BCE47 /* Scene.cpp */; };
@@ -39,10 +39,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		A002105D1CC053DB00468EE4 /* client_main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = client_main.cpp; sourceTree = "<group>"; };
+		A002105E1CC053DB00468EE4 /* client_main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = client_main.h; sourceTree = "<group>"; };
 		CD214BB81CB6E3F900D7DFD6 /* egg scramble */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "egg scramble"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD214BC71CB6E60E00D7DFD6 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
-		CD214BD41CB7027C00D7DFD6 /* client_main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = client_main.cpp; sourceTree = "<group>"; };
-		CD214BD51CB7027C00D7DFD6 /* client_main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = client_main.h; sourceTree = "<group>"; };
 		CD214BD81CB7027C00D7DFD6 /* Cube.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Cube.cpp; sourceTree = "<group>"; };
 		CD214BD91CB7027C00D7DFD6 /* Cube.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Cube.h; sourceTree = "<group>"; };
 		CD214BDA1CB7027C00D7DFD6 /* Shader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Shader.cpp; sourceTree = "<group>"; };
@@ -56,7 +56,6 @@
 		CD9C3C421CBA1E9500F627D8 /* Camera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Camera.h; path = src/Graphics/Camera.h; sourceTree = SOURCE_ROOT; };
 		CD9C3C431CBA1E9500F627D8 /* Nodes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Nodes.cpp; path = src/Graphics/Nodes.cpp; sourceTree = SOURCE_ROOT; };
 		CD9C3C441CBA1E9500F627D8 /* Nodes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Nodes.h; path = src/Graphics/Nodes.h; sourceTree = SOURCE_ROOT; };
-		CD9C3C471CBA1EAC00F627D8 /* Scenegraph.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Scenegraph.h; path = src/Graphics/Scenegraph.h; sourceTree = SOURCE_ROOT; };
 		CD9C3C481CBA1EC000F627D8 /* Shader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Shader.h; sourceTree = "<group>"; };
 		CD9C3C491CBA1F3900F627D8 /* libassimp.3.2.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libassimp.3.2.0.dylib; path = ../../../../usr/local/Cellar/assimp/3.2/lib/libassimp.3.2.0.dylib; sourceTree = "<group>"; };
 		CD9C3C4B1CBC670F00F627D8 /* Mesh.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Mesh.cpp; sourceTree = "<group>"; };
@@ -111,8 +110,8 @@
 		CD214BD31CB7027C00D7DFD6 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				CD214BD41CB7027C00D7DFD6 /* client_main.cpp */,
-				CD214BD51CB7027C00D7DFD6 /* client_main.h */,
+				A002105D1CC053DB00468EE4 /* client_main.cpp */,
+				A002105E1CC053DB00468EE4 /* client_main.h */,
 				CD95AD141CBC890000BFC772 /* Window.cpp */,
 				CD95AD151CBC890000BFC772 /* Window.h */,
 				CD214BD61CB7027C00D7DFD6 /* Graphics */,
@@ -132,7 +131,6 @@
 				CD9C3C441CBA1E9500F627D8 /* Nodes.h */,
 				CD429FCD1CBC821F001BCE47 /* Scene.cpp */,
 				CD429FCE1CBC821F001BCE47 /* Scene.h */,
-				CD9C3C471CBA1EAC00F627D8 /* Scenegraph.h */,
 				CD9C3C4B1CBC670F00F627D8 /* Mesh.cpp */,
 				CD9C3C4C1CBC670F00F627D8 /* Mesh.h */,
 				CD9C3C4D1CBC670F00F627D8 /* Model.cpp */,
@@ -233,8 +231,8 @@
 				CD9C3C4F1CBC670F00F627D8 /* Mesh.cpp in Sources */,
 				CD9C3C451CBA1E9500F627D8 /* Camera.cpp in Sources */,
 				CD9C3C531CBC67CE00F627D8 /* Chicken.cpp in Sources */,
-				CD214BE11CB7027C00D7DFD6 /* client_main.cpp in Sources */,
 				CD429FCF1CBC821F001BCE47 /* Scene.cpp in Sources */,
+				A002105F1CC053DB00468EE4 /* client_main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -340,6 +338,7 @@
 					"$(PROJECT_DIR)/lib/SOIL/lib",
 					"$(PROJECT_DIR)/lib",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SYMROOT = $PROJECT_DIR;
 			};
@@ -363,6 +362,7 @@
 					"$(PROJECT_DIR)/lib/SOIL/lib",
 					"$(PROJECT_DIR)/lib",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SYMROOT = $PROJECT_DIR;
 			};
