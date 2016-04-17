@@ -5,6 +5,7 @@ class Camera;
 class Cube;
 class Chicken;
 class Ground;
+class Player;
 struct PointLight;
 
 namespace Scene
@@ -14,6 +15,7 @@ namespace Scene
     extern std::unique_ptr<Chicken> chicken;
     extern std::unique_ptr<PointLight> pLight;
     extern std::unique_ptr<Ground> ground;
+    extern std::unique_ptr<Player> player;
 
     void Setup();
     void Dealloc();

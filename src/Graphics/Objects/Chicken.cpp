@@ -54,7 +54,7 @@ void Chicken::Draw(Camera* camera)
 
 void Chicken::Update()
 {
-    Spin(0.3f);
+    //Spin(0.3f);
 }
 
 void Chicken::Spin(float deg)

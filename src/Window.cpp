@@ -8,6 +8,7 @@
 #include "Graphics/Shader.h"
 #include "Graphics/Camera.h"
 #include "Graphics/Scene.h"
+#include "Player.h"
 
 const char* window_title = "Egg Scramble!";
 
@@ -123,22 +124,22 @@ void Window::Key_callback(GLFWwindow* window, int key, int scancode, int action,
                 break;
 
             case GLFW_KEY_W:
-                Scene::camera->ProcessKeyboard(Camera_Movement::FORWARD, 1);
+                Scene::player->ProcessKeyboard(DIRECTION::D_FORWARD, 1);
                 break;
             case GLFW_KEY_A:
-                Scene::camera->ProcessKeyboard(Camera_Movement::LEFT, 1);
+                Scene::player->ProcessKeyboard(DIRECTION::D_LEFT, 1);
                 break;
             case GLFW_KEY_S:
-                Scene::camera->ProcessKeyboard(Camera_Movement::BACKWARD, 1);
+                Scene::player->ProcessKeyboard(DIRECTION::D_BACKWARD, 1);
                 break;
             case GLFW_KEY_D:
-                Scene::camera->ProcessKeyboard(Camera_Movement::RIGHT, 1);
+                Scene::player->ProcessKeyboard(DIRECTION::D_RIGHT, 1);
                 break;
             case GLFW_KEY_SPACE:
-                Scene::camera->ProcessKeyboard(Camera_Movement::UP, 1);
+                Scene::player->ProcessKeyboard(DIRECTION::D_UP, 1);
                 break;
             case GLFW_KEY_Z:
-                Scene::camera->ProcessKeyboard(Camera_Movement::DOWN, 1);
+                Scene::player->ProcessKeyboard(DIRECTION::D_DOWN, 1);
                 break;
             default:
                 break;
@@ -162,7 +163,7 @@ void Window::Mouse_callback(GLFWwindow* window, double xpos, double ypos)
         GLfloat yoffset = (GLfloat) (lastY - ypos);
         lastX = (GLuint)xpos;
         lastY = (GLuint)ypos;
-        Scene::camera->ProcessMouseMovement(xoffset, yoffset);
+        Scene::player->ProcessMouseMovement(xoffset, yoffset);
     }
     else
     {
