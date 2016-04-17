@@ -45,18 +45,31 @@ void Player::Draw() const
 void Player::ProcessKeyboard(DIRECTION direction, GLfloat deltaTime)
 {
     GLfloat velocity = camera->Speed() * deltaTime;
+    //if (direction == D_FORWARD)
+    //    this->toWorld = glm::translate(glm::mat4(1.0f), camera->Front() * velocity) * this->toWorld;
+    //if (direction == D_BACKWARD)
+    //    this->toWorld = glm::translate(glm::mat4(1.0f), camera->Front() * -velocity) * this->toWorld;
+    //if (direction == D_LEFT)
+    //    this->toWorld = glm::translate(glm::mat4(1.0f), camera->Right() * velocity) * this->toWorld;
+    //if (direction == D_RIGHT)
+    //    this->toWorld = glm::translate(glm::mat4(1.0f), camera->Right() * -velocity) * this->toWorld;
+    //if (direction == D_UP)
+    //    this->toWorld = glm::translate(glm::mat4(1.0f), camera->Up() * velocity) * this->toWorld;
+    //if (direction == D_DOWN)
+    //    this->toWorld = glm::translate(glm::mat4(1.0f), camera->Up() * -velocity) * this->toWorld;
+
     if (direction == D_FORWARD)
-        this->toWorld = glm::translate(glm::mat4(1.0f), camera->Front() * velocity) * this->toWorld;
+        this->toWorld = glm::translate(glm::mat4(1.0f), glm::mat3(toWorld) * glm::vec3(0.0f, 0.0f, 1.0f)) * this->toWorld;;
     if (direction == D_BACKWARD)
-        this->toWorld = glm::translate(glm::mat4(1.0f), camera->Front() * -velocity) * this->toWorld;
+        this->toWorld = glm::translate(glm::mat4(1.0f), glm::mat3(toWorld) * glm::vec3(0.0f, 0.0f, -1.0f)) * this->toWorld;
     if (direction == D_LEFT)
-        this->toWorld = glm::translate(glm::mat4(1.0f), camera->Right() * velocity) * this->toWorld;
+        this->toWorld = glm::translate(glm::mat4(1.0f), glm::mat3(toWorld) * glm::vec3(-1.0f, 0.0f, 0.0f)) * this->toWorld;
     if (direction == D_RIGHT)
-        this->toWorld = glm::translate(glm::mat4(1.0f), camera->Right() * -velocity) * this->toWorld;
+        this->toWorld = glm::translate(glm::mat4(1.0f), glm::mat3(toWorld) * glm::vec3(1.0f, 0.0f, 0.0f)) * this->toWorld;
     if (direction == D_UP)
-        this->toWorld = glm::translate(glm::mat4(1.0f), camera->Up() * velocity) * this->toWorld;
+        this->toWorld = glm::translate(glm::mat4(1.0f), glm::mat3(toWorld) * glm::vec3(0.0f, 1.0f, 0.0f)) * this->toWorld;
     if (direction == D_DOWN)
-        this->toWorld = glm::translate(glm::mat4(1.0f), camera->Up() * -velocity) * this->toWorld;
+        this->toWorld = glm::translate(glm::mat4(1.0f), glm::mat3(toWorld) * glm::vec3(0.0f, -1.0f, 0.0f)) * this->toWorld;
 }
 
 // Processes input received from a mouse input system. Expects the offset value in both the x and y direction.
