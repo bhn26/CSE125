@@ -16,13 +16,14 @@
 		CD6658DE1CC3F4250099F9BC /* Ground.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD6658DB1CC3F4250099F9BC /* Ground.cpp */; };
 		CD6658E01CC3F4CA0099F9BC /* libaudiodecoder.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CD6658DF1CC3F4CA0099F9BC /* libaudiodecoder.dylib */; };
 		CD6658E21CC3F4E20099F9BC /* libportaudio.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CD6658E11CC3F4E20099F9BC /* libportaudio.2.dylib */; };
-		CD6658ED1CC3FD340099F9BC /* math_3d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD6658E41CC3FD340099F9BC /* math_3d.cpp */; };
+		CD6658ED1CC3FD340099F9BC /* ogldev_math_3d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD6658E41CC3FD340099F9BC /* ogldev_math_3d.cpp */; };
 		CD6658EE1CC3FD340099F9BC /* ogldev_skinned_mesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD6658E61CC3FD340099F9BC /* ogldev_skinned_mesh.cpp */; };
 		CD6658EF1CC3FD340099F9BC /* ogldev_texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD6658E81CC3FD340099F9BC /* ogldev_texture.cpp */; };
 		CD6658F01CC3FD340099F9BC /* ogldev_util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD6658EB1CC3FD340099F9BC /* ogldev_util.cpp */; };
 		CD6658F21CC3FF130099F9BC /* libMagickCore-6.Q16.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CD6658F11CC3FF130099F9BC /* libMagickCore-6.Q16.2.dylib */; };
 		CD6658F51CC407BE0099F9BC /* skinning_technique.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD6658F31CC407BE0099F9BC /* skinning_technique.cpp */; };
 		CD6658F81CC409330099F9BC /* technique.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD6658F61CC409330099F9BC /* technique.cpp */; };
+		CD6658FC1CC40D6D0099F9BC /* ChickenAnim.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD6658FA1CC40D6D0099F9BC /* ChickenAnim.cpp */; };
 		CD95AD161CBC890000BFC772 /* Window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD95AD141CBC890000BFC772 /* Window.cpp */; };
 		CD9C3C3D1CBA1AD200F627D8 /* libglfw3.3.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CD9C3C3C1CBA1AD200F627D8 /* libglfw3.3.1.dylib */; };
 		CD9C3C3F1CBA1B0800F627D8 /* libGLEW.1.13.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CD9C3C3E1CBA1B0800F627D8 /* libGLEW.1.13.0.dylib */; };
@@ -65,7 +66,7 @@
 		CD6658DC1CC3F4250099F9BC /* Ground.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Ground.h; sourceTree = "<group>"; };
 		CD6658DF1CC3F4CA0099F9BC /* libaudiodecoder.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libaudiodecoder.dylib; path = ../../../../usr/local/lib/libaudiodecoder.dylib; sourceTree = "<group>"; };
 		CD6658E11CC3F4E20099F9BC /* libportaudio.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libportaudio.2.dylib; path = ../../../../usr/local/Cellar/portaudio/19.20140130/lib/libportaudio.2.dylib; sourceTree = "<group>"; };
-		CD6658E41CC3FD340099F9BC /* math_3d.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = math_3d.cpp; sourceTree = "<group>"; };
+		CD6658E41CC3FD340099F9BC /* ogldev_math_3d.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ogldev_math_3d.cpp; sourceTree = "<group>"; };
 		CD6658E51CC3FD340099F9BC /* ogldev_math_3d.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ogldev_math_3d.h; sourceTree = "<group>"; };
 		CD6658E61CC3FD340099F9BC /* ogldev_skinned_mesh.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ogldev_skinned_mesh.cpp; sourceTree = "<group>"; };
 		CD6658E71CC3FD340099F9BC /* ogldev_skinned_mesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ogldev_skinned_mesh.h; sourceTree = "<group>"; };
@@ -79,6 +80,8 @@
 		CD6658F41CC407BE0099F9BC /* skinning_technique.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = skinning_technique.h; sourceTree = "<group>"; };
 		CD6658F61CC409330099F9BC /* technique.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = technique.cpp; sourceTree = "<group>"; };
 		CD6658F71CC409330099F9BC /* technique.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = technique.h; sourceTree = "<group>"; };
+		CD6658FA1CC40D6D0099F9BC /* ChickenAnim.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ChickenAnim.cpp; sourceTree = "<group>"; };
+		CD6658FB1CC40D6D0099F9BC /* ChickenAnim.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChickenAnim.h; sourceTree = "<group>"; };
 		CD95AD141CBC890000BFC772 /* Window.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Window.cpp; sourceTree = "<group>"; };
 		CD95AD151CBC890000BFC772 /* Window.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Window.h; sourceTree = "<group>"; };
 		CD9C3C3C1CBA1AD200F627D8 /* libglfw3.3.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw3.3.1.dylib; path = /usr/local/Cellar/glfw3/3.1.2/lib/libglfw3.3.1.dylib; sourceTree = "<absolute>"; };
@@ -177,6 +180,8 @@
 		CD214BD71CB7027C00D7DFD6 /* Objects */ = {
 			isa = PBXGroup;
 			children = (
+				CD6658FA1CC40D6D0099F9BC /* ChickenAnim.cpp */,
+				CD6658FB1CC40D6D0099F9BC /* ChickenAnim.h */,
 				CD6658D91CC3F4250099F9BC /* Entity.cpp */,
 				CD6658DA1CC3F4250099F9BC /* Entity.h */,
 				CD6658DB1CC3F4250099F9BC /* Ground.cpp */,
@@ -192,7 +197,7 @@
 		CD6658E31CC3FD340099F9BC /* Animation */ = {
 			isa = PBXGroup;
 			children = (
-				CD6658E41CC3FD340099F9BC /* math_3d.cpp */,
+				CD6658E41CC3FD340099F9BC /* ogldev_math_3d.cpp */,
 				CD6658E51CC3FD340099F9BC /* ogldev_math_3d.h */,
 				CD6658E61CC3FD340099F9BC /* ogldev_skinned_mesh.cpp */,
 				CD6658E71CC3FD340099F9BC /* ogldev_skinned_mesh.h */,
@@ -287,9 +292,10 @@
 			files = (
 				CD6658EE1CC3FD340099F9BC /* ogldev_skinned_mesh.cpp in Sources */,
 				CD214BE31CB7027C00D7DFD6 /* Shader.cpp in Sources */,
-				CD6658ED1CC3FD340099F9BC /* math_3d.cpp in Sources */,
+				CD6658ED1CC3FD340099F9BC /* ogldev_math_3d.cpp in Sources */,
 				CD95AD161CBC890000BFC772 /* Window.cpp in Sources */,
 				CD9C3C461CBA1E9500F627D8 /* Nodes.cpp in Sources */,
+				CD6658FC1CC40D6D0099F9BC /* ChickenAnim.cpp in Sources */,
 				CD6658DD1CC3F4250099F9BC /* Entity.cpp in Sources */,
 				CD214BE21CB7027C00D7DFD6 /* Cube.cpp in Sources */,
 				CD9C3C501CBC671000F627D8 /* Model.cpp in Sources */,

@@ -36,11 +36,11 @@ bool SkinningTechnique::Init()
         return false;
     }
 
-    if (!AddShader(GL_VERTEX_SHADER, "shaders/skinning.vs")) {
+    if (!AddShader(GL_VERTEX_SHADER, "src/Graphics/Shaders/skinning.vert")) {
         return false;
     }
 
-    if (!AddShader(GL_FRAGMENT_SHADER, "shaders/skinning.fs")) {
+    if (!AddShader(GL_FRAGMENT_SHADER, "src/Graphics/Shaders/skinning.frag")) {
         return false;
     }
 
@@ -211,7 +211,7 @@ void SkinningTechnique::SetMatSpecularPower(float Power)
 }
 
 
-void SkinningTechnique::SetPointLights(unsigned int NumLights, const PointLight* pLights)
+void SkinningTechnique::SetPointLights(unsigned int NumLights, const PointLight2* pLights)
 {
     glUniform1i(m_numPointLightsLocation, NumLights);
     

@@ -45,7 +45,7 @@ struct DirectionalLight : public BaseLight
     }
 };
 
-struct PointLight : public BaseLight
+struct PointLight2 : public BaseLight
 {
     Vector3f Position;
 
@@ -56,7 +56,7 @@ struct PointLight : public BaseLight
         float Exp;
     } Attenuation;
 
-    PointLight()
+    PointLight2()
     {
         Position = Vector3f(0.0f, 0.0f, 0.0f);
         Attenuation.Constant = 1.0f;
@@ -65,7 +65,7 @@ struct PointLight : public BaseLight
     }
 };
 
-struct SpotLight : public PointLight
+struct SpotLight : public PointLight2
 {
     Vector3f Direction;
     float Cutoff;
@@ -92,7 +92,7 @@ public:
     void SetWorldMatrix(const Matrix4f& WVP);
     void SetColorTextureUnit(uint TextureUnit);
     void SetDirectionalLight(const DirectionalLight& Light);
-    void SetPointLights(uint NumLights, const PointLight* pLights);
+    void SetPointLights(uint NumLights, const PointLight2* pLights);
     void SetSpotLights(uint NumLights, const SpotLight* pLights);
     void SetEyeWorldPos(const Vector3f& EyeWorldPos);
     void SetMatSpecularIntensity(float Intensity);

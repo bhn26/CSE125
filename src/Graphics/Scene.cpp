@@ -9,11 +9,15 @@
 #include <memory>
 #include <algorithm>
 
+#include "Objects/ChickenAnim.h"
+
 std::unique_ptr<Cube> Scene::cube;
 std::unique_ptr<Camera> Scene::camera;
 std::unique_ptr<Chicken> Scene::chicken;
 std::unique_ptr<PointLight> Scene::pLight;
 std::unique_ptr<Ground> Scene::ground;
+
+std::unique_ptr<ChickenAnim> Scene::chicken_anim;
 
 void Scene::Setup()
 {
@@ -30,6 +34,8 @@ void Scene::Setup()
     cube->shader = basicShader;
     ground->shader = diffuseShader;
     chicken->shader = modelShader;
+    
+    chicken_anim = std::unique_ptr<ChickenAnim>(new ChickenAnim);
 }
 
 void Scene::Dealloc()
@@ -47,4 +53,6 @@ void Scene::Draw()
     chicken->Draw(camera.get());
     ground->Draw(camera->GetViewMatrix());
     //cube->Draw(camera->GetViewMatrix());
+    
+    chicken_anim->Draw(camera.get());
 }
