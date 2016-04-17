@@ -12,6 +12,17 @@
 		CD214BE21CB7027C00D7DFD6 /* Cube.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD214BD81CB7027C00D7DFD6 /* Cube.cpp */; };
 		CD214BE31CB7027C00D7DFD6 /* Shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD214BDA1CB7027C00D7DFD6 /* Shader.cpp */; };
 		CD429FCF1CBC821F001BCE47 /* Scene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD429FCD1CBC821F001BCE47 /* Scene.cpp */; };
+		CD6658DD1CC3F4250099F9BC /* Entity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD6658D91CC3F4250099F9BC /* Entity.cpp */; };
+		CD6658DE1CC3F4250099F9BC /* Ground.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD6658DB1CC3F4250099F9BC /* Ground.cpp */; };
+		CD6658E01CC3F4CA0099F9BC /* libaudiodecoder.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CD6658DF1CC3F4CA0099F9BC /* libaudiodecoder.dylib */; };
+		CD6658E21CC3F4E20099F9BC /* libportaudio.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CD6658E11CC3F4E20099F9BC /* libportaudio.2.dylib */; };
+		CD6658ED1CC3FD340099F9BC /* math_3d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD6658E41CC3FD340099F9BC /* math_3d.cpp */; };
+		CD6658EE1CC3FD340099F9BC /* ogldev_skinned_mesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD6658E61CC3FD340099F9BC /* ogldev_skinned_mesh.cpp */; };
+		CD6658EF1CC3FD340099F9BC /* ogldev_texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD6658E81CC3FD340099F9BC /* ogldev_texture.cpp */; };
+		CD6658F01CC3FD340099F9BC /* ogldev_util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD6658EB1CC3FD340099F9BC /* ogldev_util.cpp */; };
+		CD6658F21CC3FF130099F9BC /* libMagickCore-6.Q16.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CD6658F11CC3FF130099F9BC /* libMagickCore-6.Q16.2.dylib */; };
+		CD6658F51CC407BE0099F9BC /* skinning_technique.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD6658F31CC407BE0099F9BC /* skinning_technique.cpp */; };
+		CD6658F81CC409330099F9BC /* technique.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD6658F61CC409330099F9BC /* technique.cpp */; };
 		CD95AD161CBC890000BFC772 /* Window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD95AD141CBC890000BFC772 /* Window.cpp */; };
 		CD9C3C3D1CBA1AD200F627D8 /* libglfw3.3.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CD9C3C3C1CBA1AD200F627D8 /* libglfw3.3.1.dylib */; };
 		CD9C3C3F1CBA1B0800F627D8 /* libGLEW.1.13.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CD9C3C3E1CBA1B0800F627D8 /* libGLEW.1.13.0.dylib */; };
@@ -48,6 +59,26 @@
 		CD214BDA1CB7027C00D7DFD6 /* Shader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Shader.cpp; sourceTree = "<group>"; };
 		CD429FCD1CBC821F001BCE47 /* Scene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Scene.cpp; sourceTree = "<group>"; };
 		CD429FCE1CBC821F001BCE47 /* Scene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Scene.h; sourceTree = "<group>"; };
+		CD6658D91CC3F4250099F9BC /* Entity.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Entity.cpp; sourceTree = "<group>"; };
+		CD6658DA1CC3F4250099F9BC /* Entity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Entity.h; sourceTree = "<group>"; };
+		CD6658DB1CC3F4250099F9BC /* Ground.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Ground.cpp; sourceTree = "<group>"; };
+		CD6658DC1CC3F4250099F9BC /* Ground.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Ground.h; sourceTree = "<group>"; };
+		CD6658DF1CC3F4CA0099F9BC /* libaudiodecoder.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libaudiodecoder.dylib; path = ../../../../usr/local/lib/libaudiodecoder.dylib; sourceTree = "<group>"; };
+		CD6658E11CC3F4E20099F9BC /* libportaudio.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libportaudio.2.dylib; path = ../../../../usr/local/Cellar/portaudio/19.20140130/lib/libportaudio.2.dylib; sourceTree = "<group>"; };
+		CD6658E41CC3FD340099F9BC /* math_3d.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = math_3d.cpp; sourceTree = "<group>"; };
+		CD6658E51CC3FD340099F9BC /* ogldev_math_3d.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ogldev_math_3d.h; sourceTree = "<group>"; };
+		CD6658E61CC3FD340099F9BC /* ogldev_skinned_mesh.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ogldev_skinned_mesh.cpp; sourceTree = "<group>"; };
+		CD6658E71CC3FD340099F9BC /* ogldev_skinned_mesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ogldev_skinned_mesh.h; sourceTree = "<group>"; };
+		CD6658E81CC3FD340099F9BC /* ogldev_texture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ogldev_texture.cpp; sourceTree = "<group>"; };
+		CD6658E91CC3FD340099F9BC /* ogldev_texture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ogldev_texture.h; sourceTree = "<group>"; };
+		CD6658EA1CC3FD340099F9BC /* ogldev_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ogldev_types.h; sourceTree = "<group>"; };
+		CD6658EB1CC3FD340099F9BC /* ogldev_util.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ogldev_util.cpp; sourceTree = "<group>"; };
+		CD6658EC1CC3FD340099F9BC /* ogldev_util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ogldev_util.h; sourceTree = "<group>"; };
+		CD6658F11CC3FF130099F9BC /* libMagickCore-6.Q16.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libMagickCore-6.Q16.2.dylib"; path = "../../../../usr/local/Cellar/imagemagick/6.9.3-7/lib/libMagickCore-6.Q16.2.dylib"; sourceTree = "<group>"; };
+		CD6658F31CC407BE0099F9BC /* skinning_technique.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = skinning_technique.cpp; sourceTree = "<group>"; };
+		CD6658F41CC407BE0099F9BC /* skinning_technique.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = skinning_technique.h; sourceTree = "<group>"; };
+		CD6658F61CC409330099F9BC /* technique.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = technique.cpp; sourceTree = "<group>"; };
+		CD6658F71CC409330099F9BC /* technique.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = technique.h; sourceTree = "<group>"; };
 		CD95AD141CBC890000BFC772 /* Window.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Window.cpp; sourceTree = "<group>"; };
 		CD95AD151CBC890000BFC772 /* Window.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Window.h; sourceTree = "<group>"; };
 		CD9C3C3C1CBA1AD200F627D8 /* libglfw3.3.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw3.3.1.dylib; path = /usr/local/Cellar/glfw3/3.1.2/lib/libglfw3.3.1.dylib; sourceTree = "<absolute>"; };
@@ -77,6 +108,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CD6658F21CC3FF130099F9BC /* libMagickCore-6.Q16.2.dylib in Frameworks */,
+				CD6658E21CC3F4E20099F9BC /* libportaudio.2.dylib in Frameworks */,
+				CD6658E01CC3F4CA0099F9BC /* libaudiodecoder.dylib in Frameworks */,
 				CD9C3C5D1CBC75DD00F627D8 /* libSOIL.a in Frameworks */,
 				CD9C3C4A1CBA1F3900F627D8 /* libassimp.3.2.0.dylib in Frameworks */,
 				CD9C3C3F1CBA1B0800F627D8 /* libGLEW.1.13.0.dylib in Frameworks */,
@@ -135,6 +169,7 @@
 				CD9C3C4C1CBC670F00F627D8 /* Mesh.h */,
 				CD9C3C4D1CBC670F00F627D8 /* Model.cpp */,
 				CD9C3C4E1CBC670F00F627D8 /* Model.h */,
+				CD6658E31CC3FD340099F9BC /* Animation */,
 			);
 			path = Graphics;
 			sourceTree = "<group>";
@@ -142,6 +177,10 @@
 		CD214BD71CB7027C00D7DFD6 /* Objects */ = {
 			isa = PBXGroup;
 			children = (
+				CD6658D91CC3F4250099F9BC /* Entity.cpp */,
+				CD6658DA1CC3F4250099F9BC /* Entity.h */,
+				CD6658DB1CC3F4250099F9BC /* Ground.cpp */,
+				CD6658DC1CC3F4250099F9BC /* Ground.h */,
 				CD214BD81CB7027C00D7DFD6 /* Cube.cpp */,
 				CD214BD91CB7027C00D7DFD6 /* Cube.h */,
 				CD9C3C511CBC67CE00F627D8 /* Chicken.cpp */,
@@ -150,9 +189,32 @@
 			path = Objects;
 			sourceTree = "<group>";
 		};
+		CD6658E31CC3FD340099F9BC /* Animation */ = {
+			isa = PBXGroup;
+			children = (
+				CD6658E41CC3FD340099F9BC /* math_3d.cpp */,
+				CD6658E51CC3FD340099F9BC /* ogldev_math_3d.h */,
+				CD6658E61CC3FD340099F9BC /* ogldev_skinned_mesh.cpp */,
+				CD6658E71CC3FD340099F9BC /* ogldev_skinned_mesh.h */,
+				CD6658E81CC3FD340099F9BC /* ogldev_texture.cpp */,
+				CD6658E91CC3FD340099F9BC /* ogldev_texture.h */,
+				CD6658EA1CC3FD340099F9BC /* ogldev_types.h */,
+				CD6658EB1CC3FD340099F9BC /* ogldev_util.cpp */,
+				CD6658EC1CC3FD340099F9BC /* ogldev_util.h */,
+				CD6658F31CC407BE0099F9BC /* skinning_technique.cpp */,
+				CD6658F41CC407BE0099F9BC /* skinning_technique.h */,
+				CD6658F61CC409330099F9BC /* technique.cpp */,
+				CD6658F71CC409330099F9BC /* technique.h */,
+			);
+			path = Animation;
+			sourceTree = "<group>";
+		};
 		CD9C3C401CBA1BE700F627D8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				CD6658F11CC3FF130099F9BC /* libMagickCore-6.Q16.2.dylib */,
+				CD6658E11CC3F4E20099F9BC /* libportaudio.2.dylib */,
+				CD6658DF1CC3F4CA0099F9BC /* libaudiodecoder.dylib */,
 				CD9C3C601CBC763900F627D8 /* CoreFoundation.framework */,
 				CD9C3C5E1CBC761F00F627D8 /* GLUT.framework */,
 				CD9C3C5A1CBC73C000F627D8 /* libSOIL.a */,
@@ -223,15 +285,23 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CD6658EE1CC3FD340099F9BC /* ogldev_skinned_mesh.cpp in Sources */,
 				CD214BE31CB7027C00D7DFD6 /* Shader.cpp in Sources */,
+				CD6658ED1CC3FD340099F9BC /* math_3d.cpp in Sources */,
 				CD95AD161CBC890000BFC772 /* Window.cpp in Sources */,
 				CD9C3C461CBA1E9500F627D8 /* Nodes.cpp in Sources */,
+				CD6658DD1CC3F4250099F9BC /* Entity.cpp in Sources */,
 				CD214BE21CB7027C00D7DFD6 /* Cube.cpp in Sources */,
 				CD9C3C501CBC671000F627D8 /* Model.cpp in Sources */,
+				CD6658F81CC409330099F9BC /* technique.cpp in Sources */,
 				CD9C3C4F1CBC670F00F627D8 /* Mesh.cpp in Sources */,
+				CD6658F51CC407BE0099F9BC /* skinning_technique.cpp in Sources */,
 				CD9C3C451CBA1E9500F627D8 /* Camera.cpp in Sources */,
 				CD9C3C531CBC67CE00F627D8 /* Chicken.cpp in Sources */,
 				CD429FCF1CBC821F001BCE47 /* Scene.cpp in Sources */,
+				CD6658EF1CC3FD340099F9BC /* ogldev_texture.cpp in Sources */,
+				CD6658DE1CC3F4250099F9BC /* Ground.cpp in Sources */,
+				CD6658F01CC3FD340099F9BC /* ogldev_util.cpp in Sources */,
 				A002105F1CC053DB00468EE4 /* client_main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -323,10 +393,13 @@
 		CD214BC01CB6E3F900D7DFD6 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				GCC_PREPROCESSOR_DEFINITIONS = "";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					/usr/local/include,
+					"/usr/local/Cellar/imagemagick/6.9.3-7/include/ImageMagick-6",
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -337,8 +410,35 @@
 					/usr/local/Cellar/assimp/3.2/lib,
 					"$(PROJECT_DIR)/lib/SOIL/lib",
 					"$(PROJECT_DIR)/lib",
+					/usr/local/lib,
+					/usr/local/Cellar/portaudio/19.20140130/lib,
+					"/usr/local/Cellar/imagemagick/6.9.3-7/lib",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				OTHER_LDFLAGS = (
+					"-DMAGICKCORE_HDRI_ENABLE=0",
+					"-DMAGICKCORE_QUANTUM_DEPTH=16",
+					"-DMAGICKCORE_HDRI_ENABLE=0",
+					"-DMAGICKCORE_QUANTUM_DEPTH=16",
+					"-DMAGICKCORE_HDRI_ENABLE=0",
+					"-DMAGICKCORE_QUANTUM_DEPTH=16",
+					"-I/usr/local/Cellar/imagemagick/6.9.3-7/include/ImageMagick-6",
+					"-DMAGICKCORE_HDRI_ENABLE=0",
+					"-DMAGICKCORE_QUANTUM_DEPTH=16",
+					"-DMAGICKCORE_HDRI_ENABLE=0",
+					"-DMAGICKCORE_QUANTUM_DEPTH=16",
+					"-DMAGICKCORE_HDRI_ENABLE=0",
+					"-DMAGICKCORE_QUANTUM_DEPTH=16",
+					"-I/usr/local/Cellar/imagemagick/6.9.3-7/include/ImageMagick-6",
+					"-L/usr/local/Cellar/imagemagick/6.9.3-7/lib",
+					"-lMagick++-6.Q16",
+					"-lMagickWand-6.Q16",
+					"-lMagickCore-6.Q16",
+					"-L/usr/local/Cellar/imagemagick/6.9.3-7/lib",
+					"-lMagick++-6.Q16",
+					"-lMagickWand-6.Q16",
+					"-lMagickCore-6.Q16",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SYMROOT = $PROJECT_DIR;
 			};
@@ -347,10 +447,13 @@
 		CD214BC11CB6E3F900D7DFD6 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				GCC_PREPROCESSOR_DEFINITIONS = "";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					/usr/local/include,
+					"/usr/local/Cellar/imagemagick/6.9.3-7/include/ImageMagick-6",
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -361,8 +464,35 @@
 					/usr/local/Cellar/assimp/3.2/lib,
 					"$(PROJECT_DIR)/lib/SOIL/lib",
 					"$(PROJECT_DIR)/lib",
+					/usr/local/lib,
+					/usr/local/Cellar/portaudio/19.20140130/lib,
+					"/usr/local/Cellar/imagemagick/6.9.3-7/lib",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				OTHER_LDFLAGS = (
+					"-DMAGICKCORE_HDRI_ENABLE=0",
+					"-DMAGICKCORE_QUANTUM_DEPTH=16",
+					"-DMAGICKCORE_HDRI_ENABLE=0",
+					"-DMAGICKCORE_QUANTUM_DEPTH=16",
+					"-DMAGICKCORE_HDRI_ENABLE=0",
+					"-DMAGICKCORE_QUANTUM_DEPTH=16",
+					"-I/usr/local/Cellar/imagemagick/6.9.3-7/include/ImageMagick-6",
+					"-DMAGICKCORE_HDRI_ENABLE=0",
+					"-DMAGICKCORE_QUANTUM_DEPTH=16",
+					"-DMAGICKCORE_HDRI_ENABLE=0",
+					"-DMAGICKCORE_QUANTUM_DEPTH=16",
+					"-DMAGICKCORE_HDRI_ENABLE=0",
+					"-DMAGICKCORE_QUANTUM_DEPTH=16",
+					"-I/usr/local/Cellar/imagemagick/6.9.3-7/include/ImageMagick-6",
+					"-L/usr/local/Cellar/imagemagick/6.9.3-7/lib",
+					"-lMagick++-6.Q16",
+					"-lMagickWand-6.Q16",
+					"-lMagickCore-6.Q16",
+					"-L/usr/local/Cellar/imagemagick/6.9.3-7/lib",
+					"-lMagick++-6.Q16",
+					"-lMagickWand-6.Q16",
+					"-lMagickCore-6.Q16",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SYMROOT = $PROJECT_DIR;
 			};

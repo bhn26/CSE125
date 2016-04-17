@@ -6,6 +6,7 @@
 #include "Camera.h"
 #include "PointLight.h"
 
+#include <memory>
 #include <algorithm>
 
 std::unique_ptr<Cube> Scene::cube;

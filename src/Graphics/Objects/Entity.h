@@ -38,6 +38,9 @@ public:
     Entity();
     
     int PlaySound(std::string sound_file);
+    
+    // Draw
+    // Update
 
 };
 

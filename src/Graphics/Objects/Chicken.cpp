@@ -19,7 +19,7 @@ Chicken::Chicken()
     //shader.SetShaders("src/Graphics/Shaders/model_loading.vert",
     //                  "src/Graphics/Shaders/model_loading.frag");
 
-    PlaySound("assets/audio/chicken_dance.mp3");
+    //PlaySound("assets/audio/chicken_dance.mp3");
 }
 
 Chicken::~Chicken()

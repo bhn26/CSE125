@@ -57,7 +57,7 @@ Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
     // Data to fill
     std::vector<Vertex> vertices;
     std::vector<GLuint> indices;
-    std::vector<Texture> textures;
+    std::vector<TextureData> textures;
 
     // Walk through each of the mesh's vertices
     for (GLuint i = 0; i < mesh->mNumVertices; i++)
@@ -115,11 +115,11 @@ Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
         // Normal: texture_normalN
 
         // 1. Diffuse maps
-        std::vector<Texture> diffuseMaps = this->LoadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
+        std::vector<TextureData> diffuseMaps = this->LoadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
         textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
 
         // 2. Specular maps
-        std::vector<Texture> specularMaps = this->LoadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
+        std::vector<TextureData> specularMaps = this->LoadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
         textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
     }
 
@@ -127,9 +127,9 @@ Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
     return Mesh(vertices, indices, textures);
 }
 
-std::vector<Texture> Model::LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName)
+std::vector<TextureData> Model::LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName)
 {
-    std::vector<Texture> textures;
+    std::vector<TextureData> textures;
     for (GLuint i = 0; i < mat->GetTextureCount(type); i++)
     {
         aiString str;
@@ -147,7 +147,7 @@ std::vector<Texture> Model::LoadMaterialTextures(aiMaterial* mat, aiTextureType 
         }
         if (!skip)
         {   // If texture hasn't been loaded already, load it
-            Texture texture;
+            TextureData texture;
             texture.id = TextureFromFile(str.C_Str(), this->directory);
             texture.type = typeName;
             texture.path = str;

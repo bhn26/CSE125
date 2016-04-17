@@ -20,7 +20,7 @@ struct Vertex
     glm::vec2 texCoords;    // TexCoords
 };
 
-struct Texture
+struct TextureData
 {
     GLuint id;
     std::string type;
@@ -33,11 +33,11 @@ public:
     /*  Mesh Data  */
     std::vector<Vertex> vertices;
     std::vector<GLuint> indices;
-    std::vector<Texture> textures;
+    std::vector<TextureData> textures;
 
     /*  Functions  */
     // Constructor
-    Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices, std::vector<Texture> textures);
+    Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices, std::vector<TextureData> textures);
 
 
     // Render the mesh
