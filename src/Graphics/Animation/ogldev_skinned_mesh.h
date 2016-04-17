@@ -52,7 +52,7 @@ public:
     void BoneTransform(float TimeInSeconds, vector<Matrix4f>& Transforms);
     
 private:
-    #define NUM_BONES_PER_VEREX 4
+    #define NUM_BONES_PER_VEREX 8 // we have max 5
 
     struct BoneInfo
     {
