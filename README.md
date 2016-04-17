@@ -16,4 +16,6 @@ Packages to install:
 - GLM
 - Assim
 - SOIL.lib
+- PortAudio
+- libaudiodecoder
 
