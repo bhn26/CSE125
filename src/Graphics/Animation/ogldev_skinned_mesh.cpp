@@ -197,6 +197,7 @@ void SkinnedMesh::InitMesh(uint MeshIndex,
         TexCoords.push_back(Vector2f(pTexCoord->x, pTexCoord->y));        
     }
     
+    printf("Mesh #%d has %d bones.\n", MeshIndex, paiMesh->mNumBones);
     LoadBones(MeshIndex, paiMesh, Bones);
     
     // Populate the index buffer

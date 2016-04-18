@@ -35,7 +35,7 @@ struct Attenuation
     float Exp;                                                                      
 };                                                                                  
                                                                                     
-struct PointLight                                                                           
+struct PointLight2
 {                                                                                           
     BaseLight Base;                                                                  
     vec3 Position;                                                                          
@@ -44,7 +44,7 @@ struct PointLight
                                                                                             
 struct SpotLight                                                                            
 {                                                                                           
-    PointLight Base;                                                                 
+    PointLight2 Base;
     vec3 Direction;                                                                         
     float Cutoff;                                                                           
 };                                                                                          
@@ -52,7 +52,7 @@ struct SpotLight
 uniform int gNumPointLights;                                                                
 uniform int gNumSpotLights;                                                                 
 uniform DirectionalLight gDirectionalLight;                                                 
-uniform PointLight gPointLights[MAX_POINT_LIGHTS];                                          
+uniform PointLight2 gPointLights[MAX_POINT_LIGHTS];
 uniform SpotLight gSpotLights[MAX_SPOT_LIGHTS];                                             
 uniform sampler2D gColorMap;                                                                
 uniform vec3 gEyeWorldPos;                                                                  
@@ -88,7 +88,7 @@ vec4 CalcDirectionalLight(VSOutput In)
     return CalcLightInternal(gDirectionalLight.Base, gDirectionalLight.Direction, In);  
 }                                                                                           
                                                                                             
-vec4 CalcPointLight(PointLight l, VSOutput In)                                       
+vec4 CalcPointLight(PointLight2 l, VSOutput In)
 {                                                                                           
     vec3 LightDirection = In.WorldPos - l.Position;                                           
     float Distance = length(LightDirection);                                                
@@ -96,10 +96,11 @@ vec4 CalcPointLight(PointLight l, VSOutput In)
                                                                                             
     vec4 Color = CalcLightInternal(l.Base, LightDirection, In);                         
     float Attenuation =  l.Atten.Constant +                                                 
-                         l.Atten.Linear * Distance +                                        
+                         l.Atten.Linear * Distance +
                          l.Atten.Exp * Distance * Distance;                                 
                                                                                             
-    return Color / Attenuation;                                                             
+    //return Color / Attenuation;
+    return Color;
 }                                                                                           
                                                                                             
 vec4 CalcSpotLight(SpotLight l, VSOutput In)                                         
@@ -135,5 +136,5 @@ void main()
         TotalLight += CalcSpotLight(gSpotLights[i], In);                                
     }                                                                                       
                                                                                             
-    FragColor = texture(gColorMap, In.TexCoord.xy) * TotalLight;     
+    FragColor = texture(gColorMap, In.TexCoord.xy) * TotalLight;
 }

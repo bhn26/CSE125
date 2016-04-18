@@ -105,10 +105,17 @@ bool Technique::AddShader(GLenum ShaderType, const char* pFilename)
 // to link and validate the program.
 bool Technique::Finalize()
 {
+    GLuint vaoId = 0;
+    glGenVertexArrays(1, &vaoId);
+    glBindVertexArray(vaoId);
+    
     GLint Success = 0;
     GLchar ErrorLog[1024] = { 0 };
 
     glLinkProgram(m_shaderProg);
+    
+    // ^ gl_experimental causes links to return invalid enum error
+    glGetError(); // clear error buffer
 
     glGetProgramiv(m_shaderProg, GL_LINK_STATUS, &Success);
 	if (Success == 0) {
@@ -132,6 +139,9 @@ bool Technique::Finalize()
 
     m_shaderObjList.clear();
 
+    glDeleteVertexArrays(1, &vaoId);
+    glBindVertexArray(0);
+    
     return GLCheckError();
 }
 
