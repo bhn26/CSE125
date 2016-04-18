@@ -7,24 +7,26 @@
 #include "../Scene.h"
 #include "../PointLight.h"
 #include "../Camera.h"
+#include "../../Player.h"
 
-GLfloat vertices2[] =
-{
-    -50.0f, 0.0f, -50.0f,  0.0f,  1.0f, 0.0f,
-    50.0f,  0.0f, -50.0f,  0.0f,  1.0f, 0.0f,
-    -50.0f, 0.0f,  50.0f,  0.0f,  1.0f, 0.0f,
-    50.0f,  0.0f,  50.0f,  0.0f,  1.0f, 0.0f,
-};
-
-GLuint indices2[] =
-{
-    0, 1, 2,
-    3, 2, 1
-};
 
 Ground::Ground() : toWorld(glm::mat4(1.0f)), color(glm::vec3(0.545f, 0.271f, 0.075f))
 {
     this->normalMatrix = glm::mat3(glm::transpose(glm::inverse(toWorld)));
+
+    GLfloat vertices[] =
+    {
+        -50.0f, 0.0f, -50.0f,  0.0f,  1.0f, 0.0f,
+        50.0f,  0.0f, -50.0f,  0.0f,  1.0f, 0.0f,
+        -50.0f, 0.0f,  50.0f,  0.0f,  1.0f, 0.0f,
+        50.0f,  0.0f,  50.0f,  0.0f,  1.0f, 0.0f,
+    };
+
+    GLuint indices[] =
+    {
+        0, 1, 2,
+        3, 2, 1
+    };
 
     // Create buffers/arrays
     glGenVertexArrays(1, &VAO);
@@ -35,7 +37,7 @@ Ground::Ground() : toWorld(glm::mat4(1.0f)), color(glm::vec3(0.545f, 0.271f, 0.0
     glBindVertexArray(VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices2), vertices2, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
     glEnableVertexAttribArray(0);
@@ -43,7 +45,7 @@ Ground::Ground() : toWorld(glm::mat4(1.0f)), color(glm::vec3(0.545f, 0.271f, 0.0
     glEnableVertexAttribArray(1);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices2), indices2, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0); // Note that this is allowed, the call to glVertexAttribPointer registered VBO as the currently bound vertex buffer object so afterwards we can safely unbind
 
@@ -73,7 +75,7 @@ void Ground::Draw(glm::mat4 C)
     GLint lightPosLoc = shader->GetUniform("lightPos");
     GLint viewPosLoc = shader->GetUniform("viewPos");
 
-    glUniformMatrix4fv(viewLoc, 1, false, glm::value_ptr(C));
+    glUniformMatrix4fv(viewLoc, 1, false, glm::value_ptr(Scene::GetViewMatrix()));
     glUniformMatrix4fv(modelLocation, 1, false, glm::value_ptr(this->toWorld));
     glUniformMatrix3fv(normalMatrixLoc, 1, false, glm::value_ptr(this->normalMatrix));
     glUniformMatrix4fv(projectionLocation, 1, false, glm::value_ptr(projection));
@@ -81,7 +83,7 @@ void Ground::Draw(glm::mat4 C)
     glUniform3fv(objectColorLoc, 1, glm::value_ptr(this->color));
     glUniform3fv(lightColorLoc, 1, glm::value_ptr(Scene::pLight->color));
     glUniform3fv(lightPosLoc, 1, glm::value_ptr(Scene::pLight->position));
-    glUniform3fv(viewPosLoc, 1, glm::value_ptr(Scene::camera->Position()));
+    glUniform3fv(viewPosLoc, 1, glm::value_ptr(Scene::GetCameraPosition()));
 
 
     glBindVertexArray(VAO);

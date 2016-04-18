@@ -141,7 +141,7 @@
       <Filter>Source Files\Graphics\Objects</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Player.h">
-      <Filter>Source Files\Graphics</Filter>
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

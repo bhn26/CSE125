@@ -1,5 +1,6 @@
 #pragma once
 #include <memory>
+#include <glm/glm.hpp>
 
 class Camera;
 class Cube;
@@ -22,4 +23,8 @@ namespace Scene
 
     void Update();
     void Draw();
+
+    // Interface to camera
+    glm::mat4 GetViewMatrix();
+    glm::vec3 GetCameraPosition();
 }

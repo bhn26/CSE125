@@ -9,7 +9,7 @@
 Player::Player() : toWorld(glm::mat4(1.0f))
 {
     model = std::make_unique<Model>("assets/chickens/objects/chicken.obj");
-    camera = std::make_unique<Camera>(glm::vec3(2.0f, 1.0f, -3.0f));
+    camera = std::make_unique<Camera>(glm::vec3(-1.5f, 4.5f, -7.0f), glm::vec3(0.0f, 1.0f, 0.0f), 90.0f, -15.0f);
 }
 
 Player::~Player()
@@ -29,14 +29,16 @@ void Player::Draw() const
     GLint lightPosLoc = shader->GetUniform("lightPos");
     GLint viewPosLoc = shader->GetUniform("viewPos");
 
-    glUniformMatrix4fv(viewLoc, 1, false, glm::value_ptr(toWorld * camera->GetViewMatrix()));
+    //glUniformMatrix4fv(viewLoc, 1, false, glm::value_ptr(Scene::camera->GetViewMatrix()));
+    glUniformMatrix4fv(viewLoc, 1, false, glm::value_ptr(this->GetViewMatrix()));
     glUniformMatrix4fv(modelLocation, 1, false, glm::value_ptr(this->toWorld));
     glUniformMatrix3fv(normalMatrixLoc, 1, false, glm::value_ptr(GetNormalMatrix()));
     glUniformMatrix4fv(projectionLocation, 1, false, glm::value_ptr(projection));
 
     glUniform3fv(lightColorLoc, 1, glm::value_ptr(Scene::pLight->color));
     glUniform3fv(lightPosLoc, 1, glm::value_ptr(Scene::pLight->position));
-    glUniform3fv(viewPosLoc, 1, glm::value_ptr(CameraPosition()));
+    glUniform3fv(viewPosLoc, 1, glm::value_ptr(this->CameraPosition()));
+    //glUniform3fv(viewPosLoc, 1, glm::value_ptr(Scene::camera->Position()));
 
     model->Draw(shader.get());
 }
@@ -44,38 +46,41 @@ void Player::Draw() const
 // Process movement
 void Player::ProcessKeyboard(DIRECTION direction, GLfloat deltaTime)
 {
-    GLfloat velocity = camera->Speed() * deltaTime;
-    //if (direction == D_FORWARD)
-    //    this->toWorld = glm::translate(glm::mat4(1.0f), camera->Front() * velocity) * this->toWorld;
-    //if (direction == D_BACKWARD)
-    //    this->toWorld = glm::translate(glm::mat4(1.0f), camera->Front() * -velocity) * this->toWorld;
-    //if (direction == D_LEFT)
-    //    this->toWorld = glm::translate(glm::mat4(1.0f), camera->Right() * velocity) * this->toWorld;
-    //if (direction == D_RIGHT)
-    //    this->toWorld = glm::translate(glm::mat4(1.0f), camera->Right() * -velocity) * this->toWorld;
-    //if (direction == D_UP)
-    //    this->toWorld = glm::translate(glm::mat4(1.0f), camera->Up() * velocity) * this->toWorld;
-    //if (direction == D_DOWN)
-    //    this->toWorld = glm::translate(glm::mat4(1.0f), camera->Up() * -velocity) * this->toWorld;
-
+    printf("Player::ProcessKeyboard(%d, %lf);\n", direction, deltaTime);
+    // Update the translation component of the world matrix
     if (direction == D_FORWARD)
-        this->toWorld = glm::translate(glm::mat4(1.0f), glm::mat3(toWorld) * glm::vec3(0.0f, 0.0f, 1.0f)) * this->toWorld;;
+        this->toWorld[3] += deltaTime * toWorld[2];
     if (direction == D_BACKWARD)
-        this->toWorld = glm::translate(glm::mat4(1.0f), glm::mat3(toWorld) * glm::vec3(0.0f, 0.0f, -1.0f)) * this->toWorld;
+        this->toWorld[3] -= deltaTime * toWorld[2];
     if (direction == D_LEFT)
-        this->toWorld = glm::translate(glm::mat4(1.0f), glm::mat3(toWorld) * glm::vec3(-1.0f, 0.0f, 0.0f)) * this->toWorld;
+        this->toWorld[3] += deltaTime * toWorld[0];
     if (direction == D_RIGHT)
-        this->toWorld = glm::translate(glm::mat4(1.0f), glm::mat3(toWorld) * glm::vec3(1.0f, 0.0f, 0.0f)) * this->toWorld;
+        this->toWorld[3] -= deltaTime * toWorld[0];
     if (direction == D_UP)
-        this->toWorld = glm::translate(glm::mat4(1.0f), glm::mat3(toWorld) * glm::vec3(0.0f, 1.0f, 0.0f)) * this->toWorld;
+        this->toWorld[3] += deltaTime * toWorld[1];
     if (direction == D_DOWN)
-        this->toWorld = glm::translate(glm::mat4(1.0f), glm::mat3(toWorld) * glm::vec3(0.0f, -1.0f, 0.0f)) * this->toWorld;
+        this->toWorld[3] -= deltaTime * toWorld[1];
+
+    for (int i = 0; i < 4; i++)
+    {
+        for (int j = 0; j < 4; j++)
+            printf("%lf ", toWorld[i][j]);
+        printf("\n");
+    }
 }
 
 // Processes input received from a mouse input system. Expects the offset value in both the x and y direction.
 void Player::ProcessMouseMovement(GLfloat xoffset, GLfloat yoffset, GLboolean constrainPitch)
 {
-    camera->ProcessMouseMovement(xoffset, yoffset, constrainPitch);
+    xoffset *= 0.25f;
+    //yoffset *= 0.25f;
+
+    // Update Front, Right and Up Vectors using the updated Eular angles
+    //this->UpdateCameraVectors();
+    //camera->ProcessMouseMovement(xoffset, yoffset, constrainPitch);
+
+    this->toWorld = this->toWorld * glm::rotate(glm::mat4(1.0f), glm::radians(-xoffset), glm::vec3(0.0f, 1.0f, 0.0f));
+                                  //* glm::rotate(glm::mat4(1.0f), glm::radians(-yoffset), glm::vec3(1.0f, 0.0f, 0.0f));
 }
 
 // Processes input received from a mouse scroll-wheel event. Only requires input on the vertical wheel-axis
@@ -91,7 +96,7 @@ glm::vec3 Player::CameraPosition() const
 
 glm::mat4 Player::GetViewMatrix() const
 {
-    return toWorld * camera->GetViewMatrix();
+    return camera->GetViewMatrix() * glm::inverse(toWorld);
 }
 
 glm::mat3 Player::GetNormalMatrix() const

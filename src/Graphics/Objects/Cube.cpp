@@ -9,53 +9,54 @@
 
 #include "../Scene.h"
 
-GLfloat vertices[] =
-{
-    -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-    0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-    0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-    0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-    -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-
-    -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-    0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-    0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-    0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-    -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-    -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-
-    -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-    -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-    -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-    -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-    -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-    -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-
-    0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-    0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-    0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-    0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-    0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-    0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-
-    -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-    0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-    0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-    0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-    -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-
-    -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
-    0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
-    0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-    0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-    -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-    -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
-};
 
 Cube::Cube() : angle(0.0f), toWorld(glm::mat4(1.0f)), color(glm::vec3(1.0f, 0.2f, 0.1f))
 {
+
+    GLfloat vertices[] =
+    {
+        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+        0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+        0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+        0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+
+        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+        0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+        0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+        0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+
+        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+
+        0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+        0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+        0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+        0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+        0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+        0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+
+        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+        0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+        0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+        0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+
+        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+        0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+        0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+        0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
+    };
     this->normalMatrix = glm::mat3(glm::transpose(glm::inverse(toWorld)));
 
     // Create buffers/arrays
@@ -101,7 +102,7 @@ void Cube::Draw(glm::mat4 C)
     GLint lightPosLoc = shader->GetUniform("lightPos");
     GLint viewPosLoc = shader->GetUniform("viewPos");
 
-    glUniformMatrix4fv(viewLoc, 1, false, glm::value_ptr(C));
+    glUniformMatrix4fv(viewLoc, 1, false, glm::value_ptr(Scene::GetViewMatrix()));
     glUniformMatrix4fv(modelLocation, 1, false, glm::value_ptr(this->toWorld));
     glUniformMatrix3fv(normalMatrixLoc, 1, false, glm::value_ptr(this->normalMatrix));
     glUniformMatrix4fv(projectionLocation, 1, false, glm::value_ptr(projection));
@@ -109,7 +110,7 @@ void Cube::Draw(glm::mat4 C)
     glUniform3fv(objectColorLoc, 1, glm::value_ptr(this->color));
     glUniform3fv(lightColorLoc, 1, glm::value_ptr(Scene::pLight->color));
     glUniform3fv(lightPosLoc, 1, glm::value_ptr(Scene::pLight->position));
-    glUniform3fv(viewPosLoc, 1, glm::value_ptr(Scene::camera->Position()));
+    glUniform3fv(viewPosLoc, 1, glm::value_ptr(Scene::GetCameraPosition()));
 
     glBindVertexArray(VAO);
     glDrawArrays(GL_TRIANGLES, 0, 36);
