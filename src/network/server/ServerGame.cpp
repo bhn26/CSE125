@@ -25,10 +25,14 @@ void ServerGame::update()
    {
         printf("client %d has been connected to the server\n",client_id);
 
+        // This will be an INIT_CONNECTION packet
+        receiveFromClients();
         client_id++;
    }
-
-   receiveFromClients();
+   else
+   {
+       receiveFromClients();
+   }
 }
 
 void ServerGame::receiveFromClients()
@@ -56,12 +60,14 @@ void ServerGame::receiveFromClients()
             // Deserialize and check the type of packet
             packet.deserialize(&(network_data[i]));
             
-            switch (packet.packet_type) {
+            switch (packet.hdr.packet_type) {
 
                 case INIT_CONNECTION:
 
-                    receiveInitPacket();
-                    sendInitPacket();
+                    // offset is i here since we want to parse the packet header
+                    // receive it and send it right back
+                    receiveInitPacket(i);
+                    //sendInitPacket();
                     //sendActionPackets();
 
                     break;
@@ -103,17 +109,34 @@ void ServerGame::sendActionPackets()
     char packet_data[packet_size];
 
     Packet packet;
-    packet.packet_type = ACTION_EVENT;
+    packet.hdr.packet_type = ACTION_EVENT;
 
     packet.serialize(packet_data);
 
     network->sendToAll(packet_data,packet_size);
 }
 
-
-void ServerGame::receiveInitPacket()
+// Handle new init packet from client
+void ServerGame::receiveInitPacket(int offset)
 {
+    struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset]);
+    
     printf("server received init packet from client\n");
+    const unsigned int packet_size = sizeof(Packet);
+    char packet_data[packet_size];
+
+    Packet packet;
+    packet.hdr.packet_type = INIT_CONNECTION;
+
+    // Send back to the client
+    packet.hdr.receiver_id = client_id;
+    packet.hdr.sender_id = SERVER_ID;
+
+    packet.serialize(packet_data);
+
+    network->sendToClient(packet_data, packet_size, client_id);
+    printf("server sent init packet to client %d\n", client_id);
+
 }
 
 // We actually only want to send this back to the client that we received it from, but assume 1 client for now
@@ -124,7 +147,7 @@ void ServerGame::sendInitPacket()
     char packet_data[packet_size];
 
     Packet packet;
-    packet.packet_type = INIT_CONNECTION;
+    packet.hdr.packet_type = INIT_CONNECTION;
 
     packet.serialize(packet_data);
 
@@ -135,7 +158,9 @@ void ServerGame::sendInitPacket()
 // in order to distinguish the owner of the event, right now we don't do this.
 void ServerGame::receiveSpawnPacket(int offset)
 {
-    printf("Received spawn packet from client\n");
+    struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset]);
+    
+    printf("Received spawn packet from client %d\n", hdr->sender_id);
 
     // Check if valid spawn and stuff like that
 }
@@ -144,7 +169,7 @@ void ServerGame::receiveSpawnPacket(int offset)
 void ServerGame::sendSpawnPacket()
 {
     Packet packet;
-    packet.packet_type = SPAWN_EVENT;
+    packet.hdr.packet_type = SPAWN_EVENT;
 
     const unsigned int packet_size = sizeof(Packet);
     struct SpawnInfo spawn;

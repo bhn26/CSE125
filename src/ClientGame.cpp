@@ -21,7 +21,7 @@ ClientGame::ClientGame(void)
     char packet_data[packet_size];
 
     Packet packet;
-    packet.packet_type = INIT_CONNECTION;
+    packet.hdr.packet_type = INIT_CONNECTION;
 
     packet.serialize(packet_data);
 
@@ -43,7 +43,7 @@ void ClientGame::sendActionPackets()
     char packet_data[packet_size];
 
     Packet packet;
-    packet.packet_type = ACTION_EVENT;
+    packet.hdr.packet_type = ACTION_EVENT;
 
     packet.serialize(packet_data);
 
@@ -51,10 +51,15 @@ void ClientGame::sendActionPackets()
 }
 
 // Do we want to create a new world every time we get a new init packet
-void ClientGame::receiveInitPacket()
+void ClientGame::receiveInitPacket(int offset)
 {
     printf("creating new client world\n");
     world = new DummyWorld();
+    
+    struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset]);
+
+    // Find out what our client id is from the init packet of the server
+    client_id = hdr->receiver_id;
 }
 
 
@@ -78,7 +83,9 @@ void ClientGame::sendSpawnPacket()
     char packet_data[packet_size];
 
     Packet packet;
-    packet.packet_type = SPAWN_EVENT;
+    packet.hdr.packet_type = SPAWN_EVENT;
+    packet.hdr.sender_id = client_id;
+    packet.hdr.receiver_id = SERVER_ID;
 
     packet.serialize(packet_data);
 
@@ -102,10 +109,12 @@ void ClientGame::update()
     {
         packet.deserialize(&(network_data[i]));
 
-        switch (packet.packet_type) {
+        switch (packet.hdr.packet_type) {
 
             case INIT_CONNECTION:
-                receiveInitPacket();
+
+                // offset for this will be the packet header
+                receiveInitPacket(i);
                 sendSpawnPacket();
                 break;
 
@@ -120,7 +129,7 @@ void ClientGame::update()
             case SPAWN_EVENT:
 
                 // You want to offset the packet header
-                receiveSpawnPacket(i + sizeof(PacketTypes));
+                receiveSpawnPacket(i + sizeof(PacketHeader));
 
                 break;
 

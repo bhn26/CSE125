@@ -21,7 +21,7 @@ public:
     // Want singleton for the world, if we receive an init packet from a new client
     // we want to send them the current world data, not reset the world
     // Assume 1 client for now
-    void receiveInitPacket();
+    void receiveInitPacket(int offset);
     void sendInitPacket();
 
     // The data we want in network_data should have an offset if any

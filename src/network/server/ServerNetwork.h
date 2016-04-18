@@ -11,6 +11,8 @@ using namespace std;
 #define DEFAULT_BUFLEN 512
 #define DEFAULT_PORT "6881" 
 
+
+
 class ServerNetwork
 {
 public:
@@ -19,6 +21,9 @@ public:
 
 	// send data to all clients
     void sendToAll(char * packets, int totalSize);
+
+    // send data to one client
+    void sendToClient(char * packets, int totalSize, unsigned int clientId);
 
 	// receive incoming data
     int receiveData(unsigned int client_id, char * recvbuf);

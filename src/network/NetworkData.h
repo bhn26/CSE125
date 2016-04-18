@@ -4,7 +4,8 @@
 
 #define MAX_PACKET_SIZE 1000000
 
-enum PacketTypes {
+enum PacketTypes 
+{
 
     INIT_CONNECTION = 0,
 
@@ -16,9 +17,20 @@ enum PacketTypes {
 
 };
 
-struct Packet {
-
+struct PacketHeader
+{
     unsigned int packet_type;
+
+    // id for server will be -1
+    int sender_id;
+    int receiver_id;
+
+};
+
+struct Packet
+{
+
+    struct PacketHeader hdr;
 
     struct SpawnInfo sp;
 
