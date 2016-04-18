@@ -24,13 +24,7 @@ ChickenAnim::ChickenAnim() {
     m_persProjInfo.zFar = 100.0f;
     
     m_position = Vector3f(0.0f, 0.0f, 6.0f);
-}
-
-ChickenAnim::~ChickenAnim() {
-    SAFE_DELETE(m_pEffect);
-}
-
-void ChickenAnim::Draw(Camera* camera) {
+    
     m_pEffect = new SkinningTechnique();
     
     if (!m_pEffect->Init()) {
@@ -47,6 +41,13 @@ void ChickenAnim::Draw(Camera* camera) {
     if (!m_mesh.LoadMesh("assets/chickens/animations/chicken_dance.fbx")) {
         printf("Mesh load failed\n");
     }
+}
+
+ChickenAnim::~ChickenAnim() {
+    SAFE_DELETE(m_pEffect);
+}
+
+void ChickenAnim::Draw(Camera* camera) {
 
     m_mesh.Render();
 }
@@ -54,9 +55,10 @@ void ChickenAnim::Draw(Camera* camera) {
 void ChickenAnim::Update() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
-    m_pEffect->Enable();
+    m_pEffect->Enable(); // use shader
     
-    vector<Matrix4f> Transforms;
+    //i think this is crashing at the end of the animation loop
+    /*vector<Matrix4f> Transforms;
     
     float RunningTime = GetRunningTime();
     
@@ -64,7 +66,7 @@ void ChickenAnim::Update() {
     
     for (uint i = 0 ; i < Transforms.size() ; i++) {
         m_pEffect->SetBoneTransform(i, Transforms[i]);
-    }
+    }*/
     
     glm::vec3 pos = Scene::camera->Position();
     m_pEffect->SetEyeWorldPos(Vector3f(pos.x, pos.y, pos.z));
