@@ -3,6 +3,8 @@
 #include <Windows.h>
 #include "network/client/ClientNetwork.h"
 #include "network/NetworkData.h"
+#include "network/DummyWorld.h"
+#include "network/GameData.h"
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -20,6 +22,15 @@ public:
 
 	void sendActionPackets();
 
+    void receiveInitPacket();
+
+
+    static void sendMovementPacket();
+
+    // The data we want in network_data should have an offset if any
+    void receiveSpawnPacket(int offset);
+    void sendSpawnPacket();
+
     char network_data[MAX_PACKET_SIZE];
 
     void update();
@@ -31,6 +42,8 @@ public:
 private:
     double lastTime;
     int nbFrames;
+
+    DummyWorld* world;
 
     static void Error_callback(int error, const char* description);
     void Setup_callbacks();

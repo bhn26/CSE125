@@ -50,6 +50,42 @@ void ClientGame::sendActionPackets()
     NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
 }
 
+// Do we want to create a new world every time we get a new init packet
+void ClientGame::receiveInitPacket()
+{
+    printf("creating new client world\n");
+    world = new DummyWorld();
+}
+
+
+
+void ClientGame::sendMovementPacket()
+{
+}
+
+void ClientGame::receiveSpawnPacket(int offset)
+{
+    struct SpawnInfo* sp = (struct SpawnInfo *) &(network_data[offset]);
+    world->spawnDummy(sp->x, sp->y);
+    printf("------------------------------------------------------\n");
+    printf("offset = %d\n", offset);
+    printf("client spawned a dummy at (%d,%d)\n", sp->x, sp->y);
+}
+
+void ClientGame::sendSpawnPacket()
+{
+    const unsigned int packet_size = sizeof(Packet);
+    char packet_data[packet_size];
+
+    Packet packet;
+    packet.packet_type = SPAWN_EVENT;
+
+    packet.serialize(packet_data);
+
+    NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
+}
+
+
 void ClientGame::update()
 {
     Packet packet;
@@ -69,11 +105,22 @@ void ClientGame::update()
 
         switch (packet.packet_type) {
 
+            case INIT_CONNECTION:
+                receiveInitPacket();
+                sendSpawnPacket();
+                break;
+
             case ACTION_EVENT:
 
                 printf("client received action event packet from server\n");
 
-                sendActionPackets();
+                //sendActionPackets();
+
+                break;
+
+            case SPAWN_EVENT:
+
+                receiveSpawnPacket(i);
 
                 break;
 

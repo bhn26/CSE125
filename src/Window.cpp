@@ -8,6 +8,7 @@
 #include "Graphics/Shader.h"
 #include "Graphics/Camera.h"
 
+
 const char* window_title = "GLFW Starter Project";
 Cube* cube;
 Camera* camera;

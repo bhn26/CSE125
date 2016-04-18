@@ -42,12 +42,6 @@
     <ClCompile Include="..\src\Graphics\shader.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Graphics\Objects\Mesh.cpp">
-      <Filter>Source Files\Graphics\Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Graphics\Objects\Model.cpp">
-      <Filter>Source Files\Graphics\Objects</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\Graphics\Nodes.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
@@ -57,34 +51,40 @@
     <ClCompile Include="..\src\Graphics\Scene.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\network\client\ClientNetwork.cpp">
+    <ClCompile Include="..\src\network\client\ClientNetwork.cpp">
       <Filter>Source Files\Network\Client Specific</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\network\NetworkServices.cpp">
+    <ClCompile Include="..\src\network\NetworkServices.cpp">
       <Filter>Source Files\Network</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\ClientGame.cpp">
+    <ClCompile Include="..\src\ClientGame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\Window.cpp">
+    <ClCompile Include="..\src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\main.cpp">
+    <ClCompile Include="..\src\Window.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Graphics\Model.cpp">
+      <Filter>Source Files\Graphics\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Graphics\Mesh.cpp">
+      <Filter>Source Files\Graphics\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\network\Dummy.cpp">
+      <Filter>Source Files\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\network\DummyWorld.cpp">
+      <Filter>Source Files\Network</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Graphics\Objects\Cube.h">
       <Filter>Source Files\Graphics\Objects</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Graphics\Objects\Mesh.h">
-      <Filter>Source Files\Graphics\Objects</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Graphics\Shader.h">
       <Filter>Source Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Graphics\Objects\Model.h">
-      <Filter>Source Files\Graphics\Objects</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Graphics\Nodes.h">
       <Filter>Source Files\Graphics</Filter>
@@ -98,20 +98,35 @@
     <ClInclude Include="..\src\Graphics\Scene.h">
       <Filter>Source Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\network\client\ClientNetwork.h">
+    <ClInclude Include="..\src\network\client\ClientNetwork.h">
       <Filter>Source Files\Network\Client Specific</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\network\NetworkData.h">
+    <ClInclude Include="..\src\network\NetworkData.h">
       <Filter>Source Files\Network</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\network\NetworkServices.h">
+    <ClInclude Include="..\src\network\NetworkServices.h">
       <Filter>Source Files\Network</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\ClientGame.h">
+    <ClInclude Include="..\src\ClientGame.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\Window.h">
+    <ClInclude Include="..\src\Window.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Graphics\Mesh.h">
+      <Filter>Source Files\Graphics\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Graphics\Model.h">
+      <Filter>Source Files\Graphics\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\network\Dummy.h">
+      <Filter>Source Files\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\network\DummyWorld.h">
+      <Filter>Source Files\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\network\GameData.h">
+      <Filter>Source Files\Network</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

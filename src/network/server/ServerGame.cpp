@@ -10,6 +10,8 @@ ServerGame::ServerGame(void)
 
     // set up the server network to listen 
     network = new ServerNetwork(); 
+
+    world = new DummyWorld();
 }
 
 ServerGame::~ServerGame(void)
@@ -50,16 +52,17 @@ void ServerGame::receiveFromClients()
         int i = 0;
         while (i < (unsigned int)data_length) 
         {
-            packet.deserialize(&(network_data[i]));
-            i += sizeof(Packet);
 
+            // Deserialize and check the type of packet
+            packet.deserialize(&(network_data[i]));
+            
             switch (packet.packet_type) {
 
                 case INIT_CONNECTION:
 
-                    printf("server received init packet from client\n");
-
-                    sendActionPackets();
+                    receiveInitPacket();
+                    sendInitPacket();
+                    //sendActionPackets();
 
                     break;
 
@@ -71,12 +74,23 @@ void ServerGame::receiveFromClients()
 
                     break;
 
+                case SPAWN_EVENT:
+
+                    // Receive packet
+                    // Check validity of event
+                    // If check passes, send update to clients
+                    receiveSpawnPacket(i);
+                    sendSpawnPacket();
+              
+                    break;
+
                 default:
 
                     printf("error in packet types\n");
 
                     break;
             }
+            i += sizeof(Packet);
         }
     }
 }
@@ -94,4 +108,56 @@ void ServerGame::sendActionPackets()
     packet.serialize(packet_data);
 
     network->sendToAll(packet_data,packet_size);
+}
+
+
+void ServerGame::receiveInitPacket()
+{
+    printf("server received init packet from client\n");
+}
+
+// We actually only want to send this back to the client that we received it from, but assume 1 client for now
+void ServerGame::sendInitPacket()
+{
+    printf("sending init to clients\n");
+    const unsigned int packet_size = sizeof(Packet);
+    char packet_data[packet_size];
+
+    Packet packet;
+    packet.packet_type = INIT_CONNECTION;
+
+    packet.serialize(packet_data);
+
+    network->sendToAll(packet_data, packet_size);
+}
+
+// Assume one client for now, we're going to need to send client id with each packet probably
+// in order to distinguish the owner of the event, right now we don't do this.
+void ServerGame::receiveSpawnPacket(int offset)
+{
+    printf("Received spawn packet from client\n");
+
+    // Check if valid spawn and stuff like that
+}
+
+
+void ServerGame::sendSpawnPacket()
+{
+
+    const unsigned int packet_size = sizeof(Packet);
+    struct SpawnInfo sp;
+    sp.x = rand() % 5;
+    sp.y = rand() % 5;
+    printf("spawned dummy at (%d,%d)\n", sp.x, sp.y);
+    char* packet_data = (char*) &sp;
+    
+    Packet packet;
+    packet.packet_type = SPAWN_EVENT;
+
+    packet.serialize(packet_data);
+
+    printf("size of Packet: %d\n", packet_size);
+
+    network->sendToAll(packet_data, packet_size);
+
 }
