@@ -16,6 +16,8 @@
 #include <audiodecoder/audiodecoder.h>
 #include <portaudio.h>
 
+#include "ogldev_util.h"
+
 ///////////////// AUDIO STUFF ///////////////////////////
 
 // All audio will be handled as stereo.
@@ -34,10 +36,14 @@ int audioCallback(const void *input, void *output,
 ////////////////////////////////////////////////////////////
 
 class Entity {
+private:
+    long long m_startTime;
+    
 public:
     Entity();
     
     int PlaySound(std::string sound_file);
+    float GetRunningTime();
     
     // Draw
     // Update

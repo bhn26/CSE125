@@ -30,6 +30,7 @@
 
 #include "skinning_technique.h"
 #include "ogldev_skinned_mesh.h"
+#include "ogldev_pipeline.h"
 
 class ChickenAnim : public Entity {
 public:

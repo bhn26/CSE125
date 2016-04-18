@@ -46,6 +46,7 @@ void Scene::Update(bool rotX, bool rotY, bool rotZ)
 {
     cube->Update();
     chicken->Update(rotX, rotY, rotZ);
+    chicken_anim->Update();
 }
 
 void Scene::Draw()

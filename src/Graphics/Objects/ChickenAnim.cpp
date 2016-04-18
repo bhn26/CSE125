@@ -52,7 +52,7 @@ void ChickenAnim::Draw(Camera* camera) {
 }
 
 void ChickenAnim::Update() {
-    /*glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     m_pEffect->Enable();
     
@@ -66,10 +66,11 @@ void ChickenAnim::Update() {
         m_pEffect->SetBoneTransform(i, Transforms[i]);
     }
     
-    m_pEffect->SetEyeWorldPos(m_pGameCamera->GetPos());
+    glm::vec3 pos = Scene::camera->Position();
+    m_pEffect->SetEyeWorldPos(Vector3f(pos.x, pos.y, pos.z));
     
     Pipeline p;
-    p.SetCamera(m_pGameCamera->GetPos(), m_pGameCamera->GetTarget(), m_pGameCamera->GetUp());
+    p.SetCamera(Scene::camera->Position(), Scene::camera->Position(), Scene::camera->Up());
     p.SetPerspectiveProj(m_persProjInfo);
     p.Scale(0.1f, 0.1f, 0.1f);
     
@@ -81,8 +82,8 @@ void ChickenAnim::Update() {
     
     m_mesh.Render();
     
-    RenderFPS();
+    //RenderFPS();
     
-    glutSwapBuffers();*/
+    //glutSwapBuffers();
 }
 

@@ -24,6 +24,7 @@
 		CD6658F51CC407BE0099F9BC /* skinning_technique.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD6658F31CC407BE0099F9BC /* skinning_technique.cpp */; };
 		CD6658F81CC409330099F9BC /* technique.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD6658F61CC409330099F9BC /* technique.cpp */; };
 		CD6658FC1CC40D6D0099F9BC /* ChickenAnim.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD6658FA1CC40D6D0099F9BC /* ChickenAnim.cpp */; };
+		CD68A8C61CC491430018109F /* ogldev_pipeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD68A8C41CC491430018109F /* ogldev_pipeline.cpp */; };
 		CD95AD161CBC890000BFC772 /* Window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD95AD141CBC890000BFC772 /* Window.cpp */; };
 		CD9C3C3D1CBA1AD200F627D8 /* libglfw3.3.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CD9C3C3C1CBA1AD200F627D8 /* libglfw3.3.1.dylib */; };
 		CD9C3C3F1CBA1B0800F627D8 /* libGLEW.1.13.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CD9C3C3E1CBA1B0800F627D8 /* libGLEW.1.13.0.dylib */; };
@@ -82,6 +83,8 @@
 		CD6658F71CC409330099F9BC /* technique.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = technique.h; sourceTree = "<group>"; };
 		CD6658FA1CC40D6D0099F9BC /* ChickenAnim.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ChickenAnim.cpp; sourceTree = "<group>"; };
 		CD6658FB1CC40D6D0099F9BC /* ChickenAnim.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChickenAnim.h; sourceTree = "<group>"; };
+		CD68A8C41CC491430018109F /* ogldev_pipeline.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ogldev_pipeline.cpp; sourceTree = "<group>"; };
+		CD68A8C51CC491430018109F /* ogldev_pipeline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ogldev_pipeline.h; sourceTree = "<group>"; };
 		CD95AD141CBC890000BFC772 /* Window.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Window.cpp; sourceTree = "<group>"; };
 		CD95AD151CBC890000BFC772 /* Window.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Window.h; sourceTree = "<group>"; };
 		CD9C3C3C1CBA1AD200F627D8 /* libglfw3.3.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw3.3.1.dylib; path = /usr/local/Cellar/glfw3/3.1.2/lib/libglfw3.3.1.dylib; sourceTree = "<absolute>"; };
@@ -197,6 +200,8 @@
 		CD6658E31CC3FD340099F9BC /* Animation */ = {
 			isa = PBXGroup;
 			children = (
+				CD68A8C41CC491430018109F /* ogldev_pipeline.cpp */,
+				CD68A8C51CC491430018109F /* ogldev_pipeline.h */,
 				CD6658E41CC3FD340099F9BC /* ogldev_math_3d.cpp */,
 				CD6658E51CC3FD340099F9BC /* ogldev_math_3d.h */,
 				CD6658E61CC3FD340099F9BC /* ogldev_skinned_mesh.cpp */,
@@ -303,6 +308,7 @@
 				CD9C3C4F1CBC670F00F627D8 /* Mesh.cpp in Sources */,
 				CD6658F51CC407BE0099F9BC /* skinning_technique.cpp in Sources */,
 				CD9C3C451CBA1E9500F627D8 /* Camera.cpp in Sources */,
+				CD68A8C61CC491430018109F /* ogldev_pipeline.cpp in Sources */,
 				CD9C3C531CBC67CE00F627D8 /* Chicken.cpp in Sources */,
 				CD429FCF1CBC821F001BCE47 /* Scene.cpp in Sources */,
 				CD6658EF1CC3FD340099F9BC /* ogldev_texture.cpp in Sources */,

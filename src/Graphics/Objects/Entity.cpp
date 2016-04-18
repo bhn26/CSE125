@@ -52,6 +52,7 @@ int audioCallback(const void *input, void *output,
 
 Entity::Entity() {
     // empty constructor
+    m_startTime = GetCurrentTimeMillis();
 }
 
 int Entity::PlaySound(std::string sound_file) {
@@ -125,4 +126,10 @@ int Entity::PlaySound(std::string sound_file) {
     delete pAudioDecoder;
     
     return 0;
+}
+
+float Entity::GetRunningTime()
+{
+    float RunningTime = (float)((double)GetCurrentTimeMillis() - (double)m_startTime) / 1000.0f;
+    return RunningTime;
 }
