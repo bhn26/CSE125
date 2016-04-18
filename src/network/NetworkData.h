@@ -20,7 +20,7 @@ struct Packet {
 
     unsigned int packet_type;
 
-    //struct SpawnInfo sp;
+    struct SpawnInfo sp;
 
     void serialize(char * data) {
         memcpy(data, this, sizeof(Packet));

@@ -143,16 +143,19 @@ void ServerGame::receiveSpawnPacket(int offset)
 
 void ServerGame::sendSpawnPacket()
 {
-
-    const unsigned int packet_size = sizeof(Packet);
-    struct SpawnInfo sp;
-    sp.x = rand() % 5;
-    sp.y = rand() % 5;
-    printf("spawned dummy at (%d,%d)\n", sp.x, sp.y);
-    char* packet_data = (char*) &sp;
-    
     Packet packet;
     packet.packet_type = SPAWN_EVENT;
+
+    const unsigned int packet_size = sizeof(Packet);
+    struct SpawnInfo spawn;
+    //sp.x = rand() % 5;
+    //sp.y = rand() % 5;
+    packet.sp.x = rand() % 5;
+    packet.sp.y = rand() % 5;
+
+    printf("spawned dummy at (%d,%d)\n", packet.sp.x, packet.sp.y);
+    char packet_data[packet_size];
+
 
     packet.serialize(packet_data);
 

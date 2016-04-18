@@ -101,7 +101,6 @@ void ClientGame::update()
     while (i < (unsigned int)data_length) 
     {
         packet.deserialize(&(network_data[i]));
-        i += sizeof(Packet);
 
         switch (packet.packet_type) {
 
@@ -120,7 +119,8 @@ void ClientGame::update()
 
             case SPAWN_EVENT:
 
-                receiveSpawnPacket(i);
+                // You want to offset the packet header
+                receiveSpawnPacket(i + sizeof(PacketTypes));
 
                 break;
 
@@ -130,6 +130,7 @@ void ClientGame::update()
 
                 break;
         }
+        i += sizeof(Packet);
     }
 }
 
