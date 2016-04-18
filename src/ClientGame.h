@@ -14,8 +14,7 @@ class Window;
 class ClientGame
 {
 public:
-	ClientGame(void);
-	~ClientGame(void);
+
 
 	ClientNetwork* network;
     GLFWwindow* window;
@@ -39,10 +38,21 @@ public:
     void Destroy();
     void GameLoop();
 
+    static void instantiate() { 
+        if (cg == NULL)
+            cg = new ClientGame();
+    }
+    static ClientGame* instance() {return cg;}
+
 private:
+    ClientGame(void);
+    ~ClientGame(void);
+
     double lastTime;
     int nbFrames;
     int client_id; // should know what client number we are so we can fill out packet headers
+
+    static ClientGame* cg;
 
     DummyWorld* world;
 

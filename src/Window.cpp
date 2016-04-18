@@ -8,6 +8,8 @@
 #include "Graphics/Shader.h"
 #include "Graphics/Camera.h"
 
+#include "ClientGame.h"
+
 
 const char* window_title = "GLFW Starter Project";
 Cube* cube;
@@ -134,6 +136,7 @@ void Window::Key_callback(GLFWwindow* window, int key, int scancode, int action,
                 break;
             case GLFW_KEY_SPACE:
                 camera->ProcessKeyboard(Camera_Movement::UP, 1);
+                ClientGame::instance()->sendSpawnPacket();
                 break;
             case GLFW_KEY_Z:
                 camera->ProcessKeyboard(Camera_Movement::DOWN, 1);

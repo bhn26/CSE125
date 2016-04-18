@@ -12,6 +12,8 @@
 glm::vec3 lightPos(3.0f, 2.0f, 2.0f);
 glm::vec3 lightColor(1.0f, 1.0f, 1.0f);
 
+ClientGame* ClientGame::cg = nullptr;
+
 ClientGame::ClientGame(void)
 {
     network = new ClientNetwork();
@@ -115,7 +117,6 @@ void ClientGame::update()
 
                 // offset for this will be the packet header
                 receiveInitPacket(i);
-                sendSpawnPacket();
                 break;
 
             case ACTION_EVENT:
