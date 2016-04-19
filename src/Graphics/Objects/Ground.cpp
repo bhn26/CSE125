@@ -1,63 +1,32 @@
-#include "Cube.h"
-#include "../../Window.h"
-#include "../Camera.h"
-#include "../PointLight.h"
+#include "Ground.h"
 
 #include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale, glm::perspective
 #include <glm/gtc/type_ptr.hpp>
-#include <utility>
 
+#include "../../Window.h"
 #include "../Scene.h"
+#include "../PointLight.h"
+#include "../Camera.h"
+#include "../../Player.h"
 
 
-Cube::Cube() : angle(0.0f), toWorld(glm::mat4(1.0f)), color(glm::vec3(1.0f, 0.2f, 0.1f))
+Ground::Ground() : toWorld(glm::mat4(1.0f)), color(glm::vec3(0.545f, 0.271f, 0.075f))
 {
+    this->normalMatrix = glm::mat3(glm::transpose(glm::inverse(toWorld)));
 
     GLfloat vertices[] =
     {
-        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-        0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-        0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-        0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-
-        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-        0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-        0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-        0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-
-        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-        -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-        -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-
-        0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-        0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-        0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-        0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-        0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-        0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-
-        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-        0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-        0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-        0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-
-        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
-        0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
-        0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-        0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
+        -50.0f, 0.0f, -50.0f,  0.0f,  1.0f, 0.0f,
+        50.0f,  0.0f, -50.0f,  0.0f,  1.0f, 0.0f,
+        -50.0f, 0.0f,  50.0f,  0.0f,  1.0f, 0.0f,
+        50.0f,  0.0f,  50.0f,  0.0f,  1.0f, 0.0f,
     };
-    this->normalMatrix = glm::mat3(glm::transpose(glm::inverse(toWorld)));
+
+    GLuint indices[] =
+    {
+        0, 1, 2,
+        3, 2, 1
+    };
 
     // Create buffers/arrays
     glGenVertexArrays(1, &VAO);
@@ -75,19 +44,23 @@ Cube::Cube() : angle(0.0f), toWorld(glm::mat4(1.0f)), color(glm::vec3(1.0f, 0.2f
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
     glEnableVertexAttribArray(1);
 
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
     glBindBuffer(GL_ARRAY_BUFFER, 0); // Note that this is allowed, the call to glVertexAttribPointer registered VBO as the currently bound vertex buffer object so afterwards we can safely unbind
 
     glBindVertexArray(0); // Unbind VAO (it's always a good thing to unbind any buffer/array to prevent strange bugs), remember: do NOT unbind the EBO, keep it bound to this VAO
 }
 
-Cube::~Cube()
+Ground::~Ground()
 {
     // Properly de-allocate all resources once they've outlived their purpose
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
+    glDeleteBuffers(1, &EBO);
 }
 
-void Cube::Draw(glm::mat4 C)
+void Ground::Draw(glm::mat4 C)
 {
     shader->Use();
 
@@ -112,24 +85,8 @@ void Cube::Draw(glm::mat4 C)
     glUniform3fv(lightPosLoc, 1, glm::value_ptr(Scene::pLight->position));
     glUniform3fv(viewPosLoc, 1, glm::value_ptr(Scene::GetCameraPosition()));
 
+
     glBindVertexArray(VAO);
-    glDrawArrays(GL_TRIANGLES, 0, 36);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 }
-
-void Cube::Update()
-{
-    Spin(0.3f);
-}
-
-void Cube::Spin(float deg)
-{
-    this->angle += deg;
-    if (this->angle > 360.0f || this->angle < -360.0f)
-        this->angle = 0.0f;
-
-    // This creates the matrix to rotate the cube
-    this->toWorld = glm::rotate(glm::mat4(1.0f), glm::radians(this->angle), glm::vec3(0.0f, 1.0f, 0.0f));
-    this->normalMatrix = glm::mat3(glm::transpose(glm::inverse(toWorld)));
-}
-

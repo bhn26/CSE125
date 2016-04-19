@@ -15,6 +15,8 @@
     #typedef int SOCKET;
 #endif
 
+#define SERVER_ID -1
+
 class NetworkServices
 {
 public:

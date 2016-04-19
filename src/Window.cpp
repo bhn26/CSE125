@@ -4,29 +4,33 @@
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include "Graphics/Objects/Cube.h"
+#include "Graphics/Objects/Chicken.h"
 #include "Graphics/Shader.h"
 #include "Graphics/Camera.h"
+#include "Graphics/Scene.h"
+#include "Player.h"
 
-const char* window_title = "GLFW Starter Project";
-Cube* cube;
-Camera* camera;
+const char* window_title = "Egg Scramble!";
+
+//Chicken * chicken;
+#include "ClientGame.h"
+
 //GLint shaderProgram;
 
 int Window::width;
 int Window::height;
+bool Window::firstMouse = true;
+GLuint Window::lastX = width / 2;
+GLuint Window::lastY = height / 2;
 
 void Window::Initialize_objects()
 {
-    cube = new Cube();
-    camera = new Camera(glm::vec3(0.0f, 0.0f, 3.0f));
-    cube->shader.SetShaders("src/Graphics/Shaders/basic_shader.vert", "src/Graphics/Shaders/basic_shader.frag");
-    //shaderProgram = LoadShaders("src/Graphics/Shaders/basic_shader.vert", "src/Graphics/Shaders/basic_shader.frag");
+    //chicken = new Chicken();
 }
 
 void Window::Clean_up()
 {
-    delete(cube);
+    //delete(chicken);
     //glDeleteProgram(shaderProgram);
 }
 
@@ -86,7 +90,8 @@ void Window::Idle_callback()
     // Call the update function of the current object drawPtr is pointing to
     // In this instance, drawPtr is pointing to a Cube object and is therefore
     // causing the cube to rotate via its spin function.
-    cube->Update();
+    //chicken->Update();
+    Scene::Update();
 }
 
 void Window::Display_callback(GLFWwindow* window)
@@ -98,7 +103,8 @@ void Window::Display_callback(GLFWwindow* window)
     //glUseProgram(shaderProgram);
 
     // Render the object drawPtr is pointing to
-    cube->Draw(camera->GetViewMatrix());
+    //chicken->Draw(camera);
+    Scene::Draw();
 
     // Gets events, including input such as keyboard and mouse or window resizing
     glfwPollEvents();
@@ -120,22 +126,25 @@ void Window::Key_callback(GLFWwindow* window, int key, int scancode, int action,
                 break;
 
             case GLFW_KEY_W:
-                camera->ProcessKeyboard(Camera_Movement::FORWARD, 1);
+                Scene::player->ProcessKeyboard(DIRECTION::D_FORWARD, 1);
+                ClientGame::instance()->sendMovePacket(MOVE_UP);
                 break;
             case GLFW_KEY_A:
-                camera->ProcessKeyboard(Camera_Movement::LEFT, 1);
+                Scene::player->ProcessKeyboard(DIRECTION::D_LEFT, 1);
+                ClientGame::instance()->sendMovePacket(MOVE_LEFT);
                 break;
             case GLFW_KEY_S:
-                camera->ProcessKeyboard(Camera_Movement::BACKWARD, 1);
+                Scene::player->ProcessKeyboard(DIRECTION::D_BACKWARD, 1);
+                ClientGame::instance()->sendMovePacket(MOVE_DOWN);
                 break;
             case GLFW_KEY_D:
-                camera->ProcessKeyboard(Camera_Movement::RIGHT, 1);
+                Scene::player->ProcessKeyboard(DIRECTION::D_RIGHT, 1);
                 break;
             case GLFW_KEY_SPACE:
-                camera->ProcessKeyboard(Camera_Movement::UP, 1);
+                Scene::player->ProcessKeyboard(DIRECTION::D_UP, 1);
                 break;
             case GLFW_KEY_Z:
-                camera->ProcessKeyboard(Camera_Movement::DOWN, 1);
+                Scene::player->ProcessKeyboard(DIRECTION::D_DOWN, 1);
                 break;
             default:
                 break;
@@ -143,23 +152,27 @@ void Window::Key_callback(GLFWwindow* window, int key, int scancode, int action,
     }
 }
 
-bool firstMouse = true;
-GLuint lastX = Window::width / 2;
-GLuint lastY = Window::height / 2;
 
 void Window::Mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
-    if (firstMouse)
+    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_1) == 1)
     {
-        lastX = xpos;
-        lastY = ypos;
-        firstMouse = false;
-    }
+        if (firstMouse)
+        {
+            lastX = (GLuint) xpos;
+            lastY = (GLuint) ypos;
+            firstMouse = false;
+        }
 
-    GLfloat xoffset = xpos - lastX;
-    GLfloat yoffset = lastY - ypos;
-    lastX = xpos;
-    lastY = ypos;
-    camera->ProcessMouseMovement(xoffset, yoffset);
+        GLfloat xoffset = (GLfloat) (xpos - lastX);
+        GLfloat yoffset = (GLfloat) (lastY - ypos);
+        lastX = (GLuint)xpos;
+        lastY = (GLuint)ypos;
+        Scene::player->ProcessMouseMovement(xoffset, yoffset);
+    }
+    else
+    {
+        firstMouse = true;
+    }
 }
 
