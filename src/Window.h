@@ -1,8 +1,8 @@
 #ifndef _WINDOW_H_
 #define _WINDOW_H_
 
-class Camera;
-extern Camera* camera;
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
 
 struct GLFWwindow;
 
@@ -11,6 +11,10 @@ class Window
 public:
     static int width;
     static int height;
+
+    static bool firstMouse;
+    static GLuint lastX;
+    static GLuint lastY;
 
     static void Initialize_objects();
     static void Clean_up();

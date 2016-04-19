@@ -19,13 +19,13 @@ public:
     /*  Functions   */
     // Constructor, expects a filepath to a 3D model.
     // "assets/model
-    Model(GLchar* path)
+    Model(const GLchar* path)
     {
         this->LoadModel(path);
     }
 
     // Draws the model, and thus all its meshes
-    void Draw(Shader shader)
+    void Draw(const Shader* shader)
     {
         for (GLuint i = 0; i < this->meshes.size(); i++)
             this->meshes[i].Draw(shader);

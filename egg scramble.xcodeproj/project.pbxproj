@@ -11,8 +11,8 @@
 		CD214BE11CB7027C00D7DFD6 /* client_main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD214BD41CB7027C00D7DFD6 /* client_main.cpp */; };
 		CD214BE21CB7027C00D7DFD6 /* Cube.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD214BD81CB7027C00D7DFD6 /* Cube.cpp */; };
 		CD214BE31CB7027C00D7DFD6 /* Shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD214BDA1CB7027C00D7DFD6 /* Shader.cpp */; };
-		CD214BE41CB7027C00D7DFD6 /* Window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD214BDF1CB7027C00D7DFD6 /* Window.cpp */; };
 		CD429FCF1CBC821F001BCE47 /* Scene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD429FCD1CBC821F001BCE47 /* Scene.cpp */; };
+		CD95AD161CBC890000BFC772 /* Window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD95AD141CBC890000BFC772 /* Window.cpp */; };
 		CD9C3C3D1CBA1AD200F627D8 /* libglfw3.3.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CD9C3C3C1CBA1AD200F627D8 /* libglfw3.3.1.dylib */; };
 		CD9C3C3F1CBA1B0800F627D8 /* libGLEW.1.13.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CD9C3C3E1CBA1B0800F627D8 /* libGLEW.1.13.0.dylib */; };
 		CD9C3C451CBA1E9500F627D8 /* Camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD9C3C411CBA1E9500F627D8 /* Camera.cpp */; };
@@ -46,12 +46,10 @@
 		CD214BD81CB7027C00D7DFD6 /* Cube.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Cube.cpp; sourceTree = "<group>"; };
 		CD214BD91CB7027C00D7DFD6 /* Cube.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Cube.h; sourceTree = "<group>"; };
 		CD214BDA1CB7027C00D7DFD6 /* Shader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Shader.cpp; sourceTree = "<group>"; };
-		CD214BDD1CB7027C00D7DFD6 /* basic_shader.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = basic_shader.frag; sourceTree = "<group>"; };
-		CD214BDE1CB7027C00D7DFD6 /* basic_shader.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = basic_shader.vert; sourceTree = "<group>"; };
-		CD214BDF1CB7027C00D7DFD6 /* Window.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Window.cpp; sourceTree = "<group>"; };
-		CD214BE01CB7027C00D7DFD6 /* Window.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Window.h; sourceTree = "<group>"; };
 		CD429FCD1CBC821F001BCE47 /* Scene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Scene.cpp; sourceTree = "<group>"; };
 		CD429FCE1CBC821F001BCE47 /* Scene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Scene.h; sourceTree = "<group>"; };
+		CD95AD141CBC890000BFC772 /* Window.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Window.cpp; sourceTree = "<group>"; };
+		CD95AD151CBC890000BFC772 /* Window.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Window.h; sourceTree = "<group>"; };
 		CD9C3C3C1CBA1AD200F627D8 /* libglfw3.3.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw3.3.1.dylib; path = /usr/local/Cellar/glfw3/3.1.2/lib/libglfw3.3.1.dylib; sourceTree = "<absolute>"; };
 		CD9C3C3E1CBA1B0800F627D8 /* libGLEW.1.13.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libGLEW.1.13.0.dylib; path = /usr/local/Cellar/glew/1.13.0/lib/libGLEW.1.13.0.dylib; sourceTree = "<absolute>"; };
 		CD9C3C411CBA1E9500F627D8 /* Camera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Camera.cpp; path = src/Graphics/Camera.cpp; sourceTree = SOURCE_ROOT; };
@@ -115,6 +113,8 @@
 			children = (
 				CD214BD41CB7027C00D7DFD6 /* client_main.cpp */,
 				CD214BD51CB7027C00D7DFD6 /* client_main.h */,
+				CD95AD141CBC890000BFC772 /* Window.cpp */,
+				CD95AD151CBC890000BFC772 /* Window.h */,
 				CD214BD61CB7027C00D7DFD6 /* Graphics */,
 			);
 			path = src;
@@ -124,9 +124,6 @@
 			isa = PBXGroup;
 			children = (
 				CD214BD71CB7027C00D7DFD6 /* Objects */,
-				CD214BDC1CB7027C00D7DFD6 /* Shaders */,
-				CD214BDF1CB7027C00D7DFD6 /* Window.cpp */,
-				CD214BE01CB7027C00D7DFD6 /* Window.h */,
 				CD214BDA1CB7027C00D7DFD6 /* Shader.cpp */,
 				CD9C3C481CBA1EC000F627D8 /* Shader.h */,
 				CD9C3C411CBA1E9500F627D8 /* Camera.cpp */,
@@ -153,15 +150,6 @@
 				CD9C3C521CBC67CE00F627D8 /* Chicken.h */,
 			);
 			path = Objects;
-			sourceTree = "<group>";
-		};
-		CD214BDC1CB7027C00D7DFD6 /* Shaders */ = {
-			isa = PBXGroup;
-			children = (
-				CD214BDD1CB7027C00D7DFD6 /* basic_shader.frag */,
-				CD214BDE1CB7027C00D7DFD6 /* basic_shader.vert */,
-			);
-			path = Shaders;
 			sourceTree = "<group>";
 		};
 		CD9C3C401CBA1BE700F627D8 /* Frameworks */ = {
@@ -238,6 +226,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CD214BE31CB7027C00D7DFD6 /* Shader.cpp in Sources */,
+				CD95AD161CBC890000BFC772 /* Window.cpp in Sources */,
 				CD9C3C461CBA1E9500F627D8 /* Nodes.cpp in Sources */,
 				CD214BE21CB7027C00D7DFD6 /* Cube.cpp in Sources */,
 				CD9C3C501CBC671000F627D8 /* Model.cpp in Sources */,
@@ -246,7 +235,6 @@
 				CD9C3C531CBC67CE00F627D8 /* Chicken.cpp in Sources */,
 				CD214BE11CB7027C00D7DFD6 /* client_main.cpp in Sources */,
 				CD429FCF1CBC821F001BCE47 /* Scene.cpp in Sources */,
-				CD214BE41CB7027C00D7DFD6 /* Window.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

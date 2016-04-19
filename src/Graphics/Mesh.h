@@ -41,7 +41,7 @@ public:
 
 
     // Render the mesh
-    void Draw(Shader shader);
+    void Draw(const Shader* shader);
 
 private:
     /*  Render data  */

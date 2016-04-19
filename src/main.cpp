@@ -7,10 +7,11 @@
 #include <process.h>
 #include "ClientGame.h"
 
-ClientGame * client;
+//ClientGame * client;
 
 int main()
 {
-    client = new ClientGame();
-    client->GameLoop();
+    ClientGame::instantiate();
+    
+    ClientGame::instance()->GameLoop();
 }

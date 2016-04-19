@@ -9,8 +9,7 @@
 #include "Window.h"
 #include "Graphics/Scene.h"
 
-glm::vec3 lightPos(3.0f, 2.0f, 2.0f);
-glm::vec3 lightColor(1.0f, 1.0f, 1.0f);
+ClientGame* ClientGame::cg = nullptr;
 
 ClientGame::ClientGame(void)
 {
@@ -21,7 +20,7 @@ ClientGame::ClientGame(void)
     char packet_data[packet_size];
 
     Packet packet;
-    packet.packet_type = INIT_CONNECTION;
+    packet.hdr.packet_type = INIT_CONNECTION;
 
     packet.serialize(packet_data);
 
@@ -43,7 +42,69 @@ void ClientGame::sendActionPackets()
     char packet_data[packet_size];
 
     Packet packet;
-    packet.packet_type = ACTION_EVENT;
+    packet.hdr.packet_type = ACTION_EVENT;
+
+    packet.serialize(packet_data);
+
+    NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
+}
+
+// Do we want to create a new world every time we get a new init packet
+void ClientGame::receiveInitPacket(int offset)
+{
+    printf("creating new client world\n");
+    world = new DummyWorld();
+    
+    struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset]);
+
+    // Find out what our client id is from the init packet of the server
+    client_id = hdr->receiver_id;
+}
+
+void ClientGame::receiveSpawnPacket(int offset)
+{
+    struct PosInfo* pi = (struct PosInfo *) &(network_data[offset]);
+    world->spawnDummy(pi->x, pi->y);
+    printf("------------------------------------------------------\n");
+    printf("offset = %d\n", offset);
+    printf("client spawned a dummy at (%d,%d)\n", pi->x, pi->y);
+}
+
+void ClientGame::sendSpawnPacket()
+{
+    const unsigned int packet_size = sizeof(Packet);
+    char packet_data[packet_size];
+
+    Packet packet;
+    packet.hdr.packet_type = SPAWN_EVENT;
+    packet.hdr.sender_id = client_id;
+    packet.hdr.receiver_id = SERVER_ID;
+
+    packet.serialize(packet_data);
+
+    NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
+}
+
+void ClientGame::receiveMovePacket(int offset)
+{
+    struct PosInfo* pi = (struct PosInfo *) &(network_data[offset]);
+    world->moveDummy(pi->direction);
+    struct PosInfo dpi = world->getDummyPos();
+    printf("Dummy moved to (%d,%d)\n", dpi.x, dpi.y);
+}
+
+// Need to know what direction to move in
+void ClientGame::sendMovePacket(int direction)
+{
+    const unsigned int packet_size = sizeof(Packet);
+    char packet_data[packet_size];
+
+    Packet packet;
+    packet.hdr.packet_type = MOVE_EVENT;
+    packet.hdr.sender_id = client_id;
+    packet.hdr.receiver_id = SERVER_ID;
+
+    packet.pi.direction = direction;
 
     packet.serialize(packet_data);
 
@@ -57,32 +118,47 @@ void ClientGame::update()
 
     if (data_length <= 0) 
     {
-        //no data recieved
-        return;
+        return;     //no data recieved
     }
 
     int i = 0;
     while (i < (unsigned int)data_length) 
     {
         packet.deserialize(&(network_data[i]));
-        i += sizeof(Packet);
 
-        switch (packet.packet_type) {
+        switch (packet.hdr.packet_type) {
+
+            case INIT_CONNECTION:
+
+                // offset for this will be the packet header
+                receiveInitPacket(i);
+                break;
 
             case ACTION_EVENT:
 
                 printf("client received action event packet from server\n");
 
-                sendActionPackets();
+                //sendActionPackets();
 
+                break;
+
+            case SPAWN_EVENT:
+
+                // You want to offset the packet header
+                receiveSpawnPacket(i + sizeof(PacketHeader));
+
+                break;
+
+            case MOVE_EVENT:
+
+                receiveMovePacket(i + sizeof(PacketHeader));
                 break;
 
             default:
-
                 printf("error in packet types\n");
-
                 break;
         }
+        i += sizeof(Packet);
     }
 }
 
