@@ -46,7 +46,6 @@ void Player::Draw() const
 // Process movement
 void Player::ProcessKeyboard(DIRECTION direction, GLfloat deltaTime)
 {
-    printf("Player::ProcessKeyboard(%d, %lf);\n", direction, deltaTime);
     // Update the translation component of the world matrix
     if (direction == D_FORWARD)
         this->toWorld[3] += deltaTime * toWorld[2];
@@ -60,13 +59,6 @@ void Player::ProcessKeyboard(DIRECTION direction, GLfloat deltaTime)
         this->toWorld[3] += deltaTime * toWorld[1];
     if (direction == D_DOWN)
         this->toWorld[3] -= deltaTime * toWorld[1];
-
-    for (int i = 0; i < 4; i++)
-    {
-        for (int j = 0; j < 4; j++)
-            printf("%lf ", toWorld[i][j]);
-        printf("\n");
-    }
 }
 
 // Processes input received from a mouse input system. Expects the offset value in both the x and y direction.

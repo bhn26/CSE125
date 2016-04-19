@@ -34,20 +34,11 @@ void Chicken::Draw(Camera* camera)
     // Draw the loaded model
     GLint viewLoc = shader->GetUniform("view");
     GLint modelLocation = shader->GetUniform("model");
-    GLint normalMatrixLoc = shader->GetUniform("normalMatrix");
     GLint projectionLocation = shader->GetUniform("projection");
-    GLint lightColorLoc = shader->GetUniform("lightColor");
-    GLint lightPosLoc = shader->GetUniform("lightPos");
-    GLint viewPosLoc = shader->GetUniform("viewPos");
     
     glUniformMatrix4fv(viewLoc, 1, false, glm::value_ptr(view));
     glUniformMatrix4fv(modelLocation, 1, false, glm::value_ptr(this->toWorld));
-    glUniformMatrix3fv(normalMatrixLoc, 1, false, glm::value_ptr(this->normalMatrix));
     glUniformMatrix4fv(projectionLocation, 1, false, glm::value_ptr(projection));
-    
-    glUniform3fv(lightColorLoc, 1, glm::value_ptr(Scene::pLight->color));
-    glUniform3fv(lightPosLoc, 1, glm::value_ptr(Scene::pLight->position));
-    glUniform3fv(viewPosLoc, 1, glm::value_ptr(Scene::camera->Position()));
 
     model->Draw(shader.get());
 }

@@ -7,6 +7,8 @@ class Cube;
 class Chicken;
 class Ground;
 class Player;
+class CubeMap;
+
 struct PointLight;
 
 namespace Scene
@@ -17,6 +19,7 @@ namespace Scene
     extern std::unique_ptr<PointLight> pLight;
     extern std::unique_ptr<Ground> ground;
     extern std::unique_ptr<Player> player;
+    extern std::unique_ptr<CubeMap> cubeMap;
 
     void Setup();
     void Dealloc();
