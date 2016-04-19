@@ -43,6 +43,12 @@
     <None Include="..\src\Graphics\Shaders\diffuse.frag">
       <Filter>Source Files\Graphics\Shaders</Filter>
     </None>
+    <None Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\Graphics\Shaders\cubemap.frag">
+      <Filter>Source Files\Graphics\Shaders</Filter>
+    </None>
+    <None Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\Graphics\Shaders\cubemap.vert">
+      <Filter>Source Files\Graphics\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Graphics\Objects\Cube.cpp">
@@ -89,6 +95,9 @@
     </ClCompile>
     <ClCompile Include="..\src\Player.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\Graphics\CubeMap.cpp">
+      <Filter>Source Files\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -142,6 +151,9 @@
     </ClInclude>
     <ClInclude Include="..\src\Player.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\Graphics\CubeMap.h">
+      <Filter>Source Files\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
