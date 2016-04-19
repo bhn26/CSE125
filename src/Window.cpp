@@ -13,6 +13,8 @@
 const char* window_title = "Egg Scramble!";
 
 //Chicken * chicken;
+#include "ClientGame.h"
+
 //GLint shaderProgram;
 
 int Window::width;
@@ -125,12 +127,15 @@ void Window::Key_callback(GLFWwindow* window, int key, int scancode, int action,
 
             case GLFW_KEY_W:
                 Scene::player->ProcessKeyboard(DIRECTION::D_FORWARD, 1);
+                ClientGame::instance()->sendMovePacket(MOVE_UP);
                 break;
             case GLFW_KEY_A:
                 Scene::player->ProcessKeyboard(DIRECTION::D_LEFT, 1);
+                ClientGame::instance()->sendMovePacket(MOVE_LEFT);
                 break;
             case GLFW_KEY_S:
                 Scene::player->ProcessKeyboard(DIRECTION::D_BACKWARD, 1);
+                ClientGame::instance()->sendMovePacket(MOVE_DOWN);
                 break;
             case GLFW_KEY_D:
                 Scene::player->ProcessKeyboard(DIRECTION::D_RIGHT, 1);

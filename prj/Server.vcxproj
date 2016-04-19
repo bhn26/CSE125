@@ -150,12 +150,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\src\network\Dummy.h" />
+    <ClInclude Include="..\src\network\DummyWorld.h" />
+    <ClInclude Include="..\src\network\GameData.h" />
     <ClInclude Include="..\src\network\NetworkData.h" />
     <ClInclude Include="..\src\network\NetworkServices.h" />
     <ClInclude Include="..\src\network\server\ServerGame.h" />
     <ClInclude Include="..\src\network\server\ServerNetwork.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\network\Dummy.cpp" />
+    <ClCompile Include="..\src\network\DummyWorld.cpp" />
     <ClCompile Include="..\src\network\NetworkServices.cpp" />
     <ClCompile Include="..\src\network\server\main.cpp" />
     <ClCompile Include="..\src\network\server\ServerGame.cpp" />

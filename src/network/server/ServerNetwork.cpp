@@ -151,3 +151,28 @@ void ServerNetwork::sendToAll(char * packets, int totalSize)
         }
     }
 }
+
+// send to specific client
+void ServerNetwork::sendToClient(char * packets, int totalSize, unsigned int clientId)
+{
+    std::map<unsigned int, SOCKET>::iterator iter;
+    int iSendResult;
+
+    iter = sessions.find(clientId);
+    if (iter != sessions.end())
+    {
+        SOCKET cSocket = iter->second;
+
+        iSendResult = NetworkServices::sendMessage(cSocket, packets, totalSize);
+
+        if (iSendResult == SOCKET_ERROR)
+        {
+            printf("send failed with error: %d\n", WSAGetLastError());
+            closesocket(cSocket);
+        }
+    }
+    else
+    {
+        printf("no client with id: %d\n", clientId);
+    }
+}
