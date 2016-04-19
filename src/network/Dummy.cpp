@@ -37,6 +37,12 @@ void Dummy::move(int direction)
     }
 }
 
+void Dummy::move(int newx, int newy)
+{
+    x = newx;
+    y = newy;
+}
+
 int Dummy::getX()
 {
     return x;

@@ -28,6 +28,9 @@ public:
     void receiveSpawnPacket(int offset);
     void sendSpawnPacket();
 
+    // Returns the direction to be moved, if it can't move there, returns BAD_MOVE
+    int receiveMovePacket(int offset);
+    void sendMovePacket(int direction);
 
 private:
 

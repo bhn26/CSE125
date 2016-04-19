@@ -123,15 +123,19 @@ void Window::Key_callback(GLFWwindow* window, int key, int scancode, int action,
                 break;
 
             case GLFW_KEY_W:
+                ClientGame::instance()->sendMovePacket(MOVE_UP);
                 camera->ProcessKeyboard(Camera_Movement::FORWARD, 1);
                 break;
             case GLFW_KEY_A:
+                ClientGame::instance()->sendMovePacket(MOVE_LEFT);
                 camera->ProcessKeyboard(Camera_Movement::LEFT, 1);
                 break;
             case GLFW_KEY_S:
+                ClientGame::instance()->sendMovePacket(MOVE_DOWN);
                 camera->ProcessKeyboard(Camera_Movement::BACKWARD, 1);
                 break;
             case GLFW_KEY_D:
+                ClientGame::instance()->sendMovePacket(MOVE_RIGHT);
                 camera->ProcessKeyboard(Camera_Movement::RIGHT, 1);
                 break;
             case GLFW_KEY_SPACE:

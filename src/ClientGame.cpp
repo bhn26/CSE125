@@ -64,19 +64,13 @@ void ClientGame::receiveInitPacket(int offset)
     client_id = hdr->receiver_id;
 }
 
-
-
-void ClientGame::sendMovementPacket()
-{
-}
-
 void ClientGame::receiveSpawnPacket(int offset)
 {
-    struct SpawnInfo* sp = (struct SpawnInfo *) &(network_data[offset]);
-    world->spawnDummy(sp->x, sp->y);
+    struct PosInfo* pi = (struct PosInfo *) &(network_data[offset]);
+    world->spawnDummy(pi->x, pi->y);
     printf("------------------------------------------------------\n");
     printf("offset = %d\n", offset);
-    printf("client spawned a dummy at (%d,%d)\n", sp->x, sp->y);
+    printf("client spawned a dummy at (%d,%d)\n", pi->x, pi->y);
 }
 
 void ClientGame::sendSpawnPacket()
@@ -94,6 +88,31 @@ void ClientGame::sendSpawnPacket()
     NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
 }
 
+void ClientGame::receiveMovePacket(int offset)
+{
+    struct PosInfo* pi = (struct PosInfo *) &(network_data[offset]);
+    world->moveDummy(pi->direction);
+    struct PosInfo dpi = world->getDummyPos();
+    printf("Dummy moved to (%d,%d)\n", dpi.x, dpi.y);
+}
+
+// Need to know what direction to move in
+void ClientGame::sendMovePacket(int direction)
+{
+    const unsigned int packet_size = sizeof(Packet);
+    char packet_data[packet_size];
+
+    Packet packet;
+    packet.hdr.packet_type = MOVE_EVENT;
+    packet.hdr.sender_id = client_id;
+    packet.hdr.receiver_id = SERVER_ID;
+
+    packet.pi.direction = direction;
+
+    packet.serialize(packet_data);
+
+    NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
+}
 
 void ClientGame::update()
 {
@@ -132,6 +151,11 @@ void ClientGame::update()
                 // You want to offset the packet header
                 receiveSpawnPacket(i + sizeof(PacketHeader));
 
+                break;
+
+            case MOVE_EVENT:
+
+                receiveMovePacket(i + sizeof(PacketHeader));
                 break;
 
             default:

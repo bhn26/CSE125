@@ -80,6 +80,11 @@ void ServerGame::receiveFromClients()
 
                     break;
 
+                case MOVE_EVENT:
+                    // sends a move packet based on if reception was valid
+                    sendMovePacket(receiveMovePacket(i + sizeof(PacketHeader)));
+                    break;
+
                 case SPAWN_EVENT:
 
                     // Receive packet
@@ -172,13 +177,12 @@ void ServerGame::sendSpawnPacket()
     packet.hdr.packet_type = SPAWN_EVENT;
 
     const unsigned int packet_size = sizeof(Packet);
-    struct SpawnInfo spawn;
-    //sp.x = rand() % 5;
-    //sp.y = rand() % 5;
-    packet.sp.x = rand() % 5;
-    packet.sp.y = rand() % 5;
 
-    printf("spawned dummy at (%d,%d)\n", packet.sp.x, packet.sp.y);
+    packet.pi.x = rand() % 5;
+    packet.pi.y = rand() % 5;
+
+    printf("spawned dummy at (%d,%d)\n", packet.pi.x, packet.pi.y);
+    world->spawnDummy(packet.pi.x, packet.pi.y);
     char packet_data[packet_size];
 
 
@@ -188,4 +192,47 @@ void ServerGame::sendSpawnPacket()
 
     network->sendToAll(packet_data, packet_size);
 
+}
+
+int ServerGame::receiveMovePacket(int offset)
+{
+    struct PosInfo* pi = (struct PosInfo *) &(network_data[offset]);
+
+    struct PosInfo dpi = world->getDummyPos();
+    printf("dummy's current pos is (%d,%d)\n", dpi.x, dpi.y);
+
+    // check if this is a valid move
+    if (world->canMove(pi->direction))
+    {
+        world->moveDummy(pi->direction);
+        dpi = world->getDummyPos();
+        printf("Dummy moved to (%d,%d)\n", dpi.x, dpi.y);
+        return pi->direction;
+    }
+    else
+    {
+        dpi = world->getDummyPos();
+        printf("dummy cannot move past (%d,%d)\n", dpi.x, dpi.y);
+    }
+    return BAD_MOVE;
+
+}
+
+void ServerGame::sendMovePacket(int direction)
+{
+    // don't send anything if it's a bad move
+    if (direction != BAD_MOVE)
+    {
+        Packet packet;
+        packet.hdr.packet_type = MOVE_EVENT;
+        packet.pi.direction = direction;
+
+        const unsigned int packet_size = sizeof(Packet);
+        char packet_data[packet_size];
+
+        packet.serialize(packet_data);
+
+        network->sendToAll(packet_data, packet_size);
+        printf("Sent move packet to clients\n");
+    }
 }

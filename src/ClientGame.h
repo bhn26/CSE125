@@ -23,12 +23,12 @@ public:
 
     void receiveInitPacket(int offset);
 
-
-    static void sendMovementPacket();
-
     // The data we want in network_data should have an offset if any
     void receiveSpawnPacket(int offset);
     void sendSpawnPacket();
+
+    void receiveMovePacket(int offset);
+    void sendMovePacket(int direction);
 
     char network_data[MAX_PACKET_SIZE];
 

@@ -1,5 +1,6 @@
 #pragma once
 #include "Dummy.h"
+#include "GameData.h"
 #include <vector>
 
 #define MAXPOS 5
@@ -13,8 +14,15 @@ class DummyWorld
         bool canMove(int direction);
         void spawnDummy(int x, int y);
 
+        // move dummy in a direction
+        void moveDummy(int direction);
+
+        // move dummy to specific position
+        void moveDummy(int x, int y);
+
+        PosInfo getDummyPos();
 
     private:
-        std::vector<Dummy *> dummies;
+        Dummy* dummy;
         int numDummies;
 };

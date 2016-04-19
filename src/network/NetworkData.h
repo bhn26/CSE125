@@ -32,7 +32,7 @@ struct Packet
 
     struct PacketHeader hdr;
 
-    struct SpawnInfo sp;
+    struct PosInfo pi;
 
     void serialize(char * data) {
         memcpy(data, this, sizeof(Packet));

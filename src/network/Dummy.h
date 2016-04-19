@@ -1,15 +1,6 @@
 #pragma once
 
-enum MoveType {
-
-    MOVE_UP = 0,
-
-    MOVE_DOWN = 1,
-
-    MOVE_LEFT = 2,
-
-    MOVE_RIGHT = 3
-};
+#include "GameData.h"
 
 class Dummy
 {
@@ -19,6 +10,9 @@ public:
     ~Dummy(void);
     
     void move(int direction);
+
+    // move to specific coordinates
+    void move(int newx, int newy);
 
     int getX();
     int getY();
