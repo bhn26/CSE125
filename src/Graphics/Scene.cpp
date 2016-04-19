@@ -44,14 +44,14 @@ void Scene::Dealloc()
 
 void Scene::Update(bool rotX, bool rotY, bool rotZ)
 {
-    cube->Update();
-    chicken->Update(rotX, rotY, rotZ);
+    //cube->Update();
+    //chicken->Update(rotX, rotY, rotZ);
     chicken_anim->Update();
 }
 
 void Scene::Draw()
 {
-    chicken->Draw(camera.get());
+    //chicken->Draw(camera.get());
     ground->Draw(camera->GetViewMatrix());
     //cube->Draw(camera->GetViewMatrix());
     

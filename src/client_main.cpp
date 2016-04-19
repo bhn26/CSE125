@@ -94,7 +94,7 @@ int main(void)
         nbFrames++;
         if (currentTime - lastTime >= 5.0) // If last prinf() was more than 1 sec ago
         {
-            printf("%f ms/frame\n", 5000.0/double(nbFrames));   // printf and reset timer
+            //printf("%f ms/frame\n", 5000.0/double(nbFrames));   // printf and reset timer
             nbFrames = 0;
             lastTime += 5.0;
         }

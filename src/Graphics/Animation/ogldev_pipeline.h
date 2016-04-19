@@ -101,7 +101,7 @@ public:
     void SetCamera(glm::vec3 Pos, glm::vec3 Target, glm::vec3 Up)
     {
         m_camera.Pos = Vector3f(Pos.x, Pos.y, Pos.z);
-        m_camera.Target = Vector3f(Target.x, Target.y, Target.z);;
+        //m_camera.Target = Vector3f(Target.x, Target.y, Target.z);;
         m_camera.Up = Vector3f(Up.x, Up.y, Up.z);;
     }
     

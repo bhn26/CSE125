@@ -101,9 +101,6 @@
 		CD9C3C4E1CBC670F00F627D8 /* Model.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Model.h; sourceTree = "<group>"; };
 		CD9C3C511CBC67CE00F627D8 /* Chicken.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Chicken.cpp; sourceTree = "<group>"; };
 		CD9C3C521CBC67CE00F627D8 /* Chicken.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Chicken.h; sourceTree = "<group>"; };
-		CD9C3C541CBC6EED00F627D8 /* libSOIL.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSOIL.a; path = "lib/Simple OpenGL Image Library/lib/libSOIL.a"; sourceTree = "<group>"; };
-		CD9C3C561CBC71B300F627D8 /* libSOIL.lib */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSOIL.lib; path = "lib/Simple OpenGL Image Library/lib/libSOIL.lib"; sourceTree = "<group>"; };
-		CD9C3C581CBC735F00F627D8 /* libSOIL.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSOIL.a; path = lib/libSOIL.a; sourceTree = "<group>"; };
 		CD9C3C5A1CBC73C000F627D8 /* libSOIL.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSOIL.a; path = ../../../../usr/local/lib/libSOIL.a; sourceTree = "<group>"; };
 		CD9C3C5E1CBC761F00F627D8 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
 		CD9C3C601CBC763900F627D8 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
@@ -228,9 +225,6 @@
 				CD9C3C601CBC763900F627D8 /* CoreFoundation.framework */,
 				CD9C3C5E1CBC761F00F627D8 /* GLUT.framework */,
 				CD9C3C5A1CBC73C000F627D8 /* libSOIL.a */,
-				CD9C3C581CBC735F00F627D8 /* libSOIL.a */,
-				CD9C3C561CBC71B300F627D8 /* libSOIL.lib */,
-				CD9C3C541CBC6EED00F627D8 /* libSOIL.a */,
 				CD9C3C491CBA1F3900F627D8 /* libassimp.3.2.0.dylib */,
 				CD9C3C3E1CBA1B0800F627D8 /* libGLEW.1.13.0.dylib */,
 				CD9C3C3C1CBA1AD200F627D8 /* libglfw3.3.1.dylib */,

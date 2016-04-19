@@ -48,26 +48,10 @@ ChickenAnim::~ChickenAnim() {
 }
 
 void ChickenAnim::Draw(Camera* camera) {
-
-    m_mesh.Render();
-}
-
-void ChickenAnim::Update() {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     m_pEffect->Enable(); // use shader
-    
-    //i think this is crashing at the end of the animation loop
-    /*vector<Matrix4f> Transforms;
-    
-    float RunningTime = GetRunningTime();
-    
-    m_mesh.BoneTransform(RunningTime, Transforms);
-    
-    for (uint i = 0 ; i < Transforms.size() ; i++) {
-        m_pEffect->SetBoneTransform(i, Transforms[i]);
-    }*/
-    
+
     glm::vec3 pos = Scene::camera->Position();
     m_pEffect->SetEyeWorldPos(Vector3f(pos.x, pos.y, pos.z));
     
@@ -87,5 +71,22 @@ void ChickenAnim::Update() {
     //RenderFPS();
     
     //glutSwapBuffers();
+
+}
+
+void ChickenAnim::Update() {
+
+    
+    //i think this is crashing at the end of the animation loop
+    vector<Matrix4f> Transforms;
+    
+    float RunningTime = GetRunningTime();
+    
+    m_mesh.BoneTransform(RunningTime, Transforms);
+    
+    for (uint i = 0 ; i < Transforms.size() ; i++) {
+        m_pEffect->SetBoneTransform(i, Transforms[i]);
+    }
+    
 }
 
