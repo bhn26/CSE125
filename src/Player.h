@@ -27,6 +27,8 @@ class Player
     glm::mat4 toWorld;
     glm::mat4 cameraTransOffset;
 
+    float camAngle;
+
 public:
     std::shared_ptr<Shader> shader;
 
