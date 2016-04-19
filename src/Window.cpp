@@ -171,6 +171,10 @@ void Window::Key_callback(GLFWwindow* window, int key, int scancode, int action,
             case GLFW_KEY_UP:
                 Scene::camera->ProcessKeyboard(Camera_Movement::DOWN, 1);
                 break;
+            case GLFW_KEY_P:
+                Scene::chicken->PlaySound("assets/audio/chicken_dance.wav");
+                fprintf(stderr, "PlaySound\n");
+                break;
             default:
                 break;
         }

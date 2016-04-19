@@ -19,7 +19,10 @@ Chicken::Chicken()
     //shader.SetShaders("src/Graphics/Shaders/model_loading.vert",
     //                  "src/Graphics/Shaders/model_loading.frag");
 
-    PlaySound("assets/audio/chicken_dance.mp3");
+    if (!PlaySound("assets/audio/chicken_dance.wav"))
+    {
+        fprintf(stderr, "Error! Can't play audio file: assets/audio/chicken_dance.wav");
+    }
 }
 
 Chicken::~Chicken()

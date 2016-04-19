@@ -87,6 +87,9 @@
     <ClCompile Include="..\src\Graphics\Objects\Ground.cpp">
       <Filter>Source Files\Graphics\Objects</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Graphics\Objects\Entity.cpp">
+      <Filter>Source Files\Graphics\Objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Graphics\Objects\Cube.h">
@@ -135,6 +138,9 @@
       <Filter>Source Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Graphics\Objects\Ground.h">
+      <Filter>Source Files\Graphics\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Graphics\Objects\Entity.h">
       <Filter>Source Files\Graphics\Objects</Filter>
     </ClInclude>
   </ItemGroup>

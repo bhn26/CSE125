@@ -46,7 +46,6 @@
 # Remove directories
 out/
 packages/
-packages.config
 Client/
 Server/
 Release/
