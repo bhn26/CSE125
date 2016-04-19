@@ -8,11 +8,13 @@
 
 #include "Window.h"
 #include "Graphics/Scene.h"
+//#define _WIN32
 
 ClientGame* ClientGame::cg = nullptr;
 
 ClientGame::ClientGame(void)
 {
+#ifdef _WIN32
     network = new ClientNetwork();
 
     // send init packet
@@ -25,6 +27,7 @@ ClientGame::ClientGame(void)
     packet.serialize(packet_data);
 
     NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
+#endif
 
     Initialize();
 }
@@ -35,6 +38,7 @@ ClientGame::~ClientGame(void)
     Destroy();
 }
 
+#ifdef _WIN32
 void ClientGame::sendActionPackets()
 {
     // send action packet
@@ -161,6 +165,7 @@ void ClientGame::update()
         i += sizeof(Packet);
     }
 }
+#endif
 
 void ClientGame::Initialize()
 {
@@ -195,7 +200,9 @@ void ClientGame::GameLoop()
 {
     while (!glfwWindowShouldClose(window))
     {
+#ifdef _WIN32
         update();
+#endif
 
         // Measure speed
         double currentTime = glfwGetTime();

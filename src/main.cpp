@@ -4,7 +4,10 @@
 // may need #include "stdafx.h" in visual studio
 
 // used for multi-threading
+//#define _WIN32
+#ifdef _WIN32
 #include <process.h>
+#endif
 #include "ClientGame.h"
 
 //ClientGame * client;
