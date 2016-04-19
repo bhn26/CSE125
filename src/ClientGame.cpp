@@ -65,8 +65,8 @@ void ClientGame::receiveSpawnPacket(int offset)
 {
     struct PosInfo* pi = (struct PosInfo *) &(network_data[offset]);
     world->spawnDummy(pi->x, pi->y);
-    printf("------------------------------------------------------\n");
-    printf("offset = %d\n", offset);
+    //printf("------------------------------------------------------\n");
+    //printf("offset = %d\n", offset);
     printf("client spawned a dummy at (%d,%d)\n", pi->x, pi->y);
 }
 

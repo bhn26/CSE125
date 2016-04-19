@@ -188,7 +188,7 @@ void ServerGame::sendSpawnPacket()
 
     packet.serialize(packet_data);
 
-    printf("size of Packet: %d\n", packet_size);
+    //printf("size of Packet: %d\n", packet_size);
 
     network->sendToAll(packet_data, packet_size);
 
@@ -199,7 +199,7 @@ int ServerGame::receiveMovePacket(int offset)
     struct PosInfo* pi = (struct PosInfo *) &(network_data[offset]);
 
     struct PosInfo dpi = world->getDummyPos();
-    printf("dummy's current pos is (%d,%d)\n", dpi.x, dpi.y);
+    //printf("dummy's current pos is (%d,%d)\n", dpi.x, dpi.y);
 
     // check if this is a valid move
     if (world->canMove(pi->direction))
@@ -233,6 +233,6 @@ void ServerGame::sendMovePacket(int direction)
         packet.serialize(packet_data);
 
         network->sendToAll(packet_data, packet_size);
-        printf("Sent move packet to clients\n");
+        //printf("Sent move packet to clients\n");
     }
 }
