@@ -6,13 +6,6 @@
 #include "CubeMap.h"
 #include "Scene.h"
 #include "PointLight.h"
-#include "Shader.h"
-#include "Camera.h"
-#include "../Window.h"
-
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-#include <cstdio>
 
 // Other Libs
 #include <SOIL.h>
@@ -91,17 +84,13 @@ GLuint CubeMap::LoadCubeMap(){
     GLuint textureID;
     glGenTextures(1, &textureID);
     
-    int width, height;
+    int width,height;
     unsigned char* image;
     
     glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
     for(GLuint i = 0; i < faces.size(); i++)
     {
         image = SOIL_load_image(faces[i], &width, &height, 0, SOIL_LOAD_RGB);
-        if (!image)
-        {
-            fprintf(stderr, "Error: %s\n", SOIL_last_result);
-        }
         glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
         SOIL_free_image_data(image);
     }
@@ -121,7 +110,7 @@ void CubeMap::Draw(Camera* camera)
     // Draw skybox as last
     glDepthFunc(GL_LEQUAL);  // Change depth function so depth test passes when values are equal to depth buffer's content
     shader->Use();
-    glm::mat4 projection = glm::perspective(camera->Zoom(), (float)Window::width/(float)Window::height, 0.1f, 1000.0f);
+    glm::mat4 projection = glm::perspective(camera->Zoom(), (float)Window::width/(float)Window::height, 0.1f, 100.0f);
     
     GLint viewLoc = shader->GetUniform("view");
     GLint modelLocation = shader->GetUniform("model");
