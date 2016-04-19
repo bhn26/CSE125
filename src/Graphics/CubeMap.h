@@ -6,22 +6,15 @@
 #ifndef __egg_scramble__CubeMap__
 #define __egg_scramble__CubeMap__
 
-#include <stdio.h>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 
-#include <glm/mat4x4.hpp> // glm::mat4
-#include <glm/mat3x3.hpp> // glm::mat3
-#include <glm/vec3.hpp>
 #include <vector>
 #include <memory>
 
-#include "Shader.h"
-#include "Camera.h"
-#include "../Window.h"
+class Camera;
+class Shader;
 
 class CubeMap
 {
