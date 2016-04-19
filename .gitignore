@@ -43,10 +43,9 @@
 *.swp
 *.swo
 
-# Remove directories
+# Ignore directories
 out/
 packages/
-packages.config
 Client/
 Server/
 Release/
@@ -54,10 +53,6 @@ Debug/
 
 *.txt
 
-
-#ignore directories
-packages/
-out/
 
 # Ignore NuGet packages
 #*.nupkg
