@@ -1,10 +1,13 @@
 #pragma once
+//#define _WIN32
+#ifdef _WIN32
 #include <winsock2.h>
-#include <Windows.h>
 #include "network/client/ClientNetwork.h"
 #include "network/NetworkData.h"
 #include "network/DummyWorld.h"
 #include "network/GameData.h"
+#include <Windows.h>
+#endif
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -14,9 +17,12 @@ class Window;
 class ClientGame
 {
 public:
+#ifdef _WIN32
     ClientNetwork* network;
+#endif
     GLFWwindow* window;
 
+#ifdef _WIN32
     void sendActionPackets();
 
     void receiveInitPacket(int offset);
@@ -31,6 +37,7 @@ public:
     char network_data[MAX_PACKET_SIZE];
 
     void update();
+#endif
 
     void Initialize();
     void Destroy();
@@ -52,7 +59,9 @@ private:
 
     static ClientGame* cg;
 
+#ifdef _WIN32
     DummyWorld* world;
+#endif
 
     static void Error_callback(int error, const char* description);
     void Setup_callbacks();

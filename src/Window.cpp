@@ -127,23 +127,27 @@ void Window::Key_callback(GLFWwindow* window, int key, int scancode, int action,
 
             case GLFW_KEY_W:
                 Scene::player->ProcessKeyboard(DIRECTION::D_FORWARD, 1);
+#ifdef _WIN32
                 ClientGame::instance()->sendMovePacket(MOVE_UP);
+#endif
                 break;
             case GLFW_KEY_A:
                 Scene::player->ProcessKeyboard(DIRECTION::D_LEFT, 1);
+#ifdef _WIN32
                 ClientGame::instance()->sendMovePacket(MOVE_LEFT);
+#endif
                 break;
             case GLFW_KEY_S:
                 Scene::player->ProcessKeyboard(DIRECTION::D_BACKWARD, 1);
+#ifdef _WIN32
                 ClientGame::instance()->sendMovePacket(MOVE_DOWN);
+#endif
                 break;
             case GLFW_KEY_D:
                 Scene::player->ProcessKeyboard(DIRECTION::D_RIGHT, 1);
-                ClientGame::instance()->sendMovePacket(MOVE_DOWN);
                 break;
             case GLFW_KEY_SPACE:
                 Scene::player->ProcessKeyboard(DIRECTION::D_UP, 1);
-                ClientGame::instance()->sendSpawnPacket();
                 break;
             case GLFW_KEY_Z:
                 Scene::player->ProcessKeyboard(DIRECTION::D_DOWN, 1);
@@ -177,4 +181,3 @@ void Window::Mouse_callback(GLFWwindow* window, double xpos, double ypos)
         firstMouse = true;
     }
 }
-
