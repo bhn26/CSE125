@@ -89,7 +89,7 @@ glm::vec3 Player::CameraPosition() const
 
 glm::mat4 Player::GetViewMatrix() const
 {
-    return glm::rotate(glm::mat4(1.0f), camAngle, glm::vec3(-1.0f, 0.0f, 0.0f)) * camera->GetViewMatrix() * glm::inverse(toWorld);
+    return camera->GetViewMatrix() * glm::rotate(glm::mat4(1.0f), camAngle, glm::vec3(1.0f, 0.0f, 0.0f)) * glm::inverse(toWorld);
 }
 
 glm::mat3 Player::GetNormalMatrix() const
