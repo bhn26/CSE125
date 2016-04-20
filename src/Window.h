@@ -13,8 +13,9 @@ public:
     static int height;
 
     static bool firstMouse;
-    static GLuint lastX;
-    static GLuint lastY;
+    static bool mouseCaptured;
+    static GLint lastX;
+    static GLint lastY;
 
     static void Initialize_objects();
     static void Clean_up();
@@ -24,6 +25,7 @@ public:
     static void Display_callback(GLFWwindow*);
     static void Key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
     static void Mouse_callback(GLFWwindow* window, double xpos, double ypos);
+    static void Mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 };
 
 #endif

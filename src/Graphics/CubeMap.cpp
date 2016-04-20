@@ -128,6 +128,7 @@ void CubeMap::Draw(Camera* camera)
     GLint projectionLocation = shader->GetUniform("projection");
     
     
+    //glUniformMatrix4fv(viewLoc, 1, false, glm::value_ptr(glm::mat4(glm::mat3(Scene::GetViewMatrix()))));
     glUniformMatrix4fv(viewLoc, 1, false, glm::value_ptr(Scene::GetViewMatrix()));
     glUniformMatrix4fv(modelLocation, 1, false, glm::value_ptr(this->toWorld));
     glUniformMatrix4fv(projectionLocation, 1, false, glm::value_ptr(projection));

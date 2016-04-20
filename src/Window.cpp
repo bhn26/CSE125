@@ -20,8 +20,9 @@ const char* window_title = "Egg Scramble!";
 int Window::width;
 int Window::height;
 bool Window::firstMouse = true;
-GLuint Window::lastX = width / 2;
-GLuint Window::lastY = height / 2;
+bool Window::mouseCaptured = false;
+GLint Window::lastX = width / 2;
+GLint Window::lastY = height / 2;
 
 void Window::Initialize_objects()
 {
@@ -161,23 +162,35 @@ void Window::Key_callback(GLFWwindow* window, int key, int scancode, int action,
 
 void Window::Mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
-    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_1) == 1)
+    if (mouseCaptured)
     {
         if (firstMouse)
         {
-            lastX = (GLuint) xpos;
-            lastY = (GLuint) ypos;
+            lastX = (GLuint)xpos;
+            lastY = (GLuint)ypos;
             firstMouse = false;
         }
 
-        GLfloat xoffset = (GLfloat) (xpos - lastX);
-        GLfloat yoffset = (GLfloat) (lastY - ypos);
-        lastX = (GLuint)xpos;
-        lastY = (GLuint)ypos;
+        GLfloat xoffset = (GLfloat)(xpos - lastX);
+        GLfloat yoffset = (GLfloat)(lastY - ypos);
+        lastX = (GLint)xpos;
+        lastY = (GLint)ypos;
         Scene::player->ProcessMouseMovement(xoffset, yoffset);
     }
-    else
+}
+
+void Window::Mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
+{
+    if (button == GLFW_MOUSE_BUTTON_LEFT && !mouseCaptured)
     {
+        mouseCaptured = true;
         firstMouse = true;
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        glfwSetCursorPos(window, Window::width/2, Window::height/2);
+    }
+    else if (button == GLFW_MOUSE_BUTTON_RIGHT && mouseCaptured)
+    {
+        mouseCaptured = false;
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
 }
