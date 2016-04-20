@@ -10,7 +10,7 @@
 #include "../Scene.h"
 
 
-Cube::Cube() : angle(0.0f), toWorld(glm::mat4(1.0f)), color(glm::vec3(1.0f, 0.2f, 0.1f))
+Cube::Cube() : angle(0.0f), toWorld(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.5f, 0.0f))), color(glm::vec3(1.0f, 0.2f, 0.1f))
 {
 
     GLfloat vertices[] =
@@ -94,7 +94,7 @@ void Cube::Draw(glm::mat4 C)
     glm::mat4 projection = glm::perspective((GLfloat)45.0f, (GLfloat)Window::width / (GLfloat)Window::height, 0.1f, 1000.0f);
 
     GLint viewLoc = shader->GetUniform("view");
-    GLint modelLocation = shader->GetUniform("model2world");
+    GLint modelLocation = shader->GetUniform("model");
     GLint normalMatrixLoc = shader->GetUniform("normalMatrix");
     GLint projectionLocation = shader->GetUniform("projection");
     GLint objectColorLoc = shader->GetUniform("objectColor");
@@ -129,7 +129,7 @@ void Cube::Spin(float deg)
         this->angle = 0.0f;
 
     // This creates the matrix to rotate the cube
-    this->toWorld = glm::rotate(glm::mat4(1.0f), glm::radians(this->angle), glm::vec3(0.0f, 1.0f, 0.0f));
+    this->toWorld = toWorld * glm::rotate(glm::mat4(1.0f), glm::radians(deg), glm::vec3(0.0f, 1.0f, 0.0f));
     this->normalMatrix = glm::mat3(glm::transpose(glm::inverse(toWorld)));
 }
 

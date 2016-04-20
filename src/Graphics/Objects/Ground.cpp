@@ -67,7 +67,7 @@ void Ground::Draw(glm::mat4 C)
     glm::mat4 projection = glm::perspective((GLfloat)45.0f, (GLfloat)Window::width / (GLfloat)Window::height, 0.1f, 1000.0f);
 
     GLint viewLoc = shader->GetUniform("view");
-    GLint modelLocation = shader->GetUniform("model2world");
+    GLint modelLocation = shader->GetUniform("model");
     GLint normalMatrixLoc = shader->GetUniform("normalMatrix");
     GLint projectionLocation = shader->GetUniform("projection");
     GLint objectColorLoc = shader->GetUniform("objectColor");
