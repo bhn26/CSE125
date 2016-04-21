@@ -1,8 +1,8 @@
 #pragma once
 #include <stdlib.h>
 #include "ServerNetwork.h"
-#include "../NetworkData.h"
-#include "../DummyWorld.h"
+#include "../network/NetworkData.h"
+#include "../network/DummyWorld.h"
 
 class ServerGame
 {

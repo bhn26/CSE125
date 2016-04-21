@@ -2,10 +2,10 @@
 // Networking libraries
 #include <winsock2.h>
 #include <Windows.h>
-#include "../NetworkServices.h"
+#include "../network/NetworkServices.h"
 #include <ws2tcpip.h>
 #include <stdio.h> 
-#include "../NetworkData.h"
+#include "../network/NetworkData.h"
 
 // size of our buffer
 #define DEFAULT_BUFLEN 512

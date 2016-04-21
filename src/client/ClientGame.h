@@ -2,10 +2,10 @@
 //#define _WIN32
 #ifdef _WIN32
 #include <winsock2.h>
-#include "network/client/ClientNetwork.h"
-#include "network/NetworkData.h"
-#include "network/DummyWorld.h"
-#include "network/GameData.h"
+#include "ClientNetwork.h"
+#include "../network/NetworkData.h"
+#include "../network/DummyWorld.h"
+#include "../network/GameData.h"
 #include <Windows.h>
 #endif
 

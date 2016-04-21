@@ -3,11 +3,11 @@
 #include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale, glm::perspective
 #include <glm/gtc/type_ptr.hpp>
 
-#include "../../Window.h"
+#include "../../client/Window.h"
 #include "../Scene.h"
 #include "../PointLight.h"
 #include "../Camera.h"
-#include "../../Player.h"
+#include "../../client/Player.h"
 
 
 Ground::Ground() : Entity(), color(glm::vec3(0.545f, 0.271f, 0.075f))

@@ -2,12 +2,12 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
-#include "Graphics/Camera.h"
-#include "Graphics/Objects/Chicken.h"
-#include "Graphics/Shader.h"
-#include "Graphics/Scene.h"
-#include "Graphics/PointLight.h"
-#include "Graphics/Model.h"
+#include "../Graphics/Camera.h"
+#include "../Graphics/Objects/Chicken.h"
+#include "../Graphics/Shader.h"
+#include "../Graphics/Scene.h"
+#include "../Graphics/PointLight.h"
+#include "../Graphics/Model.h"
 
 Player::Player() : Entity(), camAngle(0.0f)
 {

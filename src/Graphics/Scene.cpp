@@ -6,8 +6,8 @@
 #include "Objects/Ground.h"
 #include "Camera.h"
 #include "PointLight.h"
-#include "../Player.h"
 #include "Objects/Entity.h"
+#include "../client/Player.h"
 
 #include <algorithm>
 #include <vector>

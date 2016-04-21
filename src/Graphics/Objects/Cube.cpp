@@ -1,5 +1,5 @@
 #include "Cube.h"
-#include "../../Window.h"
+#include "../../client/Window.h"
 #include "../Camera.h"
 #include "../PointLight.h"
 

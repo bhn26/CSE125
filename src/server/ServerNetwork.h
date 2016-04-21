@@ -1,10 +1,10 @@
 #pragma once
 #include <winsock2.h>
 #include <Windows.h>
-#include "../NetworkServices.h"
+#include "../network/NetworkServices.h"
 #include <ws2tcpip.h>
 #include <map>
-#include "../NetworkData.h"
+#include "../network/NetworkData.h"
 using namespace std; 
 #pragma comment (lib, "Ws2_32.lib")
 

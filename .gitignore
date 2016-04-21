@@ -46,8 +46,6 @@
 # Ignore directories
 out/
 packages/
-Client/
-Server/
 Release/
 Debug/
 

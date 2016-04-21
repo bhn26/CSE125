@@ -7,7 +7,7 @@
 #include <glm/glm.hpp>
 
 #include "Window.h"
-#include "Graphics/Scene.h"
+#include "../Graphics/Scene.h"
 //#define _WIN32
 
 ClientGame* ClientGame::cg = nullptr;
