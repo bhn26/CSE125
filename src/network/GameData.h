@@ -3,9 +3,9 @@ enum MoveType {
 
     BAD_MOVE = -1,
 
-    MOVE_UP = 0,
+    MOVE_FORWARD = 0,
 
-    MOVE_DOWN = 1,
+    MOVE_BACKWARD = 1,
 
     MOVE_LEFT = 2,
 

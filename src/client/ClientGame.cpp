@@ -8,6 +8,7 @@
 
 #include "Window.h"
 #include "../Graphics/Scene.h"
+#include "Player.h"
 //#define _WIN32
 
 ClientGame* ClientGame::cg = nullptr;
@@ -95,6 +96,9 @@ void ClientGame::receiveMovePacket(int offset)
     world->moveDummy(pi->direction);
     struct PosInfo dpi = world->getDummyPos();
     printf("Dummy moved to (%d,%d)\n", dpi.x, dpi.y);
+
+    /* probably gonna switch this to coordinates later on */
+    Scene::player->ProcessKeyboard((DIRECTION) pi->direction, 1); // move (rename method later)
 }
 
 // Need to know what direction to move in

@@ -127,25 +127,26 @@ void Window::Key_callback(GLFWwindow* window, int key, int scancode, int action,
                 break;
 
             case GLFW_KEY_W:
-                Scene::Instance()->GetPlayer()->ProcessKeyboard(DIRECTION::D_FORWARD, 1);
+                //Scene::player->ProcessKeyboard(DIRECTION::D_FORWARD, 1);
 #ifdef _WIN32
-                ClientGame::instance()->sendMovePacket(MOVE_UP);
+                ClientGame::instance()->sendMovePacket(MOVE_FORWARD);
 #endif
                 break;
             case GLFW_KEY_A:
-                Scene::Instance()->GetPlayer()->ProcessKeyboard(DIRECTION::D_LEFT, 1);
+                //Scene::player->ProcessKeyboard(DIRECTION::D_LEFT, 1);
 #ifdef _WIN32
                 ClientGame::instance()->sendMovePacket(MOVE_LEFT);
 #endif
                 break;
             case GLFW_KEY_S:
-                Scene::Instance()->GetPlayer()->ProcessKeyboard(DIRECTION::D_BACKWARD, 1);
+                //Scene::player->ProcessKeyboard(DIRECTION::D_BACKWARD, 1);
 #ifdef _WIN32
-                ClientGame::instance()->sendMovePacket(MOVE_DOWN);
+                ClientGame::instance()->sendMovePacket(MOVE_BACKWARD);
 #endif
                 break;
             case GLFW_KEY_D:
-                Scene::Instance()->GetPlayer()->ProcessKeyboard(DIRECTION::D_RIGHT, 1);
+                //Scene::player->ProcessKeyboard(DIRECTION::D_RIGHT, 1);
+                ClientGame::instance()->sendMovePacket(MOVE_RIGHT);
                 break;
             case GLFW_KEY_SPACE:
                 Scene::Instance()->GetPlayer()->ProcessKeyboard(DIRECTION::D_UP, 1);

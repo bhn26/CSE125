@@ -16,11 +16,11 @@ void Dummy::move(int direction)
 {
     switch (direction)
     {
-        case MOVE_UP:
+        case MOVE_FORWARD:
             y++;
             break;
 
-        case MOVE_DOWN:
+        case MOVE_BACKWARD:
             y--;
             break;
 
