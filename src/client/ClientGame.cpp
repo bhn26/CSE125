@@ -119,6 +119,28 @@ void ClientGame::sendMovePacket(int direction)
     NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
 }
 
+void ClientGame::receiveVRotationPacket(int offset) {
+    struct PosInfo* pi = (struct PosInfo *) &(network_data[offset]);
+
+    Scene::player->toWorld *= glm::rotate(glm::mat4(1.0f), pi.radians, glm::vec3(0.0f, 1.0f, 0.0f));
+}
+
+void ClientGame::sendVRotationPacket(float radians) {
+    const unsigned int packet_size = sizeof(Packet);
+    char packet_data[packet_size];
+
+    Packet packet;
+    packet.hdr.packet_type = V_ROTATION_EVENT;
+    packet.hdr.sender_id = client_id;
+    packet.hdr.receiver_id = SERVER_ID;
+
+    packet.pi.radians = radians;
+
+    packet.serialize(packet_data);
+
+    NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
+}
+
 void ClientGame::update()
 {
     Packet packet;

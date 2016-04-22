@@ -148,7 +148,7 @@ void Window::Key_callback(GLFWwindow* window, int key, int scancode, int action,
                 //Scene::player->ProcessKeyboard(DIRECTION::D_RIGHT, 1);
                 ClientGame::instance()->sendMovePacket(MOVE_RIGHT);
                 break;
-            case GLFW_KEY_SPACE:
+            case GLFW_KEY_SPACE: // jump?
                 Scene::Instance()->GetPlayer()->ProcessKeyboard(DIRECTION::D_UP, 1);
                 break;
             case GLFW_KEY_Z:

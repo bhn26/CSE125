@@ -13,7 +13,9 @@ enum PacketTypes
 
     SPAWN_EVENT = 2,
 
-    MOVE_EVENT = 3
+    MOVE_EVENT = 3,
+
+    V_ROTATION_EVENT = 4
 
 };
 

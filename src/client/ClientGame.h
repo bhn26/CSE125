@@ -34,6 +34,9 @@ public:
     void receiveMovePacket(int offset);
     void sendMovePacket(int direction);
 
+    void receiveVRotationPacket(int offset);
+    void sendVRotationPacket(float radians); 
+
     char network_data[MAX_PACKET_SIZE];
 
     void update();

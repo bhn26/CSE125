@@ -34,6 +34,12 @@ void DummyWorld::moveDummy(int direction)
         dummy->move(direction);
 }
 
+void DummyWorld::rotateDummy(float rad)
+{
+    if (dummy != nullptr)
+        dummy->rotate(rad);
+}
+
 PosInfo DummyWorld::getDummyPos()
 {
     PosInfo pi;
@@ -46,6 +52,19 @@ PosInfo DummyWorld::getDummyPos()
     {
         pi.x = 0;
         pi.y = 0;
+    }
+    return pi;
+}
+
+PosInfo DummyWorld::getDummyRotation() {
+    PosInfo pi;
+    if (dummy != nullptr)
+    {
+        pi.radians = dummy->getRotation();
+    }
+    else
+    {
+        pi.radians = 0;
     }
     return pi;
 }

@@ -14,8 +14,13 @@ enum MoveType {
 
 struct PosInfo
 {
+	// object coordinates
     int x;
     int y;
     int z;
-    int direction;
+
+    int direction; // remove later?
+
+    // rotation
+    float radians;
 };

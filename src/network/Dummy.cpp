@@ -43,6 +43,10 @@ void Dummy::move(int newx, int newy)
     y = newy;
 }
 
+void Dummy::Rotate(float rad) {
+    radians += rad;
+}
+
 int Dummy::getX()
 {
     return x;

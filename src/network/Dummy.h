@@ -14,12 +14,16 @@ public:
     // move to specific coordinates
     void move(int newx, int newy);
 
+    void Rotate(float rad);
+
     int getX();
     int getY();
+    float getRotation() {return radians; };
     int getId();
 
 private:
     int x;
     int y;
     int id;
+    float radians;
 };

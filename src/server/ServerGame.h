@@ -12,6 +12,8 @@ public:
     ServerGame(void);
     ~ServerGame(void);
 
+    static unsigned int NumClients() {return client_id;}
+
     void update();
 
 	void receiveFromClients();
@@ -31,6 +33,9 @@ public:
     // Returns the direction to be moved, if it can't move there, returns BAD_MOVE
     int receiveMovePacket(int offset);
     void sendMovePacket(int direction);
+
+    void receiveVRotationPacket(int offset);
+    void sendVRotationPacket(); 
 
 private:
 

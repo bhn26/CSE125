@@ -95,6 +95,11 @@ void ServerGame::receiveFromClients()
               
                     break;
 
+                case V_ROTATION_EVENT:
+                    receiveVRotationPacket(i + sizeof(PacketHeader));
+                    sendVRotationPacket();
+                    break;
+
                 default:
 
                     printf("error in packet types\n");
@@ -235,4 +240,27 @@ void ServerGame::sendMovePacket(int direction)
         network->sendToAll(packet_data, packet_size);
         //printf("Sent move packet to clients\n");
     }
+}
+
+void ClientGame::receiveVRotationPacket(int offset) {
+    struct PosInfo* pi = (struct PosInfo *) &(network_data[offset]);
+
+    // TODO - rotate player in game state
+    world->rotateDummy(pi->radians);
+}
+
+void ClientGame::sendVRotationPacket() {
+    const unsigned int packet_size = sizeof(Packet);
+    char packet_data[packet_size];
+
+    Packet packet;
+    packet.hdr.packet_type = V_ROTATION_EVENT;
+    packet.hdr.sender_id = client_id;
+    packet.hdr.receiver_id = SERVER_ID;
+
+    packet.pi = world->getDummyRotation();
+
+    packet.serialize(packet_data);
+
+    NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
 }
