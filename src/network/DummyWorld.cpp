@@ -2,7 +2,7 @@
 
 DummyWorld::DummyWorld(void)
 {
-    dummy = nullptr;
+    dummy = new Dummy(0,0,0);
     numDummies = 0;
 }
 
@@ -37,7 +37,7 @@ void DummyWorld::moveDummy(int direction)
 void DummyWorld::rotateDummy(float rad)
 {
     if (dummy != nullptr)
-        dummy->rotate(rad);
+        dummy->Rotate(rad);
 }
 
 PosInfo DummyWorld::getDummyPos()

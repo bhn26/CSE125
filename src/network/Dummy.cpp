@@ -1,10 +1,13 @@
 #include "Dummy.h"
+#include <stdio.h>
 
 Dummy::Dummy(int newId, int newx, int newy)
 {
     x = newx;
     y = newy;
     id = newId;
+
+	radians = 0;
 }
 
 Dummy::~Dummy(void)
@@ -45,6 +48,7 @@ void Dummy::move(int newx, int newy)
 
 void Dummy::Rotate(float rad) {
     radians += rad;
+	printf("rotated dummy on server");
 }
 
 int Dummy::getX()

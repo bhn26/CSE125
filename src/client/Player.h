@@ -52,4 +52,6 @@ public:
     glm::mat4 GetViewMatrix() const;
     glm::mat3 GetNormalMatrix() const;
 
+	glm::mat4 GetToWorld() { return toWorld; };
+	void SetToWorld(glm::mat4 newToWorld) { toWorld = newToWorld;  };
 };

@@ -242,14 +242,15 @@ void ServerGame::sendMovePacket(int direction)
     }
 }
 
-void ClientGame::receiveVRotationPacket(int offset) {
+void ServerGame::receiveVRotationPacket(int offset) {
     struct PosInfo* pi = (struct PosInfo *) &(network_data[offset]);
 
+	printf("rotating player by %d\n", pi->radians);
     // TODO - rotate player in game state
     world->rotateDummy(pi->radians);
 }
 
-void ClientGame::sendVRotationPacket() {
+void ServerGame::sendVRotationPacket() {
     const unsigned int packet_size = sizeof(Packet);
     char packet_data[packet_size];
 
@@ -260,7 +261,9 @@ void ClientGame::sendVRotationPacket() {
 
     packet.pi = world->getDummyRotation();
 
+	printf("send rotate packet by %d\n", packet.pi.radians);
+
     packet.serialize(packet_data);
 
-    NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
+	network->sendToAll(packet_data, packet_size);
 }

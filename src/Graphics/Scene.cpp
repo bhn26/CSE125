@@ -15,8 +15,8 @@
 Scene::Scene() : camera(std::unique_ptr<Camera>(nullptr)), pLight(std::unique_ptr<PointLight>(nullptr)), player(nullptr), entities(std::vector<std::unique_ptr<Entity>>())
 {
 }
-const int WIDTH = 100;
-const int HEIGHT = 100;
+const int Scene::WIDTH = 100;
+const int Scene::HEIGHT = 100;
 
 void Scene::Setup()
 {

@@ -16,8 +16,8 @@ class Scene
     std::unique_ptr<PointLight> pLight;
     Player* player;
 
-    const int WIDTH;
-    const int HEIGHT;
+    static const int WIDTH;
+    static const int HEIGHT;
 
     std::vector<std::unique_ptr<Entity>> entities;
 

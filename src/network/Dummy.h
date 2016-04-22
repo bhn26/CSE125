@@ -12,7 +12,7 @@ public:
     void move(int direction);
 
     // move to specific coordinates
-    void move(int newx, int newy);
+	void move(int newx, int newy);
 
     void Rotate(float rad);
 

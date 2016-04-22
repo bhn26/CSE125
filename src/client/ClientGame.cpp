@@ -5,10 +5,12 @@
 #include <GLFW/glfw3.h>
 #include <cstdio>
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include "Window.h"
 #include "../Graphics/Scene.h"
 #include "Player.h"
+#include "../network/NetworkData.h"
 //#define _WIN32
 
 ClientGame* ClientGame::cg = nullptr;
@@ -98,7 +100,7 @@ void ClientGame::receiveMovePacket(int offset)
     printf("Dummy moved to (%d,%d)\n", dpi.x, dpi.y);
 
     /* probably gonna switch this to coordinates later on */
-    Scene::player->ProcessKeyboard((DIRECTION) pi->direction, 1); // move (rename method later)
+    Scene::Instance()->GetPlayer()->ProcessKeyboard((DIRECTION) pi->direction, 1); // move (rename method later)
 }
 
 // Need to know what direction to move in
@@ -122,7 +124,10 @@ void ClientGame::sendMovePacket(int direction)
 void ClientGame::receiveVRotationPacket(int offset) {
     struct PosInfo* pi = (struct PosInfo *) &(network_data[offset]);
 
-    Scene::player->toWorld *= glm::rotate(glm::mat4(1.0f), pi.radians, glm::vec3(0.0f, 1.0f, 0.0f));
+	printf("rotate player by %d\n", pi->radians);
+
+    glm::mat4 newToWorld = Scene::Instance()->GetPlayer()->GetToWorld() * glm::rotate(glm::mat4(1.0f), pi->radians, glm::vec3(0.0f, 1.0f, 0.0f));
+	Scene::Instance()->GetPlayer()->SetToWorld(newToWorld);
 }
 
 void ClientGame::sendVRotationPacket(float radians) {
@@ -136,6 +141,7 @@ void ClientGame::sendVRotationPacket(float radians) {
 
     packet.pi.radians = radians;
 
+	printf("client wants to rotate by %d, so sending %d\n", radians, packet.pi.radians);
     packet.serialize(packet_data);
 
     NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
@@ -183,6 +189,10 @@ void ClientGame::update()
 
                 receiveMovePacket(i + sizeof(PacketHeader));
                 break;
+
+			case V_ROTATION_EVENT:
+				receiveVRotationPacket(i + sizeof(PacketHeader));
+				break;
 
             default:
                 printf("error in packet types\n");
