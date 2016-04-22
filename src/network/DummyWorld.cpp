@@ -34,10 +34,14 @@ void DummyWorld::moveDummy(int direction)
         dummy->move(direction);
 }
 
-void DummyWorld::rotateDummy(float rad)
+void DummyWorld::rotateDummy(float v_rot, float h_rot)
 {
     if (dummy != nullptr)
+<<<<<<< 174b3f97e4b370bde6db6b896fe55f3188611e9a
         dummy->Rotate(rad);
+=======
+        dummy->rotate(v_rot, h_rot);
+>>>>>>> all rotation done by network and ignore *.db files
 }
 
 PosInfo DummyWorld::getDummyPos()
@@ -60,11 +64,13 @@ PosInfo DummyWorld::getDummyRotation() {
     PosInfo pi;
     if (dummy != nullptr)
     {
-        pi.radians = dummy->getRotation();
+        pi.v_rotation = dummy->getVRotation();
+		pi.h_rotation = dummy->getHRotation();
     }
     else
     {
-        pi.radians = 0;
+        pi.v_rotation = 0;
+		pi.h_rotation = 0;
     }
     return pi;
 }

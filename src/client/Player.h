@@ -54,4 +54,7 @@ public:
 
 	glm::mat4 GetToWorld() { return toWorld; };
 	void SetToWorld(glm::mat4 newToWorld) { toWorld = newToWorld;  };
+
+	float GetCamAngle() { return camAngle; };
+	void SetCamAngle(float newAngle) { camAngle = newAngle; };
 };

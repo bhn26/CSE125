@@ -124,13 +124,24 @@ void ClientGame::sendMovePacket(int direction)
 void ClientGame::receiveVRotationPacket(int offset) {
     struct PosInfo* pi = (struct PosInfo *) &(network_data[offset]);
 
+<<<<<<< 174b3f97e4b370bde6db6b896fe55f3188611e9a
 	printf("rotate player by %d\n", pi->radians);
 
     glm::mat4 newToWorld = Scene::Instance()->GetPlayer()->GetToWorld() * glm::rotate(glm::mat4(1.0f), pi->radians, glm::vec3(0.0f, 1.0f, 0.0f));
 	Scene::Instance()->GetPlayer()->SetToWorld(newToWorld);
+=======
+	// left/right rotation
+    glm::mat4 newToWorld = Scene::player->GetToWorld() * glm::rotate(glm::mat4(1.0f), pi->v_rotation, glm::vec3(0.0f, 1.0f, 0.0f));
+	Scene::Instance()->GetPlayer()->SetToWorld(newToWorld);
+
+	// up/down rotation
+	float newAngle = Scene::Instance()->GetPlayer()->GetCamAngle() + pi->h_rotation;
+	const static float pi2 = glm::pi<float>()/2;
+	Scene::Instance()->GetPlayer()->SetCamAngle((newAngle > pi2) ? pi2 : ((newAngle < -pi2) ? -pi2 : newAngle));
+>>>>>>> all rotation done by network and ignore *.db files
 }
 
-void ClientGame::sendVRotationPacket(float radians) {
+void ClientGame::sendVRotationPacket(float v_rot, float h_rot) {
     const unsigned int packet_size = sizeof(Packet);
     char packet_data[packet_size];
 
@@ -139,9 +150,9 @@ void ClientGame::sendVRotationPacket(float radians) {
     packet.hdr.sender_id = client_id;
     packet.hdr.receiver_id = SERVER_ID;
 
-    packet.pi.radians = radians;
+    packet.pi.v_rotation = v_rot;
+	packet.pi.h_rotation = h_rot;
 
-	printf("client wants to rotate by %d, so sending %d\n", radians, packet.pi.radians);
     packet.serialize(packet_data);
 
     NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);

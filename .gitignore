@@ -32,6 +32,7 @@
 .vs/
 *.opensdf
 *.suo
+*.db
 
 # Output
 #Output/

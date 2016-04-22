@@ -245,9 +245,8 @@ void ServerGame::sendMovePacket(int direction)
 void ServerGame::receiveVRotationPacket(int offset) {
     struct PosInfo* pi = (struct PosInfo *) &(network_data[offset]);
 
-	printf("rotating player by %d\n", pi->radians);
     // TODO - rotate player in game state
-    world->rotateDummy(pi->radians);
+    world->rotateDummy(pi->v_rotation, pi->h_rotation);
 }
 
 void ServerGame::sendVRotationPacket() {
@@ -260,8 +259,6 @@ void ServerGame::sendVRotationPacket() {
     packet.hdr.receiver_id = SERVER_ID;
 
     packet.pi = world->getDummyRotation();
-
-	printf("send rotate packet by %d\n", packet.pi.radians);
 
     packet.serialize(packet_data);
 

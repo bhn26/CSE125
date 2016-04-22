@@ -22,5 +22,6 @@ struct PosInfo
     int direction; // remove later?
 
     // rotation
-    float radians;
+    float v_rotation;
+	float h_rotation;
 };

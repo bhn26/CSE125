@@ -7,7 +7,8 @@ Dummy::Dummy(int newId, int newx, int newy)
     y = newy;
     id = newId;
 
-	radians = 0;
+	v_rotation = 0;
+	h_rotation = 0;
 }
 
 Dummy::~Dummy(void)
@@ -46,8 +47,14 @@ void Dummy::move(int newx, int newy)
     y = newy;
 }
 
+<<<<<<< 174b3f97e4b370bde6db6b896fe55f3188611e9a
 void Dummy::Rotate(float rad) {
     radians += rad;
+=======
+void Dummy::rotate(float v_rot, float h_rot) {
+    v_rotation += v_rot;
+	h_rotation += h_rot;
+>>>>>>> all rotation done by network and ignore *.db files
 	printf("rotated dummy on server");
 }
 
