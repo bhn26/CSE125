@@ -54,8 +54,11 @@ void Dummy::Rotate(float rad) {
 void Dummy::rotate(float v_rot, float h_rot) {
     v_rotation += v_rot;
 	h_rotation += h_rot;
+<<<<<<< 5b4dc56def5629597e75abbc0b615510ce3c57e3
 >>>>>>> all rotation done by network and ignore *.db files
 	printf("rotated dummy on server");
+=======
+>>>>>>> send packets to start game
 }
 
 int Dummy::getX()

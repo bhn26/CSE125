@@ -3,6 +3,8 @@
 #include "../../network/GameData.h"
 #include <vector>
 
+using namespace std;
+
 typedef vector<PosInfo> pos_list;
 
 class World {

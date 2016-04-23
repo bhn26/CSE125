@@ -26,6 +26,10 @@ public:
     void sendActionPackets();
 
     void receiveInitPacket(int offset);
+	void sendInitPacket();
+
+	void receiveStartPacket(int offset);
+	void sendStartPacket();
 
     // The data we want in network_data should have an offset if any
     void receiveSpawnPacket(int offset);

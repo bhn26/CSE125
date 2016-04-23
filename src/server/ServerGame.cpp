@@ -75,10 +75,9 @@ void ServerGame::receiveFromClients()
                     break;
 
 				case START_GAME:
-					if (!game_started) {
-						engine->InitWorld(client_id);
-						game_started = true;
-					}
+					receiveStartPacket(i + sizeof(PacketHeader));
+					sendStartPacket();
+
 					break;
 
                 case ACTION_EVENT:
@@ -147,7 +146,7 @@ void ServerGame::receiveInitPacket(int offset)
     Packet packet;
     packet.hdr.packet_type = INIT_CONNECTION;
 
-    // Send back to the client
+    // Send back to the client and assign client id
     packet.hdr.receiver_id = client_id;
     packet.hdr.sender_id = SERVER_ID;
 
@@ -171,6 +170,25 @@ void ServerGame::sendInitPacket()
     packet.serialize(packet_data);
 
     network->sendToAll(packet_data, packet_size);
+}
+
+void ServerGame::receiveStartPacket(int offset) {
+	if (!game_started) {
+		engine->InitWorld(client_id);
+		game_started = true;
+	}
+}
+
+void ServerGame::sendStartPacket() { // will add more later based on generated world
+	const unsigned int packet_size = sizeof(Packet);
+	char packet_data[packet_size];
+
+	Packet packet;
+	packet.hdr.packet_type = START_GAME;
+
+	packet.serialize(packet_data);
+
+	network->sendToAll(packet_data, packet_size);
 }
 
 // Assume one client for now, we're going to need to send client id with each packet probably

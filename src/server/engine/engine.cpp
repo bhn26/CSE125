@@ -14,7 +14,7 @@ Engine::~Engine() {
 }
 
 void Engine::InitWorld(int num_players) {
-	printf("INITIALIZING WORLD ON SERVER");
+	printf("INITIALIZING WORLD ON SERVER\n");
 
     pos_list player_poss = GenerateCoords(num_players);
     pos_list egg_poss = GenerateCoords(num_players * 2);

@@ -20,19 +20,13 @@ ClientGame::ClientGame(void)
 #ifdef _WIN32
     network = new ClientNetwork();
 
-    // send init packet
-    const unsigned int packet_size = sizeof(Packet);
-    char packet_data[packet_size];
+	sendInitPacket();
+	Initialize();
 
-    Packet packet;
-    packet.hdr.packet_type = INIT_CONNECTION;
-
-    packet.serialize(packet_data);
-
-    NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
+	sendStartPacket(); // temp - will add start button
+    
 #endif
 
-    Initialize();
 }
 
 
@@ -66,6 +60,36 @@ void ClientGame::receiveInitPacket(int offset)
 
     // Find out what our client id is from the init packet of the server
     client_id = hdr->receiver_id;
+
+	//Initialize();
+}
+
+void ClientGame::sendInitPacket() {
+	const unsigned int packet_size = sizeof(Packet);
+	char packet_data[packet_size];
+
+	Packet packet;
+	packet.hdr.packet_type = INIT_CONNECTION;
+
+	packet.serialize(packet_data);
+
+	NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
+}
+
+void ClientGame::receiveStartPacket(int offset) {
+	printf("received start packet\n");
+}
+
+void ClientGame::sendStartPacket() {
+	const unsigned int packet_size = sizeof(Packet);
+	char packet_data[packet_size];
+
+	Packet packet;
+	packet.hdr.packet_type = START_GAME;
+
+	packet.serialize(packet_data);
+
+	NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
 }
 
 void ClientGame::receiveSpawnPacket(int offset)
@@ -180,6 +204,10 @@ void ClientGame::update()
                 // offset for this will be the packet header
                 receiveInitPacket(i);
                 break;
+
+			case START_GAME:
+				receiveStartPacket(i + sizeof(PacketHeader));
+				break;
 
             case ACTION_EVENT:
 
