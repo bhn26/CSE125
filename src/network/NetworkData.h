@@ -7,15 +7,17 @@
 enum PacketTypes 
 {
 
-    INIT_CONNECTION = 0,
+    INIT_CONNECTION, //0
 
-    ACTION_EVENT = 1,
+	START_GAME, //1
 
-    SPAWN_EVENT = 2,
+    ACTION_EVENT, //2
 
-    MOVE_EVENT = 3,
+    SPAWN_EVENT, //3
 
-    V_ROTATION_EVENT = 4
+    MOVE_EVENT, //4
+
+    V_ROTATION_EVENT //5
 
 };
 

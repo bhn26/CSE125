@@ -13,6 +13,9 @@
     <Filter Include="Source Files\Network">
       <UniqueIdentifier>{44bf970c-bd1d-410d-bf90-b6d3f44267e8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\engine">
+      <UniqueIdentifier>{f6c08102-e4c8-4092-94a8-f8597e05712e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\network\NetworkData.h">
@@ -36,6 +39,15 @@
     <ClInclude Include="..\src\server\ServerNetwork.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\server\engine\engine.h">
+      <Filter>Source Files\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\server\engine\World.h">
+      <Filter>Source Files\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\server\engine\Player.h">
+      <Filter>Source Files\engine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\network\NetworkServices.cpp">
@@ -55,6 +67,15 @@
     </ClCompile>
     <ClCompile Include="..\src\server\ServerNetwork.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\server\engine\engine.cpp">
+      <Filter>Source Files\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\server\engine\World.cpp">
+      <Filter>Source Files\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\server\engine\Player.cpp">
+      <Filter>Source Files\engine</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

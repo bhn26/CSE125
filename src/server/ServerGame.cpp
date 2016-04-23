@@ -7,11 +7,13 @@ ServerGame::ServerGame(void)
 {
     // id's to assign clients for our table
     client_id = 0;
+	game_started = false;
 
     // set up the server network to listen 
     network = new ServerNetwork(); 
 
     world = new DummyWorld();
+	engine = new Engine();
 }
 
 ServerGame::~ServerGame(void)
@@ -71,6 +73,13 @@ void ServerGame::receiveFromClients()
                     //sendActionPackets();
 
                     break;
+
+				case START_GAME:
+					if (!game_started) {
+						engine->InitWorld(client_id);
+						game_started = true;
+					}
+					break;
 
                 case ACTION_EVENT:
 

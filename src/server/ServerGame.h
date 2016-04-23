@@ -3,6 +3,7 @@
 #include "ServerNetwork.h"
 #include "../network/NetworkData.h"
 #include "../network/DummyWorld.h"
+#include "engine/engine.h"
 
 class ServerGame
 {
@@ -42,8 +43,12 @@ private:
    // IDs for the clients connecting for table in ServerNetwork 
     static unsigned int client_id;
 
+	bool game_started;
+
     // dummy world
     DummyWorld* world;
+
+	Engine * engine;
 
    // The ServerNetwork object 
     ServerNetwork* network;
