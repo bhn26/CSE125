@@ -4,14 +4,26 @@
 #include "../network/NetworkData.h"
 #include "../network/DummyWorld.h"
 #include "engine/engine.h"
+#include <btBulletDynamicsCommon.h>
 
 class ServerGame
 {
+
+	btDiscreteDynamicsWorld* curWorld;
+	btDefaultCollisionConfiguration* colConfig;
+	btCollisionDispatcher* disp;
+	btBroadphaseInterface* pairCache;
+	btSequentialImpulseConstraintSolver* solv;
+	std::vector <btRigidBody*> bullets;
+	std::vector <btRigidBody*> players;
 
 public:
 
     ServerGame(void);
     ~ServerGame(void);
+
+	// Initialize Game World (physics world)
+	void initGameInstance();
 
     static unsigned int NumClients() {return client_id;}
 

@@ -20,6 +20,27 @@ ServerGame::~ServerGame(void)
 {
 }
 
+void ServerGame::initGameInstance()
+{
+	btDefaultCollisionConfiguration * collisionConfig = new btDefaultCollisionConfiguration();
+	
+	btCollisionDispatcher* dispatcher = new btCollisionDispatcher(collisionConfig);
+
+	btBroadphaseInterface* overlappingPairCache = new btDbvtBroadphase();
+
+	btSequentialImpulseConstraintSolver* solver = new btSequentialImpulseConstraintSolver;
+
+	btDiscreteDynamicsWorld* dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfig);
+
+	dynamicsWorld->setGravity(btVector3(0, -10, 0));
+
+	curWorld = dynamicsWorld;
+	solv = solver;
+	pairCache = overlappingPairCache;
+	disp = dispatcher;
+	colConfig = collisionConfig;
+}
+
 void ServerGame::update()
 {
     // get new clients
