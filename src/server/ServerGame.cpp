@@ -18,6 +18,11 @@ ServerGame::ServerGame(void)
 
 ServerGame::~ServerGame(void)
 {
+	delete curWorld;
+	delete solv;
+	delete pairCache;
+	delete disp;
+	delete colConfig;
 }
 
 void ServerGame::initGameInstance()

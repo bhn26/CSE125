@@ -163,6 +163,7 @@
     <ClInclude Include="..\src\server\engine\World.h" />
     <ClInclude Include="..\src\server\ServerGame.h" />
     <ClInclude Include="..\src\server\ServerNetwork.h" />
+    <ClInclude Include="..\src\server\ServerPlayer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\network\Dummy.cpp" />
@@ -174,6 +175,7 @@
     <ClCompile Include="..\src\server\main.cpp" />
     <ClCompile Include="..\src\server\ServerGame.cpp" />
     <ClCompile Include="..\src\server\ServerNetwork.cpp" />
+    <ClCompile Include="..\src\server\ServerPlayer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
