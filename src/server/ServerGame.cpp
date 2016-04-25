@@ -185,6 +185,7 @@ void ServerGame::sendStartPacket() { // will add more later based on generated w
 
 	Packet packet;
 	packet.hdr.packet_type = START_GAME;
+    packet.hdr.sender_id = SERVER_ID;
 
 	packet.serialize(packet_data);
 
@@ -210,14 +211,20 @@ void ServerGame::sendSpawnPacket()
 
     const unsigned int packet_size = sizeof(Packet);
 
-    packet.pi.x = rand() % 5;
-    packet.pi.y = rand() % 5;
+    int x = rand() % 5;
+    int y = rand() % 5;
 
-    printf("spawned dummy at (%d,%d)\n", packet.pi.x, packet.pi.y);
-    world->spawnDummy(packet.pi.x, packet.pi.y);
+    printf("spawned dummy at (%d,%d)\n", x, y);
+    world->spawnDummy(x, y);
     char packet_data[packet_size];
 
+    PosInfo p;
+    p.x = x;
+    p.y = y;
 
+    packet.dat.obj_id = POS_OBJ;
+
+    p.serialize(packet.dat.buf);
     packet.serialize(packet_data);
 
     //printf("size of Packet: %d\n", packet_size);
@@ -228,7 +235,8 @@ void ServerGame::sendSpawnPacket()
 
 int ServerGame::receiveMovePacket(int offset)
 {
-    struct PosInfo* pi = (struct PosInfo *) &(network_data[offset]);
+    struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
+    struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
 
     struct PosInfo dpi = world->getDummyPos();
     //printf("dummy's current pos is (%d,%d)\n", dpi.x, dpi.y);
@@ -257,7 +265,13 @@ void ServerGame::sendMovePacket(int direction)
     {
         Packet packet;
         packet.hdr.packet_type = MOVE_EVENT;
-        packet.pi.direction = direction;
+
+        PosInfo p;
+        p.direction = direction;
+
+        packet.dat.obj_id = POS_OBJ;
+
+        p.serialize(packet.dat.buf);
 
         const unsigned int packet_size = sizeof(Packet);
         char packet_data[packet_size];
@@ -270,7 +284,8 @@ void ServerGame::sendMovePacket(int direction)
 }
 
 void ServerGame::receiveVRotationPacket(int offset) {
-    struct PosInfo* pi = (struct PosInfo *) &(network_data[offset]);
+    struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
+    struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
 
     // TODO - rotate player in game state
     world->rotateDummy(pi->v_rotation, pi->h_rotation);
@@ -285,8 +300,12 @@ void ServerGame::sendVRotationPacket() {
     packet.hdr.sender_id = client_id;
     packet.hdr.receiver_id = SERVER_ID;
 
-    packet.pi = world->getDummyRotation();
+    PosInfo p = world->getDummyRotation();
 
+    packet.dat.obj_id = POS_OBJ;
+
+    p.serialize(packet.dat.buf);
+    
     packet.serialize(packet_data);
 
 	network->sendToAll(packet_data, packet_size);

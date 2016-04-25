@@ -3,6 +3,7 @@
 #include "GameData.h"
 
 #define MAX_PACKET_SIZE 1000000
+#define DATA_SIZE 40 // Change this to the largest data size that is needed
 
 enum PacketTypes 
 {
@@ -31,12 +32,21 @@ struct PacketHeader
 
 };
 
+struct PacketData
+{
+    ObjId obj_id;
+    char buf[DATA_SIZE];
+};
+
 struct Packet
 {
 
     struct PacketHeader hdr;
 
-    struct PosInfo pi;
+    //struct PosInfo pi;
+
+    struct PacketData dat;
+
 
     void serialize(char * data) {
         memcpy(data, this, sizeof(Packet));

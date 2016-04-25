@@ -94,11 +94,11 @@ void ClientGame::sendStartPacket() {
 
 void ClientGame::receiveSpawnPacket(int offset)
 {
-    struct PosInfo* pi = (struct PosInfo *) &(network_data[offset]);
-    world->spawnDummy(pi->x, pi->y);
-    //printf("------------------------------------------------------\n");
-    //printf("offset = %d\n", offset);
-    printf("client spawned a dummy at (%d,%d)\n", pi->x, pi->y);
+    struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
+    struct PosInfo* p = (struct PosInfo *) (dat->buf);
+    world->spawnDummy(p->x, p->y);
+
+    printf("client spawned a dummy at (%d,%d)\n", p->x, p->y);
 }
 
 void ClientGame::sendSpawnPacket()
@@ -118,7 +118,8 @@ void ClientGame::sendSpawnPacket()
 
 void ClientGame::receiveMovePacket(int offset)
 {
-    struct PosInfo* pi = (struct PosInfo *) &(network_data[offset]);
+    struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
+    struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
     world->moveDummy(pi->direction);
     struct PosInfo dpi = world->getDummyPos();
     printf("Dummy moved to (%d,%d)\n", dpi.x, dpi.y);
@@ -138,7 +139,9 @@ void ClientGame::sendMovePacket(int direction)
     packet.hdr.sender_id = client_id;
     packet.hdr.receiver_id = SERVER_ID;
 
-    packet.pi.direction = direction;
+    PosInfo pi;
+    pi.direction = direction;
+    pi.serialize(packet.dat.buf);
 
     packet.serialize(packet_data);
 
@@ -146,7 +149,8 @@ void ClientGame::sendMovePacket(int direction)
 }
 
 void ClientGame::receiveVRotationPacket(int offset) {
-    struct PosInfo* pi = (struct PosInfo *) &(network_data[offset]);
+    struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
+    struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
 
 <<<<<<< 174b3f97e4b370bde6db6b896fe55f3188611e9a
 	printf("rotate player by %d\n", pi->radians);
@@ -174,8 +178,10 @@ void ClientGame::sendVRotationPacket(float v_rot, float h_rot) {
     packet.hdr.sender_id = client_id;
     packet.hdr.receiver_id = SERVER_ID;
 
-    packet.pi.v_rotation = v_rot;
-	packet.pi.h_rotation = h_rot;
+    PosInfo pi;
+    pi.v_rotation = v_rot;
+	pi.h_rotation = h_rot;
+    pi.serialize(packet.dat.buf);
 
     packet.serialize(packet_data);
 

@@ -1,4 +1,6 @@
 #pragma once
+#include <string.h>
+#include <stdio.h>
 enum MoveType {
 
     BAD_MOVE = -1,
@@ -12,9 +14,28 @@ enum MoveType {
     MOVE_RIGHT = 3
 };
 
-struct PosInfo
+enum ObjId 
 {
-	// object coordinates
+    POS_OBJ = 0
+};
+
+struct GameInfo
+{
+    ObjId id;
+
+    // NETWORKING NOTE:
+    // Usually, you want to serialize into PacketData's buf before you send
+    void serialize(char * data) {
+        memcpy(data, this, sizeof(GameInfo));
+    }
+
+    void deserialize(char * data) {
+        memcpy(this, data, sizeof(GameInfo));
+    }
+};
+
+struct PosInfo : GameInfo
+{
     int x;
     int y;
     int z;
@@ -23,5 +44,13 @@ struct PosInfo
 
     // rotation
     float v_rotation;
-	float h_rotation;
+    float h_rotation;
+
+    void serialize(char * data) {
+        memcpy(data, this, sizeof(PosInfo));
+    }
+
+    void deserialize(char * data) {
+        memcpy(this, data, sizeof(PosInfo));
+    }
 };
