@@ -20,7 +20,11 @@ class DummyWorld
         // move dummy to specific position
         void moveDummy(int x, int y);
 
+        void rotateDummy(float v_rot, float h_rot);
+
         PosInfo getDummyPos();
+
+        PosInfo getDummyRotation();
 
     private:
         Dummy* dummy;

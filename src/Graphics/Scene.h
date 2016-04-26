@@ -1,33 +1,51 @@
 #pragma once
 #include <memory>
+#include <vector>
+
 #include <glm/glm.hpp>
+#include <vector>
+
+#include "Objects/Entity.h"
 
 class Camera;
-class Cube;
-class Chicken;
-class Ground;
 class Player;
-class CubeMap;
 
 struct PointLight;
 
-namespace Scene
+class Scene
 {
-    extern std::unique_ptr<Camera> camera;
-    extern std::unique_ptr<Cube> cube;
-    extern std::unique_ptr<Chicken> chicken;
-    extern std::unique_ptr<PointLight> pLight;
-    extern std::unique_ptr<Ground> ground;
-    extern std::unique_ptr<Player> player;
-    extern std::unique_ptr<CubeMap> cubeMap;
+    std::unique_ptr<Camera> camera;
+    std::unique_ptr<PointLight> pLight;
+    Player* player;
+
+    static const int WIDTH;
+    static const int HEIGHT;
+
+    std::vector<std::unique_ptr<Entity>> entities;
+    std::vector<std::shared_ptr<Player>> players;
+
+    Scene();
 
     void Setup();
-    void Dealloc();
 
+public:
+    static Scene* Instance()
+    {
+        static Scene* instance = new Scene();
+        return instance;
+    }
+
+    static void Initialize() { Instance()->Setup(); }
+
+	void AddPlayer(int client_id);
     void Update();
     void Draw();
 
     // Interface to camera
-    glm::mat4 GetViewMatrix();
+	glm::mat4 GetViewMatrix();
     glm::vec3 GetCameraPosition();
-}
+    glm::mat4 GetPerspectiveMatrix();
+
+    std::unique_ptr<PointLight>& GetPointLight() { return pLight; }
+    Player*& GetPlayer() { return player; }
+};

@@ -3,14 +3,14 @@
 #include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale, glm::perspective
 #include <glm/gtc/type_ptr.hpp>
 
-#include "../../Window.h"
+#include "../../client/Window.h"
 #include "../Scene.h"
 #include "../PointLight.h"
 #include "../Camera.h"
-#include "../../Player.h"
+#include "../../client/Player.h"
 
 
-Ground::Ground() : toWorld(glm::mat4(1.0f)), color(glm::vec3(0.545f, 0.271f, 0.075f))
+Ground::Ground() : Entity(), color(glm::vec3(0.545f, 0.271f, 0.075f))
 {
     this->normalMatrix = glm::mat3(glm::transpose(glm::inverse(toWorld)));
 
@@ -60,11 +60,17 @@ Ground::~Ground()
     glDeleteBuffers(1, &EBO);
 }
 
-void Ground::Draw(glm::mat4 C)
+void Ground::Update()
+{
+}
+
+void Ground::Spawn(float x, float y, float z)
+{
+}
+
+void Ground::Draw() const
 {
     shader->Use();
-
-    glm::mat4 projection = glm::perspective((GLfloat)45.0f, (GLfloat)Window::width / (GLfloat)Window::height, 0.1f, 1000.0f);
 
     GLint viewLoc = shader->GetUniform("view");
     GLint modelLocation = shader->GetUniform("model");
@@ -75,15 +81,15 @@ void Ground::Draw(glm::mat4 C)
     GLint lightPosLoc = shader->GetUniform("lightPos");
     GLint viewPosLoc = shader->GetUniform("viewPos");
 
-    glUniformMatrix4fv(viewLoc, 1, false, glm::value_ptr(Scene::GetViewMatrix()));
+    glUniformMatrix4fv(viewLoc, 1, false, glm::value_ptr(Scene::Instance()->GetViewMatrix()));
     glUniformMatrix4fv(modelLocation, 1, false, glm::value_ptr(this->toWorld));
     glUniformMatrix3fv(normalMatrixLoc, 1, false, glm::value_ptr(this->normalMatrix));
-    glUniformMatrix4fv(projectionLocation, 1, false, glm::value_ptr(projection));
+    glUniformMatrix4fv(projectionLocation, 1, false, glm::value_ptr(Scene::Instance()->GetPerspectiveMatrix()));
 
     glUniform3fv(objectColorLoc, 1, glm::value_ptr(this->color));
-    glUniform3fv(lightColorLoc, 1, glm::value_ptr(Scene::pLight->color));
-    glUniform3fv(lightPosLoc, 1, glm::value_ptr(Scene::pLight->position));
-    glUniform3fv(viewPosLoc, 1, glm::value_ptr(Scene::GetCameraPosition()));
+    glUniform3fv(lightColorLoc, 1, glm::value_ptr(Scene::Instance()->GetPointLight()->color));
+    glUniform3fv(lightPosLoc, 1, glm::value_ptr(Scene::Instance()->GetPointLight()->position));
+    glUniform3fv(viewPosLoc, 1, glm::value_ptr(Scene::Instance()->GetCameraPosition()));
 
 
     glBindVertexArray(VAO);

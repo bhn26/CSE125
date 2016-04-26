@@ -6,18 +6,19 @@
 #include <memory>
 
 #include "../Shader.h"
+#include "Entity.h"
 
-class Ground
+class Ground : public Entity
 {
 public:
-    glm::mat4 toWorld;
-    glm::mat3 normalMatrix;
     glm::vec3 color;
-    GLuint VBO, VAO, EBO;
-    std::shared_ptr<Shader> shader;
 
     Ground();
     ~Ground();
 
-    void Draw(glm::mat4 C);
+    virtual void Draw() const override;
+
+    // Inherited via Entity
+    virtual void Update() override;
+    virtual void Spawn(float x, float y, float z) override;
 };

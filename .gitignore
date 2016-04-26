@@ -32,6 +32,7 @@
 .vs/
 *.opensdf
 *.suo
+*.db
 
 # Output
 #Output/
@@ -46,8 +47,6 @@
 # Ignore directories
 out/
 packages/
-Client/
-Server/
 Release/
 Debug/
 

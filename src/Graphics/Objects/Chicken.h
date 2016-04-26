@@ -9,41 +9,34 @@
 #ifndef Chicken_h
 #define Chicken_h
 
-#include <stdio.h>
-#include <string>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
 // GLM Mathemtics
 #include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
-#include <glm/mat4x4.hpp> // glm::mat4
-#include <glm/mat3x3.hpp> // glm::mat3
-#include <glm/vec3.hpp>
 #include <memory>
 
-#include "../../Window.h"
-#include "../Model.h"
-#include "../Camera.h"
+//#include "../../Window.h"
+//#include "../Model.h"
+//#include "../Camera.h"
+#include "Entity.h"
 
-class Chicken
+class Model;
+
+class Chicken : public Entity
 {
 public:
     Chicken();
     ~Chicken();
     
-    std::shared_ptr<Shader> shader;
     Model* model;
 
-    glm::mat4 toWorld;
-    glm::mat3 normalMatrix;
-    float angle;
-    
-    void Draw(Camera * camera);
-    void Update();
+    void Draw() const override;
+    void Update() override;
     void Spin(float deg);
+
+    // Inherited via Entity
+    virtual void Spawn(float x, float y, float z) override;
 };
 
 #endif /* Chicken_h */
