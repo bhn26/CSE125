@@ -16,6 +16,13 @@ Player::Player() : Entity(), camAngle(0.0f)
     camera = std::unique_ptr<Camera>(new Camera(glm::vec3(-1.5f, 4.5f, -7.0f), glm::vec3(0.0f, 1.0f, 0.0f), 90.0f, -15.0f));
 }
 
+Player::Player(int client_id) : Entity(), camAngle(0.0f) {
+    id = client_id;
+
+    model = std::unique_ptr<Model>(new Model("assets/chickens/objects/chicken.obj"));
+    camera = std::unique_ptr<Camera>(new Camera(glm::vec3(-1.5f, 4.5f, -7.0f), glm::vec3(0.0f, 1.0f, 0.0f), 90.0f, -15.0f));
+}
+
 Player::~Player()
 {
 }
