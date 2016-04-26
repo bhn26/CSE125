@@ -4,7 +4,6 @@
 #include <winsock2.h>
 #include "ClientNetwork.h"
 #include "../network/NetworkData.h"
-#include "../network/DummyWorld.h"
 #include "../network/GameData.h"
 #include <Windows.h>
 #endif

@@ -85,7 +85,7 @@ void ClientGame::receiveStartPacket(int offset) {
 
 	for (int i = 0; i < pi->id; i++) {
 		printf("add player %d\n", i);
-		Scene::AddPlayer(i);
+		Scene::Instance()->AddPlayer(i);
 	}
 }
 
@@ -159,21 +159,21 @@ void ClientGame::receiveVRotationPacket(int offset) {
     struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
     struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
 
-<<<<<<< 174b3f97e4b370bde6db6b896fe55f3188611e9a
+/*<<<<<<< 174b3f97e4b370bde6db6b896fe55f3188611e9a
 	printf("rotate player by %d\n", pi->radians);
 
     glm::mat4 newToWorld = Scene::Instance()->GetPlayer()->GetToWorld() * glm::rotate(glm::mat4(1.0f), pi->radians, glm::vec3(0.0f, 1.0f, 0.0f));
 	Scene::Instance()->GetPlayer()->SetToWorld(newToWorld);
-=======
+=======*/
 	// left/right rotation
-    glm::mat4 newToWorld = Scene::player->GetToWorld() * glm::rotate(glm::mat4(1.0f), pi->v_rotation, glm::vec3(0.0f, 1.0f, 0.0f));
+    glm::mat4 newToWorld = Scene::Instance()->GetPlayer()->GetToWorld() * glm::rotate(glm::mat4(1.0f), pi->v_rotation, glm::vec3(0.0f, 1.0f, 0.0f));
 	Scene::Instance()->GetPlayer()->SetToWorld(newToWorld);
 
 	// up/down rotation
 	float newAngle = Scene::Instance()->GetPlayer()->GetCamAngle() + pi->h_rotation;
 	const static float pi2 = glm::pi<float>()/2;
 	Scene::Instance()->GetPlayer()->SetCamAngle((newAngle > pi2) ? pi2 : ((newAngle < -pi2) ? -pi2 : newAngle));
->>>>>>> all rotation done by network and ignore *.db files
+
 }
 
 void ClientGame::sendVRotationPacket(float v_rot, float h_rot) {

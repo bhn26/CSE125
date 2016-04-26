@@ -25,12 +25,6 @@
     <ClCompile Include="..\src\Graphics\Objects\Cube.cpp">
       <Filter>Source Files\Graphics\Objects</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\network\Dummy.cpp">
-      <Filter>Source Files\Network</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\network\DummyWorld.cpp">
-      <Filter>Source Files\Network</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\network\NetworkServices.cpp">
       <Filter>Source Files\Network</Filter>
     </ClCompile>
@@ -84,23 +78,8 @@
     <ClInclude Include="..\src\Graphics\Objects\Chicken.h">
       <Filter>Source Files\Graphics\Objects</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\ClientGame.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Window.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\network\client\ClientNetwork.h">
-      <Filter>Source Files\Network</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Graphics\Objects\Cube.h">
       <Filter>Source Files\Graphics\Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\network\Dummy.h">
-      <Filter>Source Files\Network</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\network\DummyWorld.h">
-      <Filter>Source Files\Network</Filter>
     </ClInclude>
     <ClInclude Include="..\src\network\GameData.h">
       <Filter>Source Files\Network</Filter>
