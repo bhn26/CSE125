@@ -79,7 +79,9 @@ void ClientGame::sendInitPacket() {
 void ClientGame::receiveStartPacket(int offset) {
 	printf("received start packet\n");
 	struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset]);
-	struct PosInfo* pi = (struct PosInfo *) &(network_data[offset + sizeof(PacketHeader)]);
+    struct PacketData* dat = (struct PacketData *) &(network_data[offset + sizeof(PacketHeader)]);
+    
+	struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
 
 	for (int i = 0; i < pi->id; i++) {
 		printf("add player %d\n", i);
@@ -101,23 +103,11 @@ void ClientGame::sendStartPacket() {
 
 void ClientGame::receiveSpawnPacket(int offset)
 {
-<<<<<<< 2dce00a48b1270158a0c13e20220c3b340a84734
-<<<<<<< 849bab3ad8a94e6e1f5e449c2f13e0b7c0efe664
-=======
 
->>>>>>> now using a bytebuffer for packets
     struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
     struct PosInfo* p = (struct PosInfo *) (dat->buf);
-    world->spawnDummy(p->x, p->y);
 
-    printf("client spawned a dummy at (%d,%d)\n", p->x, p->y);
-<<<<<<< 2dce00a48b1270158a0c13e20220c3b340a84734
-=======
-    struct PosInfo* pi = (struct PosInfo *) &(network_data[offset]);
-=======
->>>>>>> now using a bytebuffer for packets
 
->>>>>>> multiplayer WIP
 }
 
 void ClientGame::sendSpawnPacket()
@@ -137,23 +127,9 @@ void ClientGame::sendSpawnPacket()
 
 void ClientGame::receiveMovePacket(int offset)
 {
-<<<<<<< 2dce00a48b1270158a0c13e20220c3b340a84734
-<<<<<<< 849bab3ad8a94e6e1f5e449c2f13e0b7c0efe664
-=======
 
->>>>>>> now using a bytebuffer for packets
     struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
     struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
-    world->moveDummy(pi->direction);
-    struct PosInfo dpi = world->getDummyPos();
-    printf("Dummy moved to (%d,%d)\n", dpi.x, dpi.y);
-<<<<<<< 2dce00a48b1270158a0c13e20220c3b340a84734
-=======
-    struct PosInfo* pi = (struct PosInfo *) &(network_data[offset]);
->>>>>>> multiplayer WIP
-=======
-
->>>>>>> now using a bytebuffer for packets
 
     /* probably gonna switch this to coordinates later on */
     Scene::Instance()->GetPlayer()->ProcessKeyboard((DIRECTION) pi->direction, 1); // move (rename method later)

@@ -227,13 +227,7 @@ void ServerGame::sendStartPacket() { // will add more later based on generated w
 
 	Packet packet;
 	packet.hdr.packet_type = START_GAME;
-<<<<<<< 2dce00a48b1270158a0c13e20220c3b340a84734
-<<<<<<< 849bab3ad8a94e6e1f5e449c2f13e0b7c0efe664
-    packet.hdr.sender_id = SERVER_ID;
-=======
-	packet.pi.id = client_id + 1;
->>>>>>> multiplayer WIP
-=======
+
 
     PosInfo p;
     p.id = client_id + 1;
@@ -244,7 +238,6 @@ void ServerGame::sendStartPacket() { // will add more later based on generated w
     packet.serialize(packet_data);
 
     packet.hdr.sender_id = SERVER_ID;
->>>>>>> now using a bytebuffer for packets
 
 	packet.serialize(packet_data);
 
@@ -270,22 +263,11 @@ void ServerGame::sendSpawnPacket()
 
     const unsigned int packet_size = sizeof(Packet);
 
-<<<<<<< 2dce00a48b1270158a0c13e20220c3b340a84734
-<<<<<<< 849bab3ad8a94e6e1f5e449c2f13e0b7c0efe664
-=======
 
->>>>>>> now using a bytebuffer for packets
     int x = rand() % 5;
     int y = rand() % 5;
 
-    printf("spawned dummy at (%d,%d)\n", x, y);
-    world->spawnDummy(x, y);
-<<<<<<< 2dce00a48b1270158a0c13e20220c3b340a84734
-=======
->>>>>>> multiplayer WIP
-=======
 
->>>>>>> now using a bytebuffer for packets
     char packet_data[packet_size];
 
     PosInfo p;
@@ -305,20 +287,13 @@ void ServerGame::sendSpawnPacket()
 
 void ServerGame::receiveMovePacket(int offset)
 {
-<<<<<<< 2dce00a48b1270158a0c13e20220c3b340a84734
-<<<<<<< 849bab3ad8a94e6e1f5e449c2f13e0b7c0efe664
-    struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
-    struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
-=======
-=======
 
->>>>>>> now using a bytebuffer for packets
 	struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset]);
 	printf("recieved move packet from %d\n", hdr->sender_id);
     struct PacketData* dat = (struct PacketData *) &(network_data[offset + sizeof(PacketHeader)]);
     struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
 	shared_ptr<Player> player = engine->GetWorld()->GetPlayer(hdr->sender_id);
->>>>>>> multiplayer WIP
+
 
 
     //printf("dummy's current pos is (%d,%d)\n", dpi.x, dpi.y);
@@ -334,21 +309,6 @@ void ServerGame::sendMovePacket(int client)
 		shared_ptr<Player> player = engine->GetWorld()->GetPlayer(client);
         Packet packet;
         packet.hdr.packet_type = MOVE_EVENT;
-<<<<<<< 2dce00a48b1270158a0c13e20220c3b340a84734
-<<<<<<< 849bab3ad8a94e6e1f5e449c2f13e0b7c0efe664
-
-        PosInfo p;
-        p.direction = direction;
-
-        packet.dat.obj_id = POS_OBJ;
-
-        p.serialize(packet.dat.buf);
-=======
-		
-		packet.pi = player->GetPosition();
-		packet.pi.id = client;
->>>>>>> multiplayer WIP
-=======
 
         PosInfo p;
         packet.dat.obj_id = POS_OBJ;
@@ -357,7 +317,7 @@ void ServerGame::sendMovePacket(int client)
 		p.id = client;
 
         p.serialize(packet.dat.buf);
->>>>>>> now using a bytebuffer for packets
+
 
         const unsigned int packet_size = sizeof(Packet);
         char packet_data[packet_size];
@@ -369,22 +329,13 @@ void ServerGame::sendMovePacket(int client)
 }
 
 void ServerGame::receiveVRotationPacket(int offset) {
-<<<<<<< 2dce00a48b1270158a0c13e20220c3b340a84734
-<<<<<<< 849bab3ad8a94e6e1f5e449c2f13e0b7c0efe664
+
     struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
     struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
-=======
-=======
 
->>>>>>> now using a bytebuffer for packets
 	struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset - sizeof(PacketHeader)]);
 
 	shared_ptr<Player> player = engine->GetWorld()->GetPlayer(hdr->sender_id);
->>>>>>> multiplayer WIP
-
-    struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
-    struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
-
 
     // TODO - rotate player in game state
     player->Rotate(pi->v_rotation, pi->h_rotation);
@@ -402,23 +353,14 @@ void ServerGame::sendVRotationPacket(int client) {
     packet.hdr.sender_id = client_id;
     packet.hdr.receiver_id = SERVER_ID;
 
-<<<<<<< 2dce00a48b1270158a0c13e20220c3b340a84734
-<<<<<<< 849bab3ad8a94e6e1f5e449c2f13e0b7c0efe664
-    PosInfo p = world->getDummyRotation();
-=======
-	packet.pi = player->GetPosition();
-	packet.pi.id = client;
->>>>>>> multiplayer WIP
-
     packet.dat.obj_id = POS_OBJ;
-=======
+
 	PosInfo p = player->GetPosition();
 	p.id = client;
 
 
     packet.dat.obj_id = POS_OBJ;
 
->>>>>>> now using a bytebuffer for packets
 
     p.serialize(packet.dat.buf);
     

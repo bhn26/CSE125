@@ -36,18 +36,10 @@ struct GameInfo
 
 struct PosInfo : GameInfo
 {
-<<<<<<< 2dce00a48b1270158a0c13e20220c3b340a84734
-<<<<<<< 849bab3ad8a94e6e1f5e449c2f13e0b7c0efe664
-=======
+
 	int id;
 	// object coordinates
->>>>>>> multiplayer WIP
-=======
-    int id;
 
-	// object coordinates
-
->>>>>>> now using a bytebuffer for packets
     int x;
     int y;
     int z;
