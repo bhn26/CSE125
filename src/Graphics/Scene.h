@@ -42,7 +42,7 @@ public:
     void Draw();
 
     // Interface to camera
-    glm::mat4 GetViewMatrix();
+	glm::mat4 GetViewMatrix();
     glm::vec3 GetCameraPosition();
     glm::mat4 GetPerspectiveMatrix();
 

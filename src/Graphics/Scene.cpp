@@ -8,7 +8,7 @@
 #include "PointLight.h"
 #include "Objects/Entity.h"
 #include "../client/Player.h"
-
+#include "../client/ClientGame.h"
 #include <algorithm>
 #include <vector>
 
@@ -18,7 +18,6 @@ Scene::Scene() : camera(std::unique_ptr<Camera>(nullptr)), pLight(std::unique_pt
 }
 const int Scene::WIDTH = 100;
 const int Scene::HEIGHT = 100;
-
 
 void Scene::Setup()
 {
@@ -49,6 +48,21 @@ void Scene::Setup()
     entities.push_back(std::move(cubeMap));
 }
 
+void Scene::AddPlayer(int client_id) {
+	//TODO - add client_id field to player
+	std::shared_ptr<Player> new_player = std::shared_ptr<Player>(new Player(client_id));
+
+	std::shared_ptr<Shader> modelShader = std::make_shared<Shader>("src/Graphics/Shaders/model_loading.vert", "src/Graphics/Shaders/model_loading.frag");
+	new_player->GetShader() = modelShader;
+
+	players.push_back(new_player);
+
+	if (client_id == ClientGame::GetClientId()) {
+		printf("set main player to %d\n", client_id);
+		player = new_player.get(); // set your player
+	}
+}
+
 void Scene::Update()
 {
     for (std::unique_ptr<Entity>& entity : entities)
@@ -64,16 +78,6 @@ void Scene::Draw()
 	for (int i = 0; i < players.size(); i++) {
 		players.at(i)->Draw();
 	}
-}
-
-void Scene::AddPlayer(int client_id) {
-    //TODO - add client_id field to player
-    std::shared_ptr<Player> new_player = std::shared_ptr<Player>(new Player(client_id));
-
-    std::shared_ptr<Shader> modelShader = std::make_shared<Shader>("src/Graphics/Shaders/model_loading.vert", "src/Graphics/Shaders/model_loading.frag");
-    new_player->GetShader() = modelShader;
-
-    players.push_back(new_player);
 }
 
 

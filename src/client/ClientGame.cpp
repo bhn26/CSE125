@@ -82,6 +82,7 @@ void ClientGame::receiveStartPacket(int offset) {
 	struct PosInfo* pi = (struct PosInfo *) &(network_data[offset + sizeof(PacketHeader)]);
 
 	for (int i = 0; i < pi->id; i++) {
+		printf("add player %d\n", i);
 		Scene::AddPlayer(i);
 	}
 }
