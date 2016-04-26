@@ -36,8 +36,8 @@ void Player::Draw() const
     glUniformMatrix3fv(normalMatrixLoc, 1, false, glm::value_ptr(GetNormalMatrix()));
     glUniformMatrix4fv(projectionLocation, 1, false, glm::value_ptr(camera->GetPerspectiveMatrix()));
 
-    glUniform3fv(lightColorLoc, 1, glm::value_ptr(Scene::pLight->color));
-    glUniform3fv(lightPosLoc, 1, glm::value_ptr(Scene::pLight->position));
+    glUniform3fv(lightColorLoc, 1, glm::value_ptr(Scene::Instance()->GetPointLight()->color));
+    glUniform3fv(lightPosLoc, 1, glm::value_ptr(Scene::Instance()->GetPointLight()->position));
     glUniform3fv(viewPosLoc, 1, glm::value_ptr(this->CameraPosition()));
 
     model->Draw(shader.get());

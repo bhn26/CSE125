@@ -10,16 +10,25 @@ class Player;
 
 struct PointLight;
 
-namespace Scene
+class Scene
 {
-    extern std::unique_ptr<Camera> camera;
-    extern std::unique_ptr<PointLight> pLight;
-    extern Player* player;
+    std::unique_ptr<Camera> camera;
+    std::unique_ptr<PointLight> pLight;
+    Player* player;
 
-    extern std::vector<std::unique_ptr<Entity>> entities;
+    std::vector<std::unique_ptr<Entity>> entities;
 
+    Scene();
     void Setup();
-    void Dealloc();
+
+public:
+    static Scene* Instance()
+    {
+        static Scene* instance = new Scene();
+        return instance;
+    }
+
+    static void Initialize() { Instance()->Setup(); }
 
     void Update();
     void Draw();
@@ -28,4 +37,7 @@ namespace Scene
     glm::mat4 GetViewMatrix();
     glm::vec3 GetCameraPosition();
     glm::mat4 GetPerspectiveMatrix();
-}
+
+    std::unique_ptr<PointLight>& GetPointLight() { return pLight; }
+    Player*& GetPlayer() { return player; }
+};

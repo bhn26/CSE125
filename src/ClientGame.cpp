@@ -180,7 +180,7 @@ void ClientGame::Initialize()
     // Initialize objects/pointers for rendering
     Window::Initialize_objects();
 
-    Scene::Setup();
+    Scene::Initialize();
 
     double lastTime = glfwGetTime();
     int nbFrames = 0;

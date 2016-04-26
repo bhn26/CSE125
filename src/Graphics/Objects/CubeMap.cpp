@@ -128,9 +128,9 @@ void CubeMap::Draw() const
     
     
     //glUniformMatrix4fv(viewLoc, 1, false, glm::value_ptr(glm::mat4(glm::mat3(Scene::GetViewMatrix()))));
-    glUniformMatrix4fv(viewLoc, 1, false, glm::value_ptr(Scene::GetViewMatrix()));
+    glUniformMatrix4fv(viewLoc, 1, false, glm::value_ptr(Scene::Instance()->GetViewMatrix()));
     glUniformMatrix4fv(modelLocation, 1, false, glm::value_ptr(this->toWorld));
-    glUniformMatrix4fv(projectionLocation, 1, false, glm::value_ptr(Scene::GetPerspectiveMatrix()));
+    glUniformMatrix4fv(projectionLocation, 1, false, glm::value_ptr(Scene::Instance()->GetPerspectiveMatrix()));
     
     // skybox cube
     glBindVertexArray(VAO);

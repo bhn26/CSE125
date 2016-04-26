@@ -12,10 +12,9 @@
 #include <algorithm>
 #include <vector>
 
-std::unique_ptr<Camera> Scene::camera;
-std::unique_ptr<PointLight> Scene::pLight;
-Player* Scene::player = nullptr;
-std::vector<std::unique_ptr<Entity>> Scene::entities;
+Scene::Scene() : camera(std::unique_ptr<Camera>(nullptr)), pLight(std::unique_ptr<PointLight>(nullptr)), player(nullptr), entities(std::vector<std::unique_ptr<Entity>>())
+{
+}
 
 void Scene::Setup()
 {
@@ -46,9 +45,6 @@ void Scene::Setup()
     entities.push_back(std::move(cubeMap));
 }
 
-void Scene::Dealloc()
-{
-}
 
 void Scene::Update()
 {

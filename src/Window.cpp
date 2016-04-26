@@ -92,7 +92,7 @@ void Window::Idle_callback()
     // In this instance, drawPtr is pointing to a Cube object and is therefore
     // causing the cube to rotate via its spin function.
     //chicken->Update();
-    Scene::Update();
+    Scene::Instance()->Update();
 }
 
 void Window::Display_callback(GLFWwindow* window)
@@ -105,7 +105,7 @@ void Window::Display_callback(GLFWwindow* window)
 
     // Render the object drawPtr is pointing to
     //chicken->Draw(camera);
-    Scene::Draw();
+    Scene::Instance()->Draw();
 
     // Gets events, including input such as keyboard and mouse or window resizing
     glfwPollEvents();
@@ -127,31 +127,31 @@ void Window::Key_callback(GLFWwindow* window, int key, int scancode, int action,
                 break;
 
             case GLFW_KEY_W:
-                Scene::player->ProcessKeyboard(DIRECTION::D_FORWARD, 1);
+                Scene::Instance()->GetPlayer()->ProcessKeyboard(DIRECTION::D_FORWARD, 1);
 #ifdef _WIN32
                 ClientGame::instance()->sendMovePacket(MOVE_UP);
 #endif
                 break;
             case GLFW_KEY_A:
-                Scene::player->ProcessKeyboard(DIRECTION::D_LEFT, 1);
+                Scene::Instance()->GetPlayer()->ProcessKeyboard(DIRECTION::D_LEFT, 1);
 #ifdef _WIN32
                 ClientGame::instance()->sendMovePacket(MOVE_LEFT);
 #endif
                 break;
             case GLFW_KEY_S:
-                Scene::player->ProcessKeyboard(DIRECTION::D_BACKWARD, 1);
+                Scene::Instance()->GetPlayer()->ProcessKeyboard(DIRECTION::D_BACKWARD, 1);
 #ifdef _WIN32
                 ClientGame::instance()->sendMovePacket(MOVE_DOWN);
 #endif
                 break;
             case GLFW_KEY_D:
-                Scene::player->ProcessKeyboard(DIRECTION::D_RIGHT, 1);
+                Scene::Instance()->GetPlayer()->ProcessKeyboard(DIRECTION::D_RIGHT, 1);
                 break;
             case GLFW_KEY_SPACE:
-                Scene::player->ProcessKeyboard(DIRECTION::D_UP, 1);
+                Scene::Instance()->GetPlayer()->ProcessKeyboard(DIRECTION::D_UP, 1);
                 break;
             case GLFW_KEY_Z:
-                Scene::player->ProcessKeyboard(DIRECTION::D_DOWN, 1);
+                Scene::Instance()->GetPlayer()->ProcessKeyboard(DIRECTION::D_DOWN, 1);
                 break;
             default:
                 break;
@@ -175,7 +175,7 @@ void Window::Mouse_callback(GLFWwindow* window, double xpos, double ypos)
         GLfloat yoffset = (GLfloat)(lastY - ypos);
         lastX = (GLint)xpos;
         lastY = (GLint)ypos;
-        Scene::player->ProcessMouseMovement(xoffset, yoffset);
+        Scene::Instance()->GetPlayer()->ProcessMouseMovement(xoffset, yoffset);
     }
 }
 

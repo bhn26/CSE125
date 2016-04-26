@@ -38,9 +38,9 @@ void Chicken::Draw() const
     GLint modelLocation = shader->GetUniform("model");
     GLint projectionLocation = shader->GetUniform("projection");
     
-    glUniformMatrix4fv(viewLoc, 1, false, glm::value_ptr(Scene::GetViewMatrix()));
+    glUniformMatrix4fv(viewLoc, 1, false, glm::value_ptr(Scene::Instance()->GetViewMatrix()));
     glUniformMatrix4fv(modelLocation, 1, false, glm::value_ptr(this->toWorld));
-    glUniformMatrix4fv(projectionLocation, 1, false, glm::value_ptr(Scene::GetPerspectiveMatrix()));
+    glUniformMatrix4fv(projectionLocation, 1, false, glm::value_ptr(Scene::Instance()->GetPerspectiveMatrix()));
 
     model->Draw(shader.get());
 }
