@@ -12,7 +12,6 @@ ServerGame::ServerGame(void)
     // set up the server network to listen 
     network = new ServerNetwork(); 
 
-    world = new DummyWorld();
 	engine = new Engine();
 }
 
@@ -111,7 +110,7 @@ void ServerGame::receiveFromClients()
                     break;
 
 				case START_GAME:
-					receiveStartPacket(i + sizeof(PacketHeader));
+					receiveStartPacket(i);
 					sendStartPacket();
 
 					break;
@@ -126,7 +125,7 @@ void ServerGame::receiveFromClients()
 
                 case MOVE_EVENT:
                     // sends a move packet based on if reception was valid
-                    sendMovePacket(receiveMovePacket(i + sizeof(PacketHeader)));
+                    receiveMovePacket(i);
                     break;
 
                 case SPAWN_EVENT:
@@ -141,7 +140,7 @@ void ServerGame::receiveFromClients()
 
                 case V_ROTATION_EVENT:
                     receiveVRotationPacket(i + sizeof(PacketHeader));
-                    sendVRotationPacket();
+                
                     break;
 
                 default:
@@ -205,23 +204,34 @@ void ServerGame::sendInitPacket()
 
     packet.serialize(packet_data);
 
-    network->sendToAll(packet_data, packet_size);
+	network->sendToClient(packet_data, packet_size, client_id);
 }
 
 void ServerGame::receiveStartPacket(int offset) {
+	struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset]);
+
+	printf("recieved start packet from %d\n", hdr->sender_id);
 	if (!game_started) {
-		engine->InitWorld(client_id);
+		printf("initializing world with %d players", client_id + 1);
+		engine->InitWorld(client_id + 1);
 		game_started = true;
 	}
+
+	// add player
 }
 
 void ServerGame::sendStartPacket() { // will add more later based on generated world
+	printf("sent start packet");
 	const unsigned int packet_size = sizeof(Packet);
 	char packet_data[packet_size];
 
 	Packet packet;
 	packet.hdr.packet_type = START_GAME;
+<<<<<<< 849bab3ad8a94e6e1f5e449c2f13e0b7c0efe664
     packet.hdr.sender_id = SERVER_ID;
+=======
+	packet.pi.id = client_id + 1;
+>>>>>>> multiplayer WIP
 
 	packet.serialize(packet_data);
 
@@ -247,11 +257,14 @@ void ServerGame::sendSpawnPacket()
 
     const unsigned int packet_size = sizeof(Packet);
 
+<<<<<<< 849bab3ad8a94e6e1f5e449c2f13e0b7c0efe664
     int x = rand() % 5;
     int y = rand() % 5;
 
     printf("spawned dummy at (%d,%d)\n", x, y);
     world->spawnDummy(x, y);
+=======
+>>>>>>> multiplayer WIP
     char packet_data[packet_size];
 
     PosInfo p;
@@ -269,38 +282,33 @@ void ServerGame::sendSpawnPacket()
 
 }
 
-int ServerGame::receiveMovePacket(int offset)
+void ServerGame::receiveMovePacket(int offset)
 {
+<<<<<<< 849bab3ad8a94e6e1f5e449c2f13e0b7c0efe664
     struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
     struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
+=======
+	struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset]);
+	printf("recieved move packet from %d\n", hdr->sender_id);
+    struct PosInfo* pi = (struct PosInfo *) &(network_data[offset + sizeof(PacketHeader)]);
 
-    struct PosInfo dpi = world->getDummyPos();
+	shared_ptr<Player> player = engine->GetWorld()->GetPlayer(hdr->sender_id);
+>>>>>>> multiplayer WIP
+
     //printf("dummy's current pos is (%d,%d)\n", dpi.x, dpi.y);
 
-    // check if this is a valid move
-    if (world->canMove(pi->direction))
-    {
-        world->moveDummy(pi->direction);
-        dpi = world->getDummyPos();
-        printf("Dummy moved to (%d,%d)\n", dpi.x, dpi.y);
-        return pi->direction;
-    }
-    else
-    {
-        dpi = world->getDummyPos();
-        printf("dummy cannot move past (%d,%d)\n", dpi.x, dpi.y);
-    }
-    return BAD_MOVE;
+	player->Move(pi->direction);
+
+	sendMovePacket(hdr->sender_id);
 
 }
 
-void ServerGame::sendMovePacket(int direction)
+void ServerGame::sendMovePacket(int client)
 {
-    // don't send anything if it's a bad move
-    if (direction != BAD_MOVE)
-    {
+		shared_ptr<Player> player = engine->GetWorld()->GetPlayer(client);
         Packet packet;
         packet.hdr.packet_type = MOVE_EVENT;
+<<<<<<< 849bab3ad8a94e6e1f5e449c2f13e0b7c0efe664
 
         PosInfo p;
         p.direction = direction;
@@ -308,6 +316,11 @@ void ServerGame::sendMovePacket(int direction)
         packet.dat.obj_id = POS_OBJ;
 
         p.serialize(packet.dat.buf);
+=======
+		
+		packet.pi = player->GetPosition();
+		packet.pi.id = client;
+>>>>>>> multiplayer WIP
 
         const unsigned int packet_size = sizeof(Packet);
         char packet_data[packet_size];
@@ -316,27 +329,41 @@ void ServerGame::sendMovePacket(int direction)
 
         network->sendToAll(packet_data, packet_size);
         //printf("Sent move packet to clients\n");
-    }
 }
 
 void ServerGame::receiveVRotationPacket(int offset) {
+<<<<<<< 849bab3ad8a94e6e1f5e449c2f13e0b7c0efe664
     struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
     struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
+=======
+	struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset - sizeof(PacketHeader)]);
+	struct PosInfo* pi = (struct PosInfo *) &(network_data[offset]);
+
+	shared_ptr<Player> player = engine->GetWorld()->GetPlayer(hdr->sender_id);
+>>>>>>> multiplayer WIP
 
     // TODO - rotate player in game state
-    world->rotateDummy(pi->v_rotation, pi->h_rotation);
+    player->Rotate(pi->v_rotation, pi->h_rotation);
+
+	sendVRotationPacket(hdr->sender_id);
 }
 
-void ServerGame::sendVRotationPacket() {
+void ServerGame::sendVRotationPacket(int client) {
     const unsigned int packet_size = sizeof(Packet);
     char packet_data[packet_size];
 
+	shared_ptr<Player> player = engine->GetWorld()->GetPlayer(client);
     Packet packet;
     packet.hdr.packet_type = V_ROTATION_EVENT;
     packet.hdr.sender_id = client_id;
     packet.hdr.receiver_id = SERVER_ID;
 
+<<<<<<< 849bab3ad8a94e6e1f5e449c2f13e0b7c0efe664
     PosInfo p = world->getDummyRotation();
+=======
+	packet.pi = player->GetPosition();
+	packet.pi.id = client;
+>>>>>>> multiplayer WIP
 
     packet.dat.obj_id = POS_OBJ;
 

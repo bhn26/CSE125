@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include "ServerNetwork.h"
 #include "../network/NetworkData.h"
-#include "../network/DummyWorld.h"
 #include "engine/engine.h"
 #include <btBulletDynamicsCommon.h>
 
@@ -48,21 +47,18 @@ public:
     void sendSpawnPacket();
 
     // Returns the direction to be moved, if it can't move there, returns BAD_MOVE
-    int receiveMovePacket(int offset);
-    void sendMovePacket(int direction);
+    void receiveMovePacket(int offset);
+    void sendMovePacket(int client);
 
     void receiveVRotationPacket(int offset);
-    void sendVRotationPacket(); 
+    void sendVRotationPacket(int client); 
 
 private:
 
    // IDs for the clients connecting for table in ServerNetwork 
     static unsigned int client_id;
 
-	bool game_started;
-
-    // dummy world
-    DummyWorld* world;
+	bool game_started = false;
 
 	Engine * engine;
 

@@ -72,7 +72,6 @@ void Player::ProcessMouseMovement(GLfloat xoffset, GLfloat yoffset, GLboolean co
 
     this->toWorld = this->toWorld * glm::rotate(glm::mat4(1.0f), glm::radians(-xoffset), glm::vec3(0.0f, 1.0f, 0.0f));
                                   //* glm::rotate(glm::mat4(1.0f), glm::radians(-yoffset), glm::vec3(1.0f, 0.0f, 0.0f));
-    ClientGame::instance()->SendVRotationPacket(glm::radians(-xoffset));                 
     /*camAngle += glm::radians(yoffset);
     const static float pi2 = glm::pi<float>()/2;
     camAngle = (camAngle > pi2) ? pi2 : ((camAngle < -pi2) ? -pi2 : camAngle);*/

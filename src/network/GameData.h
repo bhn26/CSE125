@@ -36,6 +36,11 @@ struct GameInfo
 
 struct PosInfo : GameInfo
 {
+<<<<<<< 849bab3ad8a94e6e1f5e449c2f13e0b7c0efe664
+=======
+	int id;
+	// object coordinates
+>>>>>>> multiplayer WIP
     int x;
     int y;
     int z;

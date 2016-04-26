@@ -1,5 +1,7 @@
 #pragma once
 #include <memory>
+#include <vector>
+
 #include <glm/glm.hpp>
 #include <vector>
 
@@ -20,8 +22,10 @@ class Scene
     static const int HEIGHT;
 
     std::vector<std::unique_ptr<Entity>> entities;
+    std::vector<std::shared_ptr<Player>> players;
 
     Scene();
+
     void Setup();
 
 public:
@@ -33,6 +37,7 @@ public:
 
     static void Initialize() { Instance()->Setup(); }
 
+	void AddPlayer(int client_id);
     void Update();
     void Draw();
 

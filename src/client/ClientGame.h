@@ -55,6 +55,7 @@ public:
             cg = new ClientGame();
     }
     static ClientGame* instance() {return cg;}
+	static int GetClientId() { return cg->client_id; }
 
 private:
     ClientGame(void);
@@ -65,10 +66,6 @@ private:
     int client_id; // should know what client number we are so we can fill out packet headers
 
     static ClientGame* cg;
-
-#ifdef _WIN32
-    DummyWorld* world;
-#endif
 
     static void Error_callback(int error, const char* description);
     void Setup_callbacks();

@@ -24,12 +24,6 @@
     <ClInclude Include="..\src\network\NetworkServices.h">
       <Filter>Source Files\Network</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\network\Dummy.h">
-      <Filter>Source Files\Network</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\network\DummyWorld.h">
-      <Filter>Source Files\Network</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\network\GameData.h">
       <Filter>Source Files\Network</Filter>
     </ClInclude>
@@ -51,12 +45,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\network\NetworkServices.cpp">
-      <Filter>Source Files\Network</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\network\Dummy.cpp">
-      <Filter>Source Files\Network</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\network\DummyWorld.cpp">
       <Filter>Source Files\Network</Filter>
     </ClCompile>
     <ClCompile Include="..\src\server\main.cpp">

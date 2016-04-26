@@ -32,6 +32,7 @@ class Player : public Entity
 public:
 
     Player();
+	Player(int client_id);
     ~Player();
 
     // Inherited via Entity
@@ -57,4 +58,7 @@ public:
 
 	float GetCamAngle() { return camAngle; };
 	void SetCamAngle(float newAngle) { camAngle = newAngle; };
+
+private:
+	int id;
 };

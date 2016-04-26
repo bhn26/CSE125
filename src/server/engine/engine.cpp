@@ -18,6 +18,8 @@ void Engine::InitWorld(int num_players) {
 
     pos_list player_poss = GenerateCoords(num_players);
     pos_list egg_poss = GenerateCoords(num_players * 2);
+
+	world->Init(player_poss);
 }
 
 pos_list Engine::GenerateCoords(int n) {

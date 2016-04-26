@@ -14,6 +14,7 @@ public:
 	Engine();
 	~Engine();
 
+	World * GetWorld() { return world; };
 	// generate map
 	void InitWorld(int num_players);
 	// move player
