@@ -16,6 +16,7 @@ class ServerGame
 	btSequentialImpulseConstraintSolver* solv;
 	std::vector <btRigidBody*> bullets;
 	std::vector <btRigidBody*> players;
+	btRigidBody * ground;
 
 public:
 
