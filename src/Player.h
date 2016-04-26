@@ -5,6 +5,8 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+#include "Graphics/Objects/Entity.h"
+
 class Camera;
 class Model;
 class Shader;
@@ -19,23 +21,23 @@ enum DIRECTION
     D_DOWN
 };
 
-class Player
+class Player : public Entity
 {
     std::unique_ptr<Camera> camera;
     std::unique_ptr<Model> model;
 
-    glm::mat4 toWorld;
     glm::mat4 cameraTransOffset;
-
     float camAngle;
 
 public:
-    std::shared_ptr<Shader> shader;
 
     Player();
     ~Player();
 
-    void Draw() const;
+    // Inherited via Entity
+    virtual void Update() override;
+    virtual void Spawn(float x, float y, float z) override;
+    virtual void Draw() const override;
 
     // Process movement
     void ProcessKeyboard(DIRECTION direction, GLfloat deltaTime);
@@ -49,4 +51,5 @@ public:
     glm::vec3 CameraPosition() const;
     glm::mat4 GetViewMatrix() const;
     glm::mat3 GetNormalMatrix() const;
+
 };

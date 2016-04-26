@@ -6,25 +6,23 @@
 #include <glm/glm.hpp> // glm::mat4
 #include <memory>
 
-#include "../Shader.h"
+//#include "../Shader.h"
+#include "Entity.h"
 
-class Cube
+class Cube : public Entity
 {
 public:
     Cube();
     ~Cube();
 
-    glm::mat4 toWorld;
-    glm::mat3 normalMatrix;
     glm::vec3 color;
-    GLuint VBO, VAO, EBO;
-    float angle;
 
-    std::shared_ptr<Shader> shader;
-
-    void Draw(glm::mat4 C);
-    void Update();
+    void Draw() const override;
+    void Update() override;
     void Spin(float);
+
+    // Inherited via Entity
+    virtual void Spawn(float x, float y, float z) override;
 };
 
 #endif

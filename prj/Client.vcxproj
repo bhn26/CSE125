@@ -97,6 +97,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <ShowIncludes>false</ShowIncludes>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -128,6 +129,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <ShowIncludes>false</ShowIncludes>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -166,7 +168,7 @@
     <None Include="..\src\Graphics\Shaders\basic_shader.vert" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\Graphics\CubeMap.cpp" />
+    <ClCompile Include="..\src\Graphics\Objects\CubeMap.cpp" />
     <ClCompile Include="..\src\Player.cpp" />
     <ClCompile Include="..\src\Graphics\Objects\Ground.cpp" />
     <ClCompile Include="..\src\ClientGame.cpp" />
@@ -186,7 +188,8 @@
     <ClCompile Include="..\src\Graphics\Shader.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\Graphics\CubeMap.h" />
+    <ClInclude Include="..\src\Graphics\Objects\CubeMap.h" />
+    <ClInclude Include="..\src\Graphics\Objects\Entity.h" />
     <ClInclude Include="..\src\Player.h" />
     <ClInclude Include="..\src\Graphics\Objects\Ground.h" />
     <ClInclude Include="..\src\ClientGame.h" />

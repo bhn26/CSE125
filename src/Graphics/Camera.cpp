@@ -2,8 +2,17 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
+// Default camera values
+const GLfloat Camera::YAW = -90.0f;
+const GLfloat Camera::PITCH = 0.0f;
+const GLfloat Camera::SPEED = 0.5f;
+const GLfloat Camera::SENSITIVTY = 0.25f;
+const GLfloat Camera::ZOOM = 45.0f;
+const GLfloat Camera::ZNEAR = 0.1f;
+const GLfloat Camera::ZFAR = 1000.0f;
+
 Camera::Camera(glm::vec3 position, glm::vec3 up, GLfloat yaw, GLfloat pitch)
-    : front(glm::vec3(0.0f, 0.0f, -1.0f)), movementSpeed(SPEED), mouseSensitivity(SENSITIVTY), zoom(ZOOM)
+    : front(glm::vec3(0.0f, 0.0f, -1.0f)), movementSpeed(SPEED), mouseSensitivity(SENSITIVTY), zoom(ZOOM), zNear(ZNEAR), zFar(ZFAR)
 {
     this->position = position;
     this->worldUp = up;
@@ -13,13 +22,8 @@ Camera::Camera(glm::vec3 position, glm::vec3 up, GLfloat yaw, GLfloat pitch)
 }
 
 Camera::Camera(GLfloat posX, GLfloat posY, GLfloat posZ, GLfloat upX, GLfloat upY, GLfloat upZ, GLfloat yaw, GLfloat pitch)
-    : front(glm::vec3(0.0f, 0.0f, -1.0f)), movementSpeed(SPEED), mouseSensitivity(SENSITIVTY), zoom(ZOOM)
+    : Camera(glm::vec3(posX, posY, posZ), glm::vec3(upX, upY, upZ), yaw, pitch)
 {
-    this->position = glm::vec3(posX, posY, posZ);
-    this->worldUp = glm::vec3(upX, upY, upZ);
-    this->yaw = yaw;
-    this->pitch = pitch;
-    this->UpdateCameraVectors();
 }
 
 void Camera::ProcessKeyboard(Camera_Movement direction, GLfloat deltaTime)

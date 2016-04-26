@@ -10,7 +10,7 @@
 #include "../Scene.h"
 
 
-Cube::Cube() : angle(0.0f), toWorld(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.5f, 0.0f))), color(glm::vec3(1.0f, 0.2f, 0.1f))
+Cube::Cube() : Entity(0.0f, 0.5f, 0.0f), color(glm::vec3(1.0f, 0.2f, 0.1f))
 {
 
     GLfloat vertices[] =
@@ -87,11 +87,9 @@ Cube::~Cube()
     glDeleteBuffers(1, &VBO);
 }
 
-void Cube::Draw(glm::mat4 C)
+void Cube::Draw() const
 {
     shader->Use();
-
-    glm::mat4 projection = glm::perspective((GLfloat)45.0f, (GLfloat)Window::width / (GLfloat)Window::height, 0.1f, 1000.0f);
 
     GLint viewLoc = shader->GetUniform("view");
     GLint modelLocation = shader->GetUniform("model");
@@ -105,7 +103,7 @@ void Cube::Draw(glm::mat4 C)
     glUniformMatrix4fv(viewLoc, 1, false, glm::value_ptr(Scene::GetViewMatrix()));
     glUniformMatrix4fv(modelLocation, 1, false, glm::value_ptr(this->toWorld));
     glUniformMatrix3fv(normalMatrixLoc, 1, false, glm::value_ptr(this->normalMatrix));
-    glUniformMatrix4fv(projectionLocation, 1, false, glm::value_ptr(projection));
+    glUniformMatrix4fv(projectionLocation, 1, false, glm::value_ptr(Scene::GetPerspectiveMatrix()));
 
     glUniform3fv(objectColorLoc, 1, glm::value_ptr(this->color));
     glUniform3fv(lightColorLoc, 1, glm::value_ptr(Scene::pLight->color));
@@ -124,12 +122,12 @@ void Cube::Update()
 
 void Cube::Spin(float deg)
 {
-    this->angle += deg;
-    if (this->angle > 360.0f || this->angle < -360.0f)
-        this->angle = 0.0f;
-
     // This creates the matrix to rotate the cube
     this->toWorld = toWorld * glm::rotate(glm::mat4(1.0f), glm::radians(deg), glm::vec3(0.0f, 1.0f, 0.0f));
     this->normalMatrix = glm::mat3(glm::transpose(glm::inverse(toWorld)));
+}
+
+void Cube::Spawn(float x, float y, float z)
+{
 }
 

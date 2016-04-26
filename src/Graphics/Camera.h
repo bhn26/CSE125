@@ -8,6 +8,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "../Window.h"
+
 // Defines several possible options for camera movement. Used as abstraction to stay away from window-system specific input methods
 enum Camera_Movement
 {
@@ -18,13 +20,6 @@ enum Camera_Movement
     UP,
     DOWN
 };
-
-// Default camera values
-const GLfloat YAW = -90.0f;
-const GLfloat PITCH = 0.0f;
-const GLfloat SPEED = 0.5f;
-const GLfloat SENSITIVTY = 0.25f;
-const GLfloat ZOOM = 45.0f;
 
 
 // An abstract camera class that processes input and calculates the corresponding Eular Angles, Vectors and Matrices for use in OpenGL
@@ -45,6 +40,8 @@ private:
     GLfloat mouseSensitivity;
     GLfloat zoom;
 
+    GLfloat zNear, zFar;
+
 public:
     // Constructor with vectors
     Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 2.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), GLfloat yaw = YAW, GLfloat pitch = PITCH);
@@ -53,6 +50,7 @@ public:
 
     // Returns the view matrix calculated using Eular Angles and the LookAt Matrix
     glm::mat4 GetViewMatrix() { return glm::lookAt(this->position, this->position + this->front, this->up); }
+    glm::mat4 Camera::GetPerspectiveMatrix() { return glm::perspective(this->zoom, ((GLfloat)Window::width) / Window::height, zNear, zFar); }
 
     // Processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
     void ProcessKeyboard(Camera_Movement direction, GLfloat deltaTime);
@@ -75,4 +73,13 @@ public:
 private:
     // Calculates the front vector from the Camera's (updated) Eular Angles
     void UpdateCameraVectors();
+
+    // Default camera values
+    static const GLfloat YAW;
+    static const GLfloat PITCH;
+    static const GLfloat SPEED;
+    static const GLfloat SENSITIVTY;
+    static const GLfloat ZOOM;
+    static const float ZNEAR;
+    static const float ZFAR;
 };

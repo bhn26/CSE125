@@ -1,25 +1,22 @@
 #pragma once
 #include <memory>
 #include <glm/glm.hpp>
+#include <vector>
+
+#include "Objects/Entity.h"
 
 class Camera;
-class Cube;
-class Chicken;
-class Ground;
 class Player;
-class CubeMap;
 
 struct PointLight;
 
 namespace Scene
 {
     extern std::unique_ptr<Camera> camera;
-    extern std::unique_ptr<Cube> cube;
-    extern std::unique_ptr<Chicken> chicken;
     extern std::unique_ptr<PointLight> pLight;
-    extern std::unique_ptr<Ground> ground;
-    extern std::unique_ptr<Player> player;
-    extern std::unique_ptr<CubeMap> cubeMap;
+    extern Player* player;
+
+    extern std::vector<std::unique_ptr<Entity>> entities;
 
     void Setup();
     void Dealloc();
@@ -30,4 +27,5 @@ namespace Scene
     // Interface to camera
     glm::mat4 GetViewMatrix();
     glm::vec3 GetCameraPosition();
+    glm::mat4 GetPerspectiveMatrix();
 }

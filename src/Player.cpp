@@ -1,12 +1,15 @@
 #include "Player.h"
 
+#include <glm/gtc/type_ptr.hpp>
+
 #include "Graphics/Camera.h"
 #include "Graphics/Objects/Chicken.h"
 #include "Graphics/Shader.h"
 #include "Graphics/Scene.h"
 #include "Graphics/PointLight.h"
+#include "Graphics/Model.h"
 
-Player::Player() : toWorld(glm::mat4(1.0f)), camAngle(0.0f)
+Player::Player() : Entity(), camAngle(0.0f)
 {
     model = std::unique_ptr<Model>(new Model("assets/chickens/objects/chicken.obj"));
     camera = std::unique_ptr<Camera>(new Camera(glm::vec3(-1.5f, 4.5f, -7.0f), glm::vec3(0.0f, 1.0f, 0.0f), 90.0f, -15.0f));
@@ -19,7 +22,6 @@ Player::~Player()
 void Player::Draw() const
 {
     shader->Use();
-    glm::mat4 projection = glm::perspective(camera->Zoom(), (float)Window::width/(float)Window::height, 0.1f, 1000.0f);
 
     GLint viewLoc = shader->GetUniform("view");
     GLint modelLocation = shader->GetUniform("model");
@@ -29,16 +31,14 @@ void Player::Draw() const
     GLint lightPosLoc = shader->GetUniform("lightPos");
     GLint viewPosLoc = shader->GetUniform("viewPos");
 
-    //glUniformMatrix4fv(viewLoc, 1, false, glm::value_ptr(Scene::camera->GetViewMatrix()));
     glUniformMatrix4fv(viewLoc, 1, false, glm::value_ptr(this->GetViewMatrix()));
     glUniformMatrix4fv(modelLocation, 1, false, glm::value_ptr(this->toWorld));
     glUniformMatrix3fv(normalMatrixLoc, 1, false, glm::value_ptr(GetNormalMatrix()));
-    glUniformMatrix4fv(projectionLocation, 1, false, glm::value_ptr(projection));
+    glUniformMatrix4fv(projectionLocation, 1, false, glm::value_ptr(camera->GetPerspectiveMatrix()));
 
     glUniform3fv(lightColorLoc, 1, glm::value_ptr(Scene::pLight->color));
     glUniform3fv(lightPosLoc, 1, glm::value_ptr(Scene::pLight->position));
     glUniform3fv(viewPosLoc, 1, glm::value_ptr(this->CameraPosition()));
-    //glUniform3fv(viewPosLoc, 1, glm::value_ptr(Scene::camera->Position()));
 
     model->Draw(shader.get());
 }
@@ -95,4 +95,12 @@ glm::mat4 Player::GetViewMatrix() const
 glm::mat3 Player::GetNormalMatrix() const
 {
     return glm::mat3(glm::transpose(glm::inverse(toWorld)));
+}
+
+void Player::Update()
+{
+}
+
+void Player::Spawn(float x, float y, float z)
+{
 }

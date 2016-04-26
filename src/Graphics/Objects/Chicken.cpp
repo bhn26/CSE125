@@ -9,15 +9,19 @@
 #include "Chicken.h"
 #include "../Scene.h"
 #include "../PointLight.h"
+#include "../Camera.h"
+#include "../Model.h"
+
+#include <stdio.h>
+#include <string>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 Chicken::Chicken()
 {
     this->toWorld = glm::mat4(1.0f);
-    this->angle = 0.0f;
   
     model = new Model("assets/chickens/objects/chicken.obj");
-    //shader.SetShaders("src/Graphics/Shaders/model_loading.vert",
-    //                  "src/Graphics/Shaders/model_loading.frag");
 }
 
 Chicken::~Chicken()
@@ -25,20 +29,18 @@ Chicken::~Chicken()
     delete(model);
 }
 
-void Chicken::Draw(Camera* camera)
+void Chicken::Draw() const
 {
     shader->Use();
-    glm::mat4 projection = glm::perspective(camera->Zoom(), (float)Window::width/(float)Window::height, 0.1f, 1000.0f);
-    glm::mat4 view = camera->GetViewMatrix();
     
     // Draw the loaded model
     GLint viewLoc = shader->GetUniform("view");
     GLint modelLocation = shader->GetUniform("model");
     GLint projectionLocation = shader->GetUniform("projection");
     
-    glUniformMatrix4fv(viewLoc, 1, false, glm::value_ptr(view));
+    glUniformMatrix4fv(viewLoc, 1, false, glm::value_ptr(Scene::GetViewMatrix()));
     glUniformMatrix4fv(modelLocation, 1, false, glm::value_ptr(this->toWorld));
-    glUniformMatrix4fv(projectionLocation, 1, false, glm::value_ptr(projection));
+    glUniformMatrix4fv(projectionLocation, 1, false, glm::value_ptr(Scene::GetPerspectiveMatrix()));
 
     model->Draw(shader.get());
 }
@@ -50,11 +52,11 @@ void Chicken::Update()
 
 void Chicken::Spin(float deg)
 {
-    this->angle += deg;
-    if (this->angle > 360.0f || this->angle < -360.0f)
-        this->angle = 0.0f;
-    
     // This creates the matrix to rotate the cube
-    this->toWorld = glm::rotate(glm::mat4(1.0f), glm::radians(this->angle), glm::vec3(0.0f, 1.0f, 0.0f));
+    this->toWorld = toWorld * glm::rotate(glm::mat4(1.0f), glm::radians(deg), glm::vec3(0.0f, 1.0f, 0.0f));
     this->normalMatrix = glm::mat3(glm::transpose(glm::inverse(toWorld)));
+}
+
+void Chicken::Spawn(float x, float y, float z)
+{
 }
