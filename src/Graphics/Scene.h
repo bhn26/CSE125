@@ -16,7 +16,7 @@ class Scene
 {
     std::unique_ptr<Camera> camera;
     std::unique_ptr<PointLight> pLight;
-    Player* player;
+	std::shared_ptr<Player> player;
 
     static const int WIDTH;
     static const int HEIGHT;
@@ -47,5 +47,6 @@ public:
     glm::mat4 GetPerspectiveMatrix();
 
     std::unique_ptr<PointLight>& GetPointLight() { return pLight; }
-    Player*& GetPlayer() { return player; }
+	std::shared_ptr<Player>& GetPlayer() { return player; }
+	std::vector<std::shared_ptr<Player>>& GetPlayers() { return players; };
 };
