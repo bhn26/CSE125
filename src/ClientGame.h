@@ -1,4 +1,6 @@
-/*#pragma once
+#ifdef _WIN32
+
+#pragma once
 #include <winsock2.h>
 #include <Windows.h>
 #include "network/client/ClientNetwork.h"
@@ -38,4 +40,5 @@ private:
     void Setup_opengl_settings();
     void Print_versions();
 };
-*/
+
+#endif  // _WIN32

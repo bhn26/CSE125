@@ -29,9 +29,7 @@
 #include <assert.h>
 #include "ogldev_types.h"
 
-using namespace std;
-
-bool ReadFile(const char* fileName, string& outFile);
+bool ReadFile(const char* fileName, std::string& outFile);
 
 void OgldevError(const char* pFileName, uint line, const char* pError);
 void OgldevFileError(const char* pFileName, uint line, const char* pFileError);
@@ -46,7 +44,7 @@ void OgldevFileError(const char* pFileName, uint line, const char* pFileError);
 #define SNPRINTF _snprintf_s
 #define RANDOM rand
 #define SRANDOM srand((unsigned)time(NULL))
-float fmax(float a, float b);
+//float fmax(float a, float b);
 #else
 #define SNPRINTF snprintf
 #define RANDOM random

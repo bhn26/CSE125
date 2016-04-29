@@ -27,14 +27,14 @@
 
 #include "ogldev_util.h"
 
-bool ReadFile(const char* pFileName, string& outFile)
+bool ReadFile(const char* pFileName, std::string& outFile)
 {
-    ifstream f(pFileName);
+    std::ifstream f(pFileName);
     
     bool ret = false;
     
     if (f.is_open()) {
-        string line;
+        std::string line;
         while (getline(f, line)) {
             outFile.append(line);
             outFile.append("\n");
@@ -90,12 +90,12 @@ long long GetCurrentTimeMillis()
 
 #ifdef WIN32
 #if _MSC_VER != 1800
-float fmax(float a, float b)
-{
-    if (a > b)
-        return a;
-    else
-        return b;
-}
+//float fmax(float a, float b)
+//{
+//    if (a > b)
+//        return a;
+//    else
+//        return b;
+//}
 #endif
 #endif

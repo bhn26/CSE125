@@ -22,7 +22,7 @@
 #include <string>
 
 #include <GL/glew.h>
-#include <ImageMagick-6/Magick++.h>
+//#include <ImageMagick-6/Magick++.h>
 
 class Texture
 {
@@ -37,8 +37,8 @@ private:
     std::string m_fileName;
     GLenum m_textureTarget;
     GLuint m_textureObj;
-    Magick::Image m_image;
-    Magick::Blob m_blob;
+    //Magick::Image m_image;
+    //Magick::Blob m_blob;
 };
 
 

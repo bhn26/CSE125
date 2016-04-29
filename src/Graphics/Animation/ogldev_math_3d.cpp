@@ -17,7 +17,7 @@
 */
 
 #include <stdlib.h>
-
+#include <glm/glm.hpp>
 
 #include "ogldev_util.h"
 #include "ogldev_math_3d.h"
@@ -44,8 +44,8 @@ Vector3f& Vector3f::Normalize()
 
 void Vector3f::Rotate(float Angle, const Vector3f& Axe)
 {
-    const float SinHalfAngle = sinf(ToRadian(Angle/2));
-    const float CosHalfAngle = cosf(ToRadian(Angle/2));
+    const float SinHalfAngle = sinf(glm::radians(Angle/2));
+    const float CosHalfAngle = cosf(glm::radians(Angle/2));
 
     const float Rx = Axe.x * SinHalfAngle;
     const float Ry = Axe.y * SinHalfAngle;

@@ -18,7 +18,7 @@
 
 #include <limits.h>
 #include <string>
-
+#include <glm/glm.hpp>
 
 #include "skinning_technique.h"
 #include "ogldev_util.h"
@@ -238,7 +238,7 @@ void SkinningTechnique::SetSpotLights(unsigned int NumLights, const SpotLight* p
         Vector3f Direction = pLights[i].Direction;
         Direction.Normalize();
         glUniform3f(m_spotLightsLocation[i].Direction, Direction.x, Direction.y, Direction.z);
-        glUniform1f(m_spotLightsLocation[i].Cutoff, cosf(ToRadian(pLights[i].Cutoff)));
+        glUniform1f(m_spotLightsLocation[i].Cutoff, cosf(glm::radians(pLights[i].Cutoff)));
         glUniform1f(m_spotLightsLocation[i].Atten.Constant, pLights[i].Attenuation.Constant);
         glUniform1f(m_spotLightsLocation[i].Atten.Linear,   pLights[i].Attenuation.Linear);
         glUniform1f(m_spotLightsLocation[i].Atten.Exp,      pLights[i].Attenuation.Exp);
@@ -249,7 +249,7 @@ void SkinningTechnique::SetSpotLights(unsigned int NumLights, const SpotLight* p
 void SkinningTechnique::SetBoneTransform(uint Index, const Matrix4f& Transform)
 {
     assert(Index < MAX_BONES);
-    printf("Transform Matrix:\n");
-    Transform.Print();
+    //printf("Transform Matrix:\n");
+    //Transform.Print();
     glUniformMatrix4fv(m_boneLocation[Index], 1, GL_TRUE, (const GLfloat*)Transform);       
 }

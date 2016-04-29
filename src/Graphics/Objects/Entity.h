@@ -13,10 +13,10 @@
 #include <iostream>
 #include <string>
 
-#include <audiodecoder/audiodecoder.h>
-#include <portaudio.h>
+//#include <audiodecoder/audiodecoder.h>
+//#include <portaudio.h>
 
-#include "ogldev_util.h"
+#include "../Animation/ogldev_util.h"
 
 ///////////////// AUDIO STUFF ///////////////////////////
 
@@ -27,11 +27,11 @@ const int NUM_CHANNELS = 2;
 // In this example, we're going to decode some audio using libaudiodecoder
 // and fill the "output" buffer with that. In other words, we're going to
 // decode demo.mp3 and send that audio to the soundcard. Easy!
-int audioCallback(const void *input, void *output,
-                  unsigned long frameCount,
-                  const PaStreamCallbackTimeInfo* timeInfo,
-                  PaStreamCallbackFlags statusFlags,
-                  void* userData);
+//int audioCallback(const void *input, void *output,
+//                  unsigned long frameCount,
+//                  const PaStreamCallbackTimeInfo* timeInfo,
+//                  PaStreamCallbackFlags statusFlags,
+//                  void* userData);
 
 ////////////////////////////////////////////////////////////
 
@@ -40,10 +40,10 @@ private:
     long long m_startTime;
     
 public:
-    Entity();
+    Entity() {}
     
-    int PlaySound(std::string sound_file);
-    float GetRunningTime();
+    int PlaySound(std::string sound_file) { return 0; }
+    float GetRunningTime() { return 0.0f; }
     
     // Draw
     // Update

@@ -1,3 +1,4 @@
+#ifdef _WIN32
 
 #include "ClientGame.h"
 
@@ -189,3 +190,5 @@ void ClientGame::Print_versions()
     std::printf("Supported GLSL version is %s.\n", (char *)glGetString(GL_SHADING_LANGUAGE_VERSION));
 #endif
 }
+
+#endif

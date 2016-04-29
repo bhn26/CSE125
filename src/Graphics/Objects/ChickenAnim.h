@@ -28,9 +28,9 @@
 #include "../Camera.h"
 #include "Entity.h"
 
-#include "skinning_technique.h"
-#include "ogldev_skinned_mesh.h"
-#include "ogldev_pipeline.h"
+#include "../Animation/skinning_technique.h"
+#include "../Animation/ogldev_skinned_mesh.h"
+#include "../Animation/ogldev_pipeline.h"
 
 class ChickenAnim : public Entity {
 public:

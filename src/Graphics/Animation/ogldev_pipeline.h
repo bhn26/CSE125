@@ -19,7 +19,9 @@
 #define	PIPELINE_H
 
 #include "ogldev_math_3d.h"
-#include "Camera.h"
+#include "../Camera.h"
+
+#include <memory>
 
 struct Orientation
 {

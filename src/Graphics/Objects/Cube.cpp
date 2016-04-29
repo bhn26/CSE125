@@ -54,7 +54,7 @@ GLfloat vertices[] =
     -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
 };
 
-Cube::Cube() : angle(0.0f), toWorld(glm::mat4(1.0f)), color(glm::vec3(1.0f, 0.2f, 0.1f))
+Cube::Cube() : angle(0.0f), toWorld(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.5f, 0.0f))), color(glm::vec3(1.0f, 0.2f, 0.1f))
 {
     this->normalMatrix = glm::mat3(glm::transpose(glm::inverse(toWorld)));
 

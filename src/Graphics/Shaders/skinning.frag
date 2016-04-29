@@ -125,7 +125,7 @@ void main()
     In.TexCoord = TexCoord0;
     In.Normal   = normalize(Normal0);
     In.WorldPos = WorldPos0;
-    /*
+    
     vec4 TotalLight = CalcDirectionalLight(In);                                         
                                                                                             
     for (int i = 0 ; i < gNumPointLights ; i++) {                                           
@@ -135,7 +135,7 @@ void main()
     for (int i = 0 ; i < gNumSpotLights ; i++) {                                            
         TotalLight += CalcSpotLight(gSpotLights[i], In);                                
     }                                                                                       
-    */
+    
     //FragColor = texture(gColorMap, In.TexCoord.xy) * TotalLight;
     FragColor = vec4(1,0,0,1);  // should be red
 }

@@ -10,7 +10,7 @@
 # Compiled Dynamic libraries
 *.so
 *.dylib
-*.dll
+#*.dll
 
 # Fortran module files
 *.mod
@@ -46,7 +46,7 @@
 # Remove directories
 out/
 packages/
-packages.config
+#packages.config
 Client/
 Server/
 Release/

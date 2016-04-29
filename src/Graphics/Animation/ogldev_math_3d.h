@@ -30,11 +30,11 @@
 #include <assimp/vector3.h>
 #include <assimp/matrix3x3.h>
 #include <assimp/matrix4x4.h>
-
+#include <glm/glm.hpp>
 #include "ogldev_util.h"
 
-#define ToRadian(x) (float)(((x) * M_PI / 180.0f))
-#define ToDegree(x) (float)(((x) * 180.0f / M_PI))
+#define ToRadian(x) glm::radians(x)
+#define ToDegree(x) glm::degrees(x)
 
 float RandomFloat();
 
