@@ -44,7 +44,7 @@ void Scene::Setup()
 
     entities.push_back(std::move(ground));
     entities.push_back(std::move(player));
-    entities.push_back(std::move(cube));
+    //entities.push_back(std::move(cube)); // Don't add cube to scene
     entities.push_back(std::move(cubeMap));
 }
 

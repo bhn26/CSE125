@@ -10,21 +10,24 @@
 #include "../Graphics/Model.h"
 #include "../client/ClientGame.h"
 
-Player::Player() : Entity(), camAngle(0.0f)
+Player::Player() : Entity(), camAngle(0.0f), modelFile("assets/chickens/objects/chicken.obj")
 {
-    model = std::unique_ptr<Model>(new Model("assets/chickens/objects/chicken.obj"));
+    model = std::unique_ptr<Model>(new Model(modelFile.c_str()));
     camera = std::unique_ptr<Camera>(new Camera(glm::vec3(-1.5f, 4.5f, -7.0f), glm::vec3(0.0f, 1.0f, 0.0f), 90.0f, -15.0f));
 }
 
-Player::Player(int client_id) : Entity(), camAngle(0.0f) {
+Player::Player(int client_id) : Player()
+{
     id = client_id;
-
-    model = std::unique_ptr<Model>(new Model("assets/chickens/objects/chicken.obj"));
-    camera = std::unique_ptr<Camera>(new Camera(glm::vec3(-1.5f, 4.5f, -7.0f), glm::vec3(0.0f, 1.0f, 0.0f), 90.0f, -15.0f));
 }
 
 Player::~Player()
 {
+}
+
+void Player::SetModelFile(std::string fileName){
+    modelFile = fileName;
+    model = std::unique_ptr<Model>(new Model(modelFile.c_str()));
 }
 
 void Player::Draw() const
@@ -39,14 +42,14 @@ void Player::Draw() const
     GLint lightPosLoc = shader->GetUniform("lightPos");
     GLint viewPosLoc = shader->GetUniform("viewPos");
 
-    glUniformMatrix4fv(viewLoc, 1, false, glm::value_ptr(this->GetViewMatrix()));
+    glUniformMatrix4fv(viewLoc, 1, false, glm::value_ptr(Scene::Instance()->GetViewMatrix()));
     glUniformMatrix4fv(modelLocation, 1, false, glm::value_ptr(this->toWorld));
     glUniformMatrix3fv(normalMatrixLoc, 1, false, glm::value_ptr(GetNormalMatrix()));
-    glUniformMatrix4fv(projectionLocation, 1, false, glm::value_ptr(camera->GetPerspectiveMatrix()));
+    glUniformMatrix4fv(projectionLocation, 1, false, glm::value_ptr(Scene::Instance()->GetPerspectiveMatrix()));
 
     glUniform3fv(lightColorLoc, 1, glm::value_ptr(Scene::Instance()->GetPointLight()->color));
     glUniform3fv(lightPosLoc, 1, glm::value_ptr(Scene::Instance()->GetPointLight()->position));
-    glUniform3fv(viewPosLoc, 1, glm::value_ptr(this->CameraPosition()));
+    glUniform3fv(viewPosLoc, 1, glm::value_ptr(Scene::Instance()->GetCameraPosition()));
 
     model->Draw(shader.get());
 }

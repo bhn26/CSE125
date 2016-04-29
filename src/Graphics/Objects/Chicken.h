@@ -27,6 +27,7 @@ class Chicken : public Entity
 {
 public:
     Chicken();
+    Chicken(glm::vec3 pos);
     ~Chicken();
     
     Model* model;
