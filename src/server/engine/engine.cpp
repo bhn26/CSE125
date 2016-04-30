@@ -30,8 +30,10 @@ pos_list Engine::GenerateCoords(int n) {
          PosInfo pos;
 
         pos.x = rand() % WORLD_WIDTH + 1; // generate random int from 1 to width
-        pos.y = rand() % WORLD_HEIGHT + 1;
-        pos.z = 0;
+        pos.z = rand() % WORLD_HEIGHT + 1;
+
+		// y is the vertical axis and should be 0, not randomized
+        pos.y = 0;
 
         /* face random direction */
 		pos.v_rotation = 0;

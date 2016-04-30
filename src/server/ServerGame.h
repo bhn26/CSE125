@@ -22,9 +22,6 @@ public:
     ServerGame(void);
     ~ServerGame(void);
 
-	// Initialize Game World (physics world)
-	void initGameInstance();
-
     static unsigned int NumClients() {return client_id;}
 
     void update();

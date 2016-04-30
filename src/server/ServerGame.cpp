@@ -24,36 +24,6 @@ ServerGame::~ServerGame(void)
 	delete colConfig;
 }
 
-void ServerGame::initGameInstance()
-{
-	btDefaultCollisionConfiguration * collisionConfig = new btDefaultCollisionConfiguration();
-	
-	btCollisionDispatcher* dispatcher = new btCollisionDispatcher(collisionConfig);
-
-	btBroadphaseInterface* overlappingPairCache = new btDbvtBroadphase();
-
-	btSequentialImpulseConstraintSolver* solver = new btSequentialImpulseConstraintSolver;
-
-	btDiscreteDynamicsWorld* dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfig);
-
-	dynamicsWorld->setGravity(btVector3(0, -10, 0));
-
-	// Add Ground Object
-	btCollisionShape* groundShape = new btStaticPlaneShape(btVector3(btScalar(0.), btScalar(1.), btScalar(0.)), 1);
-
-	btDefaultMotionState* groundMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, -1, 0)));
-	btRigidBody::btRigidBodyConstructionInfo groundRigidBodyCI(0, groundMotionState, groundShape, btVector3(0, 0, 0));
-	groundRigidBodyCI.m_friction = .9;
-	btRigidBody* groundRigidBody = new btRigidBody(groundRigidBodyCI);
-	ground = groundRigidBody;
-	dynamicsWorld->addRigidBody(groundRigidBody);
-
-	curWorld = dynamicsWorld;
-	solv = solver;
-	pairCache = overlappingPairCache;
-	disp = dispatcher;
-	colConfig = collisionConfig;
-}
 
 void ServerGame::update()
 {
