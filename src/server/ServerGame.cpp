@@ -17,11 +17,6 @@ ServerGame::ServerGame(void)
 
 ServerGame::~ServerGame(void)
 {
-	delete curWorld;
-	delete solv;
-	delete pairCache;
-	delete disp;
-	delete colConfig;
 }
 
 
@@ -267,11 +262,33 @@ void ServerGame::receiveMovePacket(int offset)
 
 
     //printf("dummy's current pos is (%d,%d)\n", dpi.x, dpi.y);
+	btVector3* vec;
+	switch (pi->direction) {
+	case MOVE_FORWARD:
+		vec = new btVector3(0, 0, -1);
+		player->Move(vec);
+		delete vec;
+		break;
+	case MOVE_BACKWARD:
+		vec = new btVector3(0, 0, 1);
+		player->Move(vec);
+		delete vec;
+		break;
+	case MOVE_LEFT:
+		vec = new btVector3(-1, 0, 0);
+		player->Move(vec);
+		delete vec;
+		break;
+	case MOVE_RIGHT:
+		vec = new btVector3(1, 0, 0);
+		player->Move(vec);
+		delete vec;
+		break;
+	}
 
-	player->Move(pi->direction);
-
+//	player->Move(pi->direction);
+	engine->GetWorld()->updateWorld();
 	sendMovePacket(hdr->sender_id);
-
 }
 
 void ServerGame::sendMovePacket(int client)

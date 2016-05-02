@@ -1,9 +1,11 @@
 #pragma once
 
 #include "../../network/GameData.h"
+#include "Player.h"
+#include "Flag.h"
 #include <vector>
 #include <memory>
-#include "Player.h"
+
 
 using namespace std;
 
@@ -15,7 +17,7 @@ private:
 	// list of map objects
 	// list (vector) of players sorted by client id
 	std::vector<std::shared_ptr<Player>> players;
-	// list of eggs
+	std::vector<std::shared_ptr<Flag>> flags;
 
 	btDiscreteDynamicsWorld* curWorld;
 	btDefaultCollisionConfiguration* colConfig;
@@ -23,14 +25,18 @@ private:
 	btBroadphaseInterface* pairCache;
 	btSequentialImpulseConstraintSolver* solv;
 	std::vector <btRigidBody*> bullets;
-	std::vector <btRigidBody*> players;
+	//std::vector <btRigidBody*> players;
 	btRigidBody * ground;
 
 public:
 	World();
 	~World();
 
-	void Init(pos_list player_poss);
+	void Init(pos_list player_poss, pos_list flag_poss);
 	std::shared_ptr<Player> GetPlayer(int id) { return players.at(id); };
+
+	// Updates Physics world by one tick
+	// Handles egg collisions with players
+	void updateWorld();
 
 };

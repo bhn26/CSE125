@@ -8,15 +8,6 @@
 class ServerGame
 {
 
-	btDiscreteDynamicsWorld* curWorld;
-	btDefaultCollisionConfiguration* colConfig;
-	btCollisionDispatcher* disp;
-	btBroadphaseInterface* pairCache;
-	btSequentialImpulseConstraintSolver* solv;
-	std::vector <btRigidBody*> bullets;
-	std::vector <btRigidBody*> players;
-	btRigidBody * ground;
-
 public:
 
     ServerGame(void);

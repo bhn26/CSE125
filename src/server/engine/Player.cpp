@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "ObjectId.h"
 
 
 Player::Player(int id, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld) {
@@ -20,27 +21,35 @@ Player::Player(int id, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld) {
 	this->playerRigidBody = pRigidBody;
 	this->jumpSem = 1;
 	this->HitPoints = 100;
+	this->flags = new std::vector<std::shared_ptr<Flag>>;
+
+	// Set RigidBody to point to Player
+	pRigidBody->setUserPointer(this);
+	pRigidBody->setUserIndex(PLAYER);
 }
 
 Player::~Player() {
 	this->curWorld->removeCollisionObject(playerRigidBody);
 	delete playerRigidBody->getMotionState();
 	delete playerRigidBody->getCollisionShape();
+	flags->clear();
+	delete flags;
 }
 
-void Player::Move(btVector3 changeVelocity) {
-
+void Player::Move(btVector3* changeVelocity) {
 	//Calculate new velocity
 	btTransform currentTrans;
 	playerRigidBody->getMotionState()->getWorldTransform(currentTrans);
 	btMatrix3x3 currentOrientation = currentTrans.getBasis();
-	btVector3 newVelocity = currentOrientation * (changeVelocity);
+	btVector3 newVelocity = currentOrientation * (*changeVelocity);
 
 	// set new velocity
 	playerRigidBody->setLinearVelocity(newVelocity);
+	//printf("%d: world pos object = %f,%f,%f\n", id, float(currentTrans.getOrigin().getX()), float(currentTrans.getOrigin().getY()), float(currentTrans.getOrigin().getZ()));
+	printf("current velocity %f, %f, %f\n", float(playerRigidBody->getLinearVelocity()[0]), float( playerRigidBody->getLinearVelocity()[1]), float(playerRigidBody->getLinearVelocity()[2]));
 
 	/*position.direction = direction;
-
+	 
 	switch (direction) {
 	case MOVE_FORWARD: 
 		position.y ++;
@@ -88,3 +97,14 @@ void Player::JumpPlayer()
 	}
 }
 
+void Player::AcquireFlag(std::shared_ptr<Flag> flag)
+{
+	// need to remove the flag from the map
+	flags->push_back(flag);
+}
+
+void Player::LoseFlags()
+{
+	// Change this, we need the flags to come out of the player back into the world
+	flags->clear();
+}

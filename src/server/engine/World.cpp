@@ -1,4 +1,5 @@
 #include "World.h"
+#include "ObjectId.h"
 
 World::World() {
 	// initialize map objects 
@@ -8,7 +9,7 @@ World::~World() {
 
 }
 
-void World::Init(pos_list player_poss) {
+void World::Init(pos_list player_poss, pos_list flag_poss) {
 
 	// Create Physics world
 	btDefaultCollisionConfiguration * collisionConfig = new btDefaultCollisionConfiguration();
@@ -19,42 +20,42 @@ void World::Init(pos_list player_poss) {
 	dynamicsWorld->setGravity(btVector3(0, -10, 0));
 
 	// Add Ground Object
-	btCollisionShape* groundShape = new btStaticPlaneShape(btVector3(btScalar(0.), btScalar(1.), btScalar(0.)), 1);
-	btDefaultMotionState* groundMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, -1, 0)));
+	btCollisionShape* groundShape = new btStaticPlaneShape(btVector3(btScalar(0.), btScalar(1.), btScalar(0.)), 0);
+	btDefaultMotionState* groundMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 0, 0)));
 	btRigidBody::btRigidBodyConstructionInfo groundRigidBodyCI(0, groundMotionState, groundShape, btVector3(0, 0, 0));
-	groundRigidBodyCI.m_friction = .9;
+	groundRigidBodyCI.m_friction = 1;
 	btRigidBody* groundRigidBody = new btRigidBody(groundRigidBodyCI);
 	dynamicsWorld->addRigidBody(groundRigidBody);
 
 	// Add Pos X Wall
 	btCollisionShape* xWallShape = new btStaticPlaneShape(btVector3(btScalar(10.), btScalar(0.), btScalar(0.)), 10);
-	btDefaultMotionState* xWallMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, -1, 0)));
+	btDefaultMotionState* xWallMotionState = new btDefaultMotionState();//btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 0, 0)));
 	btRigidBody::btRigidBodyConstructionInfo xWallRigidBodyCI(0, xWallMotionState, xWallShape, btVector3(0, 0, 0));
-	xWallRigidBodyCI.m_friction = .9;
+	xWallRigidBodyCI.m_friction = 1;
 	btRigidBody* xWallRigidBody = new btRigidBody(xWallRigidBodyCI);
 	dynamicsWorld->addRigidBody(xWallRigidBody);
 
 	// Add Neg X Wall
-	btCollisionShape* nxWallShape = new btStaticPlaneShape(btVector3(btScalar(10.), btScalar(0.), btScalar(0.)), 10);
-	btDefaultMotionState* nxWallMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, -1, 0)));
+	btCollisionShape* nxWallShape = new btStaticPlaneShape(btVector3(btScalar(-10.), btScalar(0.), btScalar(0.)), -10);
+	btDefaultMotionState* nxWallMotionState = new btDefaultMotionState();// btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, -1, 0)));
 	btRigidBody::btRigidBodyConstructionInfo nxWallRigidBodyCI(0, nxWallMotionState, nxWallShape, btVector3(0, 0, 0));
-	nxWallRigidBodyCI.m_friction = .9;
+	nxWallRigidBodyCI.m_friction = 1;
 	btRigidBody* nxWallRigidBody = new btRigidBody(nxWallRigidBodyCI);
 	dynamicsWorld->addRigidBody(nxWallRigidBody);
 
 	// Add Pos Z Wall
-	btCollisionShape* zWallShape = new btStaticPlaneShape(btVector3(btScalar(10.), btScalar(0.), btScalar(0.)), 10);
-	btDefaultMotionState* zWallMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, -1, 0)));
+	btCollisionShape* zWallShape = new btStaticPlaneShape(btVector3(btScalar(0.), btScalar(0.), btScalar(10.)), 10);
+	btDefaultMotionState* zWallMotionState = new btDefaultMotionState();// btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, -1, 0)));
 	btRigidBody::btRigidBodyConstructionInfo zWallRigidBodyCI(0, zWallMotionState, zWallShape, btVector3(0, 0, 0));
-	zWallRigidBodyCI.m_friction = .9;
+	zWallRigidBodyCI.m_friction = 1;
 	btRigidBody* zWallRigidBody = new btRigidBody(zWallRigidBodyCI);
 	dynamicsWorld->addRigidBody(zWallRigidBody);
 
 	// Add Neg Z Wall
-	btCollisionShape* nzWallShape = new btStaticPlaneShape(btVector3(btScalar(10.), btScalar(0.), btScalar(0.)), 10);
-	btDefaultMotionState* nzWallMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, -1, 0)));
+	btCollisionShape* nzWallShape = new btStaticPlaneShape(btVector3(btScalar(0.), btScalar(0.), btScalar(-10.)), -10);
+	btDefaultMotionState* nzWallMotionState = new btDefaultMotionState();// btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, -1, 0)));
 	btRigidBody::btRigidBodyConstructionInfo nzWallRigidBodyCI(0, nzWallMotionState, nzWallShape, btVector3(0, 0, 0));
-	nzWallRigidBodyCI.m_friction = .9;
+	nzWallRigidBodyCI.m_friction = 1;
 	btRigidBody* nzWallRigidBody = new btRigidBody(nzWallRigidBodyCI);
 	dynamicsWorld->addRigidBody(nzWallRigidBody);
 
@@ -68,7 +69,55 @@ void World::Init(pos_list player_poss) {
 
 	// Initialize player objects
 	for (int i = 0; i < player_poss.size(); i++) {
-		std::shared_ptr<Player> player = std::shared_ptr<Player>(new Player(i, player_poss.at(i)));
+		std::shared_ptr<Player> player = std::shared_ptr<Player>(new Player(i, player_poss.at(i), curWorld));
 		players.push_back(player);
+	}
+
+	// Initialize egg objects
+	for (int i = 0; i < flag_poss.size(); i++) {
+		std::shared_ptr<Flag> flag = std::shared_ptr<Flag>(new Flag(i, flag_poss.at(i), curWorld));
+		flags.push_back(flag);
+	}
+}
+
+void World::updateWorld()
+{
+	curWorld->stepSimulation(1 / 60.f, 10);
+
+	int numManifolds = curWorld->getDispatcher()->getNumManifolds();
+	for (int i = 0; i < numManifolds; i++)
+	{
+		btPersistentManifold* contactManifold = curWorld->getDispatcher()->getManifoldByIndexInternal(i);
+		const btCollisionObject* obA = contactManifold->getBody0();
+		const btCollisionObject* obB = contactManifold->getBody1();
+
+		// Obj A is Flag
+		if ((obA->getUserIndex()) == FLAG)
+		{
+			// Obj B is Player
+			if (obB->getUserIndex() == PLAYER)
+			{
+				printf("acquiring egg1 \n");
+				// Handle Flag Collection
+				std::shared_ptr<Flag>* collideFlag = (std::shared_ptr<Flag>*) obA->getUserPointer();
+				std::shared_ptr<Player>* collidePlayer = (std::shared_ptr<Player>*) obB->getUserPointer();
+				
+				(*collidePlayer)->AcquireFlag(*collideFlag);
+			}
+		}
+		// Obj B is Flag
+		else if (obB->getUserIndex() == FLAG)
+		{
+			// Obj A is Player
+			if (obA->getUserIndex() == PLAYER)
+			{
+				printf("acquiring egg2 \n");
+				// Handle Flag Collection
+				std::shared_ptr<Flag>* collideFlag = (std::shared_ptr<Flag>*) obB->getUserPointer();
+				std::shared_ptr<Player>* collidePlayer = (std::shared_ptr<Player>*) obA->getUserPointer();
+
+				(*collidePlayer)->AcquireFlag(*collideFlag);
+			}
+		}
 	}
 }

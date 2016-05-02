@@ -157,6 +157,8 @@
     <ClInclude Include="..\src\network\NetworkData.h" />
     <ClInclude Include="..\src\network\NetworkServices.h" />
     <ClInclude Include="..\src\server\engine\engine.h" />
+    <ClInclude Include="..\src\server\engine\Flag.h" />
+    <ClInclude Include="..\src\server\engine\ObjectId.h" />
     <ClInclude Include="..\src\server\engine\Player.h" />
     <ClInclude Include="..\src\server\engine\World.h" />
     <ClInclude Include="..\src\server\ServerGame.h" />
@@ -166,6 +168,7 @@
   <ItemGroup>
     <ClCompile Include="..\src\network\NetworkServices.cpp" />
     <ClCompile Include="..\src\server\engine\engine.cpp" />
+    <ClCompile Include="..\src\server\engine\Flag.cpp" />
     <ClCompile Include="..\src\server\engine\Player.cpp" />
     <ClCompile Include="..\src\server\engine\World.cpp" />
     <ClCompile Include="..\src\server\main.cpp" />

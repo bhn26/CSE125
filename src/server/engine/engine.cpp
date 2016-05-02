@@ -17,9 +17,9 @@ void Engine::InitWorld(int num_players) {
 	printf("INITIALIZING WORLD ON SERVER\n");
 
     pos_list player_poss = GenerateCoords(num_players);
-    pos_list egg_poss = GenerateCoords(num_players * 2);
+    pos_list flag_poss = GenerateCoords(num_players * 2);
 
-	world->Init(player_poss);
+	world->Init(player_poss, flag_poss);
 }
 
 pos_list Engine::GenerateCoords(int n) {
@@ -33,7 +33,7 @@ pos_list Engine::GenerateCoords(int n) {
         pos.z = rand() % WORLD_HEIGHT + 1;
 
 		// y is the vertical axis and should be 0, not randomized
-        pos.y = 0;
+        pos.y = 1;
 
         /* face random direction */
 		pos.v_rotation = 0;
