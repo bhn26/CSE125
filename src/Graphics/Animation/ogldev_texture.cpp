@@ -18,6 +18,7 @@
 
 #include <iostream>
 #include "ogldev_texture.h"
+#include <SOIL.h>
 
 Texture::Texture(GLenum TextureTarget, const std::string& FileName)
 {
@@ -28,22 +29,22 @@ Texture::Texture(GLenum TextureTarget, const std::string& FileName)
 
 bool Texture::Load()
 {
-    //try {
-    //    m_image.read(m_fileName);
-    //    m_image.write(&m_blob, "RGBA");
-    //}
-    //catch (Magick::Error& Error) {
-    //    std::cout << "Error loading texture '" << m_fileName << "': " << Error.what() << std::endl;
-    //    return false;
-    //}
-
-    glGenTextures(1, &m_textureObj);
+    int width, height;
+    unsigned char* image = SOIL_load_image(m_fileName.c_str(), &width, &height, 0, SOIL_LOAD_RGB);
+    // Assign texture to ID
     glBindTexture(m_textureTarget, m_textureObj);
-    //glTexImage2D(m_textureTarget, 0, GL_RGBA, m_image.columns(), m_image.rows(), 0, GL_RGBA, GL_UNSIGNED_BYTE, m_blob.data());
-    glTexParameterf(m_textureTarget, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameterf(m_textureTarget, GL_TEXTURE_MAG_FILTER, GL_LINEAR);    
-    glBindTexture(m_textureTarget, 0);
-    
+    glTexImage2D(m_textureTarget, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+    glGenerateMipmap(GL_TEXTURE_2D);
+
+    // Parameters
+    glTexParameteri(m_textureTarget, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(m_textureTarget, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(m_textureTarget, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(m_textureTarget, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    // Reset
+    glBindTexture(GL_TEXTURE_2D, 0);
+    SOIL_free_image_data(image);
     return true;
 }
 
