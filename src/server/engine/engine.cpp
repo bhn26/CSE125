@@ -16,6 +16,8 @@ Engine::~Engine() {
 void Engine::InitWorld(int num_players) {
 	printf("INITIALIZING WORLD ON SERVER\n");
 
+	// we only need to seed once
+	srand(time(NULL));
     pos_list player_poss = GenerateCoords(num_players);
     pos_list flag_poss = GenerateCoords(num_players * 2);
 
@@ -23,7 +25,6 @@ void Engine::InitWorld(int num_players) {
 }
 
 pos_list Engine::GenerateCoords(int n) {
-    srand (time(NULL));
     pos_list poss;
 
     for(int i = 0; i < n; i++) {

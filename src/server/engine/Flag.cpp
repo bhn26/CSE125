@@ -3,6 +3,8 @@
 
 Flag::Flag(int id, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld)
 {
+	p = pos;
+
 	btCollisionShape* playerShape = new btBoxShape(btVector3(1, 1, 1));
 
 	// Create Flag physics object
@@ -31,4 +33,9 @@ Flag::~Flag()
 btRigidBody* Flag::getRigidBody()
 {
 	return this->flagRigidBody;
+}
+
+btVector3 Flag::GetFlagPosition()
+{
+	return flagRigidBody->getCenterOfMassPosition();
 }

@@ -5,7 +5,6 @@
 Player::Player(int id, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld) {
 
 	btCollisionShape* playerShape = new btCylinderShape(btVector3(1, 1, 1));
-
 	// Create player physics object
 	btDefaultMotionState*playerMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(pos.x, pos.y, pos.z)));
 	btScalar mass = 1;
@@ -22,6 +21,7 @@ Player::Player(int id, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld) {
 	this->jumpSem = 1;
 	this->HitPoints = 100;
 	this->flags = new std::vector<std::shared_ptr<Flag>>;
+	this->position = pos;
 
 	// Set RigidBody to point to Player
 	pRigidBody->setUserPointer(this);

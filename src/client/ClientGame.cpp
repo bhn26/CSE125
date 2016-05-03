@@ -151,7 +151,7 @@ void ClientGame::sendMovePacket(int direction)
     pi.serialize(packet.dat.buf);
 
     packet.serialize(packet_data);
-	printf("sending move packet from %d", client_id);
+	printf("sending move packet from %d\n", client_id);
     NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
 }
 
@@ -238,7 +238,6 @@ void ClientGame::update()
                 break;
 
             case MOVE_EVENT:
-
                 receiveMovePacket(i + sizeof(PacketHeader));
                 break;
 

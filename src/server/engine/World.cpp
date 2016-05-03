@@ -70,12 +70,18 @@ void World::Init(pos_list player_poss, pos_list flag_poss) {
 	// Initialize player objects
 	for (int i = 0; i < player_poss.size(); i++) {
 		std::shared_ptr<Player> player = std::shared_ptr<Player>(new Player(i, player_poss.at(i), curWorld));
+		btVector3 vec = player->GetPlayerPosition();
+		printf("Created player at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
+		printf("Posinfo player at (%d,%d,%d)\n", player->GetPosition().x, player->GetPosition().y, player->GetPosition().z);
 		players.push_back(player);
 	}
 
 	// Initialize egg objects
 	for (int i = 0; i < flag_poss.size(); i++) {
 		std::shared_ptr<Flag> flag = std::shared_ptr<Flag>(new Flag(i, flag_poss.at(i), curWorld));
+		btVector3 vec = flag->GetFlagPosition();
+		printf("Created flag at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
+		printf("Posinfo flag at (%d,%d,%d)\n", flag->p.x, flag->p.y, flag->p.z);
 		flags.push_back(flag);
 	}
 }
@@ -85,6 +91,7 @@ void World::updateWorld()
 	curWorld->stepSimulation(1 / 60.f, 10);
 
 	int numManifolds = curWorld->getDispatcher()->getNumManifolds();
+
 	for (int i = 0; i < numManifolds; i++)
 	{
 		btPersistentManifold* contactManifold = curWorld->getDispatcher()->getManifoldByIndexInternal(i);
@@ -97,12 +104,13 @@ void World::updateWorld()
 			// Obj B is Player
 			if (obB->getUserIndex() == PLAYER)
 			{
-				printf("acquiring egg1 \n");
+
 				// Handle Flag Collection
-				std::shared_ptr<Flag>* collideFlag = (std::shared_ptr<Flag>*) obA->getUserPointer();
-				std::shared_ptr<Player>* collidePlayer = (std::shared_ptr<Player>*) obB->getUserPointer();
-				
-				(*collidePlayer)->AcquireFlag(*collideFlag);
+
+				Flag * collideFlag = (Flag *)obB->getUserPointer();
+				Player * collidePlayer = (Player *)obA->getUserPointer();
+
+				collidePlayer->AcquireFlag((std::shared_ptr<Flag>)collideFlag);
 			}
 		}
 		// Obj B is Flag
@@ -111,13 +119,32 @@ void World::updateWorld()
 			// Obj A is Player
 			if (obA->getUserIndex() == PLAYER)
 			{
-				printf("acquiring egg2 \n");
-				// Handle Flag Collection
-				std::shared_ptr<Flag>* collideFlag = (std::shared_ptr<Flag>*) obB->getUserPointer();
-				std::shared_ptr<Player>* collidePlayer = (std::shared_ptr<Player>*) obA->getUserPointer();
 
-				(*collidePlayer)->AcquireFlag(*collideFlag);
+				// Handle Flag Collection
+				//std::shared_ptr<Flag>* collideFlag = reinterpret_cast<std::shared_ptr<Flag> * >(obB->getUserPointer());
+				//std::shared_ptr<Player>* collidePlayer = reinterpret_cast<std::shared_ptr<Player> * >(obA->getUserPointer());
+
+				//(*collidePlayer)->AcquireFlag(*collideFlag);
+
+				Flag * collideFlag = (Flag *)obB->getUserPointer();
+				Player * collidePlayer = (Player *)obA->getUserPointer();
+
+				collidePlayer->AcquireFlag((std::shared_ptr<Flag>)collideFlag);
 			}
 		}
 	}
+	if (x++ % 50000 == 0) {
+		for (std::vector<std::shared_ptr<Player> >::iterator it = players.begin(); it != players.end(); ++it)
+		{
+			btVector3 vec = (*it)->GetPlayerPosition();
+			printf(" player at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
+		}
+
+		for (std::vector<std::shared_ptr<Flag> >::iterator it = flags.begin(); it != flags.end(); ++it)
+		{
+			btVector3 vec = (*it)->GetFlagPosition();
+			printf(" flag at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
+		}
+	}
+	
 }

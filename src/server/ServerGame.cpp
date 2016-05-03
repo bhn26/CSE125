@@ -22,19 +22,24 @@ ServerGame::~ServerGame(void)
 
 void ServerGame::update()
 {
-    // get new clients
-   if(network->acceptNewClient(client_id))
-   {
-        printf("client %d has been connected to the server\n",client_id);
+	// get new clients
+	if (network->acceptNewClient(client_id))
+	{
+		printf("client %d has been connected to the server\n", client_id);
 
-        // This will be an INIT_CONNECTION packet
-        receiveFromClients();
-        client_id++;
-   }
-   else
-   {
-       receiveFromClients();
-   }
+		// This will be an INIT_CONNECTION packet
+		receiveFromClients();
+		client_id++;
+	}
+	else
+	{
+		receiveFromClients();
+	}
+
+	if (game_started)
+	{
+		engine->GetWorld()->updateWorld();
+	}
 }
 
 void ServerGame::receiveFromClients()
@@ -287,7 +292,6 @@ void ServerGame::receiveMovePacket(int offset)
 	}
 
 //	player->Move(pi->direction);
-	engine->GetWorld()->updateWorld();
 	sendMovePacket(hdr->sender_id);
 }
 

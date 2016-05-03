@@ -12,6 +12,7 @@ class Flag
 	int id;
 	btDiscreteDynamicsWorld* curWorld;
 	btRigidBody* flagRigidBody;
+	
 
 public:
 
@@ -20,5 +21,9 @@ public:
 	~Flag();
 
 	btRigidBody* getRigidBody();
+
+	btVector3 GetFlagPosition();
+
+	PosInfo p;
 
 };
