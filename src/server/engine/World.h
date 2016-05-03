@@ -49,4 +49,7 @@ public:
 	// Handles egg collisions with players
 	void updateWorld();
 
+	// Finds and Removes flag from world list of flags
+	void removeFlag(std::shared_ptr<Flag> collectedFlag);
+
 };

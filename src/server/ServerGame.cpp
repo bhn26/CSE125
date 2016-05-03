@@ -270,22 +270,22 @@ void ServerGame::receiveMovePacket(int offset)
 	btVector3* vec;
 	switch (pi->direction) {
 	case MOVE_FORWARD:
-		vec = new btVector3(0, 0, -1);
+		vec = new btVector3(0, 0, -20);
 		player->Move(vec);
 		delete vec;
 		break;
 	case MOVE_BACKWARD:
-		vec = new btVector3(0, 0, 1);
+		vec = new btVector3(0, 0, 20);
 		player->Move(vec);
 		delete vec;
 		break;
 	case MOVE_LEFT:
-		vec = new btVector3(-1, 0, 0);
+		vec = new btVector3(-20, 0, 0);
 		player->Move(vec);
 		delete vec;
 		break;
 	case MOVE_RIGHT:
-		vec = new btVector3(1, 0, 0);
+		vec = new btVector3(20, 0, 0);
 		player->Move(vec);
 		delete vec;
 		break;

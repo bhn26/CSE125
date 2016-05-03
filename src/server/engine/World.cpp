@@ -27,36 +27,36 @@ void World::Init(pos_list player_poss, pos_list flag_poss) {
 	btRigidBody* groundRigidBody = new btRigidBody(groundRigidBodyCI);
 	dynamicsWorld->addRigidBody(groundRigidBody);
 	
-	/*
+	/*	
 	// Add Pos X Wall
-	btCollisionShape* xWallShape = new btStaticPlaneShape(btVector3(btScalar(WORLD_WIDTH), btScalar(0.), btScalar(0.)), WORLD_WIDTH);
-	btDefaultMotionState* xWallMotionState = new btDefaultMotionState();//btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 0, 0)));
+	btCollisionShape* xWallShape = new btStaticPlaneShape(btVector3(btScalar(1.), btScalar(0.), btScalar(0.)), -100);
+	btDefaultMotionState* xWallMotionState = new btDefaultMotionState();// btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 0, 0)));
 	btRigidBody::btRigidBodyConstructionInfo xWallRigidBodyCI(0, xWallMotionState, xWallShape, btVector3(0, 0, 0));
-	xWallRigidBodyCI.m_friction = 1;
+	xWallRigidBodyCI.m_friction = .5;
 	btRigidBody* xWallRigidBody = new btRigidBody(xWallRigidBodyCI);
 	dynamicsWorld->addRigidBody(xWallRigidBody);
 
 	// Add Neg X Wall
 	btCollisionShape* nxWallShape = new btStaticPlaneShape(btVector3(btScalar(-WORLD_WIDTH), btScalar(0.), btScalar(0.)), -WORLD_WIDTH);
-	btDefaultMotionState* nxWallMotionState = new btDefaultMotionState();// btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, -1, 0)));
+	btDefaultMotionState* nxWallMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 0, 0)));
 	btRigidBody::btRigidBodyConstructionInfo nxWallRigidBodyCI(0, nxWallMotionState, nxWallShape, btVector3(0, 0, 0));
-	nxWallRigidBodyCI.m_friction = 1;
+	nxWallRigidBodyCI.m_friction = .5;
 	btRigidBody* nxWallRigidBody = new btRigidBody(nxWallRigidBodyCI);
 	dynamicsWorld->addRigidBody(nxWallRigidBody);
 
 	// Add Pos Z Wall
 	btCollisionShape* zWallShape = new btStaticPlaneShape(btVector3(btScalar(0.), btScalar(0.), btScalar(WORLD_WIDTH)), WORLD_WIDTH);
-	btDefaultMotionState* zWallMotionState = new btDefaultMotionState();// btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, -1, 0)));
+	btDefaultMotionState* zWallMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 0, 0)));
 	btRigidBody::btRigidBodyConstructionInfo zWallRigidBodyCI(0, zWallMotionState, zWallShape, btVector3(0, 0, 0));
-	zWallRigidBodyCI.m_friction = 1;
+	zWallRigidBodyCI.m_friction = .5;
 	btRigidBody* zWallRigidBody = new btRigidBody(zWallRigidBodyCI);
 	dynamicsWorld->addRigidBody(zWallRigidBody);
 
 	// Add Neg Z Wall
 	btCollisionShape* nzWallShape = new btStaticPlaneShape(btVector3(btScalar(0.), btScalar(0.), btScalar(-WORLD_WIDTH)), -WORLD_WIDTH);
-	btDefaultMotionState* nzWallMotionState = new btDefaultMotionState();// btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, -1, 0)));
+	btDefaultMotionState* nzWallMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 0, 0)));
 	btRigidBody::btRigidBodyConstructionInfo nzWallRigidBodyCI(0, nzWallMotionState, nzWallShape, btVector3(0, 0, 0));
-	nzWallRigidBodyCI.m_friction = 1;
+	nzWallRigidBodyCI.m_friction = .5;
 	btRigidBody* nzWallRigidBody = new btRigidBody(nzWallRigidBodyCI);
 	dynamicsWorld->addRigidBody(nzWallRigidBody);
 	*/
@@ -131,6 +131,8 @@ void World::updateWorld()
 
 				collidePlayer->AcquireFlag((std::shared_ptr<Flag>)collideFlag);
 				curWorld->removeRigidBody(collideFlag->getRigidBody());
+				//TODO remove flag from Vector causes strange issues...
+				//removeFlag((std::shared_ptr<Flag>)collideFlag);
 			}
 		}
 		// Obj B is Flag
@@ -151,10 +153,13 @@ void World::updateWorld()
 
 				collidePlayer->AcquireFlag((std::shared_ptr<Flag>)collideFlag);
 				curWorld->removeRigidBody(collideFlag->getRigidBody());
+				//TODO remove flag from Vector causes strange issues...
+				//removeFlag((std::shared_ptr<Flag>)collideFlag);
 			}
 		}
 	}
 	if (x++ % 10000 == 0) {
+
 		for (std::vector<std::shared_ptr<Player> >::iterator it = players.begin(); it != players.end(); ++it)
 		{
 			btVector3 vec = (*it)->GetPlayerPosition();
@@ -171,9 +176,17 @@ void World::updateWorld()
 	
 }
 
-/*
-World::removeFlag()
+void World::removeFlag(std::shared_ptr<Flag> collectedFlag)
 {
 
+	for (std::vector<std::shared_ptr<Flag> >::iterator it = flags.begin(); it != flags.end(); ++it)
+	{
+		if (collectedFlag == (*it))
+		{
+			flags.erase(it);
+			printf("Flag has been removed from world list \n");
+			return;
+		}
+	}
+
 }
-*/
