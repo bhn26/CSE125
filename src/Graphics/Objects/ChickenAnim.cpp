@@ -67,17 +67,6 @@ void ChickenAnim::Draw(Camera* camera)
 
     glm::vec3 pos = Scene::camera->Position();
     m_pEffect->SetEyeWorldPos(Vector3f(pos.x, pos.y, pos.z));
-    
-    //Pipeline p;
-    //p.SetCamera(Scene::camera->Position(), Scene::camera->Position() + Scene::camera->Front(), Scene::camera->WorldUp());
-    //p.SetPerspectiveProj(m_persProjInfo);
-    //p.Scale(0.1f, 0.1f, 0.1f);
-    //
-    //Vector3f Pos(m_position);
-    //p.WorldPos(Pos);
-    //p.Rotate(270.0f, 180.0f, 0.0f);
-    //m_pEffect->SetWVP(p.GetWVPTrans());
-    //m_pEffect->SetWorldMatrix(p.GetWorldTrans());
 
     m_pEffect->SetWVP(Scene::camera->GetPerspectiveMatrix() * Scene::camera->GetViewMatrix() * m_toWorld);
     m_pEffect->SetWorldMatrix(m_toWorld);
