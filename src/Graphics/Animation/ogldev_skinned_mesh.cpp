@@ -86,7 +86,7 @@ void SkinnedMesh::Clear()
 }
 
 
-bool SkinnedMesh::LoadMesh(const string& Filename)
+bool SkinnedMesh::LoadMesh(const std::string& Filename)
 {
     // Release the previously loaded mesh (if it exists)
     Clear();
@@ -120,18 +120,18 @@ bool SkinnedMesh::LoadMesh(const string& Filename)
 }
 
 
-bool SkinnedMesh::InitFromScene(const aiScene* pScene, const string& Filename)
+bool SkinnedMesh::InitFromScene(const aiScene* pScene, const std::string& Filename)
 {  
     m_Entries.resize(pScene->mNumMeshes);
     m_Textures.resize(pScene->mNumMaterials);
 
-    vector<glm::vec3> Positions;
-    vector<glm::vec3> Normals;
-    vector<glm::vec2> TexCoords;
-    vector<VertexBoneData> Bones;
-    vector<uint> Indices;
+    std::vector<glm::vec3> Positions;
+    std::vector<glm::vec3> Normals;
+    std::vector<glm::vec2> TexCoords;
+    std::vector<VertexBoneData> Bones;
+    std::vector<uint> Indices;
 
-    vector<VertexInfo> vertices;
+    std::vector<VertexInfo> vertices;
        
     uint NumVertices = 0;
     uint NumIndices = 0;
@@ -196,11 +196,11 @@ bool SkinnedMesh::InitFromScene(const aiScene* pScene, const string& Filename)
 
 void SkinnedMesh::InitMesh(uint MeshIndex,
                     const aiMesh* paiMesh,
-                    vector<glm::vec3>& Positions,
-                    vector<glm::vec3>& Normals,
-                    vector<glm::vec2>& TexCoords,
-                    vector<VertexBoneData>& Bones,
-                    vector<uint>& Indices)
+                    std::vector<glm::vec3>& Positions,
+                    std::vector<glm::vec3>& Normals,
+                    std::vector<glm::vec2>& TexCoords,
+                    std::vector<VertexBoneData>& Bones,
+                    std::vector<uint>& Indices)
 {    
     const aiVector3D Zero3D(0.0f, 0.0f, 0.0f);
     
@@ -230,7 +230,7 @@ void SkinnedMesh::InitMesh(uint MeshIndex,
     }
 }
 
-void SkinnedMesh::InitMesh(uint meshIndex, const aiMesh * paiMesh, vector<VertexInfo>& vertices, vector<unsigned int>& indices)
+void SkinnedMesh::InitMesh(uint meshIndex, const aiMesh * paiMesh, std::vector<VertexInfo>& vertices, std::vector<unsigned int>& indices)
 {
     const aiVector3D Zero3D(0.0f, 0.0f, 0.0f);
 
@@ -263,12 +263,12 @@ void SkinnedMesh::InitMesh(uint meshIndex, const aiMesh * paiMesh, vector<Vertex
 }
 
 
-void SkinnedMesh::LoadBones(uint MeshIndex, const aiMesh* pMesh, vector<VertexBoneData>& Bones)
+void SkinnedMesh::LoadBones(uint MeshIndex, const aiMesh* pMesh, std::vector<VertexBoneData>& Bones)
 {
     for (uint i = 0 ; i < pMesh->mNumBones ; i++)
     {                
         uint BoneIndex = 0;        
-        string BoneName(pMesh->mBones[i]->mName.data);
+        std::string BoneName(pMesh->mBones[i]->mName.data);
         
         if (m_BoneMapping.find(BoneName) == m_BoneMapping.end())
         {
@@ -294,12 +294,12 @@ void SkinnedMesh::LoadBones(uint MeshIndex, const aiMesh* pMesh, vector<VertexBo
     }    
 }
 
-void SkinnedMesh::LoadBones(uint MeshIndex, const aiMesh* pMesh, vector<VertexInfo>& vertices)
+void SkinnedMesh::LoadBones(uint MeshIndex, const aiMesh* pMesh, std::vector<VertexInfo>& vertices)
 {
     for (uint i = 0; i < pMesh->mNumBones; i++)
     {
         uint BoneIndex = 0;
-        string BoneName(pMesh->mBones[i]->mName.data);
+        std::string BoneName(pMesh->mBones[i]->mName.data);
 
         if (m_BoneMapping.find(BoneName) == m_BoneMapping.end())
         {
@@ -327,13 +327,13 @@ void SkinnedMesh::LoadBones(uint MeshIndex, const aiMesh* pMesh, vector<VertexIn
 
 
 
-bool SkinnedMesh::InitMaterials(const aiScene* pScene, const string& Filename)
+bool SkinnedMesh::InitMaterials(const aiScene* pScene, const std::string& Filename)
 {
     // Extract the directory part from the file name
-    string::size_type SlashIndex = Filename.find_last_of("/");
-    string Dir;
+    std::string::size_type SlashIndex = Filename.find_last_of("/");
+    std::string Dir;
 
-    if (SlashIndex == string::npos)
+    if (SlashIndex == std::string::npos)
     {
         Dir = ".";
     }
@@ -361,14 +361,14 @@ bool SkinnedMesh::InitMaterials(const aiScene* pScene, const string& Filename)
 
             if (pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &Path, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS)
             {
-                string p(Path.data);
+                std::string p(Path.data);
                 
                 if (p.substr(0, 2) == ".\\")
                 {                    
                     p = p.substr(2, p.size() - 2);
                 }
                                
-                string FullPath = Dir + "/" + p;
+                std::string FullPath = Dir + "/" + p;
                     
                 m_Textures[i] = new Texture(GL_TEXTURE_2D, FullPath.c_str());
 
@@ -536,7 +536,7 @@ void SkinnedMesh::CalcInterpolatedScaling(aiVector3D& Out, float AnimationTime, 
 
 void SkinnedMesh::ReadNodeHeirarchy(float AnimationTime, const aiNode* pNode, const glm::mat4& ParentTransform)
 {    
-    string NodeName(pNode->mName.data);
+    std::string NodeName(pNode->mName.data);
     
     const aiAnimation* pAnimation = m_pScene->mAnimations[0];
         
@@ -582,7 +582,7 @@ void SkinnedMesh::ReadNodeHeirarchy(float AnimationTime, const aiNode* pNode, co
 }
 
 
-void SkinnedMesh::BoneTransform(float TimeInSeconds, vector<glm::mat4>& Transforms)
+void SkinnedMesh::BoneTransform(float TimeInSeconds, std::vector<glm::mat4>& Transforms)
 {
     glm::mat4 Identity(1.0f);
     
@@ -601,13 +601,13 @@ void SkinnedMesh::BoneTransform(float TimeInSeconds, vector<glm::mat4>& Transfor
 }
 
 
-const aiNodeAnim* SkinnedMesh::FindNodeAnim(const aiAnimation* pAnimation, const string NodeName)
+const aiNodeAnim* SkinnedMesh::FindNodeAnim(const aiAnimation* pAnimation, const std::string NodeName)
 {
     for (uint i = 0 ; i < pAnimation->mNumChannels ; i++)
     {
         const aiNodeAnim* pNodeAnim = pAnimation->mChannels[i];
         
-        if (string(pNodeAnim->mNodeName.data) == NodeName)
+        if (std::string(pNodeAnim->mNodeName.data) == NodeName)
         {
             return pNodeAnim;
         }

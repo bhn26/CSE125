@@ -41,7 +41,7 @@ ChickenAnim::ChickenAnim() : m_toWorld(glm::mat4(1.0f))
 
     float RunningTime = GetRunningTime();
 
-    vector<glm::mat4> transforms;
+    std::vector<glm::mat4> transforms;
     m_mesh.BoneTransform(RunningTime, transforms);
 
     for (uint i = 0; i < transforms.size(); i++)
@@ -71,7 +71,7 @@ void ChickenAnim::Draw(Camera* camera)
 void ChickenAnim::Update()
 {
     //i think this is crashing at the end of the animation loop
-    vector<glm::mat4> Transforms;
+    std::vector<glm::mat4> Transforms;
     
     float RunningTime = GetRunningTime();
     

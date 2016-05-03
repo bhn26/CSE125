@@ -24,8 +24,6 @@
 #include "skinning_technique.h"
 #include "ogldev_util.h"
 
-using namespace std;
-
 SkinningTechnique::SkinningTechnique()
 {   
 }

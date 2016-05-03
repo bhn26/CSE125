@@ -17,7 +17,7 @@
 */
 
 #ifndef OGLDEV_SKINNED_MESH_H
-#define	OGLDEV_SKINNED_MESH_H
+#define OGLDEV_SKINNED_MESH_H
 
 #include <map>
 #include <vector>
@@ -31,8 +31,6 @@
 #include "ogldev_util.h"
 #include "ogldev_texture.h"
 
-using namespace std;
-
 class SkinnedMesh
 {
 public:
@@ -40,7 +38,7 @@ public:
 
     ~SkinnedMesh();
 
-    bool LoadMesh(const string& Filename);
+    bool LoadMesh(const std::string& Filename);
 
     void Render();
 
@@ -49,7 +47,7 @@ public:
         return m_NumBones;
     }
     
-    void BoneTransform(float TimeInSeconds, vector<glm::mat4>& Transforms);
+    void BoneTransform(float TimeInSeconds, std::vector<glm::mat4>& Transforms);
     
 private:
     #define NUM_BONES_PER_VEREX 8 // we have max 5
@@ -97,23 +95,23 @@ private:
     uint FindScaling(float AnimationTime, const aiNodeAnim* pNodeAnim);
     uint FindRotation(float AnimationTime, const aiNodeAnim* pNodeAnim);
     uint FindPosition(float AnimationTime, const aiNodeAnim* pNodeAnim);
-    const aiNodeAnim* FindNodeAnim(const aiAnimation* pAnimation, const string NodeName);
+    const aiNodeAnim* FindNodeAnim(const aiAnimation* pAnimation, const std::string NodeName);
     void ReadNodeHeirarchy(float AnimationTime, const aiNode* pNode, const glm::mat4& ParentTransform);
-    bool InitFromScene(const aiScene* pScene, const string& Filename);
+    bool InitFromScene(const aiScene* pScene, const std::string& Filename);
     void InitMesh(uint MeshIndex,
                   const aiMesh* paiMesh,
-                  vector<glm::vec3>& Positions,
-                  vector<glm::vec3>& Normals,
-                  vector<glm::vec2>& TexCoords,
-                  vector<VertexBoneData>& Bones,
-                  vector<unsigned int>& Indices);
+                  std::vector<glm::vec3>& Positions,
+                  std::vector<glm::vec3>& Normals,
+                  std::vector<glm::vec2>& TexCoords,
+                  std::vector<VertexBoneData>& Bones,
+                  std::vector<unsigned int>& Indices);
     void InitMesh(uint meshIndex,
         const aiMesh* paiMesh,
-        vector<VertexInfo>& vertices,
-        vector<unsigned int>& indices);
-    void LoadBones(uint MeshIndex, const aiMesh* paiMesh, vector<VertexBoneData>& Bones);
-    void LoadBones(uint MeshIndex, const aiMesh* paiMesh, vector<VertexInfo>& vertices);
-    bool InitMaterials(const aiScene* pScene, const string& Filename);
+        std::vector<VertexInfo>& vertices,
+        std::vector<unsigned int>& indices);
+    void LoadBones(uint MeshIndex, const aiMesh* paiMesh, std::vector<VertexBoneData>& Bones);
+    void LoadBones(uint MeshIndex, const aiMesh* paiMesh, std::vector<VertexInfo>& vertices);
+    bool InitMaterials(const aiScene* pScene, const std::string& Filename);
     void Clear();
 
 #define INVALID_MATERIAL 0xFFFFFFFF
@@ -145,12 +143,12 @@ enum VB_TYPES {
         unsigned int MaterialIndex;
     };
     
-    vector<MeshEntry> m_Entries;
-    vector<Texture*> m_Textures;
+    std::vector<MeshEntry> m_Entries;
+    std::vector<Texture*> m_Textures;
      
-    map<string,uint> m_BoneMapping; // maps a bone name to its index
+    std::map<std::string,uint> m_BoneMapping; // maps a bone name to its index
     uint m_NumBones;
-    vector<BoneInfo> m_BoneInfo;
+    std::vector<BoneInfo> m_BoneInfo;
     glm::mat4 m_GlobalInverseTransform;
     
     const aiScene* m_pScene;
