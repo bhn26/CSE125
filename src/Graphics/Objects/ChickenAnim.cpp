@@ -18,12 +18,6 @@ ChickenAnim::ChickenAnim() : m_toWorld(glm::mat4(1.0f))
     m_directionalLight.DiffuseIntensity = 0.9f;
     m_directionalLight.Direction = glm::vec3(1.0f, 0.0, 0.0);
     
-    m_persProjInfo.FOV = 45.0f;
-    m_persProjInfo.Height = Window::height;
-    m_persProjInfo.Width = Window::width;
-    m_persProjInfo.zNear = 1.0f;
-    m_persProjInfo.zFar = 1000.0f;
-    
     m_position = glm::vec3(0.0f, 0.0f, 6.0f);
     
     m_pEffect = new SkinningTechnique();

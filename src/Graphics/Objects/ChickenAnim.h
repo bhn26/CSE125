@@ -35,7 +35,6 @@ public:
     DirectionalLight m_directionalLight;
     SkinnedMesh m_mesh;
     glm::vec3 m_position;
-    PersProjInfo m_persProjInfo;
 
     glm::mat4 m_toWorld;
     
