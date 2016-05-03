@@ -187,12 +187,12 @@ bool SkinningTechnique::Init()
 
 void SkinningTechnique::SetWVP(const glm::mat4& WVP)
 {
-    glUniformMatrix4fv(m_WVPLocation, 1, GL_TRUE, glm::value_ptr(WVP));
+    glUniformMatrix4fv(m_WVPLocation, 1, GL_FALSE, glm::value_ptr(WVP));
 }
 
 void SkinningTechnique::SetWorldMatrix(const glm::mat4& World)
 {
-    glUniformMatrix4fv(m_WorldMatrixLocation, 1, GL_TRUE, glm::value_ptr(World));
+    glUniformMatrix4fv(m_WorldMatrixLocation, 1, GL_FALSE, glm::value_ptr(World));
 }
 
 void SkinningTechnique::SetColorTextureUnit(unsigned int TextureUnit)
