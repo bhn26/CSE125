@@ -21,6 +21,7 @@
 
 #include <map>
 #include <vector>
+#include <glm/glm.hpp>
 
 #include <GL/glew.h>
 #include <assimp/Importer.hpp>      // C++ importer interface
@@ -28,7 +29,6 @@
 #include <assimp/postprocess.h> // Post processing flags
 
 #include "ogldev_util.h"
-#include "ogldev_math_3d.h"
 #include "ogldev_texture.h"
 
 using namespace std;
@@ -43,26 +43,24 @@ public:
     bool LoadMesh(const string& Filename);
 
     void Render();
-	
+
     uint NumBones() const
     {
         return m_NumBones;
     }
     
-    void BoneTransform(float TimeInSeconds, vector<Matrix4f>& Transforms);
+    void BoneTransform(float TimeInSeconds, vector<glm::mat4>& Transforms);
     
 private:
     #define NUM_BONES_PER_VEREX 8 // we have max 5
 
     struct BoneInfo
     {
-        Matrix4f BoneOffset;
-        Matrix4f FinalTransformation;        
+        glm::mat4 BoneOffset;
+        glm::mat4 FinalTransformation;        
 
-        BoneInfo()
+        BoneInfo() : BoneOffset(glm::mat4(0.0f)), FinalTransformation(glm::mat4(0.0f))
         {
-            BoneOffset.SetZero();
-            FinalTransformation.SetZero();            
         }
     };
     
@@ -100,7 +98,7 @@ private:
     uint FindRotation(float AnimationTime, const aiNodeAnim* pNodeAnim);
     uint FindPosition(float AnimationTime, const aiNodeAnim* pNodeAnim);
     const aiNodeAnim* FindNodeAnim(const aiAnimation* pAnimation, const string NodeName);
-    void ReadNodeHeirarchy(float AnimationTime, const aiNode* pNode, const Matrix4f& ParentTransform);
+    void ReadNodeHeirarchy(float AnimationTime, const aiNode* pNode, const glm::mat4& ParentTransform);
     bool InitFromScene(const aiScene* pScene, const string& Filename);
     void InitMesh(uint MeshIndex,
                   const aiMesh* paiMesh,
@@ -153,7 +151,7 @@ enum VB_TYPES {
     map<string,uint> m_BoneMapping; // maps a bone name to its index
     uint m_NumBones;
     vector<BoneInfo> m_BoneInfo;
-    Matrix4f m_GlobalInverseTransform;
+    glm::mat4 m_GlobalInverseTransform;
     
     const aiScene* m_pScene;
     Assimp::Importer m_Importer;

@@ -175,15 +175,6 @@ bool SkinningTechnique::Init()
     return true;
 }
 
-//void SkinningTechnique::SetWVP(const Matrix4f& WVP)
-//{
-//    glUniformMatrix4fv(m_WVPLocation, 1, GL_TRUE, (const GLfloat*)WVP);    
-//}
-//
-//void SkinningTechnique::SetWorldMatrix(const Matrix4f& World)
-//{
-//    glUniformMatrix4fv(m_WorldMatrixLocation, 1, GL_TRUE, (const GLfloat*)World);
-//}
 
 void SkinningTechnique::SetWVP(const glm::mat4& WVP)
 {
@@ -206,7 +197,6 @@ void SkinningTechnique::SetDirectionalLight(const DirectionalLight& Light)
     glUniform3f(m_dirLightLocation.Color, Light.Color.x, Light.Color.y, Light.Color.z);
     glUniform1f(m_dirLightLocation.AmbientIntensity, Light.AmbientIntensity);
     glm::vec3 Direction = glm::normalize(Light.Direction);
-    //Direction.Normalize();
     glUniform3f(m_dirLightLocation.Direction, Direction.x, Direction.y, Direction.z);
     glUniform1f(m_dirLightLocation.DiffuseIntensity, Light.DiffuseIntensity);
 }
@@ -257,7 +247,6 @@ void SkinningTechnique::SetSpotLights(unsigned int NumLights, const SpotLight* p
         glUniform1f(m_spotLightsLocation[i].DiffuseIntensity, pLights[i].DiffuseIntensity);
         glUniform3f(m_spotLightsLocation[i].Position,  pLights[i].Position.x, pLights[i].Position.y, pLights[i].Position.z);
         glm::vec3 Direction = glm::normalize(pLights[i].Direction);
-        //Direction.Normalize();
         glUniform3f(m_spotLightsLocation[i].Direction, Direction.x, Direction.y, Direction.z);
         glUniform1f(m_spotLightsLocation[i].Cutoff, cosf(glm::radians(pLights[i].Cutoff)));
         glUniform1f(m_spotLightsLocation[i].Atten.Constant, pLights[i].Attenuation.Constant);
@@ -266,11 +255,10 @@ void SkinningTechnique::SetSpotLights(unsigned int NumLights, const SpotLight* p
     }
 }
 
-
-void SkinningTechnique::SetBoneTransform(uint Index, const Matrix4f& Transform)
+void SkinningTechnique::SetBoneTransform(uint Index, const glm::mat4& Transform)
 {
     assert(Index < MAX_BONES);
     //printf("Transform Matrix:\n");
     //Transform.Print();
-    glUniformMatrix4fv(m_boneLocation[Index], 1, GL_TRUE, (const GLfloat*)Transform);
+    glUniformMatrix4fv(m_boneLocation[Index], 1, false, glm::value_ptr(Transform));
 }

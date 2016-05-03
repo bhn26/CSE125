@@ -16,14 +16,24 @@
 */
 
 
-
 #include "ogldev_skinned_mesh.h"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #define POSITION_LOCATION    0
 #define TEX_COORD_LOCATION   1
 #define NORMAL_LOCATION      2
 #define BONE_ID_LOCATION     3
 #define BONE_WEIGHT_LOCATION 4
+
+// aiMatrix4x4 is a row-major matrix!!!
+void Assign(glm::mat4& m, const aiMatrix4x4& aimatrix)
+{
+    m[0][0] = aimatrix.a1; m[1][0] = aimatrix.a2; m[2][0] = aimatrix.a3; m[3][0] = aimatrix.a4;
+    m[0][1] = aimatrix.b1; m[1][1] = aimatrix.b2; m[2][1] = aimatrix.b3; m[3][1] = aimatrix.b4;
+    m[0][2] = aimatrix.c1; m[1][2] = aimatrix.c2; m[2][2] = aimatrix.c3; m[3][2] = aimatrix.c4;
+    m[0][3] = aimatrix.d1; m[1][3] = aimatrix.d2; m[2][3] = aimatrix.d3; m[3][3] = aimatrix.d4;
+}
 
 void SkinnedMesh::VertexBoneData::AddBoneData(uint BoneID, float Weight)
 {
@@ -94,8 +104,8 @@ bool SkinnedMesh::LoadMesh(const string& Filename)
     
     if (m_pScene)
     {  
-        m_GlobalInverseTransform = m_pScene->mRootNode->mTransformation;
-        m_GlobalInverseTransform.Inverse();
+        Assign(m_GlobalInverseTransform, m_pScene->mRootNode->mTransformation);
+        m_GlobalInverseTransform = glm::inverse(m_GlobalInverseTransform);
         Ret = InitFromScene(m_pScene, Filename);
     }
     else
@@ -267,7 +277,7 @@ void SkinnedMesh::LoadBones(uint MeshIndex, const aiMesh* pMesh, vector<VertexBo
             m_NumBones++;            
             BoneInfo bi;
             m_BoneInfo.push_back(bi);
-            m_BoneInfo[BoneIndex].BoneOffset = pMesh->mBones[i]->mOffsetMatrix;            
+            Assign(m_BoneInfo[BoneIndex].BoneOffset, pMesh->mBones[i]->mOffsetMatrix);
             m_BoneMapping[BoneName] = BoneIndex;
         }
         else
@@ -298,7 +308,7 @@ void SkinnedMesh::LoadBones(uint MeshIndex, const aiMesh* pMesh, vector<VertexIn
             m_NumBones++;
             BoneInfo bi;
             m_BoneInfo.push_back(bi);
-            m_BoneInfo[BoneIndex].BoneOffset = pMesh->mBones[i]->mOffsetMatrix;
+            Assign(m_BoneInfo[BoneIndex].BoneOffset, pMesh->mBones[i]->mOffsetMatrix);
             m_BoneMapping[BoneName] = BoneIndex;
         }
         else
@@ -524,13 +534,14 @@ void SkinnedMesh::CalcInterpolatedScaling(aiVector3D& Out, float AnimationTime, 
 }
 
 
-void SkinnedMesh::ReadNodeHeirarchy(float AnimationTime, const aiNode* pNode, const Matrix4f& ParentTransform)
+void SkinnedMesh::ReadNodeHeirarchy(float AnimationTime, const aiNode* pNode, const glm::mat4& ParentTransform)
 {    
     string NodeName(pNode->mName.data);
     
     const aiAnimation* pAnimation = m_pScene->mAnimations[0];
         
-    Matrix4f NodeTransformation(pNode->mTransformation);
+    glm::mat4 NodeTransformation(0.0f);
+    Assign(NodeTransformation, pNode->mTransformation);
      
     const aiNodeAnim* pNodeAnim = FindNodeAnim(pAnimation, NodeName);
     
@@ -539,25 +550,24 @@ void SkinnedMesh::ReadNodeHeirarchy(float AnimationTime, const aiNode* pNode, co
         // Interpolate scaling and generate scaling transformation matrix
         aiVector3D Scaling;
         CalcInterpolatedScaling(Scaling, AnimationTime, pNodeAnim);
-        Matrix4f ScalingM;
-        ScalingM.InitScaleTransform(Scaling.x, Scaling.y, Scaling.z);
-        
+        glm::mat4 ScalingM = glm::scale(glm::mat4(1.0f), glm::vec3(Scaling.x, Scaling.y, Scaling.z));
+
         // Interpolate rotation and generate rotation transformation matrix
         aiQuaternion RotationQ;
         CalcInterpolatedRotation(RotationQ, AnimationTime, pNodeAnim);        
-        Matrix4f RotationM = Matrix4f(RotationQ.GetMatrix());
+        glm::mat4 RotationM(0.0f);
+        Assign(RotationM, aiMatrix4x4(RotationQ.GetMatrix()));
 
         // Interpolate translation and generate translation transformation matrix
         aiVector3D Translation;
         CalcInterpolatedPosition(Translation, AnimationTime, pNodeAnim);
-        Matrix4f TranslationM;
-        TranslationM.InitTranslationTransform(Translation.x, Translation.y, Translation.z);
-        
+        glm::mat4 TranslationM = glm::translate(glm::mat4(1.0f), glm::vec3(Translation.x, Translation.y, Translation.z));
+
         // Combine the above transformations
         NodeTransformation = TranslationM * RotationM * ScalingM;
     }
        
-    Matrix4f GlobalTransformation = ParentTransform * NodeTransformation;
+    glm::mat4 GlobalTransformation = ParentTransform * NodeTransformation;
     
     if (m_BoneMapping.find(NodeName) != m_BoneMapping.end())
     {
@@ -572,10 +582,9 @@ void SkinnedMesh::ReadNodeHeirarchy(float AnimationTime, const aiNode* pNode, co
 }
 
 
-void SkinnedMesh::BoneTransform(float TimeInSeconds, vector<Matrix4f>& Transforms)
+void SkinnedMesh::BoneTransform(float TimeInSeconds, vector<glm::mat4>& Transforms)
 {
-    Matrix4f Identity;
-    Identity.InitIdentity();
+    glm::mat4 Identity(1.0f);
     
     float TicksPerSecond = (float)(m_pScene->mAnimations[0]->mTicksPerSecond != 0 ? m_pScene->mAnimations[0]->mTicksPerSecond : 25.0f);
     float TimeInTicks = TimeInSeconds * TicksPerSecond;

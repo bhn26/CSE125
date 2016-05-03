@@ -19,7 +19,7 @@
 #define	SKINNING_TECHNIQUE_H
 
 #include "technique.h"
-#include "ogldev_math_3d.h"
+#include "ogldev_util.h"
 #include <glm/glm.hpp>
 
 struct BaseLight
@@ -90,8 +90,6 @@ public:
 
     virtual bool Init();
 
-    //void SetWVP(const Matrix4f& WVP);
-    //void SetWorldMatrix(const Matrix4f& WVP);
     void SetWVP(const glm::mat4& WVP);
     void SetWorldMatrix(const glm::mat4& WVP);
     void SetColorTextureUnit(uint TextureUnit);
@@ -101,7 +99,7 @@ public:
     void SetEyeWorldPos(const glm::vec3& EyeWorldPos);
     void SetMatSpecularIntensity(float Intensity);
     void SetMatSpecularPower(float Power);
-    void SetBoneTransform(uint Index, const Matrix4f& Transform);
+    void SetBoneTransform(uint Index, const glm::mat4& Transform);
 
 private:
     
