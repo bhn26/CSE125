@@ -137,5 +137,5 @@ void main()
     }
     
     //FragColor = texture(gColorMap, In.TexCoord.xy) * TotalLight;
-    FragColor = vec4(1,0,0,1);  // should be red
+    FragColor = vec4(1,0,0,1) * TotalLight;  // should be red + lighting... LOL
 }

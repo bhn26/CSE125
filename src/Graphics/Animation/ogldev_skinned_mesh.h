@@ -143,7 +143,7 @@ enum VB_TYPES {
         unsigned int MaterialIndex;
     };
     
-    std::vector<MeshEntry> m_Entries;
+    std::vector<MeshEntry> m_Meshes;
     std::vector<Texture*> m_Textures;
      
     std::map<std::string,uint> m_BoneMapping; // maps a bone name to its index

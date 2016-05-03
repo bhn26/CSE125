@@ -92,14 +92,14 @@ public:
 
     void SetWVP(const glm::mat4& WVP);
     void SetWorldMatrix(const glm::mat4& WVP);
-    void SetColorTextureUnit(uint TextureUnit);
+    void SetColorTextureUnit(unsigned int TextureUnit);
     void SetDirectionalLight(const DirectionalLight& Light);
-    void SetPointLights(uint NumLights, const PointLight2* pLights);
-    void SetSpotLights(uint NumLights, const SpotLight* pLights);
+    void SetPointLights(unsigned int NumLights, const PointLight2* pLights);
+    void SetSpotLights(unsigned int NumLights, const SpotLight* pLights);
     void SetEyeWorldPos(const glm::vec3& EyeWorldPos);
     void SetMatSpecularIntensity(float Intensity);
     void SetMatSpecularPower(float Power);
-    void SetBoneTransform(uint Index, const glm::mat4& Transform);
+    void SetBoneTransform(unsigned int Index, const glm::mat4& Transform);
 
 private:
     

@@ -19,6 +19,7 @@
 #include "ogldev_skinned_mesh.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 #define POSITION_LOCATION    0
 #define TEX_COORD_LOCATION   1
@@ -103,7 +104,8 @@ bool SkinnedMesh::LoadMesh(const std::string& Filename)
     m_pScene = m_Importer.ReadFile(Filename.c_str(), aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs);
     
     if (m_pScene)
-    {  
+    {
+        // What is this global inverse??
         Assign(m_GlobalInverseTransform, m_pScene->mRootNode->mTransformation);
         m_GlobalInverseTransform = glm::inverse(m_GlobalInverseTransform);
         Ret = InitFromScene(m_pScene, Filename);
@@ -122,44 +124,35 @@ bool SkinnedMesh::LoadMesh(const std::string& Filename)
 
 bool SkinnedMesh::InitFromScene(const aiScene* pScene, const std::string& Filename)
 {  
-    m_Entries.resize(pScene->mNumMeshes);
+    m_Meshes.resize(pScene->mNumMeshes);
     m_Textures.resize(pScene->mNumMaterials);
 
-    std::vector<glm::vec3> Positions;
-    std::vector<glm::vec3> Normals;
-    std::vector<glm::vec2> TexCoords;
-    std::vector<VertexBoneData> Bones;
     std::vector<uint> Indices;
-
     std::vector<VertexInfo> vertices;
        
     uint NumVertices = 0;
     uint NumIndices = 0;
     
     // Count the number of vertices and indices
-    for (uint i = 0 ; i < m_Entries.size() ; i++)
+    for (uint i = 0 ; i < m_Meshes.size() ; i++)
     {
-        m_Entries[i].MaterialIndex = pScene->mMeshes[i]->mMaterialIndex;        
-        m_Entries[i].NumIndices    = pScene->mMeshes[i]->mNumFaces * 3;
-        m_Entries[i].BaseVertex    = NumVertices;
-        m_Entries[i].BaseIndex     = NumIndices;
+        m_Meshes[i].MaterialIndex = pScene->mMeshes[i]->mMaterialIndex;        
+        m_Meshes[i].NumIndices    = pScene->mMeshes[i]->mNumFaces * 3;
+        m_Meshes[i].BaseVertex    = NumVertices;
+        m_Meshes[i].BaseIndex     = NumIndices;
         
         NumVertices += pScene->mMeshes[i]->mNumVertices;
-        NumIndices  += m_Entries[i].NumIndices;
+        NumIndices  += m_Meshes[i].NumIndices;
     }
     
     // Reserve space in the vectors for the vertex attributes and indices
-    Positions.reserve(NumVertices);
-    Normals.reserve(NumVertices);
-    TexCoords.reserve(NumVertices);
-    Bones.resize(NumVertices);
+    vertices.reserve(NumVertices);
     Indices.reserve(NumIndices);
         
     // Initialize the meshes in the scene one by one
-    for (uint i = 0 ; i < m_Entries.size() ; i++)
+    for (uint i = 0 ; i < m_Meshes.size() ; i++)
     {
         const aiMesh* paiMesh = pScene->mMeshes[i];
-        //InitMesh(i, paiMesh, Positions, Normals, TexCoords, Bones, Indices);
         InitMesh(i, paiMesh, vertices, Indices);
     }
 
@@ -287,7 +280,7 @@ void SkinnedMesh::LoadBones(uint MeshIndex, const aiMesh* pMesh, std::vector<Ver
         
         for (uint j = 0 ; j < pMesh->mBones[i]->mNumWeights ; j++)
         {
-            uint VertexID = m_Entries[MeshIndex].BaseVertex + pMesh->mBones[i]->mWeights[j].mVertexId;
+            uint VertexID = m_Meshes[MeshIndex].BaseVertex + pMesh->mBones[i]->mWeights[j].mVertexId;
             float Weight  = pMesh->mBones[i]->mWeights[j].mWeight;                   
             Bones[VertexID].AddBoneData(BoneIndex, Weight);
         }
@@ -318,7 +311,7 @@ void SkinnedMesh::LoadBones(uint MeshIndex, const aiMesh* pMesh, std::vector<Ver
 
         for (uint j = 0; j < pMesh->mBones[i]->mNumWeights; j++)
         {
-            uint VertexID = m_Entries[MeshIndex].BaseVertex + pMesh->mBones[i]->mWeights[j].mVertexId;
+            uint VertexID = m_Meshes[MeshIndex].BaseVertex + pMesh->mBones[i]->mWeights[j].mVertexId;
             float Weight = pMesh->mBones[i]->mWeights[j].mWeight;
             vertices[VertexID].boneData.AddBoneData(BoneIndex, Weight);
         }
@@ -395,9 +388,9 @@ void SkinnedMesh::Render()
 {
     glBindVertexArray(m_VAO);
     
-    for (uint i = 0 ; i < m_Entries.size() ; i++)
+    for (uint i = 0 ; i < m_Meshes.size() ; i++)
     {
-        const uint MaterialIndex = m_Entries[i].MaterialIndex;
+        const uint MaterialIndex = m_Meshes[i].MaterialIndex;
 
         assert(MaterialIndex < m_Textures.size());
         
@@ -407,10 +400,10 @@ void SkinnedMesh::Render()
         }
 
         glDrawElementsBaseVertex(GL_TRIANGLES, 
-                                 m_Entries[i].NumIndices, 
+                                 m_Meshes[i].NumIndices, 
                                  GL_UNSIGNED_INT, 
-                                 (void*)(sizeof(uint) * m_Entries[i].BaseIndex), 
-                                 m_Entries[i].BaseVertex);
+                                 (void*)(sizeof(uint) * m_Meshes[i].BaseIndex), 
+                                 m_Meshes[i].BaseVertex);
     }
 
     // Make sure the VAO is not changed from the outside    
@@ -538,7 +531,7 @@ void SkinnedMesh::ReadNodeHeirarchy(float AnimationTime, const aiNode* pNode, co
 {    
     std::string NodeName(pNode->mName.data);
     
-    const aiAnimation* pAnimation = m_pScene->mAnimations[0];
+    const aiAnimation* pAnimation = m_pScene->mAnimations[0];       // TODO: Change this from 1 animation choice
         
     glm::mat4 NodeTransformation(0.0f);
     Assign(NodeTransformation, pNode->mTransformation);
@@ -554,9 +547,10 @@ void SkinnedMesh::ReadNodeHeirarchy(float AnimationTime, const aiNode* pNode, co
 
         // Interpolate rotation and generate rotation transformation matrix
         aiQuaternion RotationQ;
-        CalcInterpolatedRotation(RotationQ, AnimationTime, pNodeAnim);        
-        glm::mat4 RotationM(0.0f);
-        Assign(RotationM, aiMatrix4x4(RotationQ.GetMatrix()));
+        CalcInterpolatedRotation(RotationQ, AnimationTime, pNodeAnim);
+        glm::mat4 RotationM = static_cast<glm::mat4>(glm::quat(RotationQ.w, RotationQ.x, RotationQ.y, RotationQ.z));
+        //glm::mat4 RotationM(0.0f);
+        //Assign(RotationM, aiMatrix4x4(RotationQ.GetMatrix()));
 
         // Interpolate translation and generate translation transformation matrix
         aiVector3D Translation;
@@ -572,6 +566,7 @@ void SkinnedMesh::ReadNodeHeirarchy(float AnimationTime, const aiNode* pNode, co
     if (m_BoneMapping.find(NodeName) != m_BoneMapping.end())
     {
         uint BoneIndex = m_BoneMapping[NodeName];
+        // What is this global inverse??
         m_BoneInfo[BoneIndex].FinalTransformation = m_GlobalInverseTransform * GlobalTransformation * m_BoneInfo[BoneIndex].BoneOffset;
     }
     

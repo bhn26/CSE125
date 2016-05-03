@@ -35,7 +35,8 @@ const int NUM_CHANNELS = 2;
 
 ////////////////////////////////////////////////////////////
 
-class Entity {
+class Entity
+{
 private:
     long long m_startTime;
     
@@ -43,7 +44,11 @@ public:
     Entity() {}
     
     int PlaySound(std::string sound_file) { return 0; }
-    float GetRunningTime() { return 0.0f; }
+    float GetRunningTime()
+    {
+        //return 0.0f;
+        return (float)((double)GetCurrentTimeMillis() - (double)m_startTime) / 1000.0f;
+    }
     
     // Draw
     // Update

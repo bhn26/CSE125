@@ -39,10 +39,8 @@ ChickenAnim::ChickenAnim() : m_toWorld(glm::mat4(1.0f))
         printf("Mesh load failed\n");
     }
 
-    float RunningTime = GetRunningTime();
-
     std::vector<glm::mat4> transforms;
-    m_mesh.BoneTransform(RunningTime, transforms);
+    m_mesh.BoneTransform(0.0f, transforms);
 
     for (uint i = 0; i < transforms.size(); i++)
     {

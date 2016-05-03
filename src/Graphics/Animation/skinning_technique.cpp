@@ -244,8 +244,8 @@ void SkinningTechnique::SetSpotLights(unsigned int NumLights, const SpotLight* p
         glUniform1f(m_spotLightsLocation[i].AmbientIntensity, pLights[i].AmbientIntensity);
         glUniform1f(m_spotLightsLocation[i].DiffuseIntensity, pLights[i].DiffuseIntensity);
         glUniform3f(m_spotLightsLocation[i].Position,  pLights[i].Position.x, pLights[i].Position.y, pLights[i].Position.z);
-        glm::vec3 Direction = glm::normalize(pLights[i].Direction);
-        glUniform3f(m_spotLightsLocation[i].Direction, Direction.x, Direction.y, Direction.z);
+        glm::vec3 direction = glm::normalize(pLights[i].Direction);
+        glUniform3fv(m_spotLightsLocation[i].Direction, 1, glm::value_ptr(direction));
         glUniform1f(m_spotLightsLocation[i].Cutoff, cosf(glm::radians(pLights[i].Cutoff)));
         glUniform1f(m_spotLightsLocation[i].Atten.Constant, pLights[i].Attenuation.Constant);
         glUniform1f(m_spotLightsLocation[i].Atten.Linear,   pLights[i].Attenuation.Linear);
@@ -253,7 +253,7 @@ void SkinningTechnique::SetSpotLights(unsigned int NumLights, const SpotLight* p
     }
 }
 
-void SkinningTechnique::SetBoneTransform(uint Index, const glm::mat4& Transform)
+void SkinningTechnique::SetBoneTransform(unsigned int Index, const glm::mat4& Transform)
 {
     assert(Index < MAX_BONES);
     //printf("Transform Matrix:\n");
