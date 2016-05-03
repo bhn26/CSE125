@@ -72,10 +72,10 @@ void Egg::Draw() const
 	GLint lightColorLoc = shader->GetUniform("lightColor");
 	GLint lightPosLoc = shader->GetUniform("lightPos");
 	GLint viewPosLoc = shader->GetUniform("viewPos");
-	GLint ambient = shader->GetUniform("ambient");
+	/*GLint ambient = shader->GetUniform("ambient");
 	GLint diffuse = shader->GetUniform("diffuse");
 	GLint specular = shader->GetUniform("specular");
-	GLint shininess = shader->GetUniform("shininess");
+	GLint shininess = shader->GetUniform("shininess");*/
 
 	//glm::vec4 ambient(0.19f, 0.19f, 0.19f, 1.0f);
 	//glm::vec4 diffuse(0.50f, 0.50f, 0.50f, 1.0f);

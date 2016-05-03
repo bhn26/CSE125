@@ -23,7 +23,7 @@ uniform vec3 dl_specular;
 
 void main()
 {
-    // Calculations
+   /* // Calculations
     vec3 norm = normalize(Normal);
     vec3 lightDir = normalize(lightPos - FragPos); 
 
@@ -32,9 +32,9 @@ void main()
 	vec4 rVec = reflect(-lightDir, norm);
 	vec4 spec = (specular * dl_specular) * pow(max(dot(rVec, Eye), 0.0), shininess);
 
-	color = kala + diff + spec;
+	color = kala + diff + spec*/
 
-    /*float ambientStrength = 0.1f;
+    float ambientStrength = 0.1f;
     float specularStrength = 0.5f;
 
     // Ambient
@@ -49,5 +49,5 @@ void main()
     vec3 diffuse = diff * lightColor;
 
     vec3 result = (ambient + diffuse) * objectColor;
-    color = vec4(result, 1.0f);*/
+    color = vec4(result, 1.0f);
 }
