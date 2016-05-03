@@ -36,6 +36,16 @@ Player::~Player() {
 	delete flags;
 }
 
+void Player::PrintPlayerVelocity()
+{
+	//Calculate new velocity
+	btTransform currentTrans;
+	playerRigidBody->getMotionState()->getWorldTransform(currentTrans);
+	btMatrix3x3 currentOrientation = currentTrans.getBasis();
+	printf("current velocity %f, %f, %f\n", float(playerRigidBody->getLinearVelocity()[0]), float(playerRigidBody->getLinearVelocity()[1]), float(playerRigidBody->getLinearVelocity()[2]));
+
+}
+
 void Player::Move(btVector3* changeVelocity) {
 	//Calculate new velocity
 	btTransform currentTrans;
@@ -47,6 +57,7 @@ void Player::Move(btVector3* changeVelocity) {
 	playerRigidBody->setLinearVelocity(newVelocity);
 	//printf("%d: world pos object = %f,%f,%f\n", id, float(currentTrans.getOrigin().getX()), float(currentTrans.getOrigin().getY()), float(currentTrans.getOrigin().getZ()));
 	printf("current velocity %f, %f, %f\n", float(playerRigidBody->getLinearVelocity()[0]), float( playerRigidBody->getLinearVelocity()[1]), float(playerRigidBody->getLinearVelocity()[2]));
+	playerRigidBody->activate();
 
 	/*position.direction = direction;
 	 
@@ -101,6 +112,7 @@ void Player::AcquireFlag(std::shared_ptr<Flag> flag)
 {
 	// need to remove the flag from the map
 	flags->push_back(flag);
+	printf("Flag was acquired! \n");
 }
 
 void Player::LoseFlags()

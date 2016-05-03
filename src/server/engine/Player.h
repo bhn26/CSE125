@@ -1,5 +1,4 @@
 #pragma once
-#include "../../network/GameData.h"
 #include "Flag.h"
 #include <memory>
 #include <vector>
@@ -8,6 +7,11 @@
 #define BULLET_PHYSICS
 #include <BulletPhysics\btBulletDynamicsCommon.h>
 #include <BulletPhysics\btBulletCollisionCommon.h>
+#endif
+
+#ifndef GAME_DATA
+#define GAME_DATA
+#include "../../network/GameData.h"
 #endif
 
 class Player 
@@ -36,6 +40,9 @@ public:
 
 	// Rotates player according to mouse move
 	void Rotate(float v_rotation, float h_rotation);
+
+	//TODO *********************************
+	void PrintPlayerVelocity();
 
 	// Return current positioning of Player
 	btVector3 GetPlayerPosition();

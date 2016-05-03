@@ -2,9 +2,6 @@
 #include <vector>
 #include <time.h>
 
-const int WORLD_WIDTH = 100;
-const int WORLD_HEIGHT = 100;
-
 Engine::Engine() {
 	world = new World();
 }
@@ -31,10 +28,10 @@ pos_list Engine::GenerateCoords(int n) {
          PosInfo pos;
 
         pos.x = rand() % WORLD_WIDTH + 1; // generate random int from 1 to width
-        pos.z = rand() % WORLD_HEIGHT + 1;
+        pos.z = rand() % WORLD_WIDTH + 1;
 
 		// y is the vertical axis and should be 0, not randomized
-        pos.y = 1;
+        pos.y = 3;
 
         /* face random direction */
 		pos.v_rotation = 0;

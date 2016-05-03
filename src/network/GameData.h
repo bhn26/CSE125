@@ -1,6 +1,10 @@
 #pragma once
 #include <string.h>
 #include <stdio.h>
+
+const int WORLD_WIDTH = 100;
+const int WORLD_HEIGHT = 100;
+
 enum MoveType {
 
     BAD_MOVE = -1,

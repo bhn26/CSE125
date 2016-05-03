@@ -1,11 +1,12 @@
 
-#include "../../network/GameData.h"
 #include "World.h"
 
-using namespace std;
+#ifndef GAME_DATA
+#define GAME_DATA
+#include "../../network/GameData.h"
+#endif
 
-extern const int WORLD_WIDTH;
-extern const int WORLD_HEIGHT;
+using namespace std;
 
 typedef vector<PosInfo> pos_list;
 

@@ -1,11 +1,14 @@
 #pragma once
 
-#include "../../network/GameData.h"
 #include "Player.h"
 #include "Flag.h"
 #include <vector>
 #include <memory>
 
+#ifndef GAME_DATA
+#define GAME_DATA
+#include "../../network/GameData.h"
+#endif
 
 using namespace std;
 
@@ -27,6 +30,11 @@ private:
 	std::vector <btRigidBody*> bullets;
 	//std::vector <btRigidBody*> players;
 	btRigidBody * ground;
+	btRigidBody * frontWall;
+	btRigidBody * backWall;
+	btRigidBody * leftWall;
+	btRigidBody * rightWall;
+	int indexCounter = 0;
 
 public:
 	World();

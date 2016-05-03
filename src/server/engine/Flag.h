@@ -1,10 +1,13 @@
 #pragma once
-#include "../../network/GameData.h"
-
 #ifndef BULLET_PHYSICS
 #define BULLET_PHYSICS
 #include <BulletPhysics\btBulletDynamicsCommon.h>
 #include <BulletPhysics\btBulletCollisionCommon.h>
+#endif
+
+#ifndef GAME_DATA
+#define GAME_DATA
+#include "../../network/GameData.h"
 #endif
 
 class Flag
