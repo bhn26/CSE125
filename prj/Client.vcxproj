@@ -161,6 +161,7 @@
     <None Include="..\src\Graphics\Shaders\cubemap.frag" />
     <None Include="..\src\Graphics\Shaders\cubemap.vert" />
     <None Include="..\src\Graphics\Shaders\diffuse.frag" />
+    <None Include="..\src\Graphics\Shaders\diffuse.vert" />
     <None Include="..\src\Graphics\Shaders\model_loading.frag" />
     <None Include="..\src\Graphics\Shaders\model_loading.vert" />
     <None Include="..\prj\packages.config" />
@@ -174,6 +175,7 @@
     <ClCompile Include="..\src\client\main.cpp" />
     <ClCompile Include="..\src\client\Player.cpp" />
     <ClCompile Include="..\src\client\Window.cpp" />
+    <ClCompile Include="..\src\Graphics\Objects\Egg.cpp" />
     <ClCompile Include="..\src\Graphics\Objects\Ground.cpp" />
     <ClCompile Include="..\src\Graphics\Mesh.cpp" />
     <ClCompile Include="..\src\Graphics\Model.cpp" />
@@ -187,6 +189,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Graphics\Objects\CubeMap.h" />
+    <ClInclude Include="..\src\Graphics\Objects\Egg.h" />
     <ClInclude Include="..\src\Graphics\Objects\Entity.h" />
     <ClInclude Include="..\src\client\ClientGame.h" />
     <ClInclude Include="..\src\client\ClientNetwork.h" />
