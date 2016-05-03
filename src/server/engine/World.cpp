@@ -133,7 +133,7 @@ void World::updateWorld()
 			}
 		}
 	}
-	if (x++ % 50000 == 0) {
+	if (x++ % 5000 == 0) {
 		for (std::vector<std::shared_ptr<Player> >::iterator it = players.begin(); it != players.end(); ++it)
 		{
 			btVector3 vec = (*it)->GetPlayerPosition();
