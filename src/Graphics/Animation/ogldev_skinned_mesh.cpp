@@ -120,6 +120,8 @@ bool SkinnedMesh::InitFromScene(const aiScene* pScene, const string& Filename)
     vector<Vector2f> TexCoords;
     vector<VertexBoneData> Bones;
     vector<uint> Indices;
+
+    vector<VertexInfo> vertices;
        
     uint NumVertices = 0;
     uint NumIndices = 0;
@@ -147,7 +149,8 @@ bool SkinnedMesh::InitFromScene(const aiScene* pScene, const string& Filename)
     for (uint i = 0 ; i < m_Entries.size() ; i++)
     {
         const aiMesh* paiMesh = pScene->mMeshes[i];
-        InitMesh(i, paiMesh, Positions, Normals, TexCoords, Bones, Indices);
+        //InitMesh(i, paiMesh, Positions, Normals, TexCoords, Bones, Indices);
+        InitMesh(i, paiMesh, vertices, Indices);
     }
 
     if (!InitMaterials(pScene, Filename))
@@ -155,31 +158,27 @@ bool SkinnedMesh::InitFromScene(const aiScene* pScene, const string& Filename)
         return false;
     }
 
-    // Generate and populate the buffers with vertex attributes and the indices
-  	glBindBuffer(GL_ARRAY_BUFFER, m_Buffers[POS_VB]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(Positions[0]) * Positions.size(), &Positions[0], GL_STATIC_DRAW);
-    glEnableVertexAttribArray(POSITION_LOCATION);
-    glVertexAttribPointer(POSITION_LOCATION, 3, GL_FLOAT, GL_FALSE, 0, 0);    
-
-    glBindBuffer(GL_ARRAY_BUFFER, m_Buffers[TEXCOORD_VB]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(TexCoords[0]) * TexCoords.size(), &TexCoords[0], GL_STATIC_DRAW);
-    glEnableVertexAttribArray(TEX_COORD_LOCATION);
-    glVertexAttribPointer(TEX_COORD_LOCATION, 2, GL_FLOAT, GL_FALSE, 0, 0);
-
-    glBindBuffer(GL_ARRAY_BUFFER, m_Buffers[NORMAL_VB]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(Normals[0]) * Normals.size(), &Normals[0], GL_STATIC_DRAW);
-    glEnableVertexAttribArray(NORMAL_LOCATION);
-    glVertexAttribPointer(NORMAL_LOCATION, 3, GL_FLOAT, GL_FALSE, 0, 0);
-
-    glBindBuffer(GL_ARRAY_BUFFER, m_Buffers[BONE_VB]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(Bones[0]) * Bones.size(), &Bones[0], GL_STATIC_DRAW);
-    glEnableVertexAttribArray(BONE_ID_LOCATION);
-    glVertexAttribIPointer(BONE_ID_LOCATION, 4, GL_INT, sizeof(VertexBoneData), (const GLvoid*)0);
-    glEnableVertexAttribArray(BONE_WEIGHT_LOCATION);    
-    glVertexAttribPointer(BONE_WEIGHT_LOCATION, 4, GL_FLOAT, GL_FALSE, sizeof(VertexBoneData), (const GLvoid*)16);
-    
+    // Populate the buffers with vertex attributes and the indices
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_Buffers[INDEX_BUFFER]);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(Indices[0]) * Indices.size(), &Indices[0], GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ARRAY_BUFFER, m_Buffers[POS_VB]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(VertexInfo) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
+
+    glEnableVertexAttribArray(POSITION_LOCATION);
+    glVertexAttribPointer(POSITION_LOCATION, 3, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), (GLvoid*)0);
+
+    glEnableVertexAttribArray(TEX_COORD_LOCATION);
+    glVertexAttribPointer(TEX_COORD_LOCATION, 2, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), (GLvoid*)offsetof(VertexInfo, texCoords));
+
+    glEnableVertexAttribArray(NORMAL_LOCATION);
+    glVertexAttribPointer(NORMAL_LOCATION, 3, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), (GLvoid*)offsetof(VertexInfo, normal));
+
+    glEnableVertexAttribArray(BONE_ID_LOCATION);
+    glVertexAttribIPointer(BONE_ID_LOCATION, 4, GL_UNSIGNED_INT, sizeof(VertexInfo), (GLvoid*)offsetof(VertexInfo, boneData.IDs));
+
+    glEnableVertexAttribArray(BONE_WEIGHT_LOCATION);
+    glVertexAttribPointer(BONE_WEIGHT_LOCATION, 4, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), (GLvoid*)offsetof(VertexInfo, boneData.Weights));
 
     return GLCheckError();
 }
@@ -221,6 +220,38 @@ void SkinnedMesh::InitMesh(uint MeshIndex,
     }
 }
 
+void SkinnedMesh::InitMesh(uint meshIndex, const aiMesh * paiMesh, vector<VertexInfo>& vertices, vector<unsigned int>& indices)
+{
+    const aiVector3D Zero3D(0.0f, 0.0f, 0.0f);
+
+    // Populate the vertex attribute vectors
+    for (uint i = 0; i < paiMesh->mNumVertices; i++)
+    {
+        VertexInfo vertex;
+        const aiVector3D* pPos = &(paiMesh->mVertices[i]);
+        const aiVector3D* pNormal = &(paiMesh->mNormals[i]);
+        const aiVector3D* pTexCoord = paiMesh->HasTextureCoords(0) ? &(paiMesh->mTextureCoords[0][i]) : &Zero3D;
+
+        vertex.position = Vector3f(pPos->x, pPos->y, pPos->z);
+        vertex.normal = Vector3f(pNormal->x, pNormal->y, pNormal->z);
+        vertex.texCoords = Vector2f(pTexCoord->x, pTexCoord->y);
+        vertices.push_back(vertex);
+    }
+
+    printf("Mesh #%d has %d bones.\n", meshIndex, paiMesh->mNumBones);
+    LoadBones(meshIndex, paiMesh, vertices);
+
+    // Populate the index buffer
+    for (uint i = 0; i < paiMesh->mNumFaces; i++)
+    {
+        const aiFace& Face = paiMesh->mFaces[i];
+        assert(Face.mNumIndices == 3);
+        indices.push_back(Face.mIndices[0]);
+        indices.push_back(Face.mIndices[1]);
+        indices.push_back(Face.mIndices[2]);
+    }
+}
+
 
 void SkinnedMesh::LoadBones(uint MeshIndex, const aiMesh* pMesh, vector<VertexBoneData>& Bones)
 {
@@ -252,6 +283,38 @@ void SkinnedMesh::LoadBones(uint MeshIndex, const aiMesh* pMesh, vector<VertexBo
         }
     }    
 }
+
+void SkinnedMesh::LoadBones(uint MeshIndex, const aiMesh* pMesh, vector<VertexInfo>& vertices)
+{
+    for (uint i = 0; i < pMesh->mNumBones; i++)
+    {
+        uint BoneIndex = 0;
+        string BoneName(pMesh->mBones[i]->mName.data);
+
+        if (m_BoneMapping.find(BoneName) == m_BoneMapping.end())
+        {
+            // Allocate an index for a new bone
+            BoneIndex = m_NumBones;
+            m_NumBones++;
+            BoneInfo bi;
+            m_BoneInfo.push_back(bi);
+            m_BoneInfo[BoneIndex].BoneOffset = pMesh->mBones[i]->mOffsetMatrix;
+            m_BoneMapping[BoneName] = BoneIndex;
+        }
+        else
+        {
+            BoneIndex = m_BoneMapping[BoneName];
+        }
+
+        for (uint j = 0; j < pMesh->mBones[i]->mNumWeights; j++)
+        {
+            uint VertexID = m_Entries[MeshIndex].BaseVertex + pMesh->mBones[i]->mWeights[j].mVertexId;
+            float Weight = pMesh->mBones[i]->mWeights[j].mWeight;
+            vertices[VertexID].boneData.AddBoneData(BoneIndex, Weight);
+        }
+    }
+}
+
 
 
 bool SkinnedMesh::InitMaterials(const aiScene* pScene, const string& Filename)

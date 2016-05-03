@@ -85,6 +85,14 @@ private:
         void AddBoneData(uint BoneID, float Weight);
     };
 
+    struct VertexInfo
+    {
+        Vector3f position;
+        Vector3f normal;
+        Vector2f texCoords;
+        VertexBoneData boneData;
+    };
+
     void CalcInterpolatedScaling(aiVector3D& Out, float AnimationTime, const aiNodeAnim* pNodeAnim);
     void CalcInterpolatedRotation(aiQuaternion& Out, float AnimationTime, const aiNodeAnim* pNodeAnim);
     void CalcInterpolatedPosition(aiVector3D& Out, float AnimationTime, const aiNodeAnim* pNodeAnim);    
@@ -101,7 +109,12 @@ private:
                   vector<Vector2f>& TexCoords,
                   vector<VertexBoneData>& Bones,
                   vector<unsigned int>& Indices);
+    void InitMesh(uint meshIndex,
+        const aiMesh* paiMesh,
+        vector<VertexInfo>& vertices,
+        vector<unsigned int>& indices);
     void LoadBones(uint MeshIndex, const aiMesh* paiMesh, vector<VertexBoneData>& Bones);
+    void LoadBones(uint MeshIndex, const aiMesh* paiMesh, vector<VertexInfo>& vertices);
     bool InitMaterials(const aiScene* pScene, const string& Filename);
     void Clear();
 
