@@ -87,9 +87,9 @@ private:
 
     struct VertexInfo
     {
-        Vector3f position;
-        Vector3f normal;
-        Vector2f texCoords;
+        glm::vec3 position;
+        glm::vec3 normal;
+        glm::vec2 texCoords;
         VertexBoneData boneData;
     };
 
@@ -104,9 +104,9 @@ private:
     bool InitFromScene(const aiScene* pScene, const string& Filename);
     void InitMesh(uint MeshIndex,
                   const aiMesh* paiMesh,
-                  vector<Vector3f>& Positions,
-                  vector<Vector3f>& Normals,
-                  vector<Vector2f>& TexCoords,
+                  vector<glm::vec3>& Positions,
+                  vector<glm::vec3>& Normals,
+                  vector<glm::vec2>& TexCoords,
                   vector<VertexBoneData>& Bones,
                   vector<unsigned int>& Indices);
     void InitMesh(uint meshIndex,

@@ -13,10 +13,10 @@
 ChickenAnim::ChickenAnim() : m_toWorld(glm::mat4(1.0f))
 {
     m_pEffect = NULL;
-    m_directionalLight.Color = Vector3f(1.0f, 1.0f, 1.0f);
+    m_directionalLight.Color = glm::vec3(1.0f, 1.0f, 1.0f);
     m_directionalLight.AmbientIntensity = 0.55f;
     m_directionalLight.DiffuseIntensity = 0.9f;
-    m_directionalLight.Direction = Vector3f(1.0f, 0.0, 0.0);
+    m_directionalLight.Direction = glm::vec3(1.0f, 0.0, 0.0);
     
     m_persProjInfo.FOV = 45.0f;
     m_persProjInfo.Height = Window::height;
@@ -24,7 +24,7 @@ ChickenAnim::ChickenAnim() : m_toWorld(glm::mat4(1.0f))
     m_persProjInfo.zNear = 1.0f;
     m_persProjInfo.zFar = 1000.0f;
     
-    m_position = Vector3f(0.0f, 0.0f, 6.0f);
+    m_position = glm::vec3(0.0f, 0.0f, 6.0f);
     
     m_pEffect = new SkinningTechnique();
     
@@ -66,7 +66,7 @@ void ChickenAnim::Draw(Camera* camera)
     m_pEffect->Enable(); // use shader
 
     glm::vec3 pos = Scene::camera->Position();
-    m_pEffect->SetEyeWorldPos(Vector3f(pos.x, pos.y, pos.z));
+    m_pEffect->SetEyeWorldPos(glm::vec3(pos.x, pos.y, pos.z));
 
     m_pEffect->SetWVP(Scene::camera->GetPerspectiveMatrix() * Scene::camera->GetViewMatrix() * m_toWorld);
     m_pEffect->SetWorldMatrix(m_toWorld);

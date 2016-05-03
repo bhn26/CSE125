@@ -115,9 +115,9 @@ bool SkinnedMesh::InitFromScene(const aiScene* pScene, const string& Filename)
     m_Entries.resize(pScene->mNumMeshes);
     m_Textures.resize(pScene->mNumMaterials);
 
-    vector<Vector3f> Positions;
-    vector<Vector3f> Normals;
-    vector<Vector2f> TexCoords;
+    vector<glm::vec3> Positions;
+    vector<glm::vec3> Normals;
+    vector<glm::vec2> TexCoords;
     vector<VertexBoneData> Bones;
     vector<uint> Indices;
 
@@ -186,9 +186,9 @@ bool SkinnedMesh::InitFromScene(const aiScene* pScene, const string& Filename)
 
 void SkinnedMesh::InitMesh(uint MeshIndex,
                     const aiMesh* paiMesh,
-                    vector<Vector3f>& Positions,
-                    vector<Vector3f>& Normals,
-                    vector<Vector2f>& TexCoords,
+                    vector<glm::vec3>& Positions,
+                    vector<glm::vec3>& Normals,
+                    vector<glm::vec2>& TexCoords,
                     vector<VertexBoneData>& Bones,
                     vector<uint>& Indices)
 {    
@@ -201,9 +201,9 @@ void SkinnedMesh::InitMesh(uint MeshIndex,
         const aiVector3D* pNormal   = &(paiMesh->mNormals[i]);
         const aiVector3D* pTexCoord = paiMesh->HasTextureCoords(0) ? &(paiMesh->mTextureCoords[0][i]) : &Zero3D;
 
-        Positions.push_back(Vector3f(pPos->x, pPos->y, pPos->z));
-        Normals.push_back(Vector3f(pNormal->x, pNormal->y, pNormal->z));
-        TexCoords.push_back(Vector2f(pTexCoord->x, pTexCoord->y));        
+        Positions.push_back(glm::vec3(pPos->x, pPos->y, pPos->z));
+        Normals.push_back(glm::vec3(pNormal->x, pNormal->y, pNormal->z));
+        TexCoords.push_back(glm::vec2(pTexCoord->x, pTexCoord->y));        
     }
     
     printf("Mesh #%d has %d bones.\n", MeshIndex, paiMesh->mNumBones);
@@ -232,9 +232,9 @@ void SkinnedMesh::InitMesh(uint meshIndex, const aiMesh * paiMesh, vector<Vertex
         const aiVector3D* pNormal = &(paiMesh->mNormals[i]);
         const aiVector3D* pTexCoord = paiMesh->HasTextureCoords(0) ? &(paiMesh->mTextureCoords[0][i]) : &Zero3D;
 
-        vertex.position = Vector3f(pPos->x, pPos->y, pPos->z);
-        vertex.normal = Vector3f(pNormal->x, pNormal->y, pNormal->z);
-        vertex.texCoords = Vector2f(pTexCoord->x, pTexCoord->y);
+        vertex.position = glm::vec3(pPos->x, pPos->y, pPos->z);
+        vertex.normal = glm::vec3(pNormal->x, pNormal->y, pNormal->z);
+        vertex.texCoords = glm::vec2(pTexCoord->x, pTexCoord->y);
         vertices.push_back(vertex);
     }
 

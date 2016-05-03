@@ -24,13 +24,13 @@
 
 struct BaseLight
 {
-    Vector3f Color;
+    glm::vec3 Color;
     float AmbientIntensity;
     float DiffuseIntensity;
 
     BaseLight()
     {
-        Color = Vector3f(0.0f, 0.0f, 0.0f);
+        Color = glm::vec3(0.0f, 0.0f, 0.0f);
         AmbientIntensity = 0.0f;
         DiffuseIntensity = 0.0f;
     }
@@ -38,17 +38,17 @@ struct BaseLight
 
 struct DirectionalLight : public BaseLight
 {        
-    Vector3f Direction;
+    glm::vec3 Direction;
 
     DirectionalLight()
     {
-        Direction = Vector3f(0.0f, 0.0f, 0.0f);
+        Direction = glm::vec3(0.0f, 0.0f, 0.0f);
     }
 };
 
 struct PointLight2 : public BaseLight
 {
-    Vector3f Position;
+    glm::vec3 Position;
 
     struct
     {
@@ -59,7 +59,7 @@ struct PointLight2 : public BaseLight
 
     PointLight2()
     {
-        Position = Vector3f(0.0f, 0.0f, 0.0f);
+        Position = glm::vec3(0.0f, 0.0f, 0.0f);
         Attenuation.Constant = 1.0f;
         Attenuation.Linear = 0.0f;
         Attenuation.Exp = 0.0f;
@@ -68,12 +68,12 @@ struct PointLight2 : public BaseLight
 
 struct SpotLight : public PointLight2
 {
-    Vector3f Direction;
+    glm::vec3 Direction;
     float Cutoff;
 
     SpotLight()
     {
-        Direction = Vector3f(0.0f, 0.0f, 0.0f);
+        Direction = glm::vec3(0.0f, 0.0f, 0.0f);
         Cutoff = 0.0f;
     }
 };
@@ -98,7 +98,7 @@ public:
     void SetDirectionalLight(const DirectionalLight& Light);
     void SetPointLights(uint NumLights, const PointLight2* pLights);
     void SetSpotLights(uint NumLights, const SpotLight* pLights);
-    void SetEyeWorldPos(const Vector3f& EyeWorldPos);
+    void SetEyeWorldPos(const glm::vec3& EyeWorldPos);
     void SetMatSpecularIntensity(float Intensity);
     void SetMatSpecularPower(float Power);
     void SetBoneTransform(uint Index, const Matrix4f& Transform);

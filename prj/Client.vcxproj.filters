@@ -46,12 +46,8 @@
     <None Include="..\src\Graphics\Shaders\diffuse.frag">
       <Filter>Source Files\Graphics\Shaders</Filter>
     </None>
-    <None Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\Graphics\Shaders\skinning.frag">
-      <Filter>Source Files\Graphics\Shaders</Filter>
-    </None>
-    <None Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\Graphics\Shaders\skinning.vert">
-      <Filter>Source Files\Graphics\Shaders</Filter>
-    </None>
+    <None Include="..\src\Graphics\Shaders\skinning.frag" />
+    <None Include="..\src\Graphics\Shaders\skinning.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Graphics\Objects\Cube.cpp">
@@ -97,9 +93,6 @@
       <Filter>Source Files\Graphics\Objects</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Graphics\Animation\ogldev_math_3d.cpp">
-      <Filter>Source Files\Graphics\Animation</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Graphics\Animation\ogldev_pipeline.cpp">
       <Filter>Source Files\Graphics\Animation</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Graphics\Animation\ogldev_skinned_mesh.cpp">
@@ -174,9 +167,6 @@
       <Filter>Source Files\Graphics\Objects</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Graphics\Animation\ogldev_math_3d.h">
-      <Filter>Source Files\Graphics\Animation</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Graphics\Animation\ogldev_pipeline.h">
       <Filter>Source Files\Graphics\Animation</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Graphics\Animation\ogldev_skinned_mesh.h">
