@@ -19,6 +19,7 @@
 #include <limits.h>
 #include <string>
 #include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include "skinning_technique.h"
 #include "ogldev_util.h"
@@ -32,19 +33,23 @@ SkinningTechnique::SkinningTechnique()
 
 bool SkinningTechnique::Init()
 {
-    if (!Technique::Init()) {
+    if (!Technique::Init())
+    {
         return false;
     }
 
-    if (!AddShader(GL_VERTEX_SHADER, "src/Graphics/Shaders/skinning.vert")) {
+    if (!AddShader(GL_VERTEX_SHADER, "src/Graphics/Shaders/skinning.vert"))
+    {
         return false;
     }
 
-    if (!AddShader(GL_FRAGMENT_SHADER, "src/Graphics/Shaders/skinning.frag")) {
+    if (!AddShader(GL_FRAGMENT_SHADER, "src/Graphics/Shaders/skinning.frag"))
+    {
         return false;
     }
 
-    if (!Finalize()) {
+    if (!Finalize())
+    {
         return false;
     }
     
@@ -72,11 +77,13 @@ bool SkinningTechnique::Init()
         m_matSpecularIntensityLocation == INVALID_UNIFORM_LOCATION ||
         m_matSpecularPowerLocation == INVALID_UNIFORM_LOCATION ||
         m_numPointLightsLocation == INVALID_UNIFORM_LOCATION ||
-        m_numSpotLightsLocation == INVALID_UNIFORM_LOCATION) {
+        m_numSpotLightsLocation == INVALID_UNIFORM_LOCATION)
+    {
         return false;
     }
 
-    for (unsigned int i = 0 ; i < ARRAY_SIZE_IN_ELEMENTS(m_pointLightsLocation) ; i++) {
+    for (unsigned int i = 0 ; i < ARRAY_SIZE_IN_ELEMENTS(m_pointLightsLocation) ; i++)
+    {
         char Name[128];
         memset(Name, 0, sizeof(Name));
         SNPRINTF(Name, sizeof(Name), "gPointLights[%d].Base.Color", i);
@@ -106,12 +113,14 @@ bool SkinningTechnique::Init()
             m_pointLightsLocation[i].DiffuseIntensity == INVALID_UNIFORM_LOCATION ||
             m_pointLightsLocation[i].Atten.Constant == INVALID_UNIFORM_LOCATION ||
             m_pointLightsLocation[i].Atten.Linear == INVALID_UNIFORM_LOCATION ||
-            m_pointLightsLocation[i].Atten.Exp == INVALID_UNIFORM_LOCATION) {
+            m_pointLightsLocation[i].Atten.Exp == INVALID_UNIFORM_LOCATION)
+        {
             return false;
         }
     }
 
-    for (unsigned int i = 0 ; i < ARRAY_SIZE_IN_ELEMENTS(m_spotLightsLocation) ; i++) {
+    for (unsigned int i = 0 ; i < ARRAY_SIZE_IN_ELEMENTS(m_spotLightsLocation) ; i++)
+    {
         char Name[128];
         memset(Name, 0, sizeof(Name));
         SNPRINTF(Name, sizeof(Name), "gSpotLights[%d].Base.Base.Color", i);
@@ -149,12 +158,14 @@ bool SkinningTechnique::Init()
             m_spotLightsLocation[i].DiffuseIntensity == INVALID_UNIFORM_LOCATION ||
             m_spotLightsLocation[i].Atten.Constant == INVALID_UNIFORM_LOCATION ||
             m_spotLightsLocation[i].Atten.Linear == INVALID_UNIFORM_LOCATION ||
-            m_spotLightsLocation[i].Atten.Exp == INVALID_UNIFORM_LOCATION) {
+            m_spotLightsLocation[i].Atten.Exp == INVALID_UNIFORM_LOCATION)
+        {
             return false;
         }
     }
 
-    for (unsigned int i = 0 ; i < ARRAY_SIZE_IN_ELEMENTS(m_boneLocation) ; i++) {
+    for (unsigned int i = 0 ; i < ARRAY_SIZE_IN_ELEMENTS(m_boneLocation) ; i++)
+    {
         char Name[128];
         memset(Name, 0, sizeof(Name));
         SNPRINTF(Name, sizeof(Name), "gBones[%d]", i);
@@ -164,17 +175,25 @@ bool SkinningTechnique::Init()
     return true;
 }
 
-void SkinningTechnique::SetWVP(const Matrix4f& WVP)
+//void SkinningTechnique::SetWVP(const Matrix4f& WVP)
+//{
+//    glUniformMatrix4fv(m_WVPLocation, 1, GL_TRUE, (const GLfloat*)WVP);    
+//}
+//
+//void SkinningTechnique::SetWorldMatrix(const Matrix4f& World)
+//{
+//    glUniformMatrix4fv(m_WorldMatrixLocation, 1, GL_TRUE, (const GLfloat*)World);
+//}
+
+void SkinningTechnique::SetWVP(const glm::mat4& WVP)
 {
-    glUniformMatrix4fv(m_WVPLocation, 1, GL_TRUE, (const GLfloat*)WVP);    
+    glUniformMatrix4fv(m_WVPLocation, 1, GL_TRUE, glm::value_ptr(WVP));
 }
 
-
-void SkinningTechnique::SetWorldMatrix(const Matrix4f& World)
+void SkinningTechnique::SetWorldMatrix(const glm::mat4& World)
 {
-    glUniformMatrix4fv(m_WorldMatrixLocation, 1, GL_TRUE, (const GLfloat*)World);
+    glUniformMatrix4fv(m_WorldMatrixLocation, 1, GL_TRUE, glm::value_ptr(World));
 }
-
 
 void SkinningTechnique::SetColorTextureUnit(unsigned int TextureUnit)
 {
@@ -215,7 +234,8 @@ void SkinningTechnique::SetPointLights(unsigned int NumLights, const PointLight2
 {
     glUniform1i(m_numPointLightsLocation, NumLights);
     
-    for (unsigned int i = 0 ; i < NumLights ; i++) {
+    for (unsigned int i = 0 ; i < NumLights ; i++)
+    {
         glUniform3f(m_pointLightsLocation[i].Color, pLights[i].Color.x, pLights[i].Color.y, pLights[i].Color.z);
         glUniform1f(m_pointLightsLocation[i].AmbientIntensity, pLights[i].AmbientIntensity);
         glUniform1f(m_pointLightsLocation[i].DiffuseIntensity, pLights[i].DiffuseIntensity);
@@ -230,7 +250,8 @@ void SkinningTechnique::SetSpotLights(unsigned int NumLights, const SpotLight* p
 {
     glUniform1i(m_numSpotLightsLocation, NumLights);
 
-    for (unsigned int i = 0 ; i < NumLights ; i++) {
+    for (unsigned int i = 0 ; i < NumLights ; i++)
+    {
         glUniform3f(m_spotLightsLocation[i].Color, pLights[i].Color.x, pLights[i].Color.y, pLights[i].Color.z);
         glUniform1f(m_spotLightsLocation[i].AmbientIntensity, pLights[i].AmbientIntensity);
         glUniform1f(m_spotLightsLocation[i].DiffuseIntensity, pLights[i].DiffuseIntensity);
@@ -251,5 +272,5 @@ void SkinningTechnique::SetBoneTransform(uint Index, const Matrix4f& Transform)
     assert(Index < MAX_BONES);
     //printf("Transform Matrix:\n");
     //Transform.Print();
-    glUniformMatrix4fv(m_boneLocation[Index], 1, GL_TRUE, (const GLfloat*)Transform);       
+    glUniformMatrix4fv(m_boneLocation[Index], 1, GL_TRUE, (const GLfloat*)Transform);
 }

@@ -19,14 +19,6 @@ enum Camera_Movement
     DOWN
 };
 
-// Default camera values
-const GLfloat YAW = -90.0f;
-const GLfloat PITCH = 0.0f;
-const GLfloat SPEED = 0.5f;
-const GLfloat SENSITIVTY = 0.25f;
-const GLfloat ZOOM = 45.0f;
-
-
 // An abstract camera class that processes input and calculates the corresponding Eular Angles, Vectors and Matrices for use in OpenGL
 class Camera
 {
@@ -45,6 +37,8 @@ private:
     GLfloat mouseSensitivity;
     GLfloat zoom;
 
+    GLfloat zNear, zFar;
+
 public:
     // Constructor with vectors
     Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 2.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), GLfloat yaw = YAW, GLfloat pitch = PITCH);
@@ -52,7 +46,8 @@ public:
     Camera(GLfloat posX, GLfloat posY, GLfloat posZ, GLfloat upX, GLfloat upY, GLfloat upZ, GLfloat yaw, GLfloat pitch);
 
     // Returns the view matrix calculated using Eular Angles and the LookAt Matrix
-    glm::mat4 GetViewMatrix() { return glm::lookAt(this->position, this->position + this->front, this->up); }
+    glm::mat4 GetViewMatrix() const;
+    glm::mat4 GetPerspectiveMatrix() const;
 
     // Processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
     void ProcessKeyboard(Camera_Movement direction, GLfloat deltaTime);
@@ -63,12 +58,23 @@ public:
     // Processes input received from a mouse scroll-wheel event. Only requires input on the vertical wheel-axis
     void ProcessMouseScroll(GLfloat yoffset);
 
-    glm::vec3 Position() { return this->position; }
-    glm::vec3 Up() { return this->up; }
+    const glm::vec3& Position() const { return this->position; }
+    const glm::vec3& Up() const { return this->up; }
+    const glm::vec3& Front() const { return front; }
+    const glm::vec3& Right() const { return right; }
+    const glm::vec3& WorldUp() const { return worldUp; }
     GLfloat Zoom() { return this->zoom; }
 
 
 private:
     // Calculates the front vector from the Camera's (updated) Eular Angles
     void UpdateCameraVectors();
+
+    static const GLfloat YAW;
+    static const GLfloat PITCH;
+    static const GLfloat SPEED;
+    static const GLfloat SENSITIVTY;
+    static const GLfloat ZOOM;
+    static const float ZNEAR;
+    static const float ZFAR;
 };

@@ -20,6 +20,7 @@
 
 #include "technique.h"
 #include "ogldev_math_3d.h"
+#include <glm/glm.hpp>
 
 struct BaseLight
 {
@@ -77,7 +78,8 @@ struct SpotLight : public PointLight2
     }
 };
 
-class SkinningTechnique : public Technique {
+class SkinningTechnique : public Technique
+{
 public:
 
     static const uint MAX_POINT_LIGHTS = 2;
@@ -88,8 +90,10 @@ public:
 
     virtual bool Init();
 
-    void SetWVP(const Matrix4f& WVP);
-    void SetWorldMatrix(const Matrix4f& WVP);
+    //void SetWVP(const Matrix4f& WVP);
+    //void SetWorldMatrix(const Matrix4f& WVP);
+    void SetWVP(const glm::mat4& WVP);
+    void SetWorldMatrix(const glm::mat4& WVP);
     void SetColorTextureUnit(uint TextureUnit);
     void SetDirectionalLight(const DirectionalLight& Light);
     void SetPointLights(uint NumLights, const PointLight2* pLights);
