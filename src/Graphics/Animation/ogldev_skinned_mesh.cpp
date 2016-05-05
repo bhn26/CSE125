@@ -36,14 +36,14 @@ void Assign(glm::mat4& m, const aiMatrix4x4& aimatrix)
     m[0][3] = aimatrix.d1;  m[1][3] = aimatrix.d2;  m[2][3] = aimatrix.d3;  m[3][3] = aimatrix.d4;
 }
 
-void SkinnedMesh::VertexBoneData::AddBoneData(uint BoneID, float Weight)
+void SkinnedMesh::VertexBoneData::AddBoneData(uint boneID, float weight)
 {
     for (uint i = 0 ; i < ARRAY_SIZE_IN_ELEMENTS(IDs) ; i++)
     {
-        if (Weights[i] == 0.0)
+        if (weights[i] == 0.0)
         {
-            IDs[i]     = BoneID;
-            Weights[i] = Weight;
+            IDs[i]     = boneID;
+            weights[i] = weight;
             return;
         }        
     }
@@ -87,7 +87,7 @@ void SkinnedMesh::Clear()
 }
 
 
-bool SkinnedMesh::LoadMesh(const std::string& Filename)
+bool SkinnedMesh::LoadMesh(const std::string& filename)
 {
     // Release the previously loaded mesh (if it exists)
     Clear();
@@ -99,35 +99,35 @@ bool SkinnedMesh::LoadMesh(const std::string& Filename)
     // Create the buffers for the vertices attributes
     glGenBuffers(ARRAY_SIZE_IN_ELEMENTS(m_Buffers), m_Buffers);
 
-    bool Ret = false;    
+    bool ret = false;    
   
-    m_pScene = m_Importer.ReadFile(Filename.c_str(), aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs);
+    m_pScene = m_Importer.ReadFile(filename.c_str(), aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs);
     
     if (m_pScene)
     {
         // What is this global inverse??
         Assign(m_GlobalInverseTransform, m_pScene->mRootNode->mTransformation);
         m_GlobalInverseTransform = glm::inverse(m_GlobalInverseTransform);
-        Ret = InitFromScene(m_pScene, Filename);
+        ret = InitFromScene(m_pScene, filename);
     }
     else
     {
-        printf("Error parsing '%s': '%s'\n", Filename.c_str(), m_Importer.GetErrorString());
+        printf("Error parsing '%s': '%s'\n", filename.c_str(), m_Importer.GetErrorString());
     }
 
     // Make sure the VAO is not changed from the outside
     glBindVertexArray(0);	
 
-    return Ret;
+    return ret;
 }
 
 
-bool SkinnedMesh::InitFromScene(const aiScene* pScene, const std::string& Filename)
+bool SkinnedMesh::InitFromScene(const aiScene* scene, const std::string& filename)
 {  
-    m_Meshes.resize(pScene->mNumMeshes);
-    m_Textures.resize(pScene->mNumMaterials);
+    m_Meshes.resize(scene->mNumMeshes);
+    m_Textures.resize(scene->mNumMaterials);
 
-    std::vector<uint> Indices;
+    std::vector<uint> indices;
     std::vector<VertexInfo> vertices;
        
     uint NumVertices = 0;
@@ -136,34 +136,34 @@ bool SkinnedMesh::InitFromScene(const aiScene* pScene, const std::string& Filena
     // Count the number of vertices and indices
     for (uint i = 0 ; i < m_Meshes.size() ; i++)
     {
-        m_Meshes[i].MaterialIndex = pScene->mMeshes[i]->mMaterialIndex;        
-        m_Meshes[i].NumIndices    = pScene->mMeshes[i]->mNumFaces * 3;
-        m_Meshes[i].BaseVertex    = NumVertices;
-        m_Meshes[i].BaseIndex     = NumIndices;
+        m_Meshes[i].materialIndex = scene->mMeshes[i]->mMaterialIndex;        
+        m_Meshes[i].numIndices    = scene->mMeshes[i]->mNumFaces * 3;
+        m_Meshes[i].baseVertex    = NumVertices;
+        m_Meshes[i].baseIndex     = NumIndices;
         
-        NumVertices += pScene->mMeshes[i]->mNumVertices;
-        NumIndices  += m_Meshes[i].NumIndices;
+        NumVertices += scene->mMeshes[i]->mNumVertices;
+        NumIndices  += m_Meshes[i].numIndices;
     }
     
     // Reserve space in the vectors for the vertex attributes and indices
     vertices.reserve(NumVertices);
-    Indices.reserve(NumIndices);
+    indices.reserve(NumIndices);
         
     // Initialize the meshes in the scene one by one
     for (uint i = 0 ; i < m_Meshes.size() ; i++)
     {
-        const aiMesh* paiMesh = pScene->mMeshes[i];
-        InitMesh(i, paiMesh, vertices, Indices);
+        const aiMesh* paiMesh = scene->mMeshes[i];
+        InitMesh(i, paiMesh, vertices, indices);
     }
 
-    if (!InitMaterials(pScene, Filename))
+    if (!InitMaterials(scene, filename))
     {
         return false;
     }
 
     // Populate the buffers with vertex attributes and the indices
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_Buffers[INDEX_BUFFER]);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(Indices[0]) * Indices.size(), &Indices[0], GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices[0]) * indices.size(), &indices[0], GL_STATIC_DRAW);
 
     glBindBuffer(GL_ARRAY_BUFFER, m_Buffers[POS_VB]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(VertexInfo) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
@@ -181,73 +181,36 @@ bool SkinnedMesh::InitFromScene(const aiScene* pScene, const std::string& Filena
     glVertexAttribIPointer(BONE_ID_LOCATION, 4, GL_UNSIGNED_INT, sizeof(VertexInfo), (GLvoid*)offsetof(VertexInfo, boneData.IDs));
 
     glEnableVertexAttribArray(BONE_WEIGHT_LOCATION);
-    glVertexAttribPointer(BONE_WEIGHT_LOCATION, 4, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), (GLvoid*)offsetof(VertexInfo, boneData.Weights));
+    glVertexAttribPointer(BONE_WEIGHT_LOCATION, 4, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), (GLvoid*)offsetof(VertexInfo, boneData.weights));
 
     return GLCheckError();
 }
 
-
-void SkinnedMesh::InitMesh(uint MeshIndex,
-                    const aiMesh* paiMesh,
-                    std::vector<glm::vec3>& Positions,
-                    std::vector<glm::vec3>& Normals,
-                    std::vector<glm::vec2>& TexCoords,
-                    std::vector<VertexBoneData>& Bones,
-                    std::vector<uint>& Indices)
-{    
-    const aiVector3D Zero3D(0.0f, 0.0f, 0.0f);
-    
-    // Populate the vertex attribute vectors
-    for (uint i = 0 ; i < paiMesh->mNumVertices ; i++)
-    {
-        const aiVector3D* pPos      = &(paiMesh->mVertices[i]);
-        const aiVector3D* pNormal   = &(paiMesh->mNormals[i]);
-        const aiVector3D* pTexCoord = paiMesh->HasTextureCoords(0) ? &(paiMesh->mTextureCoords[0][i]) : &Zero3D;
-
-        Positions.push_back(glm::vec3(pPos->x, pPos->y, pPos->z));
-        Normals.push_back(glm::vec3(pNormal->x, pNormal->y, pNormal->z));
-        TexCoords.push_back(glm::vec2(pTexCoord->x, pTexCoord->y));        
-    }
-    
-    printf("Mesh #%d has %d bones.\n", MeshIndex, paiMesh->mNumBones);
-    LoadBones(MeshIndex, paiMesh, Bones);
-    
-    // Populate the index buffer
-    for (uint i = 0 ; i < paiMesh->mNumFaces ; i++)
-    {
-        const aiFace& Face = paiMesh->mFaces[i];
-        assert(Face.mNumIndices == 3);
-        Indices.push_back(Face.mIndices[0]);
-        Indices.push_back(Face.mIndices[1]);
-        Indices.push_back(Face.mIndices[2]);
-    }
-}
-
-void SkinnedMesh::InitMesh(uint meshIndex, const aiMesh * paiMesh, std::vector<VertexInfo>& vertices, std::vector<unsigned int>& indices)
+void SkinnedMesh::InitMesh(uint meshIndex, const aiMesh * aiMesh, std::vector<VertexInfo>& vertices, std::vector<unsigned int>& indices)
 {
-    const aiVector3D Zero3D(0.0f, 0.0f, 0.0f);
+    const aiVector3D zero3D(0.0f, 0.0f, 0.0f);
 
     // Populate the vertex attribute vectors
-    for (uint i = 0; i < paiMesh->mNumVertices; i++)
+    for (uint i = 0; i < aiMesh->mNumVertices; i++)
     {
         VertexInfo vertex;
-        const aiVector3D* pPos = &(paiMesh->mVertices[i]);
-        const aiVector3D* pNormal = &(paiMesh->mNormals[i]);
-        const aiVector3D* pTexCoord = paiMesh->HasTextureCoords(0) ? &(paiMesh->mTextureCoords[0][i]) : &Zero3D;
+        const aiVector3D* pos = &(aiMesh->mVertices[i]);
+        const aiVector3D* normal = &(aiMesh->mNormals[i]);
+        const aiVector3D* texCoord = aiMesh->HasTextureCoords(0) ? &(aiMesh->mTextureCoords[0][i]) : &zero3D;
 
-        vertex.position = glm::vec3(pPos->x, pPos->y, pPos->z);
-        vertex.normal = glm::vec3(pNormal->x, pNormal->y, pNormal->z);
-        vertex.texCoords = glm::vec2(pTexCoord->x, pTexCoord->y);
+        vertex.position = glm::vec3(pos->x, pos->y, pos->z);
+        vertex.normal = glm::vec3(normal->x, normal->y, normal->z);
+        vertex.texCoords = glm::vec2(texCoord->x, texCoord->y);
         vertices.push_back(vertex);
     }
 
-    printf("Mesh #%d has %d bones.\n", meshIndex, paiMesh->mNumBones);
-    LoadBones(meshIndex, paiMesh, vertices);
+    printf("Mesh #%d has %d bones.\n", meshIndex, aiMesh->mNumBones);
+    LoadBones(meshIndex, aiMesh, vertices);
 
     // Populate the index buffer
-    for (uint i = 0; i < paiMesh->mNumFaces; i++)
+    for (uint i = 0; i < aiMesh->mNumFaces; i++)
     {
-        const aiFace& Face = paiMesh->mFaces[i];
+        const aiFace& Face = aiMesh->mFaces[i];
         assert(Face.mNumIndices == 3);
         indices.push_back(Face.mIndices[0]);
         indices.push_back(Face.mIndices[1]);
@@ -255,132 +218,98 @@ void SkinnedMesh::InitMesh(uint meshIndex, const aiMesh * paiMesh, std::vector<V
     }
 }
 
-
-void SkinnedMesh::LoadBones(uint MeshIndex, const aiMesh* pMesh, std::vector<VertexBoneData>& Bones)
+void SkinnedMesh::LoadBones(uint meshIndex, const aiMesh* mesh, std::vector<VertexInfo>& vertices)
 {
-    for (uint i = 0 ; i < pMesh->mNumBones ; i++)
-    {                
-        uint BoneIndex = 0;        
-        std::string BoneName(pMesh->mBones[i]->mName.data);
-        
-        if (m_BoneMapping.find(BoneName) == m_BoneMapping.end())
-        {
-            // Allocate an index for a new bone
-            BoneIndex = m_NumBones;
-            m_NumBones++;            
-            BoneInfo bi;
-            m_BoneInfo.push_back(bi);
-            Assign(m_BoneInfo[BoneIndex].BoneOffset, pMesh->mBones[i]->mOffsetMatrix);
-            m_BoneMapping[BoneName] = BoneIndex;
-        }
-        else
-        {
-            BoneIndex = m_BoneMapping[BoneName];
-        }                      
-        
-        for (uint j = 0 ; j < pMesh->mBones[i]->mNumWeights ; j++)
-        {
-            uint VertexID = m_Meshes[MeshIndex].BaseVertex + pMesh->mBones[i]->mWeights[j].mVertexId;
-            float Weight  = pMesh->mBones[i]->mWeights[j].mWeight;                   
-            Bones[VertexID].AddBoneData(BoneIndex, Weight);
-        }
-    }    
-}
-
-void SkinnedMesh::LoadBones(uint MeshIndex, const aiMesh* pMesh, std::vector<VertexInfo>& vertices)
-{
-    for (uint i = 0; i < pMesh->mNumBones; i++)
+    for (uint i = 0; i < mesh->mNumBones; i++)
     {
-        uint BoneIndex = 0;
-        std::string BoneName(pMesh->mBones[i]->mName.data);
+        uint boneIndex = 0;
+        std::string boneName(mesh->mBones[i]->mName.data);
 
-        if (m_BoneMapping.find(BoneName) == m_BoneMapping.end())
+        if (m_BoneMapping.find(boneName) == m_BoneMapping.end())
         {
             // Allocate an index for a new bone
-            BoneIndex = m_NumBones;
+            boneIndex = m_NumBones;
             m_NumBones++;
             BoneInfo bi;
             m_BoneInfo.push_back(bi);
-            Assign(m_BoneInfo[BoneIndex].BoneOffset, pMesh->mBones[i]->mOffsetMatrix);
-            m_BoneMapping[BoneName] = BoneIndex;
+            Assign(m_BoneInfo[boneIndex].boneOffset, mesh->mBones[i]->mOffsetMatrix);
+            m_BoneMapping[boneName] = boneIndex;
         }
         else
         {
-            BoneIndex = m_BoneMapping[BoneName];
+            boneIndex = m_BoneMapping[boneName];
         }
 
-        for (uint j = 0; j < pMesh->mBones[i]->mNumWeights; j++)
+        for (uint j = 0; j < mesh->mBones[i]->mNumWeights; j++)
         {
-            uint VertexID = m_Meshes[MeshIndex].BaseVertex + pMesh->mBones[i]->mWeights[j].mVertexId;
-            float Weight = pMesh->mBones[i]->mWeights[j].mWeight;
-            vertices[VertexID].boneData.AddBoneData(BoneIndex, Weight);
+            uint vertexID = m_Meshes[meshIndex].baseVertex + mesh->mBones[i]->mWeights[j].mVertexId;
+            float weight = mesh->mBones[i]->mWeights[j].mWeight;
+            vertices[vertexID].boneData.AddBoneData(boneIndex, weight);
         }
     }
 }
 
-
-
-bool SkinnedMesh::InitMaterials(const aiScene* pScene, const std::string& Filename)
+bool SkinnedMesh::InitMaterials(const aiScene* scene, const std::string& filename)
 {
     // Extract the directory part from the file name
-    std::string::size_type SlashIndex = Filename.find_last_of("/");
-    std::string Dir;
+    std::string::size_type slashIndex = filename.find_last_of("/");
+    std::string dir;
 
-    if (SlashIndex == std::string::npos)
+    if (slashIndex == std::string::npos)
     {
-        Dir = ".";
+        dir = ".";
     }
-    else if (SlashIndex == 0)
+    else if (slashIndex == 0)
     {
-        Dir = "/";
+        dir = "/";
     }
     else
     {
-        Dir = Filename.substr(0, SlashIndex);
+        dir = filename.substr(0, slashIndex);
     }
 
-    bool Ret = true;
+    bool ret = true;
 
     // Initialize the materials
-    for (uint i = 0 ; i < pScene->mNumMaterials ; i++)
+    for (uint i = 0 ; i < scene->mNumMaterials ; i++)
     {
-        const aiMaterial* pMaterial = pScene->mMaterials[i];
+        const aiMaterial* material = scene->mMaterials[i];
 
         m_Textures[i] = NULL;
 
-        if (pMaterial->GetTextureCount(aiTextureType_DIFFUSE) > 0)
+        if (material->GetTextureCount(aiTextureType_DIFFUSE) > 0)
         {
-            aiString Path;
+            aiString path;
 
-            if (pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &Path, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS)
+            if (material->GetTexture(aiTextureType_DIFFUSE, 0, &path, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS)
             {
-                std::string p(Path.data);
+                std::string p(path.data);
                 
                 if (p.substr(0, 2) == ".\\")
                 {                    
                     p = p.substr(2, p.size() - 2);
                 }
                                
-                std::string FullPath = Dir + "/" + p;
+                std::string fullPath = dir + "/" + p;
                     
-                m_Textures[i] = new Texture(GL_TEXTURE_2D, FullPath.c_str());
+                m_Textures[i] = new Texture(GL_TEXTURE_2D, fullPath.c_str());
 
                 if (!m_Textures[i]->Load())
                 {
-                    printf("Error loading texture '%s'\n", FullPath.c_str());
+                    printf("Error loading texture '%s'\n", fullPath.c_str());
                     delete m_Textures[i];
                     m_Textures[i] = NULL;
-                    Ret = false;
+                    ret = false;
                 }
                 else
                 {
-                    printf("%d - loaded texture '%s'\n", i, FullPath.c_str());
+                    printf("%d - loaded texture '%s'\n", i, fullPath.c_str());
                 }
             }
         }
     }
 
-    return Ret;
+    return ret;
 }
 
 
@@ -390,20 +319,20 @@ void SkinnedMesh::Render()
     
     for (uint i = 0 ; i < m_Meshes.size() ; i++)
     {
-        const uint MaterialIndex = m_Meshes[i].MaterialIndex;
+        const uint materialIndex = m_Meshes[i].materialIndex;
 
-        assert(MaterialIndex < m_Textures.size());
+        assert(materialIndex < m_Textures.size());
         
-        if (m_Textures[MaterialIndex])
+        if (m_Textures[materialIndex])
         {
-            m_Textures[MaterialIndex]->Bind(GL_TEXTURE0);
+            m_Textures[materialIndex]->Bind(GL_TEXTURE0);
         }
 
         glDrawElementsBaseVertex(GL_TRIANGLES, 
-                                 m_Meshes[i].NumIndices, 
+                                 m_Meshes[i].numIndices, 
                                  GL_UNSIGNED_INT, 
-                                 (void*)(sizeof(uint) * m_Meshes[i].BaseIndex), 
-                                 m_Meshes[i].BaseVertex);
+                                 (void*)(sizeof(uint) * m_Meshes[i].baseIndex), 
+                                 m_Meshes[i].baseVertex);
     }
 
     // Make sure the VAO is not changed from the outside    
@@ -466,165 +395,163 @@ uint SkinnedMesh::FindScaling(float AnimationTime, const aiNodeAnim* pNodeAnim)
 }
 
 
-void SkinnedMesh::CalcInterpolatedPosition(aiVector3D& Out, float AnimationTime, const aiNodeAnim* pNodeAnim)
+void SkinnedMesh::CalcInterpolatedPosition(aiVector3D& out, float animationTime, const aiNodeAnim* nodeAnim)
 {
-    if (pNodeAnim->mNumPositionKeys == 1)
+    if (nodeAnim->mNumPositionKeys == 1)
     {
-        Out = pNodeAnim->mPositionKeys[0].mValue;
+        out = nodeAnim->mPositionKeys[0].mValue;
         return;
     }
             
-    uint PositionIndex = FindPosition(AnimationTime, pNodeAnim);
-    uint NextPositionIndex = (PositionIndex + 1) % pNodeAnim->mNumPositionKeys;
-    assert(NextPositionIndex < pNodeAnim->mNumPositionKeys);
+    uint positionIndex = FindPosition(animationTime, nodeAnim);
+    uint nextPositionIndex = (positionIndex + 1) % nodeAnim->mNumPositionKeys;
+    assert(nextPositionIndex < nodeAnim->mNumPositionKeys);
 
-    float DeltaTime;
-    if (NextPositionIndex == 0)
-        DeltaTime = (float)(m_pScene->mAnimations[0]->mDuration - pNodeAnim->mPositionKeys[PositionIndex].mTime);
+    float deltaTime;
+    if (nextPositionIndex == 0)
+        deltaTime = (float)(m_pScene->mAnimations[0]->mDuration - nodeAnim->mPositionKeys[positionIndex].mTime);
     else
-        DeltaTime = (float)(pNodeAnim->mPositionKeys[NextPositionIndex].mTime - pNodeAnim->mPositionKeys[PositionIndex].mTime);
-    float Factor = (AnimationTime - (float)pNodeAnim->mPositionKeys[PositionIndex].mTime) / DeltaTime;
-    assert(Factor >= 0.0f && Factor <= 1.0f);
+        deltaTime = (float)(nodeAnim->mPositionKeys[nextPositionIndex].mTime - nodeAnim->mPositionKeys[positionIndex].mTime);
+    float factor = (animationTime - (float)nodeAnim->mPositionKeys[positionIndex].mTime) / deltaTime;
+    assert(factor >= 0.0f && factor <= 1.0f);
 
-    const aiVector3D& Start = pNodeAnim->mPositionKeys[PositionIndex].mValue;
-    const aiVector3D& End = pNodeAnim->mPositionKeys[NextPositionIndex].mValue;
-    aiVector3D Delta = End - Start;
-    Out = Start + Factor * Delta;
+    const aiVector3D& start = nodeAnim->mPositionKeys[positionIndex].mValue;
+    const aiVector3D& end = nodeAnim->mPositionKeys[nextPositionIndex].mValue;
+    aiVector3D delta = end - start;
+    out = start + factor * delta;
 }
 
 
-void SkinnedMesh::CalcInterpolatedRotation(aiQuaternion& Out, float AnimationTime, const aiNodeAnim* pNodeAnim)
+void SkinnedMesh::CalcInterpolatedRotation(aiQuaternion& out, float animationTime, const aiNodeAnim* nodeAnim)
 {
     // we need at least two values to interpolate...
-    if (pNodeAnim->mNumRotationKeys == 1)
+    if (nodeAnim->mNumRotationKeys == 1)
     {
-        Out = pNodeAnim->mRotationKeys[0].mValue;
+        out = nodeAnim->mRotationKeys[0].mValue;
         return;
     }
     
-    uint RotationIndex = FindRotation(AnimationTime, pNodeAnim);
-    uint NextRotationIndex = (RotationIndex + 1) % pNodeAnim->mNumRotationKeys;
-    assert(NextRotationIndex < pNodeAnim->mNumRotationKeys);
+    uint rotationIndex = FindRotation(animationTime, nodeAnim);
+    uint nextRotationIndex = (rotationIndex + 1) % nodeAnim->mNumRotationKeys;
+    assert(nextRotationIndex < nodeAnim->mNumRotationKeys);
 
-    float DeltaTime;
-    if (NextRotationIndex == 0)
-        DeltaTime = (float)(m_pScene->mAnimations[0]->mDuration - pNodeAnim->mRotationKeys[RotationIndex].mTime);
+    float deltaTime;
+    if (nextRotationIndex == 0)
+        deltaTime = (float)(m_pScene->mAnimations[0]->mDuration - nodeAnim->mRotationKeys[rotationIndex].mTime);
     else
-        DeltaTime = (float)(pNodeAnim->mRotationKeys[NextRotationIndex].mTime - pNodeAnim->mRotationKeys[RotationIndex].mTime);
-    float Factor = (AnimationTime - (float)pNodeAnim->mRotationKeys[RotationIndex].mTime) / DeltaTime;
-    assert(Factor >= 0.0f && Factor <= 1.0f);
+        deltaTime = (float)(nodeAnim->mRotationKeys[nextRotationIndex].mTime - nodeAnim->mRotationKeys[rotationIndex].mTime);
+    float factor = (animationTime - (float)nodeAnim->mRotationKeys[rotationIndex].mTime) / deltaTime;
+    assert(factor >= 0.0f && factor <= 1.0f);
 
-    const aiQuaternion& StartRotationQ = pNodeAnim->mRotationKeys[RotationIndex].mValue;
-    const aiQuaternion& EndRotationQ   = pNodeAnim->mRotationKeys[NextRotationIndex].mValue;    
-    aiQuaternion::Interpolate(Out, StartRotationQ, EndRotationQ, Factor);
-    Out = Out.Normalize();
+    const aiQuaternion& startRotationQ = nodeAnim->mRotationKeys[rotationIndex].mValue;
+    const aiQuaternion& endRotationQ   = nodeAnim->mRotationKeys[nextRotationIndex].mValue;    
+    aiQuaternion::Interpolate(out, startRotationQ, endRotationQ, factor);
+    out = out.Normalize();
 }
 
 
-void SkinnedMesh::CalcInterpolatedScaling(aiVector3D& Out, float AnimationTime, const aiNodeAnim* pNodeAnim)
+void SkinnedMesh::CalcInterpolatedScaling(aiVector3D& out, float animationTime, const aiNodeAnim* nodeAnim)
 {
-    if (pNodeAnim->mNumScalingKeys == 1)
+    if (nodeAnim->mNumScalingKeys == 1)
     {
-        Out = pNodeAnim->mScalingKeys[0].mValue;
+        out = nodeAnim->mScalingKeys[0].mValue;
         return;
     }
 
-    uint ScalingIndex = FindScaling(AnimationTime, pNodeAnim);
-    uint NextScalingIndex = (ScalingIndex + 1) % pNodeAnim->mNumScalingKeys;
-    assert(NextScalingIndex < pNodeAnim->mNumScalingKeys);
+    uint scalingIndex = FindScaling(animationTime, nodeAnim);
+    uint nextScalingIndex = (scalingIndex + 1) % nodeAnim->mNumScalingKeys;
+    assert(nextScalingIndex < nodeAnim->mNumScalingKeys);
 
-    float DeltaTime;
-    if (NextScalingIndex == 0)
-        DeltaTime = (float)(m_pScene->mAnimations[0]->mDuration - pNodeAnim->mScalingKeys[ScalingIndex].mTime);
+    float deltaTime;
+    if (nextScalingIndex == 0)
+        deltaTime = (float)(m_pScene->mAnimations[0]->mDuration - nodeAnim->mScalingKeys[scalingIndex].mTime);
     else
-        DeltaTime = (float)(pNodeAnim->mScalingKeys[NextScalingIndex].mTime - pNodeAnim->mScalingKeys[ScalingIndex].mTime);
-    float Factor = (AnimationTime - (float)pNodeAnim->mScalingKeys[ScalingIndex].mTime) / DeltaTime;
-    assert(Factor >= 0.0f && Factor <= 1.0f);
+        deltaTime = (float)(nodeAnim->mScalingKeys[nextScalingIndex].mTime - nodeAnim->mScalingKeys[scalingIndex].mTime);
+    float factor = (animationTime - (float)nodeAnim->mScalingKeys[scalingIndex].mTime) / deltaTime;
+    assert(factor >= 0.0f && factor <= 1.0f);
 
-    const aiVector3D& Start = pNodeAnim->mScalingKeys[ScalingIndex].mValue;
-    const aiVector3D& End   = pNodeAnim->mScalingKeys[NextScalingIndex].mValue;
-    aiVector3D Delta = End - Start;
-    Out = Start + Factor * Delta;
+    const aiVector3D& start = nodeAnim->mScalingKeys[scalingIndex].mValue;
+    const aiVector3D& end   = nodeAnim->mScalingKeys[nextScalingIndex].mValue;
+    aiVector3D delta = end - start;
+    out = start + factor * delta;
 }
 
 
-void SkinnedMesh::ReadNodeHeirarchy(float AnimationTime, const aiNode* pNode, const glm::mat4& ParentTransform)
+void SkinnedMesh::ReadNodeHeirarchy(float animationTime, const aiNode* node, const glm::mat4& parentTransform)
 {    
-    std::string NodeName(pNode->mName.data);
+    std::string NodeName(node->mName.data);
     
     const aiAnimation* pAnimation = m_pScene->mAnimations[0];       // TODO: Change this from 1 animation choice
         
-    glm::mat4 NodeTransformation(0.0f);
-    Assign(NodeTransformation, pNode->mTransformation);
+    glm::mat4 nodeTransformation(0.0f);
+    Assign(nodeTransformation, node->mTransformation);
      
     const aiNodeAnim* pNodeAnim = FindNodeAnim(pAnimation, NodeName);
     
     if (pNodeAnim)
     {
         // Interpolate scaling and generate scaling transformation matrix
-        aiVector3D Scaling;
-        CalcInterpolatedScaling(Scaling, AnimationTime, pNodeAnim);
-        glm::mat4 ScalingM = glm::scale(glm::mat4(1.0f), glm::vec3(Scaling.x, Scaling.y, Scaling.z));
+        aiVector3D scaling;
+        CalcInterpolatedScaling(scaling, animationTime, pNodeAnim);
+        glm::mat4 scalingM = glm::scale(glm::mat4(1.0f), glm::vec3(scaling.x, scaling.y, scaling.z));
 
         // Interpolate rotation and generate rotation transformation matrix
-        aiQuaternion RotationQ;
-        CalcInterpolatedRotation(RotationQ, AnimationTime, pNodeAnim);
-        glm::mat4 RotationM = static_cast<glm::mat4>(glm::quat(RotationQ.w, RotationQ.x, RotationQ.y, RotationQ.z));
-        //glm::mat4 RotationM(0.0f);
-        //Assign(RotationM, aiMatrix4x4(RotationQ.GetMatrix()));
+        aiQuaternion rotationQ;
+        CalcInterpolatedRotation(rotationQ, animationTime, pNodeAnim);
+        glm::mat4 rotationM = static_cast<glm::mat4>(glm::quat(rotationQ.w, rotationQ.x, rotationQ.y, rotationQ.z));
 
         // Interpolate translation and generate translation transformation matrix
-        aiVector3D Translation;
-        CalcInterpolatedPosition(Translation, AnimationTime, pNodeAnim);
-        glm::mat4 TranslationM = glm::translate(glm::mat4(1.0f), glm::vec3(Translation.x, Translation.y, Translation.z));
+        aiVector3D translation;
+        CalcInterpolatedPosition(translation, animationTime, pNodeAnim);
+        glm::mat4 translationM = glm::translate(glm::mat4(1.0f), glm::vec3(translation.x, translation.y, translation.z));
 
         // Combine the above transformations
-        NodeTransformation = TranslationM * RotationM * ScalingM;
+        nodeTransformation = translationM * rotationM * scalingM;
     }
        
-    glm::mat4 GlobalTransformation = ParentTransform * NodeTransformation;
+    glm::mat4 GlobalTransformation = parentTransform * nodeTransformation;
     
     if (m_BoneMapping.find(NodeName) != m_BoneMapping.end())
     {
         uint BoneIndex = m_BoneMapping[NodeName];
-        m_BoneInfo[BoneIndex].FinalTransformation = m_GlobalInverseTransform * GlobalTransformation * m_BoneInfo[BoneIndex].BoneOffset;
+        m_BoneInfo[BoneIndex].finalTransformation = m_GlobalInverseTransform * GlobalTransformation * m_BoneInfo[BoneIndex].boneOffset;
     }
     
-    for (uint i = 0 ; i < pNode->mNumChildren ; i++)
+    for (uint i = 0 ; i < node->mNumChildren ; i++)
     {
-        ReadNodeHeirarchy(AnimationTime, pNode->mChildren[i], GlobalTransformation);
+        ReadNodeHeirarchy(animationTime, node->mChildren[i], GlobalTransformation);
     }
 }
 
 
-void SkinnedMesh::BoneTransform(float TimeInSeconds, std::vector<glm::mat4>& Transforms)
+void SkinnedMesh::BoneTransform(float timeInSeconds, std::vector<glm::mat4>& transforms)
 {
-    glm::mat4 Identity(1.0f);
+    glm::mat4 identity(1.0f);
     
-    float TicksPerSecond = (float)(m_pScene->mAnimations[0]->mTicksPerSecond != 0 ? m_pScene->mAnimations[0]->mTicksPerSecond : 25.0f);
-    float TimeInTicks = TimeInSeconds * TicksPerSecond;
-    float AnimationTime = fmod(TimeInTicks, (float)m_pScene->mAnimations[0]->mDuration);
+    float ticksPerSecond = (float)(m_pScene->mAnimations[0]->mTicksPerSecond != 0 ? m_pScene->mAnimations[0]->mTicksPerSecond : 25.0f);
+    float timeInTicks = timeInSeconds * ticksPerSecond;
+    float animationTime = fmod(timeInTicks, (float)m_pScene->mAnimations[0]->mDuration);
 
-    ReadNodeHeirarchy(AnimationTime, m_pScene->mRootNode, Identity);
+    ReadNodeHeirarchy(animationTime, m_pScene->mRootNode, identity);
 
-    Transforms.resize(m_NumBones);
+    transforms.resize(m_NumBones);
 
     for (uint i = 0 ; i < m_NumBones ; i++)
     {
-        Transforms[i] = m_BoneInfo[i].FinalTransformation;
+        transforms[i] = m_BoneInfo[i].finalTransformation;
     }
 }
 
 
-const aiNodeAnim* SkinnedMesh::FindNodeAnim(const aiAnimation* pAnimation, const std::string NodeName)
+const aiNodeAnim* SkinnedMesh::FindNodeAnim(const aiAnimation* animation, const std::string nodeName)
 {
-    for (uint i = 0 ; i < pAnimation->mNumChannels ; i++)
+    for (uint i = 0 ; i < animation->mNumChannels ; i++)
     {
-        const aiNodeAnim* pNodeAnim = pAnimation->mChannels[i];
+        const aiNodeAnim* nodeAnim = animation->mChannels[i];
         
-        if (std::string(pNodeAnim->mNodeName.data) == NodeName)
+        if (std::string(nodeAnim->mNodeName.data) == nodeName)
         {
-            return pNodeAnim;
+            return nodeAnim;
         }
     }
     

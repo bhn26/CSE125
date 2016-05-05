@@ -26,11 +26,11 @@
 class Texture
 {
 public:
-    Texture(GLenum TextureTarget, const std::string& FileName);
+    Texture(GLenum textureTarget, const std::string& fileName);
 
     bool Load();
 
-    void Bind(GLenum TextureUnit);
+    void Bind(GLenum textureUnit);
 
 private:
     std::string m_fileName;

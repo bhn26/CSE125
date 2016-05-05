@@ -50,7 +50,8 @@ bool Technique::Init()
 {
     m_shaderProg = glCreateProgram();
 
-    if (m_shaderProg == 0) {
+    if (m_shaderProg == 0)
+    {
         fprintf(stderr, "Error creating shader program\n");
         return false;
     }
@@ -59,43 +60,46 @@ bool Technique::Init()
 }
 
 // Use this method to add shaders to the program. When finished - call finalize()
-bool Technique::AddShader(GLenum ShaderType, const char* pFilename)
+bool Technique::AddShader(GLenum shaderType, const char* filename)
 {
     std::string s;
     
-    if (!ReadFile(pFilename, s)) {
+    if (!ReadFile(filename, s))
+    {
         return false;
     }
     
-    GLuint ShaderObj = glCreateShader(ShaderType);
+    GLuint shaderObj = glCreateShader(shaderType);
 
-    if (ShaderObj == 0) {
-        fprintf(stderr, "Error creating shader type %d\n", ShaderType);
+    if (shaderObj == 0)
+    {
+        fprintf(stderr, "Error creating shader type %d\n", shaderType);
         return false;
     }
 
     // Save the shader object - will be deleted in the destructor
-    m_shaderObjList.push_back(ShaderObj);
+    m_shaderObjList.push_back(shaderObj);
 
     const GLchar* p[1];
     p[0] = s.c_str();
-    GLint Lengths[1] = { (GLint)s.size() };
+    GLint lengths[1] = { (GLint)s.size() };
 
-    glShaderSource(ShaderObj, 1, p, Lengths);
+    glShaderSource(shaderObj, 1, p, lengths);
 
-    glCompileShader(ShaderObj);
+    glCompileShader(shaderObj);
 
     GLint success;
-    glGetShaderiv(ShaderObj, GL_COMPILE_STATUS, &success);
+    glGetShaderiv(shaderObj, GL_COMPILE_STATUS, &success);
 
-    if (!success) {
+    if (!success)
+    {
         GLchar InfoLog[1024];
-        glGetShaderInfoLog(ShaderObj, 1024, NULL, InfoLog);
-        fprintf(stderr, "Error compiling '%s': '%s'\n", pFilename, InfoLog);
+        glGetShaderInfoLog(shaderObj, 1024, NULL, InfoLog);
+        fprintf(stderr, "Error compiling '%s': '%s'\n", filename, InfoLog);
         return false;
     }
 
-    glAttachShader(m_shaderProg, ShaderObj);
+    glAttachShader(m_shaderProg, shaderObj);
 
     return true;
 }
@@ -105,41 +109,41 @@ bool Technique::AddShader(GLenum ShaderType, const char* pFilename)
 // to link and validate the program.
 bool Technique::Finalize()
 {
-    GLuint vaoId = 0;
-    glGenVertexArrays(1, &vaoId);
-    glBindVertexArray(vaoId);
+    GLuint VAO = 0;
+    glGenVertexArrays(1, &VAO);
+    glBindVertexArray(VAO);
     
-    GLint Success = 0;
-    GLchar ErrorLog[1024] = { 0 };
+    GLint success = 0;
+    GLchar errorLog[1024] = { 0 };
 
     glLinkProgram(m_shaderProg);
     
     // ^ gl_experimental causes links to return invalid enum error
     glGetError(); // clear error buffer
 
-    glGetProgramiv(m_shaderProg, GL_LINK_STATUS, &Success);
-	if (Success == 0) {
-		glGetProgramInfoLog(m_shaderProg, sizeof(ErrorLog), NULL, ErrorLog);
-		fprintf(stderr, "Error linking shader program: '%s'\n", ErrorLog);
+    glGetProgramiv(m_shaderProg, GL_LINK_STATUS, &success);
+    if (success == 0)
+    {
+        glGetProgramInfoLog(m_shaderProg, sizeof(errorLog), NULL, errorLog);
+        fprintf(stderr, "Error linking shader program: '%s'\n", errorLog);
         return false;
-	}
+    }
 
     glValidateProgram(m_shaderProg);
-    glGetProgramiv(m_shaderProg, GL_VALIDATE_STATUS, &Success);
-    if (!Success) {
-        glGetProgramInfoLog(m_shaderProg, sizeof(ErrorLog), NULL, ErrorLog);
-        fprintf(stderr, "Invalid shader program: '%s'\n", ErrorLog);
+    glGetProgramiv(m_shaderProg, GL_VALIDATE_STATUS, &success);
+    if (!success) {
+        glGetProgramInfoLog(m_shaderProg, sizeof(errorLog), NULL, errorLog);
+        fprintf(stderr, "Invalid shader program: '%s'\n", errorLog);
      //   return false;
     }
 
     // Delete the intermediate shader objects that have been added to the program
-    for (ShaderObjList::iterator it = m_shaderObjList.begin() ; it != m_shaderObjList.end() ; it++) {
-        glDeleteShader(*it);
-    }
+    for (GLuint shader : m_shaderObjList)
+        glDeleteShader(shader);
 
     m_shaderObjList.clear();
 
-    glDeleteVertexArrays(1, &vaoId);
+    glDeleteVertexArrays(1, &VAO);
     glBindVertexArray(0);
     
     return GLCheckError();
@@ -156,7 +160,8 @@ GLint Technique::GetUniformLocation(const char* pUniformName)
 {
     GLuint Location = glGetUniformLocation(m_shaderProg, pUniformName);
 
-    if (Location == INVALID_UNIFORM_LOCATION) {
+    if (Location == INVALID_UNIFORM_LOCATION)
+    {
         fprintf(stderr, "Warning! Unable to get the location of uniform '%s'\n", pUniformName);
     }
 

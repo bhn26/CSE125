@@ -20,10 +20,10 @@
 #include "ogldev_texture.h"
 #include <SOIL.h>
 
-Texture::Texture(GLenum TextureTarget, const std::string& FileName)
+Texture::Texture(GLenum textureTarget, const std::string& fileName)
 {
-    m_textureTarget = TextureTarget;
-    m_fileName      = FileName;
+    m_textureTarget = textureTarget;
+    m_fileName      = fileName;
 }
 
 
@@ -48,8 +48,8 @@ bool Texture::Load()
     return true;
 }
 
-void Texture::Bind(GLenum TextureUnit)
+void Texture::Bind(GLenum textureUnit)
 {
-    glActiveTexture(TextureUnit);
+    glActiveTexture(textureUnit);
     glBindTexture(m_textureTarget, m_textureObj);
 }

@@ -52,22 +52,23 @@ public:
     const aiScene* Scene() const { return m_pScene; }
 
 private:
-    #define NUM_BONES_PER_VEREX 8 // we have max 5
+    //#define NUM_BONES_PER_VEREX 8 // we have max 5
+    static const int NUM_BONES_PER_VERTEX = 8;
 
     struct BoneInfo
     {
-        glm::mat4 BoneOffset;
-        glm::mat4 FinalTransformation;        
+        glm::mat4 boneOffset;
+        glm::mat4 finalTransformation;        
 
-        BoneInfo() : BoneOffset(glm::mat4(0.0f)), FinalTransformation(glm::mat4(0.0f))
+        BoneInfo() : boneOffset(glm::mat4(0.0f)), finalTransformation(glm::mat4(0.0f))
         {
         }
     };
     
     struct VertexBoneData
-    {        
-        uint IDs[NUM_BONES_PER_VEREX];
-        float Weights[NUM_BONES_PER_VEREX];
+    {
+        uint IDs[NUM_BONES_PER_VERTEX];
+        float weights[NUM_BONES_PER_VERTEX];
 
         VertexBoneData()
         {
@@ -77,10 +78,10 @@ private:
         void Reset()
         {
             ZERO_MEM(IDs);
-            ZERO_MEM(Weights);        
+            ZERO_MEM(weights);        
         }
         
-        void AddBoneData(uint BoneID, float Weight);
+        void AddBoneData(uint boneID, float weight);
     };
 
     struct VertexInfo
@@ -91,29 +92,24 @@ private:
         VertexBoneData boneData;
     };
 
-    void CalcInterpolatedScaling(aiVector3D& Out, float AnimationTime, const aiNodeAnim* pNodeAnim);
-    void CalcInterpolatedRotation(aiQuaternion& Out, float AnimationTime, const aiNodeAnim* pNodeAnim);
-    void CalcInterpolatedPosition(aiVector3D& Out, float AnimationTime, const aiNodeAnim* pNodeAnim);    
-    uint FindScaling(float AnimationTime, const aiNodeAnim* pNodeAnim);
-    uint FindRotation(float AnimationTime, const aiNodeAnim* pNodeAnim);
-    uint FindPosition(float AnimationTime, const aiNodeAnim* pNodeAnim);
+    void CalcInterpolatedScaling(aiVector3D& out, float animationTime, const aiNodeAnim* nodeAnim);
+    void CalcInterpolatedRotation(aiQuaternion& out, float animationTime, const aiNodeAnim* nodeAnim);
+    void CalcInterpolatedPosition(aiVector3D& out, float animationTime, const aiNodeAnim* nodeAnim);
+
+    uint FindScaling(float animationTime, const aiNodeAnim* nodeAnim);
+    uint FindRotation(float animationTime, const aiNodeAnim* nodeAnim);
+    uint FindPosition(float animationTime, const aiNodeAnim* nodeAnim);
     const aiNodeAnim* FindNodeAnim(const aiAnimation* pAnimation, const std::string NodeName);
-    void ReadNodeHeirarchy(float AnimationTime, const aiNode* pNode, const glm::mat4& ParentTransform);
-    bool InitFromScene(const aiScene* pScene, const std::string& Filename);
-    void InitMesh(uint MeshIndex,
-                  const aiMesh* paiMesh,
-                  std::vector<glm::vec3>& Positions,
-                  std::vector<glm::vec3>& Normals,
-                  std::vector<glm::vec2>& TexCoords,
-                  std::vector<VertexBoneData>& Bones,
-                  std::vector<unsigned int>& Indices);
+
+    void ReadNodeHeirarchy(float animationTime, const aiNode* node, const glm::mat4& parentTransform);
+    bool InitFromScene(const aiScene* scene, const std::string& filename);
     void InitMesh(uint meshIndex,
-        const aiMesh* paiMesh,
+        const aiMesh* aiMesh,
         std::vector<VertexInfo>& vertices,
         std::vector<unsigned int>& indices);
-    void LoadBones(uint MeshIndex, const aiMesh* paiMesh, std::vector<VertexBoneData>& Bones);
     void LoadBones(uint MeshIndex, const aiMesh* paiMesh, std::vector<VertexInfo>& vertices);
-    bool InitMaterials(const aiScene* pScene, const std::string& Filename);
+    bool InitMaterials(const aiScene* scene, const std::string& filename);
+
     void Clear();
 
 #define INVALID_MATERIAL 0xFFFFFFFF
@@ -130,19 +126,20 @@ enum VB_TYPES {
     GLuint m_VAO;
     GLuint m_Buffers[NUM_VBs];
 
-    struct MeshEntry {
+    struct MeshEntry
+    {
         MeshEntry()
         {
-            NumIndices    = 0;
-            BaseVertex    = 0;
-            BaseIndex     = 0;
-            MaterialIndex = INVALID_MATERIAL;
+            numIndices    = 0;
+            baseVertex    = 0;
+            baseIndex     = 0;
+            materialIndex = INVALID_MATERIAL;
         }
         
-        unsigned int NumIndices;
-        unsigned int BaseVertex;
-        unsigned int BaseIndex;
-        unsigned int MaterialIndex;
+        unsigned int numIndices;
+        unsigned int baseVertex;
+        unsigned int baseIndex;
+        unsigned int materialIndex;
     };
     
     std::vector<MeshEntry> m_Meshes;

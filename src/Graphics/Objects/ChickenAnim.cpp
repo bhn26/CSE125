@@ -13,10 +13,10 @@
 ChickenAnim::ChickenAnim() : m_toWorld(glm::scale(glm::mat4(1.0f), glm::vec3(0.01f, 0.01f, 0.01f)))
 {
     m_pEffect = NULL;
-    m_directionalLight.Color = glm::vec3(1.0f, 1.0f, 1.0f);
-    m_directionalLight.AmbientIntensity = 0.55f;
-    m_directionalLight.DiffuseIntensity = 0.9f;
-    m_directionalLight.Direction = glm::vec3(1.0f, 0.0, 0.0);
+    m_directionalLight.color = glm::vec3(1.0f, 1.0f, 1.0f);
+    m_directionalLight.ambientIntensity = 0.55f;
+    m_directionalLight.diffuseIntensity = 0.9f;
+    m_directionalLight.direction = glm::vec3(1.0f, 0.0, 0.0);
     
     m_pEffect = new SkinningTechnique();
     

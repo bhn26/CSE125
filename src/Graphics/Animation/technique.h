@@ -36,11 +36,11 @@ public:
 
 protected:
 
-    bool AddShader(GLenum ShaderType, const char* pFilename);
+    bool AddShader(GLenum shaderType, const char* filename);
 
     bool Finalize();
 
-    GLint GetUniformLocation(const char* pUniformName);
+    GLint GetUniformLocation(const char* uniformName);
     
     GLint GetProgramParam(GLint param);
     

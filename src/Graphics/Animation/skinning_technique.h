@@ -24,57 +24,57 @@
 
 struct BaseLight
 {
-    glm::vec3 Color;
-    float AmbientIntensity;
-    float DiffuseIntensity;
+    glm::vec3 color;
+    float ambientIntensity;
+    float diffuseIntensity;
 
     BaseLight()
     {
-        Color = glm::vec3(0.0f, 0.0f, 0.0f);
-        AmbientIntensity = 0.0f;
-        DiffuseIntensity = 0.0f;
+        color = glm::vec3(0.0f, 0.0f, 0.0f);
+        ambientIntensity = 0.0f;
+        diffuseIntensity = 0.0f;
     }
 };
 
 struct DirectionalLight : public BaseLight
 {        
-    glm::vec3 Direction;
+    glm::vec3 direction;
 
     DirectionalLight()
     {
-        Direction = glm::vec3(0.0f, 0.0f, 0.0f);
+        direction = glm::vec3(0.0f, 0.0f, 0.0f);
     }
 };
 
 struct PointLight2 : public BaseLight
 {
-    glm::vec3 Position;
+    glm::vec3 position;
 
     struct
     {
-        float Constant;
-        float Linear;
-        float Exp;
-    } Attenuation;
+        float constant;
+        float linear;
+        float exp;
+    } attenuation;
 
     PointLight2()
     {
-        Position = glm::vec3(0.0f, 0.0f, 0.0f);
-        Attenuation.Constant = 1.0f;
-        Attenuation.Linear = 0.0f;
-        Attenuation.Exp = 0.0f;
+        position = glm::vec3(0.0f, 0.0f, 0.0f);
+        attenuation.constant = 1.0f;
+        attenuation.linear = 0.0f;
+        attenuation.exp = 0.0f;
     }
 };
 
 struct SpotLight : public PointLight2
 {
-    glm::vec3 Direction;
-    float Cutoff;
+    glm::vec3 direction;
+    float cutoff;
 
     SpotLight()
     {
-        Direction = glm::vec3(0.0f, 0.0f, 0.0f);
-        Cutoff = 0.0f;
+        direction = glm::vec3(0.0f, 0.0f, 0.0f);
+        cutoff = 0.0f;
     }
 };
 
@@ -94,14 +94,14 @@ public:
     //void SeViewMatrix(const glm::mat4& view);
     //void SetPerspectiveMatrix(const glm::mat4& perspective);
     void SetWorldMatrix(const glm::mat4& WVP);
-    void SetColorTextureUnit(unsigned int TextureUnit);
-    void SetDirectionalLight(const DirectionalLight& Light);
-    void SetPointLights(unsigned int NumLights, const PointLight2* pLights);
-    void SetSpotLights(unsigned int NumLights, const SpotLight* pLights);
-    void SetEyeWorldPos(const glm::vec3& EyeWorldPos);
-    void SetMatSpecularIntensity(float Intensity);
-    void SetMatSpecularPower(float Power);
-    void SetBoneTransform(unsigned int Index, const glm::mat4& Transform);
+    void SetColorTextureUnit(unsigned int textureUnit);
+    void SetDirectionalLight(const DirectionalLight& light);
+    void SetPointLights(unsigned int numLights, const PointLight2* lights);
+    void SetSpotLights(unsigned int numLights, const SpotLight* lights);
+    void SetEyeWorldPos(const glm::vec3& eyeWorldPos);
+    void SetMatSpecularIntensity(float intensity);
+    void SetMatSpecularPower(float power);
+    void SetBoneTransform(unsigned int index, const glm::mat4& transform);
 
 private:
     
@@ -117,36 +117,36 @@ private:
     GLuint m_numSpotLightsLocation;
 
     struct {
-        GLuint Color;
-        GLuint AmbientIntensity;
-        GLuint DiffuseIntensity;
-        GLuint Direction;
+        GLuint color;
+        GLuint ambientIntensity;
+        GLuint diffuseIntensity;
+        GLuint direction;
     } m_dirLightLocation;
 
     struct {
-        GLuint Color;
-        GLuint AmbientIntensity;
-        GLuint DiffuseIntensity;
-        GLuint Position;
+        GLuint color;
+        GLuint ambientIntensity;
+        GLuint diffuseIntensity;
+        GLuint position;
         struct {
-            GLuint Constant;
-            GLuint Linear;
-            GLuint Exp;
-        } Atten;
+            GLuint constant;
+            GLuint linear;
+            GLuint exp;
+        } atten;
     } m_pointLightsLocation[MAX_POINT_LIGHTS];
 
     struct {
-        GLuint Color;
-        GLuint AmbientIntensity;
-        GLuint DiffuseIntensity;
-        GLuint Position;
-        GLuint Direction;
+        GLuint color;
+        GLuint ambientIntensity;
+        GLuint diffuseIntensity;
+        GLuint position;
+        GLuint direction;
         GLuint Cutoff;
         struct {
-            GLuint Constant;
-            GLuint Linear;
-            GLuint Exp;
-        } Atten;
+            GLuint constant;
+            GLuint linear;
+            GLuint exp;
+        } atten;
     } m_spotLightsLocation[MAX_SPOT_LIGHTS];
     
     GLuint m_boneLocation[MAX_BONES];
