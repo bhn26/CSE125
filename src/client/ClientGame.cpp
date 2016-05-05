@@ -84,6 +84,8 @@ void ClientGame::receiveStartPacket(int offset) {
 	struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
 	printf("received start packet for %d players\n", pi->id);
 
+	Scene::Instance()->ClearPlayers();
+
 	for (int i = 0; i < pi->id; i++) {
 		printf("add player %d\n", i);
 		Scene::Instance()->AddPlayer(i);

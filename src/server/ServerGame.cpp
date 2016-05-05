@@ -217,6 +217,10 @@ void ServerGame::receiveStartPacket(int offset) {
 		engine->InitWorld(client_id + 1);
 		game_started = true;
 	}
+	else {
+		printf("re-initializing world with %d players", client_id + 1);
+		engine->InitWorld(client_id + 1);
+	}
 
 	// add player
 }

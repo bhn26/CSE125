@@ -49,4 +49,5 @@ public:
     std::unique_ptr<PointLight>& GetPointLight() { return pLight; }
 	std::shared_ptr<Player>& GetPlayer() { return player; }
 	std::vector<std::shared_ptr<Player>>& GetPlayers() { return players; };
+	void ClearPlayers() { players.clear(); };
 };
