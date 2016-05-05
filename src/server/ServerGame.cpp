@@ -264,28 +264,26 @@ void ServerGame::receiveMovePacket(int offset)
     struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
 	shared_ptr<Player> player = engine->GetWorld()->GetPlayer(hdr->sender_id);
 
-
-
     //printf("dummy's current pos is (%d,%d)\n", dpi.x, dpi.y);
 	btVector3* vec;
 	switch (pi->direction) {
 	case MOVE_FORWARD:
-		vec = new btVector3(0, 0, -20);
+		vec = new btVector3(0, 0, -5);
 		player->Move(vec);
 		delete vec;
 		break;
 	case MOVE_BACKWARD:
-		vec = new btVector3(0, 0, 20);
+		vec = new btVector3(0, 0, 5);
 		player->Move(vec);
 		delete vec;
 		break;
 	case MOVE_LEFT:
-		vec = new btVector3(-20, 0, 0);
+		vec = new btVector3(-5, 0, 0);
 		player->Move(vec);
 		delete vec;
 		break;
 	case MOVE_RIGHT:
-		vec = new btVector3(20, 0, 0);
+		vec = new btVector3(5, 0, 0);
 		player->Move(vec);
 		delete vec;
 		break;

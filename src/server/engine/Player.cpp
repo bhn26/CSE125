@@ -12,6 +12,7 @@ Player::Player(int id, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld) {
 	playerShape->calculateLocalInertia(mass, playerInertia);
 	btRigidBody::btRigidBodyConstructionInfo playerRigidBodyCI(mass, playerMotionState, playerShape, playerInertia);
 	btRigidBody* pRigidBody = new btRigidBody(playerRigidBodyCI);
+	pRigidBody->forceActivationState(DISABLE_DEACTIVATION);
 	physicsWorld->addRigidBody(pRigidBody);
 
 	// Set Player's protected fields
@@ -57,7 +58,7 @@ void Player::Move(btVector3* changeVelocity) {
 	playerRigidBody->setLinearVelocity(newVelocity);
 	//printf("%d: world pos object = %f,%f,%f\n", id, float(currentTrans.getOrigin().getX()), float(currentTrans.getOrigin().getY()), float(currentTrans.getOrigin().getZ()));
 	printf("current velocity %f, %f, %f\n", float(playerRigidBody->getLinearVelocity()[0]), float( playerRigidBody->getLinearVelocity()[1]), float(playerRigidBody->getLinearVelocity()[2]));
-	playerRigidBody->activate();
+	//playerRigidBody->activate();
 
 	/*position.direction = direction;
 	 
@@ -106,6 +107,11 @@ void Player::JumpPlayer()
 		curVelocity[1] = 5;
 		playerRigidBody->setLinearVelocity(curVelocity);
 	}
+}
+
+void Player::ResetJump()
+{
+	jumpSem = 1;
 }
 
 void Player::AcquireFlag(std::shared_ptr<Flag> flag)
