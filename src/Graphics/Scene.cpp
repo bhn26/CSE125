@@ -2,6 +2,7 @@
 
 #include "Objects/CubeMap.h"
 #include "Objects/Cube.h"
+#include "Objects/Egg.h"
 #include "Objects/Chicken.h"
 #include "Objects/Ground.h"
 #include "Camera.h"
@@ -31,20 +32,25 @@ void Scene::Setup()
     pLight = std::unique_ptr<PointLight>(new PointLight(glm::vec3(0.0f, 20.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)));
 
     std::unique_ptr<Player> player = std::unique_ptr<Player>(new Player);
+	player->SetModelFile("assets/chickens/objects/pinocchio_chicken.obj");
     Scene::player = player.get();
     std::unique_ptr<Ground> ground = std::unique_ptr<Ground>(new Ground);
-    std::unique_ptr<Cube> cube = std::unique_ptr<Cube>(new Cube);
+    //std::unique_ptr<Cube> cube = std::unique_ptr<Cube>(new Cube);
+	std::unique_ptr<Egg> egg = std::unique_ptr<Egg>(new Egg(glm::vec3(10.0f, 3.0f, 10.0f)));
+	egg->SetColor(glm::vec3(0.27f, 0.16f, 0.0f));
     std::unique_ptr<CubeMap> cubeMap = std::unique_ptr<CubeMap>(new CubeMap);
     cubeMap->LoadCubeMap();
 
-    cube->GetShader() = basicShader;
+    //cube->GetShader() = basicShader;
+	egg->GetShader() = diffuseShader;
     ground->GetShader() = diffuseShader;
     player->GetShader() = modelShader;
     cubeMap->GetShader() = cubeMapShader;
 
     entities.push_back(std::move(ground));
     entities.push_back(std::move(player));
-    entities.push_back(std::move(cube));
+	entities.push_back(std::move(egg));
+    //entities.push_back(std::move(cube)); // Don't add cube to scene
     entities.push_back(std::move(cubeMap));
 }
 

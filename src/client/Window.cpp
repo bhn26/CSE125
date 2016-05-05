@@ -154,6 +154,9 @@ void Window::Key_callback(GLFWwindow* window, int key, int scancode, int action,
             case GLFW_KEY_Z:
                 Scene::Instance()->GetPlayer()->ProcessKeyboard(DIRECTION::D_DOWN, 1);
                 break;
+            case GLFW_KEY_C:
+                Scene::Instance()->GetPlayer()->SetModelFile("assets/chickens/objects/pinocchio_chicken.obj");
+                break;
             default:
                 break;
         }

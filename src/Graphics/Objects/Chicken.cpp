@@ -24,6 +24,10 @@ Chicken::Chicken()
     model = new Model("assets/chickens/objects/chicken.obj");
 }
 
+Chicken::Chicken(glm::vec3 pos) : Entity(pos) {
+    this->toWorld = glm::translate(glm::mat4(1.0f), pos);
+}
+
 Chicken::~Chicken()
 {
     delete(model);
