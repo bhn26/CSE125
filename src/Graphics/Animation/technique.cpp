@@ -144,7 +144,7 @@ bool Technique::Finalize()
     glDeleteVertexArrays(1, &VAO);
     glBindVertexArray(0);
     
-    return GLCheckError();
+    return glGetError() == GL_NO_ERROR;
 }
 
 

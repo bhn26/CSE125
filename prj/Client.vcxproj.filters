@@ -173,9 +173,6 @@
     <ClInclude Include="..\src\Graphics\Animation\ogldev_texture.h">
       <Filter>Source Files\Graphics\Animation</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Graphics\Animation\ogldev_types.h">
-      <Filter>Source Files\Graphics\Animation</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Graphics\Animation\ogldev_util.h">
       <Filter>Source Files\Graphics\Animation</Filter>
     </ClInclude>

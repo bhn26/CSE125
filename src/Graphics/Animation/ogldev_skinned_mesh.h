@@ -42,7 +42,7 @@ public:
 
     void Render();
 
-    uint NumBones() const
+    unsigned int NumBones() const
     {
         return m_NumBones;
     }
@@ -67,7 +67,7 @@ private:
     
     struct VertexBoneData
     {
-        uint IDs[NUM_BONES_PER_VERTEX];
+        unsigned int IDs[NUM_BONES_PER_VERTEX];
         float weights[NUM_BONES_PER_VERTEX];
 
         VertexBoneData()
@@ -81,7 +81,7 @@ private:
             ZERO_MEM(weights);        
         }
         
-        void AddBoneData(uint boneID, float weight);
+        void AddBoneData(unsigned int boneID, float weight);
     };
 
     struct VertexInfo
@@ -96,18 +96,18 @@ private:
     void CalcInterpolatedRotation(aiQuaternion& out, float animationTime, const aiNodeAnim* nodeAnim);
     void CalcInterpolatedPosition(aiVector3D& out, float animationTime, const aiNodeAnim* nodeAnim);
 
-    uint FindScaling(float animationTime, const aiNodeAnim* nodeAnim);
-    uint FindRotation(float animationTime, const aiNodeAnim* nodeAnim);
-    uint FindPosition(float animationTime, const aiNodeAnim* nodeAnim);
+    unsigned int FindScaling(float animationTime, const aiNodeAnim* nodeAnim);
+    unsigned int FindRotation(float animationTime, const aiNodeAnim* nodeAnim);
+    unsigned int FindPosition(float animationTime, const aiNodeAnim* nodeAnim);
     const aiNodeAnim* FindNodeAnim(const aiAnimation* pAnimation, const std::string NodeName);
 
     void ReadNodeHeirarchy(float animationTime, const aiNode* node, const glm::mat4& parentTransform);
     bool InitFromScene(const aiScene* scene, const std::string& filename);
-    void InitMesh(uint meshIndex,
+    void InitMesh(unsigned int meshIndex,
         const aiMesh* aiMesh,
         std::vector<VertexInfo>& vertices,
         std::vector<unsigned int>& indices);
-    void LoadBones(uint MeshIndex, const aiMesh* paiMesh, std::vector<VertexInfo>& vertices);
+    void LoadBones(unsigned int MeshIndex, const aiMesh* paiMesh, std::vector<VertexInfo>& vertices);
     bool InitMaterials(const aiScene* scene, const std::string& filename);
 
     void Clear();
@@ -145,8 +145,8 @@ enum VB_TYPES {
     std::vector<MeshEntry> m_Meshes;
     std::vector<Texture*> m_Textures;
      
-    std::map<std::string,uint> m_BoneMapping; // maps a bone name to its index
-    uint m_NumBones;
+    std::map<std::string,unsigned int> m_BoneMapping; // maps a bone name to its index
+    unsigned int m_NumBones;
     std::vector<BoneInfo> m_BoneInfo;
     glm::mat4 m_GlobalInverseTransform;
     

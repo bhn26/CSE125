@@ -203,7 +203,6 @@
   <ItemGroup>
     <ClInclude Include="..\src\Graphics\Animation\ogldev_skinned_mesh.h" />
     <ClInclude Include="..\src\Graphics\Animation\ogldev_texture.h" />
-    <ClInclude Include="..\src\Graphics\Animation\ogldev_types.h" />
     <ClInclude Include="..\src\Graphics\Animation\ogldev_util.h" />
     <ClInclude Include="..\src\Graphics\Animation\skinning_technique.h" />
     <ClInclude Include="..\src\Graphics\Animation\technique.h" />

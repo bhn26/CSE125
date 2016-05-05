@@ -40,7 +40,7 @@ ChickenAnim::ChickenAnim() : m_toWorld(glm::scale(glm::mat4(1.0f), glm::vec3(0.0
     std::vector<glm::mat4> transforms;
     m_mesh.BoneTransform(0.0f, transforms);
 
-    for (uint i = 0; i < transforms.size(); i++)
+    for (unsigned int i = 0; i < transforms.size(); i++)
     {
         m_pEffect->SetBoneTransform(i, transforms[i]);
     }
@@ -73,7 +73,7 @@ void ChickenAnim::Update()
     
     m_mesh.BoneTransform(RunningTime, Transforms);
     
-    for (uint i = 0 ; i < Transforms.size() ; i++)
+    for (unsigned int i = 0 ; i < Transforms.size() ; i++)
     {
         m_pEffect->SetBoneTransform(i, Transforms[i]);
     }

@@ -86,25 +86,25 @@ bool SkinningTechnique::Init()
     {
         char name[128];
         memset(name, 0, sizeof(name));
-        SNPRINTF(name, sizeof(name), "gPointLights[%d].Base.Color", i);
+        _snprintf_s(name, sizeof(name), "gPointLights[%d].Base.Color", i);
         m_pointLightsLocation[i].color = GetUniformLocation(name);
 
-        SNPRINTF(name, sizeof(name), "gPointLights[%d].Base.AmbientIntensity", i);
+        _snprintf_s(name, sizeof(name), "gPointLights[%d].Base.AmbientIntensity", i);
         m_pointLightsLocation[i].ambientIntensity = GetUniformLocation(name);
 
-        SNPRINTF(name, sizeof(name), "gPointLights[%d].Position", i);
+        _snprintf_s(name, sizeof(name), "gPointLights[%d].Position", i);
         m_pointLightsLocation[i].position = GetUniformLocation(name);
 
-        SNPRINTF(name, sizeof(name), "gPointLights[%d].Base.DiffuseIntensity", i);
+        _snprintf_s(name, sizeof(name), "gPointLights[%d].Base.DiffuseIntensity", i);
         m_pointLightsLocation[i].diffuseIntensity = GetUniformLocation(name);
 
-        SNPRINTF(name, sizeof(name), "gPointLights[%d].Atten.Constant", i);
+        _snprintf_s(name, sizeof(name), "gPointLights[%d].Atten.Constant", i);
         m_pointLightsLocation[i].atten.constant = GetUniformLocation(name);
 
-        SNPRINTF(name, sizeof(name), "gPointLights[%d].Atten.Linear", i);
+        _snprintf_s(name, sizeof(name), "gPointLights[%d].Atten.Linear", i);
         m_pointLightsLocation[i].atten.linear = GetUniformLocation(name);
 
-        SNPRINTF(name, sizeof(name), "gPointLights[%d].Atten.Exp", i);
+        _snprintf_s(name, sizeof(name), "gPointLights[%d].Atten.Exp", i);
         m_pointLightsLocation[i].atten.exp = GetUniformLocation(name);
 
         if (m_pointLightsLocation[i].color == INVALID_UNIFORM_LOCATION ||
@@ -123,31 +123,31 @@ bool SkinningTechnique::Init()
     {
         char name[128];
         memset(name, 0, sizeof(name));
-        SNPRINTF(name, sizeof(name), "gSpotLights[%d].Base.Base.Color", i);
+        _snprintf_s(name, sizeof(name), "gSpotLights[%d].Base.Base.Color", i);
         m_spotLightsLocation[i].color = GetUniformLocation(name);
 
-        SNPRINTF(name, sizeof(name), "gSpotLights[%d].Base.Base.AmbientIntensity", i);
+        _snprintf_s(name, sizeof(name), "gSpotLights[%d].Base.Base.AmbientIntensity", i);
         m_spotLightsLocation[i].ambientIntensity = GetUniformLocation(name);
 
-        SNPRINTF(name, sizeof(name), "gSpotLights[%d].Base.Position", i);
+        _snprintf_s(name, sizeof(name), "gSpotLights[%d].Base.Position", i);
         m_spotLightsLocation[i].position = GetUniformLocation(name);
 
-        SNPRINTF(name, sizeof(name), "gSpotLights[%d].Direction", i);
+        _snprintf_s(name, sizeof(name), "gSpotLights[%d].Direction", i);
         m_spotLightsLocation[i].direction = GetUniformLocation(name);
 
-        SNPRINTF(name, sizeof(name), "gSpotLights[%d].Cutoff", i);
+        _snprintf_s(name, sizeof(name), "gSpotLights[%d].Cutoff", i);
         m_spotLightsLocation[i].Cutoff = GetUniformLocation(name);
 
-        SNPRINTF(name, sizeof(name), "gSpotLights[%d].Base.Base.DiffuseIntensity", i);
+        _snprintf_s(name, sizeof(name), "gSpotLights[%d].Base.Base.DiffuseIntensity", i);
         m_spotLightsLocation[i].diffuseIntensity = GetUniformLocation(name);
 
-        SNPRINTF(name, sizeof(name), "gSpotLights[%d].Base.Atten.Constant", i);
+        _snprintf_s(name, sizeof(name), "gSpotLights[%d].Base.Atten.Constant", i);
         m_spotLightsLocation[i].atten.constant = GetUniformLocation(name);
 
-        SNPRINTF(name, sizeof(name), "gSpotLights[%d].Base.Atten.Linear", i);
+        _snprintf_s(name, sizeof(name), "gSpotLights[%d].Base.Atten.Linear", i);
         m_spotLightsLocation[i].atten.linear = GetUniformLocation(name);
 
-        SNPRINTF(name, sizeof(name), "gSpotLights[%d].Base.Atten.Exp", i);
+        _snprintf_s(name, sizeof(name), "gSpotLights[%d].Base.Atten.Exp", i);
         m_spotLightsLocation[i].atten.exp = GetUniformLocation(name);
 
         if (m_spotLightsLocation[i].color == INVALID_UNIFORM_LOCATION ||
@@ -168,7 +168,7 @@ bool SkinningTechnique::Init()
     {
         char name[128];
         memset(name, 0, sizeof(name));
-        SNPRINTF(name, sizeof(name), "gBones[%d]", i);
+        _snprintf_s(name, sizeof(name), "gBones[%d]", i);
         m_boneLocation[i] = GetUniformLocation(name);
     }
 

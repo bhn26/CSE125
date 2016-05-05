@@ -27,9 +27,9 @@
 
 #include "ogldev_util.h"
 
-bool ReadFile(const char* pFileName, std::string& outFile)
+bool ReadFile(const char* fileName, std::string& outFile)
 {
-    std::ifstream f(pFileName);
+    std::ifstream f(fileName);
     
     bool ret = false;
     
@@ -45,35 +45,22 @@ bool ReadFile(const char* pFileName, std::string& outFile)
         ret = true;
     }
     else {
-        OGLDEV_FILE_ERROR(pFileName);
+        OGLDEV_FILE_ERROR(fileName);
     }
     
     return ret;
 }
 
-void OgldevError(const char* pFileName, uint line, const char* pError)
+void OgldevFileError(const char* fileName, unsigned int line, const char* fileError)
 {
 #ifdef WIN32
     char msg[1000];
-    _snprintf_s(msg, sizeof(msg), "%s:%d: %s", pFileName, line, pError);
-    MessageBoxA(NULL, msg, NULL, 0);
-#else
-    fprintf(stderr, "%s:%d: %s\n", pFileName, line, pError);
-#endif    
-}
-
-
-void OgldevFileError(const char* pFileName, uint line, const char* pFileError)
-{
-#ifdef WIN32
-    char msg[1000];
-    _snprintf_s(msg, sizeof(msg), "%s:%d: unable to open file `%s`", pFileName, line, pFileError);
+    _snprintf_s(msg, sizeof(msg), "%s:%d: unable to open file `%s`", fileName, line, fileError);
     MessageBoxA(NULL, msg, NULL, 0);
 #else
     fprintf(stderr, "%s:%d: unable to open file `%s`\n", pFileName, line, pFileError);
 #endif    
 }
-
 
 long long GetCurrentTimeMillis()
 {
@@ -87,15 +74,3 @@ long long GetCurrentTimeMillis()
     return ret;
 #endif    
 }
-
-#ifdef WIN32
-#if _MSC_VER != 1800
-//float fmax(float a, float b)
-//{
-//    if (a > b)
-//        return a;
-//    else
-//        return b;
-//}
-#endif
-#endif
