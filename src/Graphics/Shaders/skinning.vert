@@ -16,6 +16,7 @@ out vec3 WorldPos0;
 const int MAX_BONES = 100;
 
 uniform mat4 gWVP;
+uniform mat4 perspective;
 uniform mat4 view;
 uniform mat4 gWorld;
 uniform mat4 gBones[MAX_BONES];
@@ -27,6 +28,11 @@ void main()
     BoneTransform     += gBones[BoneIDs[2]] * Weights[2];
     BoneTransform     += gBones[BoneIDs[3]] * Weights[3];
     //BoneTransform     += gBones[BoneIDs[4]] * Weights[4];   // Need a 5th bone
+
+    mat4 model = mat4(vec4(0.1f, 0.0f, 0.0f, 0.0f),
+                    vec4(0.0f, 0.1f, 0.0f, 0.0f),
+                    vec4(0.0f, 0.0f, 0.1f, 0.0f),
+                    vec4(0.0f, 0.0f, 0.0f, 1.0f));
 
     vec4 PosL    = BoneTransform * vec4(Position, 1.0);
     gl_Position  = gWVP * PosL;

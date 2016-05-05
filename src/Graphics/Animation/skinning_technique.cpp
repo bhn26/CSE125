@@ -52,6 +52,8 @@ bool SkinningTechnique::Init()
     }
     
     m_WVPLocation = GetUniformLocation("gWVP");
+    //m_ViewLocation = GetUniformLocation("view");
+    //m_PerspectiveLocation = GetUniformLocation("perspective");
     m_WorldMatrixLocation = GetUniformLocation("gWorld");
     m_colorTextureLocation = GetUniformLocation("gColorMap");
     m_eyeWorldPosLocation = GetUniformLocation("gEyeWorldPos");
@@ -178,6 +180,16 @@ void SkinningTechnique::SetWVP(const glm::mat4& WVP)
 {
     glUniformMatrix4fv(m_WVPLocation, 1, GL_FALSE, glm::value_ptr(WVP));
 }
+
+//void SkinningTechnique::SeViewMatrix(const glm::mat4 & view)
+//{
+//    glUniformMatrix4fv(m_ViewLocation, 1, GL_FALSE, glm::value_ptr(view));
+//}
+//
+//void SkinningTechnique::SetPerspectiveMatrix(const glm::mat4 & perspective)
+//{
+//    glUniformMatrix4fv(m_PerspectiveLocation, 1, GL_FALSE, glm::value_ptr(perspective));
+//}
 
 void SkinningTechnique::SetWorldMatrix(const glm::mat4& World)
 {

@@ -34,7 +34,6 @@ public:
     SkinningTechnique* m_pEffect;
     DirectionalLight m_directionalLight;
     SkinnedMesh m_mesh;
-    glm::vec3 m_position;
 
     glm::mat4 m_toWorld;
     

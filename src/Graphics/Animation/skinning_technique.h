@@ -91,6 +91,8 @@ public:
     virtual bool Init();
 
     void SetWVP(const glm::mat4& WVP);
+    //void SeViewMatrix(const glm::mat4& view);
+    //void SetPerspectiveMatrix(const glm::mat4& perspective);
     void SetWorldMatrix(const glm::mat4& WVP);
     void SetColorTextureUnit(unsigned int TextureUnit);
     void SetDirectionalLight(const DirectionalLight& Light);
@@ -104,6 +106,8 @@ public:
 private:
     
     GLuint m_WVPLocation;
+    //GLuint m_ViewLocation;
+    //GLuint m_PerspectiveLocation;
     GLuint m_WorldMatrixLocation;
     GLuint m_colorTextureLocation;
     GLuint m_eyeWorldPosLocation;
