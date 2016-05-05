@@ -33,10 +33,8 @@ Technique::~Technique()
     // Delete the intermediate shader objects that have been added to the program
     // The list will only contain something if shaders were compiled but the object itself
     // was destroyed prior to linking.
-    for (ShaderObjList::iterator it = m_shaderObjList.begin() ; it != m_shaderObjList.end() ; it++)
-    {
-        glDeleteShader(*it);
-    }
+    for (GLuint shader : m_shaderObjList)
+        glDeleteShader(shader);
 
     if (m_shaderProg != 0)
     {
@@ -93,9 +91,9 @@ bool Technique::AddShader(GLenum shaderType, const char* filename)
 
     if (!success)
     {
-        GLchar InfoLog[1024];
-        glGetShaderInfoLog(shaderObj, 1024, NULL, InfoLog);
-        fprintf(stderr, "Error compiling '%s': '%s'\n", filename, InfoLog);
+        GLchar infoLog[1024];
+        glGetShaderInfoLog(shaderObj, 1024, NULL, infoLog);
+        fprintf(stderr, "Error compiling '%s': '%s'\n", filename, infoLog);
         return false;
     }
 
