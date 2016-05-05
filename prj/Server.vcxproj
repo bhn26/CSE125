@@ -75,6 +75,7 @@
     <IntDir>$(ProjectName)\$(Configuration)\</IntDir>
     <IncludePath>$(SolutionDir)include/BulletPhysics;$(SolutionDir)include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)lib;$(LibraryPath)</LibraryPath>
+    <ReferencePath>$(ProjectDir);$(VC_ReferencesPath_x86);</ReferencePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>

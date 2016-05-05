@@ -17,13 +17,12 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-Egg::Egg() : Egg(glm::vec3(0.0f))
+Egg::Egg() : Egg(0.0f, 0.0f, 0.0f)
 {
 }
 
-Egg::Egg(glm::vec3 pos) : Entity(pos)
+Egg::Egg(float x, float y, float z) : Entity(glm::vec3(x, y, z))
 {
-	this->toWorld = glm::translate(glm::mat4(1.0f), pos);
 	model = new Model("assets/eggs/objects/egg.obj");
 }
 

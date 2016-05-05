@@ -28,7 +28,7 @@ class Egg : public Entity
 {
 public:
 	Egg();
-	Egg(glm::vec3 pos);
+	Egg(float x, float y, float z);
 	~Egg();
 
 	Model* model;

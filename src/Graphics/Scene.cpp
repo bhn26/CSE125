@@ -36,7 +36,7 @@ void Scene::Setup()
     Scene::player = player.get();
     std::unique_ptr<Ground> ground = std::unique_ptr<Ground>(new Ground);
     //std::unique_ptr<Cube> cube = std::unique_ptr<Cube>(new Cube);
-	std::unique_ptr<Egg> egg = std::unique_ptr<Egg>(new Egg(glm::vec3(10.0f, 3.0f, 10.0f)));
+	std::unique_ptr<Egg> egg = std::unique_ptr<Egg>(new Egg(10.0f, 3.0f, 10.0f));
 	egg->SetColor(glm::vec3(0.27f, 0.16f, 0.0f));
     std::unique_ptr<CubeMap> cubeMap = std::unique_ptr<CubeMap>(new CubeMap);
     cubeMap->LoadCubeMap();
