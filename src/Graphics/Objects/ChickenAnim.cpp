@@ -57,9 +57,7 @@ void ChickenAnim::Draw()
 {
     m_pEffect->Enable(); // use shader
 
-    glm::vec3 pos = Scene::camera->Position();
-    m_pEffect->SetEyeWorldPos(glm::vec3(pos.x, pos.y, pos.z));
-
+    m_pEffect->SetEyeWorldPos(Scene::camera->Position());
     m_pEffect->SetWVP(Scene::camera->GetPerspectiveMatrix() * Scene::camera->GetViewMatrix() * m_toWorld);
     m_pEffect->SetWorldMatrix(m_toWorld);
 

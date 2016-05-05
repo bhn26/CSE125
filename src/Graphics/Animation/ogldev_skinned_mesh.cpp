@@ -420,10 +420,11 @@ uint SkinnedMesh::FindPosition(float AnimationTime, const aiNodeAnim* pNodeAnim)
             return i;
         }
     }
-    
-    assert(0);
 
-    return 0;
+    return pNodeAnim->mNumPositionKeys-1;
+    
+    //assert(0);
+    //return 0;
 }
 
 
@@ -438,10 +439,11 @@ uint SkinnedMesh::FindRotation(float AnimationTime, const aiNodeAnim* pNodeAnim)
             return i;
         }
     }
-    
-    assert(0);
 
-    return 0;
+    return pNodeAnim->mNumRotationKeys-1;
+    
+    //assert(0);
+    //return 0;
 }
 
 
@@ -456,10 +458,11 @@ uint SkinnedMesh::FindScaling(float AnimationTime, const aiNodeAnim* pNodeAnim)
             return i;
         }
     }
-    
-    assert(0);
 
-    return 0;
+    return pNodeAnim->mNumScalingKeys-1;
+    
+    //assert(0);
+    //return 0;
 }
 
 
@@ -472,11 +475,17 @@ void SkinnedMesh::CalcInterpolatedPosition(aiVector3D& Out, float AnimationTime,
     }
             
     uint PositionIndex = FindPosition(AnimationTime, pNodeAnim);
-    uint NextPositionIndex = (PositionIndex + 1);
+    uint NextPositionIndex = (PositionIndex + 1) % pNodeAnim->mNumPositionKeys;
     assert(NextPositionIndex < pNodeAnim->mNumPositionKeys);
-    float DeltaTime = (float)(pNodeAnim->mPositionKeys[NextPositionIndex].mTime - pNodeAnim->mPositionKeys[PositionIndex].mTime);
+
+    float DeltaTime;
+    if (NextPositionIndex == 0)
+        DeltaTime = (float)(m_pScene->mAnimations[0]->mDuration - pNodeAnim->mPositionKeys[PositionIndex].mTime);
+    else
+        DeltaTime = (float)(pNodeAnim->mPositionKeys[NextPositionIndex].mTime - pNodeAnim->mPositionKeys[PositionIndex].mTime);
     float Factor = (AnimationTime - (float)pNodeAnim->mPositionKeys[PositionIndex].mTime) / DeltaTime;
     assert(Factor >= 0.0f && Factor <= 1.0f);
+
     const aiVector3D& Start = pNodeAnim->mPositionKeys[PositionIndex].mValue;
     const aiVector3D& End = pNodeAnim->mPositionKeys[NextPositionIndex].mValue;
     aiVector3D Delta = End - Start;
@@ -494,11 +503,17 @@ void SkinnedMesh::CalcInterpolatedRotation(aiQuaternion& Out, float AnimationTim
     }
     
     uint RotationIndex = FindRotation(AnimationTime, pNodeAnim);
-    uint NextRotationIndex = (RotationIndex + 1);
+    uint NextRotationIndex = (RotationIndex + 1) % pNodeAnim->mNumRotationKeys;
     assert(NextRotationIndex < pNodeAnim->mNumRotationKeys);
-    float DeltaTime = (float)(pNodeAnim->mRotationKeys[NextRotationIndex].mTime - pNodeAnim->mRotationKeys[RotationIndex].mTime);
+
+    float DeltaTime;
+    if (NextRotationIndex == 0)
+        DeltaTime = (float)(m_pScene->mAnimations[0]->mDuration - pNodeAnim->mRotationKeys[RotationIndex].mTime);
+    else
+        DeltaTime = (float)(pNodeAnim->mRotationKeys[NextRotationIndex].mTime - pNodeAnim->mRotationKeys[RotationIndex].mTime);
     float Factor = (AnimationTime - (float)pNodeAnim->mRotationKeys[RotationIndex].mTime) / DeltaTime;
     assert(Factor >= 0.0f && Factor <= 1.0f);
+
     const aiQuaternion& StartRotationQ = pNodeAnim->mRotationKeys[RotationIndex].mValue;
     const aiQuaternion& EndRotationQ   = pNodeAnim->mRotationKeys[NextRotationIndex].mValue;    
     aiQuaternion::Interpolate(Out, StartRotationQ, EndRotationQ, Factor);
@@ -515,11 +530,17 @@ void SkinnedMesh::CalcInterpolatedScaling(aiVector3D& Out, float AnimationTime, 
     }
 
     uint ScalingIndex = FindScaling(AnimationTime, pNodeAnim);
-    uint NextScalingIndex = (ScalingIndex + 1);
+    uint NextScalingIndex = (ScalingIndex + 1) % pNodeAnim->mNumScalingKeys;
     assert(NextScalingIndex < pNodeAnim->mNumScalingKeys);
-    float DeltaTime = (float)(pNodeAnim->mScalingKeys[NextScalingIndex].mTime - pNodeAnim->mScalingKeys[ScalingIndex].mTime);
+
+    float DeltaTime;
+    if (NextScalingIndex == 0)
+        DeltaTime = (float)(m_pScene->mAnimations[0]->mDuration - pNodeAnim->mScalingKeys[ScalingIndex].mTime);
+    else
+        DeltaTime = (float)(pNodeAnim->mScalingKeys[NextScalingIndex].mTime - pNodeAnim->mScalingKeys[ScalingIndex].mTime);
     float Factor = (AnimationTime - (float)pNodeAnim->mScalingKeys[ScalingIndex].mTime) / DeltaTime;
     assert(Factor >= 0.0f && Factor <= 1.0f);
+
     const aiVector3D& Start = pNodeAnim->mScalingKeys[ScalingIndex].mValue;
     const aiVector3D& End   = pNodeAnim->mScalingKeys[NextScalingIndex].mValue;
     aiVector3D Delta = End - Start;
