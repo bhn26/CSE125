@@ -264,8 +264,6 @@ void ServerGame::receiveMovePacket(int offset)
     struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
 	shared_ptr<Player> player = engine->GetWorld()->GetPlayer(hdr->sender_id);
 
-
-
     //printf("dummy's current pos is (%d,%d)\n", dpi.x, dpi.y);
 	btVector3* vec;
 	switch (pi->direction) {

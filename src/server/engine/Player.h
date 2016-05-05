@@ -53,6 +53,9 @@ public:
 	// Makes the player jump
 	void JumpPlayer();
 
+	// Resets player jump semaphore
+	void ResetJump();
+
 	//Flag handling
 	void AcquireFlag(std::shared_ptr<Flag> flag);
 

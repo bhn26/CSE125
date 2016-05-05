@@ -100,70 +100,135 @@ void World::Init(pos_list player_poss, pos_list flag_poss) {
 
 void World::updateWorld()
 {
+	// Step simulation
 	curWorld->stepSimulation(1 / 60.f, 10);
 
+	// Process all collisions
 	int numManifolds = curWorld->getDispatcher()->getNumManifolds();
-
-	/*
-	if (indexCounter == 5000) 
-	{
-		btVector3 playerPos = (players.at(0))->GetPlayerPosition();
-		printf("world pos object = %f,%f,%f\n", float(playerPos.getX()), float(playerPos.getY()), float(playerPos.getZ()));
-		(players.at(0))->PrintPlayerVelocity();
-		indexCounter = 0;
-	}
-	indexCounter++;
-	*/
-	
 	for (int i = 0; i < numManifolds; i++)
 	{
 		btPersistentManifold* contactManifold = curWorld->getDispatcher()->getManifoldByIndexInternal(i);
 		const btCollisionObject* obA = contactManifold->getBody0();
 		const btCollisionObject* obB = contactManifold->getBody1();
 
-		// Obj A is Flag
-		if ((obA->getUserIndex()) == FLAG)
+		//Notes: check if ObA is Player
+		//			if ObB Flag
+		//          else if obB is Bullet
+		//          else if collision is from the bottom, reset jump semaphore
+
+
+		// Obj A is Player
+		if (obA->getUserIndex() == PLAYER)
 		{
-			// Obj B is Player
-			if (obB->getUserIndex() == PLAYER)
+			// Grab Player Object
+			Player * collidePlayer = (Player *)obA->getUserPointer();
+
+			// if Obj B is Flag
+			if (obB->getUserIndex() == FLAG)
 			{
-
 				// Handle Flag Collection
-
 				Flag * collideFlag = (Flag *)obB->getUserPointer();
-				Player * collidePlayer = (Player *)obA->getUserPointer();
 
 				collidePlayer->AcquireFlag((std::shared_ptr<Flag>)collideFlag);
 				curWorld->removeRigidBody(collideFlag->getRigidBody());
 				//TODO remove flag from Vector causes strange issues...
 				//removeFlag((std::shared_ptr<Flag>)collideFlag);
 			}
-		}
-		// Obj B is Flag
-		else if (obB->getUserIndex() == FLAG)
-		{
-			// Obj A is Player
-			if (obA->getUserIndex() == PLAYER)
+			//else if   TODO Handle Bullet Collision
+			//...
+
+			// Handles Jump Semaphore
+			else // if (++y % 50000 == 0) 
 			{
+				int numContacts = contactManifold->getNumContacts();
+				printf("numContacts are %d \n", numContacts);
+				for (int j = 0; j < numContacts; j++)
+				{
+					btManifoldPoint& pt = contactManifold->getContactPoint(j);
+					if (pt.getDistance() < 0.f)
+					{
+						const btVector3& ptA = pt.getPositionWorldOnA();
+						const btVector3& ptB = pt.getPositionWorldOnB();
+						const btVector3& normalOnB = pt.m_normalWorldOnB;
 
+						// Reset Jump Semaphore, detects collision off of non-player, error of .1
+						// TODO: FIX MAGIC NUMBER OF PLAYER HALFEXTENT = 1
+						if ((collidePlayer->GetPlayerPosition()).getY() - 1 > (ptB.getY() - .1) &&
+							(collidePlayer->GetPlayerPosition()).getY() - 1 < (ptB.getY() + .1))
+						{
+							collidePlayer->ResetJump();
+						}
+						
+						/*
+						Notes: No Rotation: Can minus halfextent of player object from pt of collision ~= 0
+						Notes: Rotation:  Collision pt - (halfextent * normalOnB) ~= 0
+						printf(" ptA at (%f,%f,%f)\n", ptA.getX(), ptA.getY(), ptA.getZ());
+						printf(" ptB at (%f,%f,%f)\n", ptB.getX(), ptB.getY(), ptB.getZ());
+						printf(" normalOnB at (%f,%f,%f)\n", normalOnB.getX(), normalOnB.getY(), normalOnB.getZ());
+						*/
+					}
+				}
+			}
+		}
+
+		// Obj B is Player
+		else if (obB->getUserIndex() == PLAYER)
+		{
+			// Grab Player Object
+			Player * collidePlayer = (Player *)obB->getUserPointer();
+
+			// if Obj A is Flag
+			if ((obA->getUserIndex()) == FLAG)
+			{
 				// Handle Flag Collection
-				//std::shared_ptr<Flag>* collideFlag = reinterpret_cast<std::shared_ptr<Flag> * >(obB->getUserPointer());
-				//std::shared_ptr<Player>* collidePlayer = reinterpret_cast<std::shared_ptr<Player> * >(obA->getUserPointer());
-
-				//(*collidePlayer)->AcquireFlag(*collideFlag);
-
-				Flag * collideFlag = (Flag *)obB->getUserPointer();
-				Player * collidePlayer = (Player *)obA->getUserPointer();
+				Flag * collideFlag = (Flag *)obA->getUserPointer();
 
 				collidePlayer->AcquireFlag((std::shared_ptr<Flag>)collideFlag);
 				curWorld->removeRigidBody(collideFlag->getRigidBody());
 				//TODO remove flag from Vector causes strange issues...
 				//removeFlag((std::shared_ptr<Flag>)collideFlag);
 			}
+			//else if   TODO Handle Bullet Collision
+			//...
+
+			// Handles Jump Semaphore
+			else //if (++y % 50000 == 0) 
+			{
+				int numContacts = contactManifold->getNumContacts();
+				for (int j = 0; j < numContacts; j++)
+				{
+					btManifoldPoint& pt = contactManifold->getContactPoint(j);
+					if (pt.getDistance() < 0.f)
+					{
+						const btVector3& ptA = pt.getPositionWorldOnA();
+						const btVector3& ptB = pt.getPositionWorldOnB();
+						const btVector3& normalOnB = pt.m_normalWorldOnB;
+
+						// Reset Jump Semaphore, detects collision off of non-player, error of .1
+						// TODO: FIX MAGIC NUMBER OF PLAYER HALFEXTENT = 1
+						if ((collidePlayer->GetPlayerPosition()).getY() - 1 > (ptA.getY()- .1) &&
+							(collidePlayer->GetPlayerPosition()).getY() - 1 < (ptA.getY() + .1))
+						{
+							collidePlayer->ResetJump();
+						}
+
+						/*
+						Notes: No Rotation: Can minus halfextent of player object from pt of collision ~= 0
+						Notes: Rotation:  Collision pt - (halfextent * normalOnB) ~= 0
+						printf(" ptA at (%f,%f,%f)\n", ptA.getX(), ptA.getY(), ptA.getZ());
+						printf(" ptB at (%f,%f,%f)\n", ptB.getX(), ptB.getY(), ptB.getZ());
+						printf(" normalOnB at (%f,%f,%f)\n", normalOnB.getX(), normalOnB.getY(), normalOnB.getZ());
+						*/
+					}
+				}
+			}
 		}
+
+
 	}
 	if (x++ % 10000 == 0) {
 
+		/*
 		btVector3 vecg = rightWall->getCenterOfMassPosition();
 		printf(" right wall at (%f,%f,%f)\n", vecg.getX(), vecg.getY(), vecg.getZ());
 		vecg = leftWall->getCenterOfMassPosition();
@@ -172,6 +237,7 @@ void World::updateWorld()
 		printf(" front wall at (%f,%f,%f)\n", vecg.getX(), vecg.getY(), vecg.getZ());
 		vecg = backWall->getCenterOfMassPosition();
 		printf(" back wall at (%f,%f,%f)\n", vecg.getX(), vecg.getY(), vecg.getZ());
+		*/
 
 		for (std::vector<std::shared_ptr<Player> >::iterator it = players.begin(); it != players.end(); ++it)
 		{

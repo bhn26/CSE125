@@ -109,6 +109,11 @@ void Player::JumpPlayer()
 	}
 }
 
+void Player::ResetJump()
+{
+	jumpSem = 1;
+}
+
 void Player::AcquireFlag(std::shared_ptr<Flag> flag)
 {
 	// need to remove the flag from the map
