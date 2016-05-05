@@ -10,7 +10,7 @@
 #include "../Scene.h"
 #include "../PointLight.h"
 
-ChickenAnim::ChickenAnim() : m_toWorld(glm::mat4(1.0f))
+ChickenAnim::ChickenAnim() : m_toWorld(glm::mat4(0.01f))
 {
     m_pEffect = NULL;
     m_directionalLight.Color = glm::vec3(1.0f, 1.0f, 1.0f);
@@ -53,7 +53,7 @@ ChickenAnim::~ChickenAnim()
     SAFE_DELETE(m_pEffect);
 }
 
-void ChickenAnim::Draw(Camera* camera)
+void ChickenAnim::Draw()
 {
     m_pEffect->Enable(); // use shader
 

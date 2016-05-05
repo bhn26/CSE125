@@ -41,7 +41,7 @@ public:
     ChickenAnim();
     ~ChickenAnim();
     
-    void Draw(Camera * camera);
+    void Draw();
     void Update();
 };
 

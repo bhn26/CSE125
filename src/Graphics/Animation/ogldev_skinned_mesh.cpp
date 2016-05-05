@@ -27,13 +27,13 @@
 #define BONE_ID_LOCATION     3
 #define BONE_WEIGHT_LOCATION 4
 
-// aiMatrix4x4 is a row-major matrix!!!
+// aiMatrix4x4 is a row-major matrix!!! Assign the transpose
 void Assign(glm::mat4& m, const aiMatrix4x4& aimatrix)
 {
-    m[0][0] = aimatrix.a1; m[1][0] = aimatrix.a2; m[2][0] = aimatrix.a3; m[3][0] = aimatrix.a4;
-    m[0][1] = aimatrix.b1; m[1][1] = aimatrix.b2; m[2][1] = aimatrix.b3; m[3][1] = aimatrix.b4;
-    m[0][2] = aimatrix.c1; m[1][2] = aimatrix.c2; m[2][2] = aimatrix.c3; m[3][2] = aimatrix.c4;
-    m[0][3] = aimatrix.d1; m[1][3] = aimatrix.d2; m[2][3] = aimatrix.d3; m[3][3] = aimatrix.d4;
+    m[0][0] = aimatrix.a1;  m[1][0] = aimatrix.a2;  m[2][0] = aimatrix.a3;  m[3][0] = aimatrix.a4;
+    m[0][1] = aimatrix.b1;  m[1][1] = aimatrix.b2;  m[2][1] = aimatrix.b3;  m[3][1] = aimatrix.b4;
+    m[0][2] = aimatrix.c1;  m[1][2] = aimatrix.c2;  m[2][2] = aimatrix.c3;  m[3][2] = aimatrix.c4;
+    m[0][3] = aimatrix.d1;  m[1][3] = aimatrix.d2;  m[2][3] = aimatrix.d3;  m[3][3] = aimatrix.d4;
 }
 
 void SkinnedMesh::VertexBoneData::AddBoneData(uint BoneID, float Weight)
@@ -566,7 +566,6 @@ void SkinnedMesh::ReadNodeHeirarchy(float AnimationTime, const aiNode* pNode, co
     if (m_BoneMapping.find(NodeName) != m_BoneMapping.end())
     {
         uint BoneIndex = m_BoneMapping[NodeName];
-        // What is this global inverse??
         m_BoneInfo[BoneIndex].FinalTransformation = m_GlobalInverseTransform * GlobalTransformation * m_BoneInfo[BoneIndex].BoneOffset;
     }
     

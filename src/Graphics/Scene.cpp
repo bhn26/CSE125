@@ -55,5 +55,5 @@ void Scene::Draw()
     ground->Draw(camera->GetViewMatrix());
     cube->Draw(camera->GetViewMatrix());
     
-    chicken_anim->Draw(camera.get());
+    chicken_anim->Draw();
 }

@@ -46,8 +46,12 @@
     <None Include="..\src\Graphics\Shaders\diffuse.frag">
       <Filter>Source Files\Graphics\Shaders</Filter>
     </None>
-    <None Include="..\src\Graphics\Shaders\skinning.frag" />
-    <None Include="..\src\Graphics\Shaders\skinning.vert" />
+    <None Include="..\src\Graphics\Shaders\skinning.frag">
+      <Filter>Source Files\Graphics\Shaders</Filter>
+    </None>
+    <None Include="..\src\Graphics\Shaders\skinning.vert">
+      <Filter>Source Files\Graphics\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Graphics\Objects\Cube.cpp">

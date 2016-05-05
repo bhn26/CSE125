@@ -49,6 +49,8 @@ public:
     
     void BoneTransform(float TimeInSeconds, std::vector<glm::mat4>& Transforms);
     
+    const aiScene* Scene() const { return m_pScene; }
+
 private:
     #define NUM_BONES_PER_VEREX 8 // we have max 5
 
