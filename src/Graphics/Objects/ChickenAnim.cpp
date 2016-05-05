@@ -57,8 +57,8 @@ void ChickenAnim::Draw()
 
     m_pEffect->SetEyeWorldPos(Scene::camera->Position());
     m_pEffect->SetWVP(Scene::camera->GetPerspectiveMatrix() * Scene::camera->GetViewMatrix() * m_toWorld);
-    m_pEffect->SeViewMatrix(Scene::camera->GetViewMatrix());
-    m_pEffect->SetPerspectiveMatrix(Scene::camera->GetPerspectiveMatrix());
+    //m_pEffect->SeViewMatrix(Scene::camera->GetViewMatrix());
+    //m_pEffect->SetPerspectiveMatrix(Scene::camera->GetPerspectiveMatrix());
     m_pEffect->SetWorldMatrix(m_toWorld);
 
     m_mesh.Render();

@@ -29,14 +29,8 @@ void main()
     BoneTransform     += gBones[BoneIDs[3]] * Weights[3];
     //BoneTransform     += gBones[BoneIDs[4]] * Weights[4];   // Need a 5th bone
 
-    mat4 model = mat4(vec4(0.1f, 0.0f, 0.0f, 0.0f),
-                    vec4(0.0f, 0.1f, 0.0f, 0.0f),
-                    vec4(0.0f, 0.0f, 0.1f, 0.0f),
-                    vec4(0.0f, 0.0f, 0.0f, 1.0f));
-
     vec4 PosL    = BoneTransform * vec4(Position, 1.0);
     gl_Position  = gWVP * PosL;
-    //gl_Position = gWVP * vec4(Position, 1.0);
     TexCoord0    = TexCoord;
     vec4 NormalL = BoneTransform * vec4(Normal, 0.0);
     Normal0      = (gWorld * NormalL).xyz;
