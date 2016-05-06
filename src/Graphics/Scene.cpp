@@ -30,8 +30,6 @@ void Scene::Setup()
     camera = std::unique_ptr<Camera>(new Camera(glm::vec3(0.0f, 9.0f, -15.0f), glm::vec3(0.0f, 1.0f, 0.0f), 90.0f, -25.0f));
     pLight = std::unique_ptr<PointLight>(new PointLight(glm::vec3(0.0f, 20.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)));
 
-    std::unique_ptr<Player> player = std::unique_ptr<Player>(new Player);
-    Scene::player = player.get();
     std::unique_ptr<Ground> ground = std::unique_ptr<Ground>(new Ground);
     std::unique_ptr<Cube> cube = std::unique_ptr<Cube>(new Cube);
     std::unique_ptr<CubeMap> cubeMap = std::unique_ptr<CubeMap>(new CubeMap);
@@ -39,11 +37,9 @@ void Scene::Setup()
 
     cube->GetShader() = basicShader;
     ground->GetShader() = diffuseShader;
-    player->GetShader() = modelShader;
     cubeMap->GetShader() = cubeMapShader;
 
     entities.push_back(std::move(ground));
-    entities.push_back(std::move(player));
     entities.push_back(std::move(cube));
     entities.push_back(std::move(cubeMap));
 }
@@ -59,7 +55,7 @@ void Scene::AddPlayer(int client_id) {
 
 	if (client_id == ClientGame::GetClientId()) {
 		printf("set main player to %d\n", client_id);
-		player = new_player.get(); // set your player
+		player = new_player; // set your player
 	}
 }
 

@@ -126,6 +126,11 @@ int ServerNetwork::receiveData(unsigned int client_id, char * recvbuf)
             closesocket(currentSocket);
         }
 
+		/*if (iResult == -1) {
+			int error = WSAGetLastError();
+			printf("ERROR: %d\n", error);
+		}*/
+
         return iResult;
     }
 

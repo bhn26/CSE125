@@ -39,7 +39,7 @@ void Player::Draw() const
     GLint lightPosLoc = shader->GetUniform("lightPos");
     GLint viewPosLoc = shader->GetUniform("viewPos");
 
-    glUniformMatrix4fv(viewLoc, 1, false, glm::value_ptr(this->GetViewMatrix()));
+    glUniformMatrix4fv(viewLoc, 1, false, glm::value_ptr(Scene::Instance()->GetViewMatrix()));
     glUniformMatrix4fv(modelLocation, 1, false, glm::value_ptr(this->toWorld));
     glUniformMatrix3fv(normalMatrixLoc, 1, false, glm::value_ptr(GetNormalMatrix()));
     glUniformMatrix4fv(projectionLocation, 1, false, glm::value_ptr(camera->GetPerspectiveMatrix()));
