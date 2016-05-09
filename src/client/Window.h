@@ -3,6 +3,7 @@
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include "StateManager.h"
 
 struct GLFWwindow;
 
@@ -16,6 +17,8 @@ public:
     static bool mouseCaptured;
     static GLint lastX;
     static GLint lastY;
+
+	static CStateManager* m_pStateManager;
 
     static void Initialize_objects();
     static void Clean_up();

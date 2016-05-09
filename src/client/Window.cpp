@@ -9,6 +9,7 @@
 #include "../Graphics/Camera.h"
 #include "../Graphics/Scene.h"
 #include "Player.h"
+#include "MenuState.h"
 
 const char* window_title = "Egg Scramble!";
 
@@ -23,6 +24,8 @@ bool Window::firstMouse = true;
 bool Window::mouseCaptured = false;
 GLint Window::lastX = width / 2;
 GLint Window::lastY = height / 2;
+
+CStateManager* Window::m_pStateManager = new CStateManager;
 
 void Window::Initialize_objects()
 {
@@ -75,6 +78,8 @@ GLFWwindow* Window::Create_window(int width, int height)
     glfwGetFramebufferSize(window, &width, &height);
     Window::Resize_callback(window, width, height);
 
+	m_pStateManager->ChangeState(CMenuState::GetInstance(m_pStateManager));
+
     return window;
 }
 
@@ -92,7 +97,10 @@ void Window::Idle_callback()
     // In this instance, drawPtr is pointing to a Cube object and is therefore
     // causing the cube to rotate via its spin function.
     //chicken->Update();
-    Scene::Instance()->Update();
+    //Scene::Instance()->Update();
+
+	DWORD dwCurrentTime = GetTickCount();
+	m_pStateManager->Update(dwCurrentTime);
 }
 
 void Window::Display_callback(GLFWwindow* window)
@@ -105,7 +113,9 @@ void Window::Display_callback(GLFWwindow* window)
 
     // Render the object drawPtr is pointing to
     //chicken->Draw(camera);
-    Scene::Instance()->Draw();
+    //Scene::Instance()->Draw();
+	m_pStateManager->Draw();
+
 
     // Gets events, including input such as keyboard and mouse or window resizing
     glfwPollEvents();
