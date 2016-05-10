@@ -13,7 +13,8 @@ World::~World() {
 void World::Init(pos_list player_poss, pos_list flag_poss) {
 
 	// Init object id counter
-	objectIdCounter = 0;
+	oid = 0;
+	int z = 1000; // this is a random number for the walls right now, we need to change this
 
 	// Create Physics world
 	btDefaultCollisionConfiguration * collisionConfig = new btDefaultCollisionConfiguration();
@@ -31,8 +32,7 @@ void World::Init(pos_list player_poss, pos_list flag_poss) {
 	btRigidBody* groundRigidBody = new btRigidBody(groundRigidBodyCI);
 	dynamicsWorld->addRigidBody(groundRigidBody);
 	// Create Ground Obstacle
-	WorldObstacle* groundwall = new WorldObstacle(objectIdCounter, groundRigidBody, curWorld);
-	objectIdCounter++;
+	WorldObstacle* groundwall = new WorldObstacle(z++, groundRigidBody, curWorld);
 	
 	// Add Pos X Wall
 	btCollisionShape* xWallShape = new btStaticPlaneShape(btVector3(btScalar(-1.), btScalar(0.), btScalar(0.)), 0);
@@ -43,8 +43,7 @@ void World::Init(pos_list player_poss, pos_list flag_poss) {
 	xWallRigidBody->setGravity(btVector3(0, 0, 0));
 	dynamicsWorld->addRigidBody(xWallRigidBody);
 	// Create X Wall
-	WorldObstacle* xwall = new WorldObstacle(objectIdCounter, xWallRigidBody, curWorld);
-	objectIdCounter++;
+	WorldObstacle* xwall = new WorldObstacle(z++, xWallRigidBody, curWorld);
 
 	// Add Neg X Wall
 	btCollisionShape* nxWallShape = new btStaticPlaneShape(btVector3(btScalar(1.), btScalar(0.), btScalar(0.)), 0);
@@ -55,8 +54,7 @@ void World::Init(pos_list player_poss, pos_list flag_poss) {
 	nxWallRigidBody->setGravity(btVector3(0, 0, 0));
 	dynamicsWorld->addRigidBody(nxWallRigidBody);
 	// Create Neg X Wall
-	WorldObstacle* nxwall = new WorldObstacle(objectIdCounter, groundRigidBody, curWorld);
-	objectIdCounter++;
+	WorldObstacle* nxwall = new WorldObstacle(z++, groundRigidBody, curWorld);
 
 	// Add Pos Z Wall
 	btCollisionShape* zWallShape = new btStaticPlaneShape(btVector3(btScalar(0.), btScalar(0.), btScalar(-1.)), 0);
@@ -67,8 +65,7 @@ void World::Init(pos_list player_poss, pos_list flag_poss) {
 	zWallRigidBody->setGravity(btVector3(0, 0, 0));
 	dynamicsWorld->addRigidBody(zWallRigidBody);
 	// Create Pos Z Wall
-	WorldObstacle* zwall = new WorldObstacle(objectIdCounter, zWallRigidBody, curWorld);
-	objectIdCounter++;
+	WorldObstacle* zwall = new WorldObstacle(z++, zWallRigidBody, curWorld);
 
 	// Add Neg Z Wall
 	btCollisionShape* nzWallShape = new btStaticPlaneShape(btVector3(btScalar(0.), btScalar(0.), btScalar(1.)), 0);
@@ -79,8 +76,7 @@ void World::Init(pos_list player_poss, pos_list flag_poss) {
 	nzWallRigidBody->setGravity(btVector3(0, 0, 0));
 	dynamicsWorld->addRigidBody(nzWallRigidBody);
 	// Create Neg Z Wall
-	WorldObstacle* nzwall = new WorldObstacle(objectIdCounter, nzWallRigidBody, curWorld);
-	objectIdCounter++;
+	WorldObstacle* nzwall = new WorldObstacle(z++, nzWallRigidBody, curWorld);
 
 	// Set Local attributes
 	this->ground = groundwall;
@@ -98,8 +94,7 @@ void World::Init(pos_list player_poss, pos_list flag_poss) {
 	// Initialize player objects
 	for (int i = 0; i < player_poss.size(); i++) {
 		int teamid = 1;
-		std::shared_ptr<Player> player = std::shared_ptr<Player>(new Player(objectIdCounter, teamid, player_poss.at(i), curWorld));
-		objectIdCounter++;
+		std::shared_ptr<Player> player = std::shared_ptr<Player>(new Player(oid, teamid, player_poss.at(i), curWorld));
 		btVector3 vec = player->GetPlayerPosition();
 		printf("Created player at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
 		//printf("Posinfo player at (%d,%d,%d)\n", player->GetPosition().x, player->GetPosition().y, player->GetPosition().z);
@@ -117,8 +112,7 @@ void World::Init(pos_list player_poss, pos_list flag_poss) {
 
 	// Initialize egg objects
 	for (int i = 0; i < flag_poss.size(); i++) {
-		std::shared_ptr<Flag> flag = std::shared_ptr<Flag>(new Flag(objectIdCounter, flag_poss.at(i), curWorld));
-		objectIdCounter++;
+		std::shared_ptr<Flag> flag = std::shared_ptr<Flag>(new Flag(oid, flag_poss.at(i), curWorld));
 		btVector3 vec = flag->GetFlagPosition();
 		printf("Created flag at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
 		printf("Posinfo flag at (%d,%d,%d)\n", flag->p.x, flag->p.y, flag->p.z);
@@ -170,6 +164,9 @@ void World::updateWorld()
 
 				collidePlayer->AcquireFlag((std::shared_ptr<Flag>)collideFlag);
 				curWorld->removeRigidBody(collideFlag->getRigidBody());
+				ServerGame::instance()->sendRemovePacket(ClassId::FLAG, collideFlag->GetObjectId());
+				//TODO send a packet for the player to acquire the item
+
 				//TODO remove flag from Vector causes strange issues...
 				//removeFlag((std::shared_ptr<Flag>)collideFlag);
 			}
@@ -180,7 +177,6 @@ void World::updateWorld()
 			else // if (++y % 50000 == 0) 
 			{
 				int numContacts = contactManifold->getNumContacts();
-				printf("numContacts are %d \n", numContacts);
 				for (int j = 0; j < numContacts; j++)
 				{
 					btManifoldPoint& pt = contactManifold->getContactPoint(j);
@@ -224,6 +220,9 @@ void World::updateWorld()
 
 				collidePlayer->AcquireFlag((std::shared_ptr<Flag>)collideFlag);
 				curWorld->removeRigidBody(collideFlag->getRigidBody());
+				ServerGame::instance()->sendRemovePacket(ClassId::FLAG, collideFlag->GetObjectId());
+				//TODO send a packet for the player to acquire the item
+
 				//TODO remove flag from Vector causes strange issues...
 				//removeFlag((std::shared_ptr<Flag>)collideFlag);
 			}

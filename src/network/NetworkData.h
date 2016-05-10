@@ -8,17 +8,19 @@
 enum PacketTypes 
 {
 
-    INIT_CONNECTION = 0, //0
+    INIT_CONNECTION = 0, // Initial connection setup
 
 	READY_GAME = 1,  // The clients send this to say they're ready
 
 	START_GAME = 2, // A client would send this to start the game
 
-    SPAWN_EVENT = 3, //2
+    SPAWN_EVENT = 3, // Creating a new object, sent to the client
 
-    MOVE_EVENT = 4, //3
+	REMOVE_EVENT = 4, // Removing an object, sent to the client
 
-    V_ROTATION_EVENT = 5 //4
+    MOVE_EVENT = 5, //3
+
+    V_ROTATION_EVENT = 6 //4
 
 };
 

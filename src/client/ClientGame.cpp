@@ -132,6 +132,16 @@ void ClientGame::sendSpawnPacket()
     NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
 }
 
+void ClientGame::receiveRemovePacket(int offset)
+{
+	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
+	struct RemInfo* r = (struct RemInfo *) &(dat->buf);
+
+	printf("received a remove packet for type %d object %d\n", r->rem_cid, r->rem_oid);
+
+	Scene::Instance()->RemoveEntity(r->rem_cid, r->rem_oid);
+}
+
 void ClientGame::receiveMovePacket(int offset)
 {
 
@@ -236,6 +246,10 @@ void ClientGame::update()
                 receiveSpawnPacket(i + sizeof(PacketHeader));
 
                 break;
+
+			case REMOVE_EVENT:
+				receiveRemovePacket(i + sizeof(PacketHeader));
+				break;
 
             case MOVE_EVENT:
 				if(game_started) // the game needs to start for the client before this can happen

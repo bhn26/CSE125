@@ -25,7 +25,8 @@ enum MoveType {
 
 enum GameDataId 
 {
-    POS_OBJ = 0
+    POS_OBJ = 0,
+	REM_OBJ = 1
 };
 
 struct GameInfo
@@ -72,18 +73,18 @@ struct PosInfo : GameInfo
 
 //#endif
 
-// What needs to get deleted
-struct DelInfo : GameInfo
+// What needs to get removed
+struct RemInfo : GameInfo
 {
-	int delete_oid;
-	ClassId delete_cid;
+	int rem_oid;
+	ClassId rem_cid;
 
 	void serialize(char * data) {
-		memcpy(data, this, sizeof(DelInfo));
+		memcpy(data, this, sizeof(RemInfo));
 	}
 
 	void deserialize(char * data) {
-		memcpy(this, data, sizeof(DelInfo));
+		memcpy(this, data, sizeof(RemInfo));
 	}
 };
 

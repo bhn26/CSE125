@@ -9,7 +9,6 @@
 #include "../../network/GameData.h"
 // Game Obstacle is already existing
 
-
 using namespace std;
 
 typedef vector<PosInfo> pos_list;
@@ -34,7 +33,9 @@ private:
 	WorldObstacle * backWall;
 	WorldObstacle * leftWall;
 	WorldObstacle * rightWall;
-	int objectIdCounter;
+
+	// object ids
+	int oid;
 
 public:
 	World();
@@ -43,9 +44,6 @@ public:
 	// ticker used for now
 	int x = 0;
 	int y = 0;
-
-	// object ids
-	int oid = 0;
 
 	void Init(pos_list player_poss, pos_list flag_poss);
 	std::shared_ptr<Player> GetPlayer(int id) { return players.at(id); };

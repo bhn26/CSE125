@@ -22,12 +22,6 @@ Scene::Scene() : camera(std::unique_ptr<Camera>(nullptr)), pLight(std::unique_pt
 const int Scene::WIDTH = 100;
 const int Scene::HEIGHT = 100;
 
-/*static std::shared_ptr<Shader> basicShader = std::make_shared<Shader>("src/Graphics/Shaders/basic_shader.vert", "src/Graphics/Shaders/basic_shader.frag");
-static std::shared_ptr<Shader> diffuseShader = std::make_shared<Shader>("src/Graphics/Shaders/basic_shader.vert", "src/Graphics/Shaders/diffuse.frag");
-static std::shared_ptr<Shader> modelShader = std::make_shared<Shader>("src/Graphics/Shaders/model_loading.vert", "src/Graphics/Shaders/model_loading.frag");
-static std::shared_ptr<Shader> cubeMapShader = std::make_shared<Shader>("src/Graphics/Shaders/cubemap.vert", "src/Graphics/Shaders/cubemap.frag");*/
-
-
 void Scene::Setup()
 {
     entities.clear();
@@ -137,7 +131,7 @@ void Scene::AddEntity(int cid, int oid, float x, float y, float z)
 		AddEntity(cid, oid, std::move(player));
 		break;
 	case ClassId::FLAG:
-		egg = std::unique_ptr<Egg>(new Egg(glm::vec3(x, y, z)));
+		egg = std::unique_ptr<Egg>(new Egg(x,y,z));
 		egg->SetColor(glm::vec3(0.27f, 0.16f, 0.0f));
 		egg->GetShader() = diffuseShader;
 		AddEntity(cid, oid, std::move(egg));
@@ -150,5 +144,5 @@ void Scene::AddEntity(int cid, int oid, float x, float y, float z)
 
 void Scene::RemoveEntity(int cid, int oid)
 {
-	entities.erase(std::make_pair(cid, oid));
+	int removed = entities.erase(std::make_pair(cid, oid));
 }

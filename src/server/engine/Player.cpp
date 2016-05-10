@@ -120,7 +120,7 @@ void Player::AcquireFlag(std::shared_ptr<Flag> flag)
 {
 	// need to remove the flag from the map
 	flags->push_back(flag);
-	printf("Flag was acquired! \n");
+	printf("FLAG ACQUIRED\n");
 }
 
 void Player::LoseFlags()

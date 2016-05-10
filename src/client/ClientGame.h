@@ -36,6 +36,8 @@ public:
     void receiveSpawnPacket(int offset);
     void sendSpawnPacket();
 
+	void receiveRemovePacket(int offset);
+
     void receiveMovePacket(int offset);
     void sendMovePacket(int direction);
 

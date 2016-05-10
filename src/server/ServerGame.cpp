@@ -228,6 +228,28 @@ void ServerGame::sendSpawnPacket(PosInfo pi)
 
 }
 
+void ServerGame::sendRemovePacket(ClassId cid, int oid)
+{
+	Packet packet;
+	packet.hdr.packet_type = REMOVE_EVENT;
+
+	const unsigned int packet_size = sizeof(Packet);
+
+	char packet_data[packet_size];
+
+	packet.dat.game_data_id = REM_OBJ;
+
+	RemInfo r;
+	r.rem_cid = cid;
+	r.rem_oid = oid;
+
+	r.serialize(packet.dat.buf);
+
+	packet.serialize(packet_data);
+
+	network->sendToAll(packet_data, packet_size);
+}
+
 void ServerGame::receiveMovePacket(int offset)
 {
 

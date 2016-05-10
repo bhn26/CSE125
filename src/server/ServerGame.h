@@ -30,6 +30,9 @@ public:
     void receiveSpawnPacket(int offset);
     void sendSpawnPacket(PosInfo pi); // Spawn an object with position pi, pi holds obj type and obj id
 
+	// Send what you want to remove, with the object's ids
+	void sendRemovePacket(ClassId cid, int oid);
+
     // Returns the direction to be moved, if it can't move there, returns BAD_MOVE
     void receiveMovePacket(int offset);
     void sendMovePacket(int client);
