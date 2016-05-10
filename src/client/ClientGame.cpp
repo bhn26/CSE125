@@ -112,7 +112,9 @@ void ClientGame::receiveSpawnPacket(int offset)
 
     struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
     struct PosInfo* p = (struct PosInfo *) (dat->buf);
-
+	
+	// spawn the thing
+	Scene::Instance()->AddEntity(p->cid, p->oid, p->x, p->y, p->z);
 }
 
 void ClientGame::sendSpawnPacket()
