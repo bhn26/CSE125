@@ -31,7 +31,7 @@ void World::Init(pos_list player_poss, pos_list flag_poss) {
 	btRigidBody* groundRigidBody = new btRigidBody(groundRigidBodyCI);
 	dynamicsWorld->addRigidBody(groundRigidBody);
 	// Create Ground Obstacle
-	Obstacle* groundwall = new Obstacle(objectIdCounter, groundRigidBody, curWorld);
+	WorldObstacle* groundwall = new WorldObstacle(objectIdCounter, groundRigidBody, curWorld);
 	objectIdCounter++;
 	
 	// Add Pos X Wall
@@ -43,10 +43,9 @@ void World::Init(pos_list player_poss, pos_list flag_poss) {
 	xWallRigidBody->setGravity(btVector3(0, 0, 0));
 	dynamicsWorld->addRigidBody(xWallRigidBody);
 	// Create X Wall
-	Obstacle* xwall = new Obstacle(objectIdCounter, xWallRigidBody, curWorld);
+	WorldObstacle* xwall = new WorldObstacle(objectIdCounter, xWallRigidBody, curWorld);
 	objectIdCounter++;
 
-	
 	// Add Neg X Wall
 	btCollisionShape* nxWallShape = new btStaticPlaneShape(btVector3(btScalar(1.), btScalar(0.), btScalar(0.)), 0);
 	btDefaultMotionState* nxWallMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(-WORLD_WIDTH, 0, 0)));
@@ -56,7 +55,7 @@ void World::Init(pos_list player_poss, pos_list flag_poss) {
 	nxWallRigidBody->setGravity(btVector3(0, 0, 0));
 	dynamicsWorld->addRigidBody(nxWallRigidBody);
 	// Create Neg X Wall
-	Obstacle* nxwall = new Obstacle(objectIdCounter, groundRigidBody, curWorld);
+	WorldObstacle* nxwall = new WorldObstacle(objectIdCounter, groundRigidBody, curWorld);
 	objectIdCounter++;
 
 	// Add Pos Z Wall
@@ -68,7 +67,7 @@ void World::Init(pos_list player_poss, pos_list flag_poss) {
 	zWallRigidBody->setGravity(btVector3(0, 0, 0));
 	dynamicsWorld->addRigidBody(zWallRigidBody);
 	// Create Pos Z Wall
-	Obstacle* zwall = new Obstacle(objectIdCounter, zWallRigidBody, curWorld);
+	WorldObstacle* zwall = new WorldObstacle(objectIdCounter, zWallRigidBody, curWorld);
 	objectIdCounter++;
 
 	// Add Neg Z Wall
@@ -80,7 +79,7 @@ void World::Init(pos_list player_poss, pos_list flag_poss) {
 	nzWallRigidBody->setGravity(btVector3(0, 0, 0));
 	dynamicsWorld->addRigidBody(nzWallRigidBody);
 	// Create Neg Z Wall
-	Obstacle* nzwall = new Obstacle(objectIdCounter, nzWallRigidBody, curWorld);
+	WorldObstacle* nzwall = new WorldObstacle(objectIdCounter, nzWallRigidBody, curWorld);
 	objectIdCounter++;
 
 	// Set Local attributes

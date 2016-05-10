@@ -29,11 +29,11 @@ private:
 	btSequentialImpulseConstraintSolver* solv;
 	std::vector <btRigidBody*> bullets;
 	//std::vector <btRigidBody*> players;
-	Obstacle * ground;
-	Obstacle * frontWall;
-	Obstacle * backWall;
-	Obstacle * leftWall;
-	Obstacle * rightWall;
+	WorldObstacle * ground;
+	WorldObstacle * frontWall;
+	WorldObstacle * backWall;
+	WorldObstacle * leftWall;
+	WorldObstacle * rightWall;
 	int objectIdCounter;
 
 public:
