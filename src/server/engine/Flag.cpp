@@ -39,3 +39,8 @@ btVector3 Flag::GetFlagPosition()
 {
 	return flagRigidBody->getCenterOfMassPosition();
 }
+
+int Flag::GetObjectId()
+{
+	return id;
+}

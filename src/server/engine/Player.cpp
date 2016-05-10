@@ -2,7 +2,7 @@
 #include "ObjectId.h"
 
 
-Player::Player(int id, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld) {
+Player::Player(int id, int teamid, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld) {
 
 	btCollisionShape* playerShape = new btCylinderShape(btVector3(1, 1, 1));
 	// Create player physics object
@@ -17,6 +17,7 @@ Player::Player(int id, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld) {
 
 	// Set Player's protected fields
 	this->id = id;
+	this->teamId = teamid;
 	this->curWorld = physicsWorld;
 	this->playerRigidBody = pRigidBody;
 	this->jumpSem = 1;
@@ -33,6 +34,7 @@ Player::~Player() {
 	this->curWorld->removeCollisionObject(playerRigidBody);
 	delete playerRigidBody->getMotionState();
 	delete playerRigidBody->getCollisionShape();
+	delete playerRigidBody;
 	flags->clear();
 	delete flags;
 }
@@ -125,4 +127,14 @@ void Player::LoseFlags()
 {
 	// Change this, we need the flags to come out of the player back into the world
 	flags->clear();
+}
+
+int Player::GetObjectId()
+{
+	return id;
+}
+
+int Player::GetTeamId()
+{
+	return teamId;
 }

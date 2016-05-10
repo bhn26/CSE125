@@ -29,4 +29,6 @@ public:
 
 	PosInfo p;
 
+	int GetObjectId();
+
 };

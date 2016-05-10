@@ -1,4 +1,8 @@
 #pragma once
+
+//#ifndef GAME_DATA
+//#define GAME_DATA
+
 #include <string.h>
 #include <stdio.h>
 
@@ -62,3 +66,6 @@ struct PosInfo : GameInfo
         memcpy(this, data, sizeof(PosInfo));
     }
 };
+
+
+//#endif

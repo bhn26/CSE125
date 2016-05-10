@@ -9,10 +9,8 @@
 #include <BulletPhysics\btBulletCollisionCommon.h>
 #endif
 
-#ifndef GAME_DATA
-#define GAME_DATA
 #include "../../network/GameData.h"
-#endif
+
 
 class Player 
 {
@@ -20,7 +18,7 @@ class Player
 private:
 
 	int id;
-	// team
+	int teamId;
 	PosInfo position;
 	btDiscreteDynamicsWorld* curWorld;
 	btRigidBody* playerRigidBody;
@@ -30,7 +28,7 @@ private:
 
 public:
 
-	Player(int id, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld);
+	Player(int id, int teamid, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld);
 
 	~Player();
 
@@ -60,5 +58,12 @@ public:
 	void AcquireFlag(std::shared_ptr<Flag> flag);
 
 	void LoseFlags();
+
+	// return bullet id?
+	int SpawnBullet();
+
+	int GetObjectId();
+
+	int GetTeamId();
 };
 

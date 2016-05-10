@@ -2,13 +2,13 @@
 
 #include "Player.h"
 #include "Flag.h"
+#include "Obstacle.h"
 #include <vector>
 #include <memory>
 
-#ifndef GAME_DATA
-#define GAME_DATA
 #include "../../network/GameData.h"
-#endif
+// Game Obstacle is already existing
+
 
 using namespace std;
 
@@ -29,12 +29,12 @@ private:
 	btSequentialImpulseConstraintSolver* solv;
 	std::vector <btRigidBody*> bullets;
 	//std::vector <btRigidBody*> players;
-	btRigidBody * ground;
-	btRigidBody * frontWall;
-	btRigidBody * backWall;
-	btRigidBody * leftWall;
-	btRigidBody * rightWall;
-	int indexCounter = 0;
+	Obstacle * ground;
+	Obstacle * frontWall;
+	Obstacle * backWall;
+	Obstacle * leftWall;
+	Obstacle * rightWall;
+	int objectIdCounter;
 
 public:
 	World();
