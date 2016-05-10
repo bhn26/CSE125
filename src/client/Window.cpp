@@ -58,7 +58,16 @@ GLFWwindow* Window::Create_window(int width, int height)
     glfwWindowHint(GLFW_SAMPLES, 4);
 
     // Create the GLFW window
-    GLFWwindow* window = glfwCreateWindow(width, height, window_title, NULL, NULL);
+
+	/*GLFWmonitor * monitor = glfwGetPrimaryMonitor();
+	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+	glfwWindowHint(GLFW_RED_BITS, mode->redBits);
+	glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
+	glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
+	glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
+	GLFWwindow* window = glfwCreateWindow(mode->width, mode->height, window_title, monitor, NULL);*/ // for full screen mode
+
+	GLFWwindow* window = glfwCreateWindow(width, height, window_title, NULL, NULL);
 
     // Check if the window could not be created
     if (!window)
@@ -70,6 +79,9 @@ GLFWwindow* Window::Create_window(int width, int height)
 
     // Make the context of the window
     glfwMakeContextCurrent(window);
+
+	//HWND hwnd = GetForegroundWindow(); old font stuff
+	//HDC device_context = GetDC(hwnd);
 
     // Set swap interval to 1
     glfwSwapInterval(1);

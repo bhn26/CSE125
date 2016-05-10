@@ -10,6 +10,7 @@
 #include "Window.h"
 #include "../Graphics/Scene.h"
 #include "../network/NetworkData.h"
+#include "TextRenderer.h"
 //#define _WIN32
 
 ClientGame* ClientGame::cg = nullptr;
@@ -20,7 +21,7 @@ ClientGame::ClientGame(void)
     network = new ClientNetwork();
 
 	sendInitPacket();
-	sendStartPacket(); // temp - will add start button
+	//sendStartPacket(); // temp - will add start button
 
 	Initialize();
     
@@ -286,6 +287,7 @@ void ClientGame::Initialize()
     // Initialize objects/pointers for rendering
     Window::Initialize_objects();
 
+	TextRenderer::Initialize();
     Scene::Initialize();
 
     double lastTime = glfwGetTime();
@@ -376,6 +378,11 @@ void ClientGame::Setup_opengl_settings()
     glDisable(GL_CULL_FACE);
     // Set clear color
     glClearColor(0.2f, 0.2f, 0.5f, 1.0f);
+
+	// Font Rendering
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 void ClientGame::Print_versions()

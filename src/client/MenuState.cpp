@@ -1,35 +1,19 @@
 #include "MenuState.h"
 #include "PlayState.h"
 #include "StateManager.h"
-#include "Image.h"
+#include "TextRenderer.h"
 
 
 CMenuState::CMenuState(CStateManager* pManager) 
-  : CGameState(pManager), m_pFont(NULL), m_iCurrentSelection(0), 
-    m_pCurrentGame(NULL)
+  : CGameState(pManager), m_iCurrentSelection(0), m_pCurrentGame(NULL)
 {
-	m_pFont = new CGameFont;
-	m_pFont->CreateFont("Verdana", 30, FW_NORMAL);
-
 	// Create the different images
-	m_pBackgroundImg = CImage::CreateImage("bin/MainBackground.png",TRectanglei(0,600,0,800));
+	/*m_pBackgroundImg = CImage::CreateImage("bin/MainBackground.png",TRectanglei(0,600,0,800));
 	m_pTitleImg = CImage::CreateImage("bin/MenuTitle.png",TRectanglei(0,600,0,800));
 	m_pItemBckgndNormal = CImage::CreateImage("bin/MenuItems.png",TRectanglei(0,57,0,382));
-	m_pItemBckgndSelected = CImage::CreateImage("bin/MenuItems.png",TRectanglei(58,114,0,382));
+	m_pItemBckgndSelected = CImage::CreateImage("bin/MenuItems.png",TRectanglei(58,114,0,382));*/
 
 	// Create the text controls of the menu.
-	m_pNewGameText = new CTextControl(m_pFont,TRectanglei(150,207,209,591));
-	m_pNewGameText->SetAlignement(CTextControl::TACenter);
-	m_pNewGameText->SetText("New game");
-	m_pResumeGameText = new CTextControl(m_pFont,TRectanglei(250,307,209,591));
-	m_pResumeGameText->SetAlignement(CTextControl::TACenter);
-	m_pResumeGameText->SetText("Resume game");
-	m_pScoresText = new CTextControl(m_pFont,TRectanglei(350,407,209,591));
-	m_pScoresText->SetAlignement(CTextControl::TACenter);
-	m_pScoresText->SetText("High scores");
-	m_pExitText = new CTextControl(m_pFont,TRectanglei(450,507,209,591));
-	m_pExitText->SetAlignement(CTextControl::TACenter);
-	m_pExitText->SetText("Exit");
 }
 
 CMenuState::~CMenuState()
@@ -61,7 +45,7 @@ void CMenuState::OnKeyDown(WPARAM wKey)
 
 void CMenuState::Draw()
 {
-	m_pBackgroundImg->BlitImage();
+	/*m_pBackgroundImg->BlitImage();
 	m_pTitleImg->BlitImage();
 	// Draw the menu item backgrounds
 	for (int i=0;i<4;i++)
@@ -70,23 +54,19 @@ void CMenuState::Draw()
 			m_pItemBckgndSelected->BlitImage(209,150+i*100);
 		else
 			m_pItemBckgndNormal->BlitImage(209,150+i*100);
-	}
-	
-	m_pNewGameText->Draw();
-	m_pResumeGameText->Draw();
-	m_pScoresText->Draw();
-	m_pExitText->Draw();
-
+	}*/
+	// draw text
+	TextRenderer::RenderText("This is sample text", 25.0f, 25.0f, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 }
 
 void CMenuState::EnterState()
 {
 	// Checks whether there is a current game active
 	m_iCurrentSelection = 0;
-	if (!m_pCurrentGame || m_pCurrentGame->IsGameOver())
-		m_pResumeGameText->SetTextColor(0.5,0.5,0.5);
+	/*if (!m_pCurrentGame || m_pCurrentGame->IsGameOver())
+		//m_pResumeGameText->SetTextColor(0.5,0.5,0.5);
 	else
-		m_pResumeGameText->SetTextColor(1.0,1.0,1.0);
+		//m_pResumeGameText->SetTextColor(1.0,1.0,1.0);*/
 }
 
 void CMenuState::SelectionUp()

@@ -51,6 +51,7 @@ void Scene::AddPlayer(int client_id) {
 	std::shared_ptr<Shader> modelShader = std::make_shared<Shader>("src/Graphics/Shaders/model_loading.vert", "src/Graphics/Shaders/model_loading.frag");
 	new_player->GetShader() = modelShader;
 
+	// maybe we should add players to entities as well
 	players.push_back(new_player);
 
 	if (client_id == ClientGame::GetClientId()) {

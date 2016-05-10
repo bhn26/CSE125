@@ -49,31 +49,19 @@
     <ClCompile Include="..\src\client\Window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Phoebe%27s CSE125\src\client\MenuState.cpp">
+    <ClCompile Include="..\src\client\StateManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Phoebe%27s CSE125\src\client\StateManager.cpp">
+    <ClCompile Include="..\src\client\GameState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Phoebe%27s CSE125\src\client\GameState.cpp">
+    <ClCompile Include="..\src\client\MenuState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Phoebe%27s CSE125\src\client\PlayState.cpp">
+    <ClCompile Include="..\src\client\PlayState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Phoebe%27s CSE125\src\client\GameFont.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Phoebe%27s CSE125\src\client\Image.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Phoebe%27s CSE125\src\client\Texture.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Phoebe%27s CSE125\src\client\TextureManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Phoebe%27s CSE125\src\client\TextControl.cpp">
+    <ClCompile Include="..\src\client\TextRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -141,40 +129,19 @@
     <ClInclude Include="..\src\client\Window.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Phoebe%27s CSE125\src\client\MenuState.h">
+    <ClInclude Include="..\src\client\StateManager.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Phoebe%27s CSE125\src\client\StateManager.h">
+    <ClInclude Include="..\src\client\GameState.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Phoebe%27s CSE125\src\client\GameState.h">
+    <ClInclude Include="..\src\client\MenuState.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Phoebe%27s CSE125\src\client\PlayState.h">
+    <ClInclude Include="..\src\client\PlayState.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Phoebe%27s CSE125\src\client\GameFont.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Phoebe%27s CSE125\src\client\Image.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Phoebe%27s CSE125\src\client\Rectangle.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Phoebe%27s CSE125\src\client\SmartPtr.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Phoebe%27s CSE125\src\client\Texture.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Phoebe%27s CSE125\src\client\Exception.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Phoebe%27s CSE125\src\client\TextureManager.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Phoebe%27s CSE125\src\client\TextControl.h">
+    <ClInclude Include="..\src\client\TextRenderer.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
