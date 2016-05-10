@@ -37,6 +37,9 @@ public:
 
     static void Initialize() { Instance()->Setup(); }
 
+	void AddEntity(int oid, std::unique_ptr<Entity> ent);
+	void RemoveEntity(int oid);
+
 	void AddPlayer(int client_id);
     void Update();
     void Draw();

@@ -16,9 +16,17 @@ protected:
     glm::mat3 normalMatrix;
     GLuint VBO, VAO, EBO;
     std::shared_ptr<Shader> shader;
+	int obj_id; // This refers to the specific object
+	int class_id; // This refers to the type of object
 
 public:
     // NOTE: Constructors do not initialize vertex/element buffers, nor shader
+	Entity(int oid, int cid) : Entity()
+	{
+		obj_id = oid;
+		class_id = cid;
+	}
+
     Entity(glm::mat4 world = glm::mat4(1.0f)) : toWorld(world), VBO(0), VAO(0), EBO(0), shader(nullptr)
     {
         normalMatrix = glm::mat3(glm::transpose(glm::inverse(world)));

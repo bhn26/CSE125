@@ -103,3 +103,13 @@ glm::mat4 Scene::GetPerspectiveMatrix()
 {
     return camera->GetPerspectiveMatrix();
 }
+
+void Scene::AddEntity(int oid, std::unique_ptr<Entity> ent)
+{
+
+}
+
+void Scene::RemoveEntity(int oid)
+{
+
+}
