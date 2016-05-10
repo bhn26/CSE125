@@ -168,6 +168,10 @@ void Window::Key_callback(GLFWwindow* window, int key, int scancode, int action,
                 else
                     Scene::chicken_anim->m_object.ToggleAnimating();
                 break;
+            //case GLFW_KEY_P:
+            //    Scene::chicken->PlaySound("assets/audio/chicken_dance.wav");
+            //    fprintf(stderr, "PlaySound\n");
+            //    break;
             default:
                 break;
         }

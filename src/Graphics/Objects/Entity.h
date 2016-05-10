@@ -9,50 +9,26 @@
 #ifndef Entity_h
 #define Entity_h
 
-#include <stdio.h>
-#include <iostream>
 #include <string>
-
-//#include <audiodecoder/audiodecoder.h>
-//#include <portaudio.h>
-
+#include <SFML/Audio.hpp>
 #include "../Animation/ogldev_util.h"
-
-///////////////// AUDIO STUFF ///////////////////////////
-
-// All audio will be handled as stereo.
-const int NUM_CHANNELS = 2;
-
-// This is the function that gets called when we need to generate sound!
-// In this example, we're going to decode some audio using libaudiodecoder
-// and fill the "output" buffer with that. In other words, we're going to
-// decode demo.mp3 and send that audio to the soundcard. Easy!
-//int audioCallback(const void *input, void *output,
-//                  unsigned long frameCount,
-//                  const PaStreamCallbackTimeInfo* timeInfo,
-//                  PaStreamCallbackFlags statusFlags,
-//                  void* userData);
-
-////////////////////////////////////////////////////////////
 
 class Entity
 {
-private:
     long long m_startTime;
-    
+    sf::Music musicPlayer;
+
 public:
     Entity() {}
-    
-    int PlaySound(std::string sound_file) { return 0; }
+
+    bool PlaySound(std::string soundFile);
     float GetRunningTime()
     {
-        //return 0.0f;
         return (float)((double)GetCurrentTimeMillis() - (double)m_startTime) / 1000.0f;
     }
-    
+
     // Draw
     // Update
-
 };
 
 

@@ -18,7 +18,7 @@
 
 #include <iostream>
 #include "ogldev_texture.h"
-#include <SOIL.h>
+#include <SOIL/SOIL.h>
 
 Texture::Texture(GLenum textureTarget, const std::string& fileName)
 {

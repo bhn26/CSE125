@@ -16,15 +16,12 @@
 		CD6658DE1CC3F4250099F9BC /* Ground.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD6658DB1CC3F4250099F9BC /* Ground.cpp */; };
 		CD6658E01CC3F4CA0099F9BC /* libaudiodecoder.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CD6658DF1CC3F4CA0099F9BC /* libaudiodecoder.dylib */; };
 		CD6658E21CC3F4E20099F9BC /* libportaudio.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CD6658E11CC3F4E20099F9BC /* libportaudio.2.dylib */; };
-		CD6658ED1CC3FD340099F9BC /* ogldev_math_3d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD6658E41CC3FD340099F9BC /* ogldev_math_3d.cpp */; };
-		CD6658EE1CC3FD340099F9BC /* ogldev_skinned_mesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD6658E61CC3FD340099F9BC /* ogldev_skinned_mesh.cpp */; };
 		CD6658EF1CC3FD340099F9BC /* ogldev_texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD6658E81CC3FD340099F9BC /* ogldev_texture.cpp */; };
 		CD6658F01CC3FD340099F9BC /* ogldev_util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD6658EB1CC3FD340099F9BC /* ogldev_util.cpp */; };
 		CD6658F21CC3FF130099F9BC /* libMagickCore-6.Q16.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CD6658F11CC3FF130099F9BC /* libMagickCore-6.Q16.2.dylib */; };
 		CD6658F51CC407BE0099F9BC /* skinning_technique.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD6658F31CC407BE0099F9BC /* skinning_technique.cpp */; };
 		CD6658F81CC409330099F9BC /* technique.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD6658F61CC409330099F9BC /* technique.cpp */; };
 		CD6658FC1CC40D6D0099F9BC /* ChickenAnim.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD6658FA1CC40D6D0099F9BC /* ChickenAnim.cpp */; };
-		CD68A8C61CC491430018109F /* ogldev_pipeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD68A8C41CC491430018109F /* ogldev_pipeline.cpp */; };
 		CD95AD161CBC890000BFC772 /* Window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD95AD141CBC890000BFC772 /* Window.cpp */; };
 		CD9C3C3D1CBA1AD200F627D8 /* libglfw3.3.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CD9C3C3C1CBA1AD200F627D8 /* libglfw3.3.1.dylib */; };
 		CD9C3C3F1CBA1B0800F627D8 /* libGLEW.1.13.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CD9C3C3E1CBA1B0800F627D8 /* libGLEW.1.13.0.dylib */; };
@@ -37,6 +34,10 @@
 		CD9C3C5D1CBC75DD00F627D8 /* libSOIL.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CD9C3C5A1CBC73C000F627D8 /* libSOIL.a */; };
 		CD9C3C5F1CBC761F00F627D8 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD9C3C5E1CBC761F00F627D8 /* GLUT.framework */; };
 		CD9C3C611CBC763900F627D8 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD9C3C601CBC763900F627D8 /* CoreFoundation.framework */; };
+		CDC468631CC5EEC200B9970E /* Entity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CDC468611CC5EEC200B9970E /* Entity.cpp */; };
+		CDC468661CC5EEC900B9970E /* Ground.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CDC468641CC5EEC900B9970E /* Ground.cpp */; };
+		CDC468681CC5EF1800B9970E /* libportaudio.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CDC468671CC5EF1800B9970E /* libportaudio.2.dylib */; };
+		CDC4686A1CC5EF2600B9970E /* libaudiodecoder.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CDC468691CC5EF2600B9970E /* libaudiodecoder.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -67,13 +68,8 @@
 		CD6658DC1CC3F4250099F9BC /* Ground.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Ground.h; sourceTree = "<group>"; };
 		CD6658DF1CC3F4CA0099F9BC /* libaudiodecoder.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libaudiodecoder.dylib; path = ../../../../usr/local/lib/libaudiodecoder.dylib; sourceTree = "<group>"; };
 		CD6658E11CC3F4E20099F9BC /* libportaudio.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libportaudio.2.dylib; path = ../../../../usr/local/Cellar/portaudio/19.20140130/lib/libportaudio.2.dylib; sourceTree = "<group>"; };
-		CD6658E41CC3FD340099F9BC /* ogldev_math_3d.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ogldev_math_3d.cpp; sourceTree = "<group>"; };
-		CD6658E51CC3FD340099F9BC /* ogldev_math_3d.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ogldev_math_3d.h; sourceTree = "<group>"; };
-		CD6658E61CC3FD340099F9BC /* ogldev_skinned_mesh.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ogldev_skinned_mesh.cpp; sourceTree = "<group>"; };
-		CD6658E71CC3FD340099F9BC /* ogldev_skinned_mesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ogldev_skinned_mesh.h; sourceTree = "<group>"; };
 		CD6658E81CC3FD340099F9BC /* ogldev_texture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ogldev_texture.cpp; sourceTree = "<group>"; };
 		CD6658E91CC3FD340099F9BC /* ogldev_texture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ogldev_texture.h; sourceTree = "<group>"; };
-		CD6658EA1CC3FD340099F9BC /* ogldev_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ogldev_types.h; sourceTree = "<group>"; };
 		CD6658EB1CC3FD340099F9BC /* ogldev_util.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ogldev_util.cpp; sourceTree = "<group>"; };
 		CD6658EC1CC3FD340099F9BC /* ogldev_util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ogldev_util.h; sourceTree = "<group>"; };
 		CD6658F11CC3FF130099F9BC /* libMagickCore-6.Q16.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libMagickCore-6.Q16.2.dylib"; path = "../../../../usr/local/Cellar/imagemagick/6.9.3-7/lib/libMagickCore-6.Q16.2.dylib"; sourceTree = "<group>"; };
@@ -83,8 +79,6 @@
 		CD6658F71CC409330099F9BC /* technique.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = technique.h; sourceTree = "<group>"; };
 		CD6658FA1CC40D6D0099F9BC /* ChickenAnim.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ChickenAnim.cpp; sourceTree = "<group>"; };
 		CD6658FB1CC40D6D0099F9BC /* ChickenAnim.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChickenAnim.h; sourceTree = "<group>"; };
-		CD68A8C41CC491430018109F /* ogldev_pipeline.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ogldev_pipeline.cpp; sourceTree = "<group>"; };
-		CD68A8C51CC491430018109F /* ogldev_pipeline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ogldev_pipeline.h; sourceTree = "<group>"; };
 		CD95AD141CBC890000BFC772 /* Window.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Window.cpp; sourceTree = "<group>"; };
 		CD95AD151CBC890000BFC772 /* Window.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Window.h; sourceTree = "<group>"; };
 		CD9C3C3C1CBA1AD200F627D8 /* libglfw3.3.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw3.3.1.dylib; path = /usr/local/Cellar/glfw3/3.1.2/lib/libglfw3.3.1.dylib; sourceTree = "<absolute>"; };
@@ -104,6 +98,12 @@
 		CD9C3C5A1CBC73C000F627D8 /* libSOIL.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSOIL.a; path = ../../../../usr/local/lib/libSOIL.a; sourceTree = "<group>"; };
 		CD9C3C5E1CBC761F00F627D8 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
 		CD9C3C601CBC763900F627D8 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		CDC468611CC5EEC200B9970E /* Entity.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Entity.cpp; sourceTree = "<group>"; };
+		CDC468621CC5EEC200B9970E /* Entity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Entity.h; sourceTree = "<group>"; };
+		CDC468641CC5EEC900B9970E /* Ground.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Ground.cpp; sourceTree = "<group>"; };
+		CDC468651CC5EEC900B9970E /* Ground.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Ground.h; sourceTree = "<group>"; };
+		CDC468671CC5EF1800B9970E /* libportaudio.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libportaudio.2.dylib; path = ../../../../usr/local/Cellar/portaudio/19.20140130/lib/libportaudio.2.dylib; sourceTree = "<group>"; };
+		CDC468691CC5EF2600B9970E /* libaudiodecoder.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libaudiodecoder.dylib; path = ../../../../usr/local/lib/libaudiodecoder.dylib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -197,12 +197,6 @@
 		CD6658E31CC3FD340099F9BC /* Animation */ = {
 			isa = PBXGroup;
 			children = (
-				CD68A8C41CC491430018109F /* ogldev_pipeline.cpp */,
-				CD68A8C51CC491430018109F /* ogldev_pipeline.h */,
-				CD6658E41CC3FD340099F9BC /* ogldev_math_3d.cpp */,
-				CD6658E51CC3FD340099F9BC /* ogldev_math_3d.h */,
-				CD6658E61CC3FD340099F9BC /* ogldev_skinned_mesh.cpp */,
-				CD6658E71CC3FD340099F9BC /* ogldev_skinned_mesh.h */,
 				CD6658E81CC3FD340099F9BC /* ogldev_texture.cpp */,
 				CD6658E91CC3FD340099F9BC /* ogldev_texture.h */,
 				CD6658EA1CC3FD340099F9BC /* ogldev_types.h */,
@@ -289,9 +283,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CD6658EE1CC3FD340099F9BC /* ogldev_skinned_mesh.cpp in Sources */,
 				CD214BE31CB7027C00D7DFD6 /* Shader.cpp in Sources */,
-				CD6658ED1CC3FD340099F9BC /* ogldev_math_3d.cpp in Sources */,
 				CD95AD161CBC890000BFC772 /* Window.cpp in Sources */,
 				CD9C3C461CBA1E9500F627D8 /* Nodes.cpp in Sources */,
 				CD6658FC1CC40D6D0099F9BC /* ChickenAnim.cpp in Sources */,
@@ -302,7 +294,6 @@
 				CD9C3C4F1CBC670F00F627D8 /* Mesh.cpp in Sources */,
 				CD6658F51CC407BE0099F9BC /* skinning_technique.cpp in Sources */,
 				CD9C3C451CBA1E9500F627D8 /* Camera.cpp in Sources */,
-				CD68A8C61CC491430018109F /* ogldev_pipeline.cpp in Sources */,
 				CD9C3C531CBC67CE00F627D8 /* Chicken.cpp in Sources */,
 				CD429FCF1CBC821F001BCE47 /* Scene.cpp in Sources */,
 				CD6658EF1CC3FD340099F9BC /* ogldev_texture.cpp in Sources */,
