@@ -109,12 +109,12 @@ namespace Animation
     ///////////////////////////////////////////////////////////////////////
     // Add an animation from the assimp scene. Will not override any 
     // previous animation. Uses The name in the aiAnimation object
-    bool AnimationPlayer::AddAnimFromScene(const aiScene* scene, bool loops)
+    std::string AnimationPlayer::AddAnimFromScene(const aiScene* scene, bool loops)
     {
         if (scene->mNumAnimations < 1)
         {
             fprintf(stderr, "No animations in assimp scene!\n");
-            return false;
+            return "";
         }
 
         aiAnimation& aiAnim = *scene->mAnimations[0];
@@ -122,13 +122,17 @@ namespace Animation
         if (m_animMap.find(name) != m_animMap.end())      // Don't override an animation
         {
             fprintf(stderr, "Will not override animation: %s\n", name.c_str());
-            return false;
+            do
+            {
+                name[name.length()-1]++;
+            } while (m_animMap.find(name) != m_animMap.end());
+            //return "";
         }
 
         Animation animation = Animation(scene->mAnimations[0], loops);      // Pass in the only animation
         m_animMap[name] = m_animations.size();
         m_animations.push_back(std::move(animation));
-        return true;
+        return name;
     }
 
     ///////////////////////////////////////////////////////////////////////

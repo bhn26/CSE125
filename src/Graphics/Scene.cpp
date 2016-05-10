@@ -53,7 +53,7 @@ void Scene::Draw()
 {
     //chicken->Draw(camera.get());
     ground->Draw(camera->GetViewMatrix());
-    cube->Draw(camera->GetViewMatrix());
+    //cube->Draw(camera->GetViewMatrix());
     
     chicken_anim->Draw();
 }

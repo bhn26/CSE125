@@ -13,4 +13,5 @@ bool Entity::PlaySound(std::string soundFile)
     if (!musicPlayer.openFromFile(soundFile))
         return false; // error
     musicPlayer.play();
+    return true;
 }

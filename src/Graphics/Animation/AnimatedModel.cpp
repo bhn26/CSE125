@@ -12,6 +12,7 @@ namespace Animation
         double lastTime = (double)GetCurrentTimeMillis();
     }
 
+    ///////////////////////////////////////////////////////////////////////
     AnimatedModel::AnimatedModel(std::string fbxFilename) : AnimatedModel()
     {
         FBXLoadClean(fbxFilename);
@@ -20,23 +21,22 @@ namespace Animation
 
     ///////////////////////////////////////////////////////////////////////
     // Load an FBX completely new. Loads mesh and animation
-    bool AnimatedModel::FBXLoadClean(std::string filename, bool animLoops)
+    std::string AnimatedModel::FBXLoadClean(std::string filename, bool animLoops)
     {
         Assimp::Importer importer;
         const aiScene* scene = importer.ReadFile(filename.c_str(), aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs);
 
         if (!scene)   // If failed, return
-            return false;
+            return "";
         
         // Should not fail
         m_mesh.InitFromScene(scene, filename);
-        m_animPlayer.AddAnimFromScene(scene, animLoops);
 
-        return true;
+        return m_animPlayer.AddAnimFromScene(scene, animLoops);
     }
 
     ///////////////////////////////////////////////////////////////////////
-    bool AnimatedModel::AddAnimation(std::string animationFile, bool loops)
+    std::string AnimatedModel::AddAnimation(std::string animationFile, bool loops)
     {
         Assimp::Importer importer;
         const aiScene* scene = importer.ReadFile(animationFile.c_str(), aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs);
@@ -49,6 +49,7 @@ namespace Animation
         return m_animPlayer.AddAnimFromScene(scene, loops);
     }
 
+    ///////////////////////////////////////////////////////////////////////
     bool AnimatedModel::PlayAnimation(std::string name)
     {
         return m_animPlayer.PlayAnimation(name);

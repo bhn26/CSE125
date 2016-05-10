@@ -25,13 +25,14 @@ namespace Animation
         AnimatedModel();
         AnimatedModel(std::string fbxFilename);
 
-        bool FBXLoadClean(std::string filename, bool animLoops = false);            // Loads both Mesh and Animation
-        bool AddAnimation(std::string animationFile, bool loops = false);   // Only loads Animation
+        std::string FBXLoadClean(std::string filename, bool animLoops = false);            // Loads both Mesh and Animation
+        std::string AddAnimation(std::string animationFile, bool loops = false);   // Only loads Animation
         bool PlayAnimation(std::string name);
 
         void Update();
         void Draw() const;
         void InitBones0() { m_animPlayer.InitBones0(); }
+        void Reset() { m_animPlayer.Reset(); }
         void ToggleAnimating() { m_animPlayer.ToggleAnimation(); }
         void RestartAnimation() { m_animPlayer.RestartAnimation(); }
 

@@ -15,9 +15,10 @@
 
 class ChickenAnim : public Entity
 {
+    std::string m_walk, m_attack, m_jump, m_dance;
 public:
     DirectionalLight m_directionalLight;
-    Animation::AnimatedModel m_object;
+    Animation::AnimatedModel m_model;
 
     glm::mat4 m_toWorld;
 
@@ -27,5 +28,10 @@ public:
     void Draw();
     void Update();
     void Scale(float s);
+
+    void Walk();
+    void Attack();
+    void Jump();
+    void Dance();
 };
 

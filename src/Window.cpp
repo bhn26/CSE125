@@ -164,9 +164,24 @@ void Window::Key_callback(GLFWwindow* window, int key, int scancode, int action,
                 break;
             case GLFW_KEY_P:
                 if (mods == GLFW_MOD_SHIFT)
-                    Scene::chicken_anim->m_object.RestartAnimation();
+                    Scene::chicken_anim->m_model.RestartAnimation();
                 else
-                    Scene::chicken_anim->m_object.ToggleAnimating();
+                    Scene::chicken_anim->m_model.ToggleAnimating();
+                break;
+            case GLFW_KEY_R:
+                Scene::chicken_anim->m_model.Reset();
+                break;
+            case GLFW_KEY_1:
+                Scene::chicken_anim->Walk();
+                break;
+            case GLFW_KEY_2:
+                Scene::chicken_anim->Jump();
+                break;
+            case GLFW_KEY_3:
+                Scene::chicken_anim->Attack();
+                break;
+            case GLFW_KEY_4:
+                Scene::chicken_anim->Dance();
                 break;
             //case GLFW_KEY_P:
             //    Scene::chicken->PlaySound("assets/audio/chicken_dance.wav");

@@ -84,13 +84,14 @@ namespace Animation
 
         void InitBones0();
 
-        bool AddAnimFromScene(const aiScene* scene, bool loops = false);
+        std::string AddAnimFromScene(const aiScene* scene, bool loops = false);
         bool PlayAnimation(std::string name);
 
-        void Stop() { m_animating = false; }
+        void Pause() { m_animating = false; }
         void Continue() { m_animating = true; }
         void ToggleAnimation() { m_animating = !m_animating; }
         void RestartAnimation() { m_animating = true; m_playTimer = 0.0f; }
+        void Reset() { Pause(); m_playTimer = 0.0f; InitBones0(); }
 
         void Update(float delta);
 
@@ -130,6 +131,11 @@ namespace Animation
         {
             if (time < keys[key+1]._time)
                 break;
+        }
+
+        if (time < keys[key]._time) // HACK. TODO: Use real first frame
+        {
+            return keys[key]._value;
         }
 
         unsigned int nextKey = (key + 1) % keys.size();
