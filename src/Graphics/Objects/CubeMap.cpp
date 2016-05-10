@@ -137,7 +137,8 @@ void CubeMap::Draw() const
     glActiveTexture(GL_TEXTURE0);
     glUniform1i(shader->GetUniform("skybox"), 0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
-    glDrawArrays(GL_TRIANGLES, 0, 36);
+    
+	(GL_TRIANGLES, 0, 36);
     glBindVertexArray(0);
     glDepthFunc(GL_LESS); // Set depth function back to default
 }

@@ -30,6 +30,9 @@ struct Texture
 class Mesh
 {
 public:
+	/*  Render data  */
+	GLuint VAO, VBO, EBO;
+
     /*  Mesh Data  */
     std::vector<Vertex> vertices;
     std::vector<GLuint> indices;
@@ -44,8 +47,6 @@ public:
     void Draw(const Shader* shader);
 
 private:
-    /*  Render data  */
-    GLuint VAO, VBO, EBO;
 
     /*  Functions    */
     // Initializes all the buffer objects/arrays

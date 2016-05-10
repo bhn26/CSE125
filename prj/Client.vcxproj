@@ -163,6 +163,8 @@
     <None Include="..\src\Graphics\Shaders\cubemap.vert" />
     <None Include="..\src\Graphics\Shaders\diffuse.frag" />
     <None Include="..\src\Graphics\Shaders\diffuse.vert" />
+    <None Include="..\src\Graphics\Shaders\instancing.frag" />
+    <None Include="..\src\Graphics\Shaders\instancing.vert" />
     <None Include="..\src\Graphics\Shaders\model_loading.frag" />
     <None Include="..\src\Graphics\Shaders\model_loading.vert" />
     <None Include="..\prj\packages.config" />
@@ -177,6 +179,7 @@
     <ClCompile Include="..\src\client\Player.cpp" />
     <ClCompile Include="..\src\client\Window.cpp" />
     <ClCompile Include="..\src\Graphics\Objects\Egg.cpp" />
+    <ClCompile Include="..\src\Graphics\Objects\Grass.cpp" />
     <ClCompile Include="..\src\Graphics\Objects\Ground.cpp" />
     <ClCompile Include="..\src\Graphics\Mesh.cpp" />
     <ClCompile Include="..\src\Graphics\Model.cpp" />
@@ -196,6 +199,7 @@
     <ClInclude Include="..\src\client\ClientNetwork.h" />
     <ClInclude Include="..\src\client\Player.h" />
     <ClInclude Include="..\src\client\Window.h" />
+    <ClInclude Include="..\src\Graphics\Objects\Grass.h" />
     <ClInclude Include="..\src\Graphics\Objects\Ground.h" />
     <ClInclude Include="..\src\Graphics\Mesh.h" />
     <ClInclude Include="..\src\Graphics\Model.h" />

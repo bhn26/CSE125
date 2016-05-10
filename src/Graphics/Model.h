@@ -19,6 +19,8 @@ public:
     /*  Functions   */
     // Constructor, expects a filepath to a 3D model.
     // "assets/model
+	std::vector<Mesh> meshes;
+	std::vector<Texture> textures_loaded;   // Stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
     Model(const GLchar* path) { this->LoadModel(path); }
 
     // Draws the model, and thus all its meshes
@@ -30,9 +32,7 @@ public:
 
 private:
     /*  Model Data  */
-    std::vector<Mesh> meshes;
     std::string directory;
-    std::vector<Texture> textures_loaded;   // Stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
 
      /*  Functions   */
     void LoadModel(std::string path);  // Loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes vector.
