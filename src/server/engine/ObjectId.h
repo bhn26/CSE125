@@ -1,5 +1,5 @@
 #pragma once
-enum ObjectId {
+enum ClassId {
 	PLAYER = 0,
 
 	FLAG = 1

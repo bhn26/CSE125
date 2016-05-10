@@ -102,8 +102,17 @@ void World::Init(pos_list player_poss, pos_list flag_poss) {
 		objectIdCounter++;
 		btVector3 vec = player->GetPlayerPosition();
 		printf("Created player at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
-		printf("Posinfo player at (%d,%d,%d)\n", player->GetPosition().x, player->GetPosition().y, player->GetPosition().z);
+		//printf("Posinfo player at (%d,%d,%d)\n", player->GetPosition().x, player->GetPosition().y, player->GetPosition().z);
 		players.push_back(player);
+
+		// Send spawn info to the clients
+		PosInfo pi;
+		pi.cid = ClassId::PLAYER;
+		pi.oid = oid++;
+		pi.x = vec.getX();
+		pi.y = vec.getY();
+		pi.z = vec.getZ();
+		ServerGame::instance()->sendSpawnPacket(pi);
 	}
 
 	// Initialize egg objects
@@ -114,6 +123,14 @@ void World::Init(pos_list player_poss, pos_list flag_poss) {
 		printf("Created flag at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
 		printf("Posinfo flag at (%d,%d,%d)\n", flag->p.x, flag->p.y, flag->p.z);
 		flags.push_back(flag);
+
+		PosInfo pi;
+		pi.cid = ClassId::FLAG;
+		pi.oid = oid++;
+		pi.x = vec.getX();
+		pi.y = vec.getY();
+		pi.z = vec.getZ();
+		ServerGame::instance()->sendSpawnPacket(pi);
 	}
 }
 

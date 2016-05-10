@@ -5,6 +5,7 @@
 
 #include <string.h>
 #include <stdio.h>
+#include "../server/engine/ObjectId.h"
 
 const int WORLD_WIDTH = 100;
 const int WORLD_HEIGHT = 100;
@@ -45,7 +46,8 @@ struct GameInfo
 struct PosInfo : GameInfo
 {
 
-	int id;
+	int oid;
+	ClassId cid;
 
 	// object coordinates
     float x;

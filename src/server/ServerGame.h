@@ -28,7 +28,7 @@ public:
 
     // The data we want in network_data should have an offset if any
     void receiveSpawnPacket(int offset);
-    void sendSpawnPacket();
+    void sendSpawnPacket(PosInfo pi); // Spawn an object with position pi, pi holds obj type and obj id
 
     // Returns the direction to be moved, if it can't move there, returns BAD_MOVE
     void receiveMovePacket(int offset);

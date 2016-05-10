@@ -40,8 +40,12 @@ public:
 	World();
 	~World();
 
+	// ticker used for now
 	int x = 0;
 	int y = 0;
+
+	// object ids
+	int oid = 0;
 
 	void Init(pos_list player_poss, pos_list flag_poss);
 	std::shared_ptr<Player> GetPlayer(int id) { return players.at(id); };

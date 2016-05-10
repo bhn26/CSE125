@@ -97,13 +97,12 @@ void ServerGame::receiveFromClients()
                     receiveMovePacket(i);
                     break;
 
-                case SPAWN_EVENT:
+                case SPAWN_EVENT: // This will probably be deleted, only server spawns things i think
 
                     // Receive packet
                     // Check validity of event
                     // If check passes, send update to clients
                     receiveSpawnPacket(i);
-                    sendSpawnPacket();
               
                     break;
 
@@ -184,7 +183,7 @@ void ServerGame::sendStartPacket() { // will add more later based on generated w
 
 
     PosInfo p;
-    p.id = client_id + 1;
+    //p.id = client_id + 1;
 
     packet.dat.game_data_id = POS_OBJ;
 
@@ -210,30 +209,19 @@ void ServerGame::receiveSpawnPacket(int offset)
 }
 
 
-void ServerGame::sendSpawnPacket()
+void ServerGame::sendSpawnPacket(PosInfo pi)
 {
     Packet packet;
     packet.hdr.packet_type = SPAWN_EVENT;
 
     const unsigned int packet_size = sizeof(Packet);
 
-
-    int x = rand() % 5;
-    int y = rand() % 5;
-
-
     char packet_data[packet_size];
 
-    PosInfo p;
-    p.x = x;
-    p.y = y;
-
     packet.dat.game_data_id = POS_OBJ;
+	pi.serialize(packet.dat.buf);
 
-    p.serialize(packet.dat.buf);
     packet.serialize(packet_data);
-
-    //printf("size of Packet: %d\n", packet_size);
 
     network->sendToAll(packet_data, packet_size);
 
@@ -290,7 +278,7 @@ void ServerGame::sendMovePacket(int obj_id)
 		btVector3 vec = player->GetPlayerPosition();
 
 		p = player->GetPosition();
-		p.id = obj_id;
+		p.oid = obj_id;
 		p.x = vec.getX();
 		p.y = vec.getY();
 		p.z = vec.getZ();
@@ -334,7 +322,7 @@ void ServerGame::sendVRotationPacket(int client) {
     packet.dat.game_data_id = POS_OBJ;
 
 	PosInfo p = player->GetPosition();
-	p.id = client;
+	p.oid = client;
 
     p.serialize(packet.dat.buf);
     

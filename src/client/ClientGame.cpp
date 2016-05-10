@@ -113,7 +113,6 @@ void ClientGame::receiveSpawnPacket(int offset)
     struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
     struct PosInfo* p = (struct PosInfo *) (dat->buf);
 
-
 }
 
 void ClientGame::sendSpawnPacket()
