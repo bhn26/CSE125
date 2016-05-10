@@ -96,9 +96,6 @@
     <ClCompile Include="..\src\Graphics\Objects\Ground.cpp">
       <Filter>Source Files\Graphics\Objects</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Graphics\Animation\ogldev_skinned_mesh.cpp">
-      <Filter>Source Files\Graphics\Animation</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\Graphics\Animation\ogldev_texture.cpp">
       <Filter>Source Files\Graphics\Animation</Filter>
     </ClCompile>
@@ -116,6 +113,15 @@
     </ClCompile>
     <ClCompile Include="..\src\Graphics\Objects\Entity.cpp">
       <Filter>Source Files\Graphics\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Graphics\Animation\AnimationMesh.cpp">
+      <Filter>Source Files\Graphics\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Graphics\Animation\AnimationPlayer.cpp">
+      <Filter>Source Files\Graphics\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Graphics\Animation\AnimatedModel.cpp">
+      <Filter>Source Files\Graphics\Animation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -167,9 +173,6 @@
     <ClInclude Include="..\src\Graphics\Objects\Ground.h">
       <Filter>Source Files\Graphics\Objects</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Graphics\Animation\ogldev_skinned_mesh.h">
-      <Filter>Source Files\Graphics\Animation</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Graphics\Animation\ogldev_texture.h">
       <Filter>Source Files\Graphics\Animation</Filter>
     </ClInclude>
@@ -187,6 +190,15 @@
     </ClInclude>
     <ClInclude Include="..\src\Graphics\Objects\Entity.h">
       <Filter>Source Files\Graphics\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Graphics\Animation\AnimationMesh.h">
+      <Filter>Source Files\Graphics\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Graphics\Animation\AnimationPlayer.h">
+      <Filter>Source Files\Graphics\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Graphics\Animation\AnimatedModel.h">
+      <Filter>Source Files\Graphics\Animation</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

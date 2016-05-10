@@ -112,7 +112,7 @@ private:
 
     void Clear();
 
-#define INVALID_MATERIAL 0xFFFFFFFF
+    const static int INVALID_MATERIAL = 0xFFFFFFFF;
   
 enum VB_TYPES {
     INDEX_BUFFER,

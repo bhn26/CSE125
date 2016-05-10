@@ -8,6 +8,7 @@
 #include "Graphics/Shader.h"
 #include "Graphics/Camera.h"
 #include "Graphics/Scene.h"
+#include "Graphics/Objects/ChickenAnim.h"
 
 const char* window_title = "Egg Scramble!";
 
@@ -155,40 +156,18 @@ void Window::Key_callback(GLFWwindow* window, int key, int scancode, int action,
             case GLFW_KEY_SPACE:
                 Scene::camera->ProcessKeyboard(Camera_Movement::UP, 1);
                 break;
-            //case GLFW_KEY_X:
-            //    if (mods == GLFW_MOD_SHIFT) Scene::chicken->ShiftX(0.5);
-            //    else Scene::chicken->ShiftX(-0.5);
-            //    break;
-            //case GLFW_KEY_Y:
-            //    if (mods == GLFW_MOD_SHIFT) Scene::chicken->ShiftY(shiftVal);
-            //    else Scene::chicken->ShiftY(-shiftVal);
-            //    break;
-            //case GLFW_KEY_Z:
-            //    if (mods == GLFW_MOD_SHIFT) Scene::chicken->ShiftZ(shiftVal);
-            //    else Scene::chicken->ShiftZ(-shiftVal);
-            //    break;
-            //case GLFW_KEY_S:
-            //    if (mods == GLFW_MOD_SHIFT) Scene::chicken->Scale(1/scaleVal);
-            //    else Scene::chicken->Scale(scaleVal);
-            //    break;
-            //case GLFW_KEY_F:
-            //    Scene::camera->ProcessKeyboard(Camera_Movement::FORWARD, 1);
-            //    break;
-            //case GLFW_KEY_RIGHT:
-            //    Scene::camera->ProcessKeyboard(Camera_Movement::RIGHT, 1);
-            //    break;
-            //case GLFW_KEY_B:
-            //    Scene::camera->ProcessKeyboard(Camera_Movement::BACKWARD, 1);
-            //    break;
-            //case GLFW_KEY_LEFT:
-            //    Scene::camera->ProcessKeyboard(Camera_Movement::LEFT, 1);
-            //    break;
-            //case GLFW_KEY_DOWN:
-            //    Scene::camera->ProcessKeyboard(Camera_Movement::DOWN, 1);
-            //    break;
-            //case GLFW_KEY_UP:
-            //    Scene::camera->ProcessKeyboard(Camera_Movement::UP, 1);
-            //    break;
+            case GLFW_KEY_MINUS:
+                Scene::chicken_anim->Scale(0.9f);
+                break;
+            case GLFW_KEY_EQUAL:
+                Scene::chicken_anim->Scale(1/0.9f);
+                break;
+            case GLFW_KEY_P:
+                if (mods == GLFW_MOD_SHIFT)
+                    Scene::chicken_anim->m_object.RestartAnimation();
+                else
+                    Scene::chicken_anim->m_object.ToggleAnimating();
+                break;
             default:
                 break;
         }
