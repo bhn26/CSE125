@@ -23,6 +23,7 @@
 
 #include "skinning_technique.h"
 #include "ogldev_util.h"
+#include "ogldev_texture.h"
 
 SkinningTechnique::SkinningTechnique()
 {   
@@ -269,4 +270,17 @@ void SkinningTechnique::SetBoneTransform(unsigned int index, const glm::mat4& tr
 {
     assert(index < MAX_BONES);
     glUniformMatrix4fv(m_boneLocation[index], 1, false, glm::value_ptr(transform));
+}
+
+void SkinningTechnique::SetMaterial(const Material& material)
+{
+    glUniform3fv(GetUniformLocation("material._diffuse"), 1, glm::value_ptr(material._diffuse));
+    glUniform3fv(GetUniformLocation("material._specular"), 1, glm::value_ptr(material._specular));
+    glUniform3fv(GetUniformLocation("material._ambient"),1, glm::value_ptr(material._ambient));
+    glUniform1f(GetUniformLocation("material._shininess"), material._shininess);
+}
+
+void SkinningTechnique::SetUseTexture(bool useTexture)
+{
+    glUniform1i(GetUniformLocation("useTexture"), useTexture);
 }

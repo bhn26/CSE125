@@ -7,6 +7,14 @@ in vec2 TexCoord0;
 in vec3 Normal0;
 in vec3 WorldPos0;
 
+struct Material
+{
+    vec3 _diffuse;
+    vec3 _specular;
+    vec3 _ambient;
+    float _shininess;
+};
+
 struct VSOutput
 {
     vec2 TexCoord;
@@ -58,6 +66,8 @@ uniform sampler2D gColorMap;
 uniform vec3 gEyeWorldPos;
 uniform float gMatSpecularIntensity;
 uniform float gSpecularPower;
+uniform Material material;
+uniform bool useTexture;
 
 
 vec4 CalcLightInternal(BaseLight Light, vec3 LightDirection, VSOutput In)
@@ -136,6 +146,8 @@ void main()
         TotalLight += CalcSpotLight(gSpotLights[i], In);
     }
     
-    FragColor = texture(gColorMap, In.TexCoord.xy) * TotalLight;
-    FragColor = vec4(1,0,0,1) * TotalLight;  // should be red + lighting... LOL
+    if (useTexture)
+        FragColor = texture(gColorMap, In.TexCoord.xy) * TotalLight;
+    else
+        FragColor = material._diffuse * TotalLight;  // should be red + lighting... LOL
 }

@@ -22,15 +22,25 @@
 #include <string>
 
 #include <GL/glew.h>
+#include <glm/glm.hpp>
+
+struct Material
+{
+    glm::vec3 _diffuse;
+    glm::vec3 _specular;
+    glm::vec3 _ambient;
+    float _shininess;
+    Material() : _diffuse(), _specular(), _ambient(), _shininess(0.0f) {}
+};
 
 class Texture
 {
 public:
     Texture(GLenum textureTarget, const std::string& fileName);
+    Texture() : Texture(GL_TEXTURE0, "") {}
 
     bool Load();
-
-    void Bind(GLenum textureUnit);
+    void Bind(GLenum textureUnit) const;
 
 private:
     std::string m_fileName;

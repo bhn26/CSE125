@@ -26,7 +26,8 @@
 
 ChickenAnim::ChickenAnim() : m_toWorld(glm::scale(glm::mat4(1.0f), glm::vec3(0.01f)))
 {
-    m_object.FBXLoadClean("assets/chickens/animations/hardcore_chicken.fbx", true);
+    //m_object.FBXLoadClean("assets/chickens/animations/hardcore_chicken.fbx", true);
+    m_object.FBXLoadClean("assets/chickens/animations/chicken_dance.fbx", true);
     m_directionalLight.color = glm::vec3(1.0f, 1.0f, 1.0f);
     m_directionalLight.ambientIntensity = 0.55f;
     m_directionalLight.diffuseIntensity = 0.9f;

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <map>
+#include <unordered_map>
 #include <vector>
 
 #include <glm/glm.hpp>
@@ -112,13 +112,14 @@ namespace Animation
         GLuint m_VAO, m_VBO, m_EBO;
 
         std::vector<MeshEntry> m_meshes;
-        std::vector<Texture*> m_Textures;
+        std::unordered_map<int, Texture> m_textures;
+        std::unordered_map<int, Material> m_materials;
         std::unique_ptr<Node> m_rootNode;
 
         std::shared_ptr<SkinningTechnique> m_skinningTechnique;         // HACKY
 
         unsigned int m_numBones, m_numVertices, m_numIndices;
-        std::map<std::string, unsigned int> m_boneMapping; // maps a bone name to its index
+        std::unordered_map<std::string, unsigned int> m_boneMapping; // maps a bone name to its index
         std::vector<BoneInfo> m_boneInfo;
         glm::mat4 m_GlobalInverseTransform;
     };

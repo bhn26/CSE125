@@ -57,11 +57,6 @@ Animation::Mesh::~Mesh()
 ///////////////////////////////////////////////////////////////////////
 void Animation::Mesh::Clear()
 {
-    for (unsigned int i = 0; i < m_Textures.size(); i++)
-    {
-        SAFE_DELETE(m_Textures[i]);
-    }
-
     if (m_VBO != 0)
     {
         glDeleteBuffers(1, &m_VBO);
@@ -98,7 +93,6 @@ bool Animation::Mesh::InitFromScene(const aiScene* scene, const std::string& fil
     GenBuffers();
 
     m_meshes.resize(scene->mNumMeshes);
-    m_Textures.resize(scene->mNumMaterials);
 
     std::vector<unsigned int> indices;
     std::vector<VertexInfo> vertices;
@@ -273,15 +267,13 @@ bool Animation::Mesh::InitMaterials(const aiScene* scene, const std::string& fil
     // Initialize the materials
     for (unsigned int i = 0; i < scene->mNumMaterials; i++)
     {
-        const aiMaterial* material = scene->mMaterials[i];
+        const aiMaterial* aimaterial = scene->mMaterials[i];
 
-        m_Textures[i] = NULL;
-
-        if (material->GetTextureCount(aiTextureType_DIFFUSE) > 0)
+        if (aimaterial->GetTextureCount(aiTextureType_DIFFUSE) > 0)
         {
             aiString path;
 
-            if (material->GetTexture(aiTextureType_DIFFUSE, 0, &path, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS)
+            if (aimaterial->GetTexture(aiTextureType_DIFFUSE, 0, &path, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS)
             {
                 std::string p(path.data);
 
@@ -292,13 +284,12 @@ bool Animation::Mesh::InitMaterials(const aiScene* scene, const std::string& fil
 
                 std::string fullPath = dir + "/" + p;
 
-                m_Textures[i] = new Texture(GL_TEXTURE_2D, fullPath.c_str());
+                m_textures[i] = Texture(GL_TEXTURE_2D, fullPath.c_str());
 
-                if (!m_Textures[i]->Load())
+                if (!m_textures[i].Load())
                 {
                     printf("Error loading texture '%s'\n", fullPath.c_str());
-                    delete m_Textures[i];
-                    m_Textures[i] = NULL;
+                    m_textures.erase(m_textures.find(i));       // Remove
                     ret = false;
                 }
                 else
@@ -306,6 +297,21 @@ bool Animation::Mesh::InitMaterials(const aiScene* scene, const std::string& fil
                     printf("%d - loaded texture '%s'\n", i, fullPath.c_str());
                 }
             }
+        }
+        else        // Use a material instead of texture
+        {
+            Material& material = m_materials[i];
+            aiColor3D diffuse;
+            aiColor3D specular;
+            aiColor3D ambient;
+            aimaterial->Get(AI_MATKEY_COLOR_DIFFUSE, diffuse);
+            aimaterial->Get(AI_MATKEY_COLOR_SPECULAR, specular);
+            aimaterial->Get(AI_MATKEY_COLOR_AMBIENT, ambient);
+
+            material._diffuse = glm::vec3(diffuse.r, diffuse.g, diffuse.b);
+            material._specular = glm::vec3(specular.r, specular.g, specular.b);
+            material._ambient = glm::vec3(ambient.r, ambient.g, ambient.b);
+            aimaterial->Get(AI_MATKEY_SHININESS, material._shininess);
         }
     }
 
@@ -326,11 +332,15 @@ void Animation::Mesh::Draw() const
     {
         const unsigned int materialIndex = m_meshes[i].materialIndex;
 
-        assert(materialIndex < m_Textures.size());
-
-        if (m_Textures[materialIndex])
+        if (m_textures.find(materialIndex) != m_textures.end())
         {
-            m_Textures[materialIndex]->Bind(GL_TEXTURE0);
+            m_textures.at(materialIndex).Bind(GL_TEXTURE0);
+            m_skinningTechnique->SetUseTexture(true);
+        }
+        else if (m_materials.find(materialIndex) != m_materials.end())
+        {
+            m_skinningTechnique->SetMaterial(m_materials.at(materialIndex));
+            m_skinningTechnique->SetUseTexture(false);
         }
 
         glDrawElementsBaseVertex(GL_TRIANGLES,

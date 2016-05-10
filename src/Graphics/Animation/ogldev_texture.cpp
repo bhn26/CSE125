@@ -48,7 +48,7 @@ bool Texture::Load()
     return true;
 }
 
-void Texture::Bind(GLenum textureUnit)
+void Texture::Bind(GLenum textureUnit) const
 {
     glActiveTexture(textureUnit);
     glBindTexture(m_textureTarget, m_textureObj);

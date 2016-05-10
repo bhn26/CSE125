@@ -22,6 +22,8 @@
 #include "ogldev_util.h"
 #include <glm/glm.hpp>
 
+struct Material;
+
 struct BaseLight
 {
     glm::vec3 color;
@@ -102,6 +104,8 @@ public:
     void SetMatSpecularIntensity(float intensity);
     void SetMatSpecularPower(float power);
     void SetBoneTransform(unsigned int index, const glm::mat4& transform);
+    void SetMaterial(const Material& material);
+    void SetUseTexture(bool useTexture);
 
 private:
     
