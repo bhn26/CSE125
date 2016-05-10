@@ -4,8 +4,10 @@
 
 #include <glm/glm.hpp>
 #include <vector>
+#include <map>
 
 #include "Objects/Entity.h"
+#include "Objects/CubeMap.h"
 
 class Camera;
 class Player;
@@ -16,12 +18,13 @@ class Scene
 {
     std::unique_ptr<Camera> camera;
     std::unique_ptr<PointLight> pLight;
+	std::unique_ptr<CubeMap> cubeMap;
     Player* player;
 
     static const int WIDTH;
     static const int HEIGHT;
 
-    std::vector<std::unique_ptr<Entity>> entities;
+	std::map<std::pair<int, int>, std::unique_ptr<Entity> > entities;
     std::vector<std::shared_ptr<Player>> players;
 
     Scene();
@@ -37,8 +40,8 @@ public:
 
     static void Initialize() { Instance()->Setup(); }
 
-	void AddEntity(int oid, std::unique_ptr<Entity> ent);
-	void RemoveEntity(int oid);
+	void AddEntity(int cid, int oid, std::unique_ptr<Entity> ent);
+	void RemoveEntity(int cid, int oid);
 
 	void AddPlayer(int client_id);
     void Update();

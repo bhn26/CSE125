@@ -12,9 +12,10 @@
 #include "../client/ClientGame.h"
 #include <algorithm>
 #include <vector>
+#include <map>
 
 Scene::Scene() : camera(std::unique_ptr<Camera>(nullptr)), pLight(std::unique_ptr<PointLight>(nullptr)),
-    player(nullptr), entities(std::vector<std::unique_ptr<Entity>>()), players(std::vector<std::shared_ptr<Player>>())
+    player(nullptr), players(std::vector<std::shared_ptr<Player>>())
 {
 }
 const int Scene::WIDTH = 100;
@@ -38,20 +39,20 @@ void Scene::Setup()
     //std::unique_ptr<Cube> cube = std::unique_ptr<Cube>(new Cube);
 	std::unique_ptr<Egg> egg = std::unique_ptr<Egg>(new Egg(10.0f, 3.0f, 10.0f));
 	egg->SetColor(glm::vec3(0.27f, 0.16f, 0.0f));
-    std::unique_ptr<CubeMap> cubeMap = std::unique_ptr<CubeMap>(new CubeMap);
+    cubeMap = std::unique_ptr<CubeMap>(new CubeMap);
     cubeMap->LoadCubeMap();
-
+	
     //cube->GetShader() = basicShader;
 	egg->GetShader() = diffuseShader;
     ground->GetShader() = diffuseShader;
     player->GetShader() = modelShader;
     cubeMap->GetShader() = cubeMapShader;
 
-    entities.push_back(std::move(ground));
+    /*entities.push_back(std::move(ground));
     entities.push_back(std::move(player));
 	entities.push_back(std::move(egg));
     //entities.push_back(std::move(cube)); // Don't add cube to scene
-    entities.push_back(std::move(cubeMap));
+    entities.push_back(std::move(cubeMap));*/
 }
 
 void Scene::AddPlayer(int client_id) {
@@ -71,14 +72,16 @@ void Scene::AddPlayer(int client_id) {
 
 void Scene::Update()
 {
-    for (std::unique_ptr<Entity>& entity : entities)
-        entity->Update();
+	cubeMap->Update();
+	for (auto& const entity : entities)
+		entity.second->Update();
 }
 
 void Scene::Draw()
 {
-    for (std::unique_ptr<Entity>& entity : entities)
-        entity->Draw();
+	cubeMap->Draw();
+	for (auto& const entity : entities)
+        entity.second->Draw();
 
     // Redrawing players??
 	for (int i = 0; i < players.size(); i++) {
@@ -104,12 +107,13 @@ glm::mat4 Scene::GetPerspectiveMatrix()
     return camera->GetPerspectiveMatrix();
 }
 
-void Scene::AddEntity(int oid, std::unique_ptr<Entity> ent)
+void Scene::AddEntity(int cid, int oid, std::unique_ptr<Entity> ent)
 {
-
+	std::pair<int,int> p = std::pair<int, int>(cid, oid);
+	entities.insert(std::make_pair(p, std::move(ent)));
 }
 
-void Scene::RemoveEntity(int oid)
+void Scene::RemoveEntity(int cid, int oid)
 {
-
+	entities.erase(std::make_pair(cid, oid));
 }
