@@ -43,6 +43,7 @@ struct GameInfo
     }
 };
 
+// Position info of object
 struct PosInfo : GameInfo
 {
 
@@ -69,5 +70,20 @@ struct PosInfo : GameInfo
     }
 };
 
-
 //#endif
+
+// What needs to get deleted
+struct DelInfo : GameInfo
+{
+	int delete_oid;
+	ClassId delete_cid;
+
+	void serialize(char * data) {
+		memcpy(data, this, sizeof(DelInfo));
+	}
+
+	void deserialize(char * data) {
+		memcpy(this, data, sizeof(DelInfo));
+	}
+};
+

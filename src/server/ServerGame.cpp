@@ -84,6 +84,7 @@ void ServerGame::receiveFromClients()
 
 				case READY_GAME:
 					ready_clients++;
+					//printf("ready clients: %d\nclient_id: %d\n", ready_clients, client_id);
 					break;
 
 				case START_GAME:
