@@ -1,5 +1,4 @@
 #include "World.h"
-#include "Obstacle.h"
 #include "ObjectId.h"
 
 World::World() {

@@ -2,7 +2,7 @@
 
 #include "Player.h"
 #include "Flag.h"
-#include "Obstacle.h"
+#include "WorldObstacle.h"
 #include <vector>
 #include <memory>
 
