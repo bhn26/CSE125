@@ -22,14 +22,14 @@ enum MoveType {
     MOVE_RIGHT = 3
 };
 
-enum ObjId 
+enum GameDataId 
 {
     POS_OBJ = 0
 };
 
 struct GameInfo
 {
-    ObjId id;
+    GameDataId id;
 
     // NETWORKING NOTE:
     // Usually, you want to serialize into PacketData's buf before you send
@@ -46,11 +46,11 @@ struct PosInfo : GameInfo
 {
 
 	int id;
-	// object coordinates
 
-    int x;
-    int y;
-    int z;
+	// object coordinates
+    float x;
+    float y;
+    float z;
 
     int direction; // remove later?
 

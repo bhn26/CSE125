@@ -3,6 +3,8 @@
 
 unsigned int ServerGame::client_id; 
 
+ServerGame* ServerGame::sg = nullptr;
+
 ServerGame::ServerGame(void)
 {
     // id's to assign clients for our table
@@ -36,7 +38,8 @@ void ServerGame::update()
 		receiveFromClients();
 	}
 
-	if (game_started)
+	// Check that all clients are ready
+	if (game_started && ready_clients == client_id)
 	{
 		engine->GetWorld()->updateWorld();
 	}
@@ -79,19 +82,15 @@ void ServerGame::receiveFromClients()
 
                     break;
 
+				case READY_GAME:
+					ready_clients++;
+					break;
+
 				case START_GAME:
 					receiveStartPacket(i);
 					sendStartPacket();
 
 					break;
-
-                case ACTION_EVENT:
-
-                    printf("server received action event packet from client\n");
-
-                    sendActionPackets();
-
-                    break;
 
                 case MOVE_EVENT:
                     // sends a move packet based on if reception was valid
@@ -122,21 +121,6 @@ void ServerGame::receiveFromClients()
             i += sizeof(Packet);
         }
     }
-}
-
-
-void ServerGame::sendActionPackets()
-{
-    // send action packet
-    const unsigned int packet_size = sizeof(Packet);
-    char packet_data[packet_size];
-
-    Packet packet;
-    packet.hdr.packet_type = ACTION_EVENT;
-
-    packet.serialize(packet_data);
-
-    network->sendToAll(packet_data,packet_size);
 }
 
 // Handle new init packet from client
@@ -202,7 +186,7 @@ void ServerGame::sendStartPacket() { // will add more later based on generated w
     PosInfo p;
     p.id = client_id + 1;
 
-    packet.dat.obj_id = POS_OBJ;
+    packet.dat.game_data_id = POS_OBJ;
 
     p.serialize(packet.dat.buf);
     packet.serialize(packet_data);
@@ -244,7 +228,7 @@ void ServerGame::sendSpawnPacket()
     p.x = x;
     p.y = y;
 
-    packet.dat.obj_id = POS_OBJ;
+    packet.dat.game_data_id = POS_OBJ;
 
     p.serialize(packet.dat.buf);
     packet.serialize(packet_data);
@@ -268,45 +252,50 @@ void ServerGame::receiveMovePacket(int offset)
 	btVector3* vec;
 	switch (pi->direction) {
 	case MOVE_FORWARD:
-		vec = new btVector3(0, 0, -5);
+		vec = new btVector3(0, 0, -3);
 		player->Move(vec);
 		delete vec;
 		break;
 	case MOVE_BACKWARD:
-		vec = new btVector3(0, 0, 5);
+		vec = new btVector3(0, 0, 3);
 		player->Move(vec);
 		delete vec;
 		break;
 	case MOVE_LEFT:
-		vec = new btVector3(-5, 0, 0);
+		vec = new btVector3(-3, 0, 0);
 		player->Move(vec);
 		delete vec;
 		break;
 	case MOVE_RIGHT:
-		vec = new btVector3(5, 0, 0);
+		vec = new btVector3(3, 0, 0);
 		player->Move(vec);
 		delete vec;
 		break;
 	}
 
 //	player->Move(pi->direction);
-	sendMovePacket(hdr->sender_id);
+//	sendMovePacket(hdr->sender_id);
 }
 
-void ServerGame::sendMovePacket(int client)
+void ServerGame::sendMovePacket(int obj_id)
 {
-		shared_ptr<Player> player = engine->GetWorld()->GetPlayer(client);
+		shared_ptr<Player> player = engine->GetWorld()->GetPlayer(obj_id); // change this to getting the object
         Packet packet;
         packet.hdr.packet_type = MOVE_EVENT;
 
         PosInfo p;
-        packet.dat.obj_id = POS_OBJ;
+        packet.dat.game_data_id = POS_OBJ;
 	
+		// Extract the vector and send it with the posinfo object
+		btVector3 vec = player->GetPlayerPosition();
+
 		p = player->GetPosition();
-		p.id = client;
+		p.id = obj_id;
+		p.x = vec.getX();
+		p.y = vec.getY();
+		p.z = vec.getZ();
 
         p.serialize(packet.dat.buf);
-
 
         const unsigned int packet_size = sizeof(Packet);
         char packet_data[packet_size];
@@ -342,14 +331,10 @@ void ServerGame::sendVRotationPacket(int client) {
     packet.hdr.sender_id = client_id;
     packet.hdr.receiver_id = SERVER_ID;
 
-    packet.dat.obj_id = POS_OBJ;
+    packet.dat.game_data_id = POS_OBJ;
 
 	PosInfo p = player->GetPosition();
 	p.id = client;
-
-
-    packet.dat.obj_id = POS_OBJ;
-
 
     p.serialize(packet.dat.buf);
     

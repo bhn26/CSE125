@@ -1,5 +1,6 @@
 #include "World.h"
 #include "ObjectId.h"
+#include "../ServerGame.h"
 
 World::World() {
 	// initialize map objects 
@@ -274,7 +275,15 @@ void World::updateWorld()
 		}
 		*/
 	}
-	
+
+	// send updates every x or so ticks?
+	if (x % 5 == 0)
+	{
+		for (std::vector<std::shared_ptr<Player> >::iterator it = players.begin(); it != players.end(); ++it)
+		{
+			ServerGame::instance()->sendMovePacket((*it)->GetId());
+		}
+	}
 	
 }
 

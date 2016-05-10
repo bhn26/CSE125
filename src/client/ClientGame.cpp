@@ -36,19 +36,6 @@ ClientGame::~ClientGame(void)
 }
 
 #ifdef _WIN32
-void ClientGame::sendActionPackets()
-{
-    // send action packet
-    const unsigned int packet_size = sizeof(Packet);
-    char packet_data[packet_size];
-
-    Packet packet;
-    packet.hdr.packet_type = ACTION_EVENT;
-
-    packet.serialize(packet_data);
-
-    NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
-}
 
 // Do we want to create a new world every time we get a new init packet
 void ClientGame::receiveInitPacket(int offset)
@@ -76,6 +63,20 @@ void ClientGame::sendInitPacket() {
 	NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
 }
 
+void ClientGame::sendReadyPacket()
+{
+	const unsigned int packet_size = sizeof(Packet);
+	char packet_data[packet_size];
+
+	Packet packet;
+	packet.hdr.packet_type = READY_GAME;
+	packet.hdr.sender_id = client_id;
+
+	packet.serialize(packet_data);
+
+	NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
+}
+
 void ClientGame::receiveStartPacket(int offset) {
 	printf("received start packet\n");
 	struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset]);
@@ -83,10 +84,14 @@ void ClientGame::receiveStartPacket(int offset) {
     
 	struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
 
+	// add players, may have to send a different packet
 	for (int i = 0; i < pi->id; i++) {
 		printf("add player %d\n", i);
 		Scene::Instance()->AddPlayer(i);
 	}
+
+	game_started = true;
+	sendReadyPacket();
 }
 
 void ClientGame::sendStartPacket() {
@@ -95,6 +100,7 @@ void ClientGame::sendStartPacket() {
 
 	Packet packet;
 	packet.hdr.packet_type = START_GAME;
+	packet.hdr.sender_id = client_id;
 
 	packet.serialize(packet_data);
 
@@ -132,7 +138,8 @@ void ClientGame::receiveMovePacket(int offset)
     struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
 
     /* probably gonna switch this to coordinates later on */
-    Scene::Instance()->GetPlayer()->ProcessKeyboard((DIRECTION) pi->direction, 1); // move (rename method later)
+    //Scene::Instance()->GetPlayer()->ProcessKeyboard((DIRECTION) pi->direction, 1); // move (rename method later)
+	Scene::Instance()->GetPlayer()->MoveTo(pi->x, pi->y, pi->z);
 }
 
 // Need to know what direction to move in
@@ -222,14 +229,6 @@ void ClientGame::update()
 				receiveStartPacket(i);
 				break;
 
-            case ACTION_EVENT:
-
-                printf("client received action event packet from server\n");
-
-                //sendActionPackets();
-
-                break;
-
             case SPAWN_EVENT:
 
                 // You want to offset the packet header
@@ -238,7 +237,8 @@ void ClientGame::update()
                 break;
 
             case MOVE_EVENT:
-                receiveMovePacket(i + sizeof(PacketHeader));
+				if(game_started) // the game needs to start for the client before this can happen
+					receiveMovePacket(i + sizeof(PacketHeader));
                 break;
 
 			case V_ROTATION_EVENT:

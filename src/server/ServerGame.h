@@ -10,16 +10,11 @@ class ServerGame
 
 public:
 
-    ServerGame(void);
-    ~ServerGame(void);
-
     static unsigned int NumClients() {return client_id;}
 
     void update();
 
 	void receiveFromClients();
-
-	void sendActionPackets();
     
     // Want singleton for the world, if we receive an init packet from a new client
     // we want to send them the current world data, not reset the world
@@ -27,6 +22,7 @@ public:
     void receiveInitPacket(int offset);
     void sendInitPacket();
 
+	// Starting the game packets
 	void receiveStartPacket(int offset);
 	void sendStartPacket();
 
@@ -39,14 +35,29 @@ public:
     void sendMovePacket(int client);
 
     void receiveVRotationPacket(int offset);
-    void sendVRotationPacket(int client); 
+    void sendVRotationPacket(int obj_id); 
+
+	static void instantiate()
+	{
+		if (sg == NULL)
+			sg = new ServerGame();
+	}
+
+	static ServerGame* instance() { return sg; }
 
 private:
+	ServerGame(void);
+	~ServerGame(void);
 
-   // IDs for the clients connecting for table in ServerNetwork 
+    // IDs for the clients connecting for table in ServerNetwork 
     static unsigned int client_id;
 
+	// Singleton servergame
+	static ServerGame* sg;
+
+	// variables for starting the game
 	bool game_started = false;
+	int ready_clients = 0; // # of clients ready for the game
 
 	Engine * engine;
 

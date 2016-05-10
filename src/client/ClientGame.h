@@ -22,10 +22,12 @@ public:
     GLFWwindow* window;
 
 #ifdef _WIN32
-    void sendActionPackets();
 
     void receiveInitPacket(int offset);
 	void sendInitPacket();
+
+	// Tell the server this client is ready, this is like an ACK to prevent a race condition
+	void sendReadyPacket();
 
 	void receiveStartPacket(int offset);
 	void sendStartPacket();
@@ -63,6 +65,8 @@ private:
     double lastTime;
     int nbFrames;
     int client_id; // should know what client number we are so we can fill out packet headers
+
+	bool game_started = false;
 
     static ClientGame* cg;
 
