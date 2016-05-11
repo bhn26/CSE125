@@ -7,7 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A002105F1CC053DB00468EE4 /* client_main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A002105D1CC053DB00468EE4 /* client_main.cpp */; };
+		A00210971CC62F2900468EE4 /* ClientGame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A00210921CC62F2900468EE4 /* ClientGame.cpp */; };
+		A00210981CC62F2900468EE4 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A00210941CC62F2900468EE4 /* main.cpp */; };
+		A00210991CC62F2900468EE4 /* Player.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A00210951CC62F2900468EE4 /* Player.cpp */; };
+		A00210A51CC62F3A00468EE4 /* CubeMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A002109A1CC62F3A00468EE4 /* CubeMap.cpp */; };
+		A00210A81CC62F4800468EE4 /* Ground.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A00210A61CC62F4800468EE4 /* Ground.cpp */; };
 		CD214BC81CB6E60E00D7DFD6 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD214BC71CB6E60E00D7DFD6 /* OpenGL.framework */; };
 		CD214BE21CB7027C00D7DFD6 /* Cube.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD214BD81CB7027C00D7DFD6 /* Cube.cpp */; };
 		CD214BE31CB7027C00D7DFD6 /* Shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD214BDA1CB7027C00D7DFD6 /* Shader.cpp */; };
@@ -53,8 +57,23 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		A002105D1CC053DB00468EE4 /* client_main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = client_main.cpp; sourceTree = "<group>"; };
-		A002105E1CC053DB00468EE4 /* client_main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = client_main.h; sourceTree = "<group>"; };
+		A00210921CC62F2900468EE4 /* ClientGame.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ClientGame.cpp; sourceTree = "<group>"; };
+		A00210931CC62F2900468EE4 /* ClientGame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClientGame.h; sourceTree = "<group>"; };
+		A00210941CC62F2900468EE4 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		A00210951CC62F2900468EE4 /* Player.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Player.cpp; sourceTree = "<group>"; };
+		A00210961CC62F2900468EE4 /* Player.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Player.h; sourceTree = "<group>"; };
+		A002109A1CC62F3A00468EE4 /* CubeMap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CubeMap.cpp; sourceTree = "<group>"; };
+		A002109B1CC62F3A00468EE4 /* CubeMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CubeMap.h; sourceTree = "<group>"; };
+		A002109C1CC62F3A00468EE4 /* PointLight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PointLight.h; sourceTree = "<group>"; };
+		A002109E1CC62F3A00468EE4 /* basic_shader.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = basic_shader.frag; sourceTree = "<group>"; };
+		A002109F1CC62F3A00468EE4 /* basic_shader.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = basic_shader.vert; sourceTree = "<group>"; };
+		A00210A01CC62F3A00468EE4 /* cubemap.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = cubemap.frag; sourceTree = "<group>"; };
+		A00210A11CC62F3A00468EE4 /* cubemap.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = cubemap.vert; sourceTree = "<group>"; };
+		A00210A21CC62F3A00468EE4 /* diffuse.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = diffuse.frag; sourceTree = "<group>"; };
+		A00210A31CC62F3A00468EE4 /* model_loading.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = model_loading.frag; sourceTree = "<group>"; };
+		A00210A41CC62F3A00468EE4 /* model_loading.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = model_loading.vert; sourceTree = "<group>"; };
+		A00210A61CC62F4800468EE4 /* Ground.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Ground.cpp; sourceTree = "<group>"; };
+		A00210A71CC62F4800468EE4 /* Ground.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Ground.h; sourceTree = "<group>"; };
 		CD214BB81CB6E3F900D7DFD6 /* egg scramble */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "egg scramble"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD214BC71CB6E60E00D7DFD6 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		CD214BD81CB7027C00D7DFD6 /* Cube.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Cube.cpp; sourceTree = "<group>"; };
@@ -127,6 +146,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A002109D1CC62F3A00468EE4 /* Shaders */ = {
+			isa = PBXGroup;
+			children = (
+				A002109E1CC62F3A00468EE4 /* basic_shader.frag */,
+				A002109F1CC62F3A00468EE4 /* basic_shader.vert */,
+				A00210A01CC62F3A00468EE4 /* cubemap.frag */,
+				A00210A11CC62F3A00468EE4 /* cubemap.vert */,
+				A00210A21CC62F3A00468EE4 /* diffuse.frag */,
+				A00210A31CC62F3A00468EE4 /* model_loading.frag */,
+				A00210A41CC62F3A00468EE4 /* model_loading.vert */,
+			);
+			path = Shaders;
+			sourceTree = "<group>";
+		};
 		CD214BAF1CB6E3F900D7DFD6 = {
 			isa = PBXGroup;
 			children = (
@@ -147,8 +180,11 @@
 		CD214BD31CB7027C00D7DFD6 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				A002105D1CC053DB00468EE4 /* client_main.cpp */,
-				A002105E1CC053DB00468EE4 /* client_main.h */,
+				A00210921CC62F2900468EE4 /* ClientGame.cpp */,
+				A00210931CC62F2900468EE4 /* ClientGame.h */,
+				A00210941CC62F2900468EE4 /* main.cpp */,
+				A00210951CC62F2900468EE4 /* Player.cpp */,
+				A00210961CC62F2900468EE4 /* Player.h */,
 				CD95AD141CBC890000BFC772 /* Window.cpp */,
 				CD95AD151CBC890000BFC772 /* Window.h */,
 				CD214BD61CB7027C00D7DFD6 /* Graphics */,
@@ -159,6 +195,10 @@
 		CD214BD61CB7027C00D7DFD6 /* Graphics */ = {
 			isa = PBXGroup;
 			children = (
+				A002109A1CC62F3A00468EE4 /* CubeMap.cpp */,
+				A002109B1CC62F3A00468EE4 /* CubeMap.h */,
+				A002109C1CC62F3A00468EE4 /* PointLight.h */,
+				A002109D1CC62F3A00468EE4 /* Shaders */,
 				CD214BD71CB7027C00D7DFD6 /* Objects */,
 				CD214BDA1CB7027C00D7DFD6 /* Shader.cpp */,
 				CD9C3C481CBA1EC000F627D8 /* Shader.h */,
@@ -186,6 +226,8 @@
 				CD6658DA1CC3F4250099F9BC /* Entity.h */,
 				CD6658DB1CC3F4250099F9BC /* Ground.cpp */,
 				CD6658DC1CC3F4250099F9BC /* Ground.h */,
+				A00210A61CC62F4800468EE4 /* Ground.cpp */,
+				A00210A71CC62F4800468EE4 /* Ground.h */,
 				CD214BD81CB7027C00D7DFD6 /* Cube.cpp */,
 				CD214BD91CB7027C00D7DFD6 /* Cube.h */,
 				CD9C3C511CBC67CE00F627D8 /* Chicken.cpp */,
@@ -283,11 +325,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A00210971CC62F2900468EE4 /* ClientGame.cpp in Sources */,
 				CD214BE31CB7027C00D7DFD6 /* Shader.cpp in Sources */,
 				CD95AD161CBC890000BFC772 /* Window.cpp in Sources */,
 				CD9C3C461CBA1E9500F627D8 /* Nodes.cpp in Sources */,
 				CD6658FC1CC40D6D0099F9BC /* ChickenAnim.cpp in Sources */,
 				CD6658DD1CC3F4250099F9BC /* Entity.cpp in Sources */,
+				A00210981CC62F2900468EE4 /* main.cpp in Sources */,
 				CD214BE21CB7027C00D7DFD6 /* Cube.cpp in Sources */,
 				CD9C3C501CBC671000F627D8 /* Model.cpp in Sources */,
 				CD6658F81CC409330099F9BC /* technique.cpp in Sources */,
@@ -299,7 +343,9 @@
 				CD6658EF1CC3FD340099F9BC /* ogldev_texture.cpp in Sources */,
 				CD6658DE1CC3F4250099F9BC /* Ground.cpp in Sources */,
 				CD6658F01CC3FD340099F9BC /* ogldev_util.cpp in Sources */,
-				A002105F1CC053DB00468EE4 /* client_main.cpp in Sources */,
+				A00210991CC62F2900468EE4 /* Player.cpp in Sources */,
+				A00210A81CC62F4800468EE4 /* Ground.cpp in Sources */,
+				A00210A51CC62F3A00468EE4 /* CubeMap.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -436,6 +482,7 @@
 					"-lMagickWand-6.Q16",
 					"-lMagickCore-6.Q16",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SYMROOT = $PROJECT_DIR;
 			};
@@ -490,6 +537,7 @@
 					"-lMagickWand-6.Q16",
 					"-lMagickCore-6.Q16",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SYMROOT = $PROJECT_DIR;
 			};

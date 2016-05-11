@@ -32,6 +32,7 @@
 .vs/
 *.opensdf
 *.suo
+*.db
 
 # Output
 #Output/
@@ -43,21 +44,17 @@
 *.swp
 *.swo
 
-# Remove directories
+# Ignore directories
 out/
 packages/
 #packages.config
-Client/
-Server/
+#Client/
+#Server/
 Release/
 Debug/
 
 *.txt
 
-
-#ignore directories
-packages/
-out/
 
 # Ignore NuGet packages
 #*.nupkg

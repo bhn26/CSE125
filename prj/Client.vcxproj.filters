@@ -22,9 +22,6 @@
     <Filter Include="Source Files\Network">
       <UniqueIdentifier>{67d853c1-4103-4f93-b43e-9980b4a2edb9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Network\Client Specific">
-      <UniqueIdentifier>{8ded81f8-12d7-406f-92a8-f35836ce53c6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Graphics\Animation">
       <UniqueIdentifier>{0d2e5aff-8417-45e4-8b80-b80cf6d54683}</UniqueIdentifier>
     </Filter>
@@ -36,14 +33,20 @@
     <None Include="..\src\Graphics\Shaders\basic_shader.vert">
       <Filter>Source Files\Graphics\Shaders</Filter>
     </None>
+    <None Include="..\src\Graphics\Shaders\cubemap.frag">
+      <Filter>Source Files\Graphics\Shaders</Filter>
+    </None>
+    <None Include="..\src\Graphics\Shaders\cubemap.vert">
+      <Filter>Source Files\Graphics\Shaders</Filter>
+    </None>
+    <None Include="..\src\Graphics\Shaders\diffuse.frag">
+      <Filter>Source Files\Graphics\Shaders</Filter>
+    </None>
     <None Include="..\prj\packages.config" />
     <None Include="..\src\Graphics\Shaders\model_loading.frag">
       <Filter>Source Files\Graphics\Shaders</Filter>
     </None>
     <None Include="..\src\Graphics\Shaders\model_loading.vert">
-      <Filter>Source Files\Graphics\Shaders</Filter>
-    </None>
-    <None Include="..\src\Graphics\Shaders\diffuse.frag">
       <Filter>Source Files\Graphics\Shaders</Filter>
     </None>
     <None Include="..\src\Graphics\Shaders\skinning.frag">
@@ -57,35 +60,8 @@
     <ClCompile Include="..\src\Graphics\Objects\Cube.cpp">
       <Filter>Source Files\Graphics\Objects</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Graphics\shader.cpp">
-      <Filter>Source Files\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Graphics\Nodes.cpp">
-      <Filter>Source Files\Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\Graphics\Camera.cpp">
       <Filter>Source Files\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Graphics\Scene.cpp">
-      <Filter>Source Files\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\network\client\ClientNetwork.cpp">
-      <Filter>Source Files\Network\Client Specific</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\network\NetworkServices.cpp">
-      <Filter>Source Files\Network</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\ClientGame.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Window.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Graphics\Objects\Chicken.cpp">
-      <Filter>Source Files\Graphics\Objects</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Graphics\Mesh.cpp">
       <Filter>Source Files\Graphics</Filter>
@@ -93,8 +69,44 @@
     <ClCompile Include="..\src\Graphics\Model.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Graphics\Nodes.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Graphics\Scene.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Graphics\Shader.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Graphics\Objects\Chicken.cpp">
+      <Filter>Source Files\Graphics\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Graphics\Objects\Cube.cpp">
+      <Filter>Source Files\Graphics\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\network\NetworkServices.cpp">
+      <Filter>Source Files\Network</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\Graphics\Objects\Ground.cpp">
       <Filter>Source Files\Graphics\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Graphics\Objects\CubeMap.cpp">
+      <Filter>Source Files\Graphics\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\client\ClientGame.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\client\ClientNetwork.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\client\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\client\Player.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\client\Window.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Graphics\Animation\ogldev_texture.cpp">
       <Filter>Source Files\Graphics\Animation</Filter>
@@ -125,41 +137,8 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\Graphics\Objects\Cube.h">
-      <Filter>Source Files\Graphics\Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Graphics\Shader.h">
-      <Filter>Source Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Graphics\Nodes.h">
-      <Filter>Source Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Graphics\Scenegraph.h">
-      <Filter>Source Files\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Graphics\Camera.h">
       <Filter>Source Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Graphics\Scene.h">
-      <Filter>Source Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\network\client\ClientNetwork.h">
-      <Filter>Source Files\Network\Client Specific</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\network\NetworkData.h">
-      <Filter>Source Files\Network</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\network\NetworkServices.h">
-      <Filter>Source Files\Network</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\ClientGame.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Window.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Graphics\Objects\Chicken.h">
-      <Filter>Source Files\Graphics\Objects</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Graphics\Mesh.h">
       <Filter>Source Files\Graphics</Filter>
@@ -167,11 +146,59 @@
     <ClInclude Include="..\src\Graphics\Model.h">
       <Filter>Source Files\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\Graphics\Nodes.h">
+      <Filter>Source Files\Graphics</Filter>
+    </ClInclude>
     <ClInclude Include="..\src\Graphics\PointLight.h">
       <Filter>Source Files\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\Graphics\Scene.h">
+      <Filter>Source Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Graphics\Scenegraph.h">
+      <Filter>Source Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Graphics\Shader.h">
+      <Filter>Source Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Graphics\Objects\Chicken.h">
+      <Filter>Source Files\Graphics\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Graphics\Objects\Cube.h">
+      <Filter>Source Files\Graphics\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\network\GameData.h">
+      <Filter>Source Files\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\network\NetworkData.h">
+      <Filter>Source Files\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\network\NetworkServices.h">
+      <Filter>Source Files\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Graphics\Objects\Cube.h">
+      <Filter>Source Files\Graphics\Objects</Filter>
+    </ClInclude>
     <ClInclude Include="..\src\Graphics\Objects\Ground.h">
       <Filter>Source Files\Graphics\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Graphics\Objects\Entity.h">
+      <Filter>Source Files\Graphics\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Graphics\Objects\CubeMap.h">
+      <Filter>Source Files\Graphics\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\client\ClientGame.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\client\ClientNetwork.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\client\Player.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\client\Window.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Graphics\Animation\ogldev_texture.h">
       <Filter>Source Files\Graphics\Animation</Filter>
@@ -186,9 +213,6 @@
       <Filter>Source Files\Graphics\Animation</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Graphics\Objects\ChickenAnim.h">
-      <Filter>Source Files\Graphics\Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Graphics\Objects\Entity.h">
       <Filter>Source Files\Graphics\Objects</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Graphics\Animation\AnimationMesh.h">

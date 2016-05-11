@@ -5,21 +5,42 @@
 //  Created by Phoebe on 4/14/16.
 //  Copyright © 2016 sunny side up. All rights reserved.
 //
+#pragma once
 
-#ifndef Entity_h
-#define Entity_h
-
-#include <string>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+#include <memory>
 #include <SFML/Audio.hpp>
+
 #include "../Animation/ogldev_util.h"
+#include "../Shader.h"
 
 class Entity
 {
     long long m_startTime;
     sf::Music musicPlayer;
+protected:
+    glm::mat4 toWorld;
+    glm::mat3 normalMatrix;
+    GLuint VBO, VAO, EBO;
+    std::shared_ptr<Shader> shader;
 
 public:
-    Entity() {}
+    // NOTE: Constructors do not initialize vertex/element buffers, nor shader
+    Entity(glm::mat4 world = glm::mat4(1.0f)) : toWorld(world), VBO(0), VAO(0), EBO(0), shader(nullptr)
+    {
+        normalMatrix = glm::mat3(glm::transpose(glm::inverse(world)));
+    }
+
+    Entity(glm::vec3 pos) : Entity(glm::translate(glm::mat4(1.0f), pos))
+    {
+    }
+
+    Entity(float x, float y, float z) : Entity(glm::vec3(x, y, z))
+    {
+    }
 
     bool PlaySound(std::string soundFile);
     float GetRunningTime()
@@ -27,9 +48,18 @@ public:
         return (float)((double)GetCurrentTimeMillis() - (double)m_startTime) / 1000.0f;
     }
 
-    // Draw
-    // Update
+    virtual void Draw() const = 0;
+    virtual void Update() = 0;
+
+    virtual void Spawn(/*Scene* scene, */float x, float y, float z) = 0;      // Maybe to spawn into the world, rather than using a constructor
+
+    const glm::mat4& ToWorld() const { return toWorld; }
+    const glm::mat3& NormalMatrix() const { return normalMatrix; }
+    //const std::shared_ptr<Shader>& Shader() const { return shader; }      // Creates error with typename Shader
+    glm::vec3 Position() { return glm::vec3(toWorld[3]); }
+
+    std::shared_ptr<Shader>& GetShader() { return shader; }
+
+private:
+
 };
-
-
-#endif /* Entity_hpp */

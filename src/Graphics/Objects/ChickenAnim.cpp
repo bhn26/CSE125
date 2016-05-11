@@ -65,8 +65,8 @@ void ChickenAnim::Draw()
     SkinningTechnique* skinTechnique = m_model.GetMesh().GetSkinningTechnique();
     skinTechnique->Enable(); // use shader
 
-    skinTechnique->SetEyeWorldPos(Scene::camera->Position());
-    skinTechnique->SetWVP(Scene::camera->GetPerspectiveMatrix() * Scene::camera->GetViewMatrix() * m_toWorld);
+    skinTechnique->SetEyeWorldPos(Scene::Instance()->GetCameraPosition());
+    skinTechnique->SetWVP(Scene::Instance()->GetPerspectiveMatrix() * Scene::Instance()->GetViewMatrix() * m_toWorld);
     skinTechnique->SetWorldMatrix(m_toWorld);
 
     m_model.Draw();
