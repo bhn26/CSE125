@@ -49,6 +49,9 @@
     <ClCompile Include="..\src\client\Window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Graphics\Objects\StaticObject.cpp">
+      <Filter>Source Files\Graphics\Objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Graphics\Camera.h">
@@ -113,6 +116,9 @@
     </ClInclude>
     <ClInclude Include="..\src\client\Window.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Graphics\Objects\StaticObject.h">
+      <Filter>Source Files\Graphics\Objects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
