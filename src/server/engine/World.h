@@ -17,19 +17,21 @@ typedef vector<PosInfo> pos_list;
 class World {
 
 private:
-	// list of map objects
-	// list (vector) of players sorted by client id
+
+	// list of game world objects
 	std::vector<std::shared_ptr<Player>> players;
 	std::vector<std::shared_ptr<Flag>> flags;
 	std::vector<std::shared_ptr<Bullet>> bullets;  // this may not be necessary...
+	//TODO list of weapons to check reload
 
+	// Physics World attributes
 	btDiscreteDynamicsWorld* curWorld;
 	btDefaultCollisionConfiguration* colConfig;
 	btCollisionDispatcher* disp;
 	btBroadphaseInterface* pairCache;
 	btSequentialImpulseConstraintSolver* solv;
-	//std::vector <btRigidBody*> bullets;
-	//std::vector <btRigidBody*> players;
+
+	// Map objects
 	WorldObstacle * ground;
 	WorldObstacle * frontWall;
 	WorldObstacle * backWall;
