@@ -1,28 +1,36 @@
 #pragma once
+
 #include <string>
 
-#include <GL/glew.h> // Contains all the necessery OpenGL includes
-#include <SOIL.h>
+#include <GL/glew.h>
+#include <glm/glm.hpp>
 
-class Texture2D {
-private:
-	std::string texture_file;
+struct Material
+{
+    glm::vec3 _diffuse;
+    glm::vec3 _specular;
+    glm::vec3 _ambient;
+    float _shininess;
+    Material() : _diffuse(), _specular(), _ambient(), _shininess(0.0f) {}
+};
 
+class Texture
+{
 public:
-	Texture2D(std::string file) { texture_file = file; };
-	~Texture2D() {};
+    Texture(GLenum textureTarget = GL_TEXTURE_2D, const std::string& filename = "");
+	~Texture();
+    //Texture(GLenum textureTarget = GL_TEXTURE0, const std::string& filename = "");
 
-	void Bind() {
-		GLuint texture;
-		glGenTextures(1, &texture);
-		glBindTexture(GL_TEXTURE_2D, texture);
+	Texture(const Texture& rhs) = delete;
+	Texture& operator=(Texture& rhs) = delete;
+	Texture(Texture&& rhs);
+	Texture& operator=(Texture&& rhs);
 
-		// Load and generate the texture
-		int width, height;
-		unsigned char* image = SOIL_load_image("container.jpg", &width, &height, 0, SOIL_LOAD_RGB);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-		glGenerateMipmap(GL_TEXTURE_2D);
-		SOIL_free_image_data(image);
-		glBindTexture(GL_TEXTURE_2D, 0);
-	};
+    bool Load() const;
+    void Bind(GLenum textureUnit) const;    // Texture unit like GL_TEXTURE0
+
+private:
+    std::string m_fileName;
+    GLenum m_textureTarget;     // What type of texture (probably GL_TEXTURE_2D)
+    GLuint m_textureID;
 };

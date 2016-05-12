@@ -189,6 +189,7 @@
     <ClCompile Include="..\src\Graphics\Mesh.cpp" />
     <ClCompile Include="..\src\Graphics\Model.cpp" />
     <ClCompile Include="..\src\Graphics\Objects\Chicken.cpp" />
+    <ClCompile Include="..\src\Graphics\Texture.cpp" />
     <ClCompile Include="..\src\network\NetworkServices.cpp" />
     <ClCompile Include="..\src\Graphics\Camera.cpp" />
     <ClCompile Include="..\src\Graphics\Scene.cpp" />
