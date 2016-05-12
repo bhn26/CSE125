@@ -21,7 +21,7 @@ public:
     Shader(const Shader& rhs) = delete;
     Shader& operator=(Shader& rhs) = delete;
     Shader(Shader&& rhs) : program(rhs.program) { rhs.program = 0; }
-    Shader& operator=(Shader&& rhs) { std::swap(program, rhs.program); return *this; }
+    Shader& operator=(Shader&& rhs) { program = rhs.program; rhs.program = 0; return *this; }
 
 
     bool SetShaders(const char* vertex_file_path, const char* fragment_file_path);
