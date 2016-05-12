@@ -12,4 +12,12 @@ Weapon::~Weapon()
 }
 
 
+void Weapon::UseWeapon()
+{
 
+}
+
+void Weapon::ReloadWeapon()
+{
+
+}

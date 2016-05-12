@@ -277,7 +277,7 @@ void World::UpdateWorld()
 				//TODO send a packet for the player to acquire the item
 
 				//TODO remove flag from Vector causes strange issues...
-				//removeFlag((std::shared_ptr<Flag>)collideFlag);
+				removeFlag(collideFlag);
 			}
 			//else if   TODO Handle Bullet Collision
 			//...
@@ -333,7 +333,7 @@ void World::UpdateWorld()
 				//TODO send a packet for the player to acquire the item
 
 				//TODO remove flag from Vector causes strange issues...
-				//removeFlag((std::shared_ptr<Flag>)collideFlag);
+				removeFlag(collideFlag);
 			}
 			//else if   TODO Handle Bullet Collision
 			//...
@@ -404,20 +404,24 @@ void World::UpdateWorld()
 	// send updates every x or so ticks?
 	if (x % 5 == 0)
 	{
-		for (std::vector<std::shared_ptr<Player> >::iterator it = players.begin(); it != players.end(); ++it)
+		//for (std::vector<std::shared_ptr<Player> >::iterator it = players.begin(); it != players.end(); ++it)
+		//{
+		//	ServerGame::instance()->sendMovePacket((*it)->GetId());
+		//}
+		for (std::shared_ptr<Player>& player : players)
 		{
-			ServerGame::instance()->sendMovePacket((*it)->GetId());
+			ServerGame::instance()->sendMovePacket(player->GetId());
 		}
 	}
 	
 }
 
-void World::removeFlag(std::shared_ptr<Flag> collectedFlag)
+void World::removeFlag(Flag* collectedFlag)
 {
 
-	for (std::vector<std::shared_ptr<Flag> >::iterator it = flags.begin(); it != flags.end(); ++it)
+	for (auto it = flags.begin(); it != flags.end(); ++it)
 	{
-		if (collectedFlag == (*it))
+		if (collectedFlag == it->get())
 		{
 			flags.erase(it);
 			printf("Flag has been removed from world list \n");

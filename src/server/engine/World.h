@@ -60,7 +60,7 @@ public:
 	void UpdateWorld();
 
 	// Finds and Removes flag from world list of flags
-	void removeFlag(std::shared_ptr<Flag> collectedFlag);
+	void removeFlag(Flag* collectedFlag);
 
 	void SpawnInWorld(int classid, int teamid, int playeridforBullet, int damageforBullet, PosInfo position, btVector3* speed);
 
