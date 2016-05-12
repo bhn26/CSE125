@@ -48,7 +48,7 @@ void SpriteRenderer::DrawSprite(Texture &texture, glm::vec2 position, glm::vec2 
 	glUniformMatrix4fv(model_loc, 1, false, glm::value_ptr(model));
 
     // Render textured quad
-	GLint color_loc = shader->GetUniform("spriteColor");
+	GLint color_loc = shader->GetUniform("spriteColor"); // ignored in sprite.frag
 	glUniform3fv(color_loc, 1, glm::value_ptr(color));
 
 	GLint image_loc = shader->GetUniform("image");

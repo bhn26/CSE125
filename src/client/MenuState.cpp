@@ -2,6 +2,7 @@
 #include "PlayState.h"
 #include "StateManager.h"
 #include "TextRenderer.h"
+#include "Window.h"
 
 #include "../Graphics/Shader.h"
 #include "../Graphics/Texture.h"
@@ -60,8 +61,22 @@ void CMenuState::Draw()
 			m_pItemBckgndNormal->BlitImage(209,150+i*100);
 	}*/
 
-	Texture panel = Texture(GL_TEXTURE_2D, "assets/ui/sprites/grey_panel.png");
-	sprite_renderer->DrawSprite(panel, glm::vec2(200, 200), glm::vec2(100, 100), 0.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+	////////////////// Background ///////////////////////////////////
+	Texture panel = Texture(GL_TEXTURE_2D, "assets/ui/sprites/blue_panel.png");
+	sprite_renderer->DrawSprite(panel, glm::vec2(0, 0), glm::vec2(Window::width, Window::height), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+
+	///////////////////// LOGO ///////////////////////////////////////
+	Texture logo = Texture(GL_TEXTURE_2D, "assets/ui/logo.png");
+
+	int x = Window::width/2 - logo.Width()/2;
+	int y = 20;
+
+	sprite_renderer->DrawSprite(logo, glm::vec2(x, y), glm::vec2(logo.Width(), logo.Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+
+	////////////// USERNAME TEXTBOX /////////////////////////////////
+
+	////////////// JOIN BUTTON /////////////////////////////////////
+
 	// draw text
 	TextRenderer::RenderText("This is sample text", 25.0f, 25.0f, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 }

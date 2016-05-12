@@ -26,11 +26,17 @@ public:
 	Texture(Texture&& rhs);
 	Texture& operator=(Texture&& rhs);
 
-    bool Load() const;
+    bool Load();
     void Bind(GLenum textureUnit) const;    // Texture unit like GL_TEXTURE0
+
+	int Width() { return width; };
+	int Height() { return height; };
 
 private:
     std::string m_fileName;
     GLenum m_textureTarget;     // What type of texture (probably GL_TEXTURE_2D)
     GLuint m_textureID;
+
+	int width;
+	int height;
 };
