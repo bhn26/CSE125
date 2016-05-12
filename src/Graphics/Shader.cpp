@@ -127,5 +127,6 @@ bool Shader::SetShaders(const char* vertex_file_path, const char* fragment_file_
 
 Shader::~Shader()
 {
-    glDeleteProgram(this->program);
+    if (this->program)
+        glDeleteProgram(this->program);
 }

@@ -13,11 +13,12 @@ private:
 public:
     Shader() : program((GLuint)0) {};
     Shader(const char* vertex_file_path, const char* fragment_file_path);
-    Shader(const Shader& rhs) { program = rhs.program; }
     ~Shader();
 
-    Shader& operator=(Shader rhs) { std::swap(rhs.program, program); return *this; }
-
+    Shader(const Shader& rhs) = delete;
+    Shader& operator=(Shader& rhs) = delete;
+    Shader(Shader&& rhs) : program(rhs.program) { rhs.program = 0; }
+    Shader& operator=(Shader&& rhs) { program = rhs.program; rhs.program = 0; return *this; }
 
     bool SetShaders(const char* vertex_file_path, const char* fragment_file_path);
     void Use() const { glUseProgram(this->program); }
