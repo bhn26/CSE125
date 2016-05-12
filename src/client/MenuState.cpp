@@ -3,6 +3,9 @@
 #include "StateManager.h"
 #include "TextRenderer.h"
 
+#include "../Graphics/Shader.h"
+#include "../Graphics/Texture.h"
+
 
 CMenuState::CMenuState(CStateManager* pManager) 
   : CGameState(pManager), m_iCurrentSelection(0), m_pCurrentGame(NULL)
@@ -14,6 +17,7 @@ CMenuState::CMenuState(CStateManager* pManager)
 	m_pItemBckgndSelected = CImage::CreateImage("bin/MenuItems.png",TRectanglei(58,114,0,382));*/
 
 	// Create the text controls of the menu.
+	sprite_renderer = new SpriteRenderer();
 }
 
 CMenuState::~CMenuState()
@@ -55,6 +59,9 @@ void CMenuState::Draw()
 		else
 			m_pItemBckgndNormal->BlitImage(209,150+i*100);
 	}*/
+
+	Texture2D panel = Texture2D("assets/ui/sprites/grey_panel.png");
+	sprite_renderer->DrawSprite(panel, glm::vec2(200, 200), glm::vec2(300, 400), 45.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 	// draw text
 	TextRenderer::RenderText("This is sample text", 25.0f, 25.0f, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 }

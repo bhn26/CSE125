@@ -4,6 +4,8 @@
 #include "GameState.h"
 #include "PlayState.h"
 
+#include "SpriteRenderer.h"
+
 
 // Specialization of the CGameState class for 
 // the menu state. This displays a menu in which
@@ -36,6 +38,8 @@ private:
 
 	// A pointer to the current active game (if any).
 	CPlayState* m_pCurrentGame;
+
+	SpriteRenderer * sprite_renderer;
 };
 
 #endif  // _MENUSTATE_H_

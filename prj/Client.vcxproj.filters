@@ -64,6 +64,9 @@
     <ClCompile Include="..\src\client\TextRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\client\SpriteRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Graphics\Camera.h">
@@ -144,6 +147,12 @@
     <ClInclude Include="..\src\client\TextRenderer.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\client\SpriteRenderer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Graphics\Texture.h">
+      <Filter>Source Files\Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\src\Graphics\Shaders\basic_shader.frag">
@@ -169,6 +178,18 @@
     </None>
     <None Include="..\prj\packages.config">
       <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\src\Graphics\Shaders\text.frag">
+      <Filter>Source Files\Graphics\Shaders</Filter>
+    </None>
+    <None Include="..\src\Graphics\Shaders\text.vert">
+      <Filter>Source Files\Graphics\Shaders</Filter>
+    </None>
+    <None Include="..\src\Graphics\Shaders\sprite.frag">
+      <Filter>Source Files\Graphics\Shaders</Filter>
+    </None>
+    <None Include="..\src\Graphics\Shaders\sprite.vert">
+      <Filter>Source Files\Graphics\Shaders</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

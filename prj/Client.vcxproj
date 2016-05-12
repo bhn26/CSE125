@@ -167,11 +167,16 @@
     <None Include="..\prj\packages.config" />
     <None Include="..\src\Graphics\Shaders\basic_shader.frag" />
     <None Include="..\src\Graphics\Shaders\basic_shader.vert" />
+    <None Include="..\src\Graphics\Shaders\sprite.frag" />
+    <None Include="..\src\Graphics\Shaders\sprite.vert" />
+    <None Include="..\src\Graphics\Shaders\text.frag" />
+    <None Include="..\src\Graphics\Shaders\text.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\client\GameState.cpp" />
     <ClCompile Include="..\src\client\MenuState.cpp" />
     <ClCompile Include="..\src\client\PlayState.cpp" />
+    <ClCompile Include="..\src\client\SpriteRenderer.cpp" />
     <ClCompile Include="..\src\client\StateManager.cpp" />
     <ClCompile Include="..\src\client\TextRenderer.cpp" />
     <ClCompile Include="..\src\Graphics\Objects\CubeMap.cpp" />
@@ -195,6 +200,7 @@
     <ClInclude Include="..\src\client\GameState.h" />
     <ClInclude Include="..\src\client\MenuState.h" />
     <ClInclude Include="..\src\client\PlayState.h" />
+    <ClInclude Include="..\src\client\SpriteRenderer.h" />
     <ClInclude Include="..\src\client\StateManager.h" />
     <ClInclude Include="..\src\client\TextRenderer.h" />
     <ClInclude Include="..\src\Graphics\Objects\CubeMap.h" />
@@ -208,6 +214,7 @@
     <ClInclude Include="..\src\Graphics\Model.h" />
     <ClInclude Include="..\src\Graphics\Objects\Chicken.h" />
     <ClInclude Include="..\src\Graphics\PointLight.h" />
+    <ClInclude Include="..\src\Graphics\Texture.h" />
     <ClInclude Include="..\src\network\GameData.h" />
     <ClInclude Include="..\src\network\NetworkData.h" />
     <ClInclude Include="..\src\network\NetworkServices.h" />
@@ -225,8 +232,6 @@
     <Import Project="..\packages\glm.0.9.7.1\build\native\glm.targets" Condition="Exists('..\packages\glm.0.9.7.1\build\native\glm.targets')" />
     <Import Project="..\packages\Assimp.redist.3.0.0\build\native\Assimp.redist.targets" Condition="Exists('..\packages\Assimp.redist.3.0.0\build\native\Assimp.redist.targets')" />
     <Import Project="..\packages\Assimp.3.0.0\build\native\Assimp.targets" Condition="Exists('..\packages\Assimp.3.0.0\build\native\Assimp.targets')" />
-    <Import Project="..\packages\DevIL.redist.1.7.8\build\native\DevIL.redist.targets" Condition="Exists('..\packages\DevIL.redist.1.7.8\build\native\DevIL.redist.targets')" />
-    <Import Project="..\packages\DevIL.1.7.8\build\native\DevIL.targets" Condition="Exists('..\packages\DevIL.1.7.8\build\native\DevIL.targets')" />
     <Import Project="..\packages\freetype.redist.2.6.2.1\build\native\freetype.redist.targets" Condition="Exists('..\packages\freetype.redist.2.6.2.1\build\native\freetype.redist.targets')" />
     <Import Project="..\packages\freetype.2.6.2.1\build\native\freetype.targets" Condition="Exists('..\packages\freetype.2.6.2.1\build\native\freetype.targets')" />
   </ImportGroup>
@@ -239,8 +244,6 @@
     <Error Condition="!Exists('..\packages\glm.0.9.7.1\build\native\glm.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\glm.0.9.7.1\build\native\glm.targets'))" />
     <Error Condition="!Exists('..\packages\Assimp.redist.3.0.0\build\native\Assimp.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Assimp.redist.3.0.0\build\native\Assimp.redist.targets'))" />
     <Error Condition="!Exists('..\packages\Assimp.3.0.0\build\native\Assimp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Assimp.3.0.0\build\native\Assimp.targets'))" />
-    <Error Condition="!Exists('..\packages\DevIL.redist.1.7.8\build\native\DevIL.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\DevIL.redist.1.7.8\build\native\DevIL.redist.targets'))" />
-    <Error Condition="!Exists('..\packages\DevIL.1.7.8\build\native\DevIL.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\DevIL.1.7.8\build\native\DevIL.targets'))" />
     <Error Condition="!Exists('..\packages\freetype.redist.2.6.2.1\build\native\freetype.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\freetype.redist.2.6.2.1\build\native\freetype.redist.targets'))" />
     <Error Condition="!Exists('..\packages\freetype.2.6.2.1\build\native\freetype.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\freetype.2.6.2.1\build\native\freetype.targets'))" />
   </Target>

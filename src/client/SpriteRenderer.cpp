@@ -1,10 +1,18 @@
-#include "sprite_renderer.h"
+#include <glm/gtc/type_ptr.hpp>
 
+#include "SpriteRenderer.h"
 
-SpriteRenderer::SpriteRenderer(Shader &shader)
+SpriteRenderer::SpriteRenderer() {
+	this->shader = Shader();
+	this->initialized = false; // need to wait for glew init before initializing 
+}
+
+SpriteRenderer::SpriteRenderer(Shader &shader) // not used
 {
     this->shader = shader;
     this->initRenderData();
+
+	this->initialized = true;
 }
 
 SpriteRenderer::~SpriteRenderer()
@@ -14,6 +22,12 @@ SpriteRenderer::~SpriteRenderer()
 
 void SpriteRenderer::DrawSprite(Texture2D &texture, glm::vec2 position, glm::vec2 size, GLfloat rotate, glm::vec3 color)
 {
+	if (!initialized) {
+		shader = Shader("src/Graphics/Shaders/sprite.vert", "src/Graphics/Shaders/sprite.frag");
+		initRenderData();
+		initialized = true;
+	}
+
     // Prepare transformations
     this->shader.Use();
     glm::mat4 model;
@@ -25,10 +39,12 @@ void SpriteRenderer::DrawSprite(Texture2D &texture, glm::vec2 position, glm::vec
 
     model = glm::scale(model, glm::vec3(size, 1.0f)); // Last scale
 
-    this->shader.SetMatrix4("model", model);
+	GLint model_loc = shader.GetUniform("model");
+	glUniformMatrix4fv(model_loc, 1, false, glm::value_ptr(model));
 
     // Render textured quad
-    this->shader.SetVector3f("spriteColor", color);
+	GLint color_loc = shader.GetUniform("spriteColor");
+	glUniform3fv(color_loc, 1, glm::value_ptr(color));
 
     glActiveTexture(GL_TEXTURE0);
     texture.Bind();

@@ -25,7 +25,7 @@ bool Window::mouseCaptured = false;
 GLint Window::lastX = width / 2;
 GLint Window::lastY = height / 2;
 
-CStateManager* Window::m_pStateManager = new CStateManager;
+CStateManager* Window::m_pStateManager = new CStateManager();
 
 void Window::Initialize_objects()
 {
@@ -198,7 +198,7 @@ void Window::Mouse_callback(GLFWwindow* window, double xpos, double ypos)
         GLfloat yoffset = (GLfloat)(lastY - ypos);
         lastX = (GLint)xpos;
         lastY = (GLint)ypos;
-        Scene::Instance()->GetPlayer()->ProcessMouseMovement(xoffset, yoffset);
+        //Scene::Instance()->GetPlayer()->ProcessMouseMovement(xoffset, yoffset);
     }
 }
 
