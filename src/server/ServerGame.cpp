@@ -41,7 +41,7 @@ void ServerGame::update()
 	// Check that all clients are ready
 	if (game_started && ready_clients == client_id)
 	{
-		engine->GetWorld()->updateWorld();
+		engine->GetWorld()->UpdateWorld();
 	}
 }
 

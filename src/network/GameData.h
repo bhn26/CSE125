@@ -1,7 +1,7 @@
 #pragma once
 
-//#ifndef GAME_DATA
-//#define GAME_DATA
+#ifndef GAME_DATA
+#define GAME_DATA
 
 #include <string.h>
 #include <stdio.h>
@@ -9,6 +9,10 @@
 
 const int WORLD_WIDTH = 100;
 const int WORLD_HEIGHT = 100;
+
+static int oid0 = 0;
+static int oid1 = 0;
+static int oid2 = 0;
 
 enum MoveType {
 
@@ -71,8 +75,6 @@ struct PosInfo : GameInfo
     }
 };
 
-//#endif
-
 // What needs to get removed
 struct RemInfo : GameInfo
 {
@@ -88,3 +90,4 @@ struct RemInfo : GameInfo
 	}
 };
 
+#endif

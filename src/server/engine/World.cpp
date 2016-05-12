@@ -1,5 +1,6 @@
 #include "World.h"
 #include "ObjectId.h"
+#include "Bullet.h"
 #include "../ServerGame.h"
 
 World::World() {
@@ -7,7 +8,8 @@ World::World() {
 }
 
 World::~World() {
-
+	//TODO handle vector deletes...
+	delete curWorld;
 }
 
 void World::Init(pos_list player_poss, pos_list flag_poss) {
@@ -128,7 +130,66 @@ void World::Init(pos_list player_poss, pos_list flag_poss) {
 	}
 }
 
-void World::updateWorld()
+void World::SpawnInWorld(int classid, int teamid, int playeridforBullet, int damageforBullet, PosInfo position, btVector3* speed)
+{
+	switch(classid)
+	{
+		case PLAYER:
+		{
+			std::shared_ptr<Player> player = std::shared_ptr<Player>(new Player(oid0, teamid, position, curWorld));
+			btVector3 vec = player->GetPlayerPosition();
+			printf("SpawnInWorld player at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
+			players.push_back(player);
+
+			// Send spawn info to the clients
+			PosInfo pi;
+			pi.cid = ClassId::PLAYER;
+			pi.oid = oid0++;
+			pi.x = vec.getX();
+			pi.y = vec.getY();
+			pi.z = vec.getZ();
+			ServerGame::instance()->sendSpawnPacket(pi);
+			break;
+		}
+		case FLAG:
+		{
+			std::shared_ptr<Flag> flag = std::shared_ptr<Flag>(new Flag(oid1, position, curWorld));
+			btVector3 vec = flag->GetFlagPosition();
+			printf("Created flag at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
+			flags.push_back(flag);
+
+			PosInfo pi;
+			pi.cid = ClassId::FLAG;
+			pi.oid = oid1++;
+			pi.x = vec.getX();
+			pi.y = vec.getY();
+			pi.z = vec.getZ();
+			ServerGame::instance()->sendSpawnPacket(pi);
+			break;
+		}
+
+		case BULLET:
+		{
+			std::shared_ptr<Bullet> bullet = std::shared_ptr<Bullet>(new Bullet(oid2, playeridforBullet, teamid, damageforBullet, position, speed, curWorld));
+			btVector3 vec = bullet->GetBulletPosition();
+			printf("Created flag at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
+			bullets.push_back(bullet);
+
+			PosInfo pi;
+			pi.cid = ClassId::BULLET;
+			pi.oid = oid2++;
+			pi.x = vec.getX();
+			pi.y = vec.getY();
+			pi.z = vec.getZ();
+			ServerGame::instance()->sendSpawnPacket(pi);
+			break;
+		}
+		default:
+			break;
+	}
+}
+
+void World::UpdateWorld()
 {
 	// Step simulation
 	curWorld->stepSimulation(1 / 60.f, 10);
@@ -141,15 +202,63 @@ void World::updateWorld()
 		const btCollisionObject* obA = contactManifold->getBody0();
 		const btCollisionObject* obB = contactManifold->getBody1();
 
-		//       Check if obA is Bullet
-		//       else if objB is Bullet
-		//          if obB is Player or obA is Player, else delete bullet
-		//Notes: else if ObA is Player
-		//			if ObB Flag
-		//          else if obB is Bullet
-		//          else if collision is from the bottom, reset jump semaphore
+		// Handle Bullet Collisions--------------------------
+		// If object A of collision is a Bullet
+		if (obA->getUserIndex() == BULLET)
+		{
+			// Grab Bullet Object
+			Bullet * collideBullet = (Bullet *)obA->getUserPointer();
+
+			// If it hit a player
+			if (obB->getUserIndex() == PLAYER)
+			{
+				Player * collidePlayer = (Player *)obB->getUserPointer();
+				if (collidePlayer->takeDamage(collideBullet->GetDamage()))
+				{
+					//TODO Handle Player death:  send player death to client
+				}
+			}
+
+			// If it hit a bullet
+			else if (obB->getUserIndex() == BULLET)
+			{
+				Bullet * collideBullet2 = (Bullet *)obB->getUserPointer();
+				delete collideBullet2;
+			}
+
+			// deletes bulletA regardless
+			delete collideBullet;
+		}
+
+		// If object B of collision is a Bullet
+		else if (obB->getUserIndex() == BULLET)
+		{
+			// Grab Bullet Object
+			Bullet * collideBullet = (Bullet *)obB->getUserPointer();
+
+			// If it hit a player
+			if (obA->getUserIndex() == PLAYER)
+			{
+				Player * collidePlayer = (Player *)obA->getUserPointer();
+				if (collidePlayer->takeDamage(collideBullet->GetDamage()))
+				{
+					//TODO Handle Player death:  send player death to client
+				}
+			}
+
+			// If it hit a bullet
+			else if (obA->getUserIndex() == BULLET)
+			{
+				Bullet * collideBullet2 = (Bullet *)obA->getUserPointer();
+				delete collideBullet2;
+			}
+
+			// deletes bulletA regardless
+			delete collideBullet;
+		}
 
 
+		// Handle Player Collisions -------------------------------------------------
 		// Obj A is Player
 		if (obA->getUserIndex() == PLAYER)
 		{

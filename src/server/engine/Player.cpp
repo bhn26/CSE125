@@ -21,7 +21,7 @@ Player::Player(int id, int teamid, PosInfo pos, btDiscreteDynamicsWorld* physics
 	this->curWorld = physicsWorld;
 	this->playerRigidBody = pRigidBody;
 	this->jumpSem = 1;
-	this->HitPoints = 100;
+	this->hitPoints = 100;
 	this->flags = new std::vector<std::shared_ptr<Flag>>;
 	this->position = pos;
 
@@ -46,7 +46,6 @@ void Player::PrintPlayerVelocity()
 	playerRigidBody->getMotionState()->getWorldTransform(currentTrans);
 	btMatrix3x3 currentOrientation = currentTrans.getBasis();
 	printf("current velocity %f, %f, %f\n", float(playerRigidBody->getLinearVelocity()[0]), float(playerRigidBody->getLinearVelocity()[1]), float(playerRigidBody->getLinearVelocity()[2]));
-
 }
 
 void Player::Move(btVector3* changeVelocity) {
@@ -61,23 +60,6 @@ void Player::Move(btVector3* changeVelocity) {
 	//printf("%d: world pos object = %f,%f,%f\n", id, float(currentTrans.getOrigin().getX()), float(currentTrans.getOrigin().getY()), float(currentTrans.getOrigin().getZ()));
 	printf("current velocity %f, %f, %f\n", float(playerRigidBody->getLinearVelocity()[0]), float( playerRigidBody->getLinearVelocity()[1]), float(playerRigidBody->getLinearVelocity()[2]));
 	//playerRigidBody->activate();
-
-	/*position.direction = direction;
-	 
-	switch (direction) {
-	case MOVE_FORWARD: 
-		position.y ++;
-		break;
-	case MOVE_BACKWARD:
-		position.y--;
-		break;
-	case MOVE_LEFT:
-		position.x++;
-		break;
-	case MOVE_RIGHT:
-		position.x--;
-		break;
-	}*/
 }
 
 void Player::Rotate(float v_rotation, float h_rotation) {
@@ -113,7 +95,7 @@ void Player::JumpPlayer()
 
 void Player::ResetJump()
 {
-	jumpSem = 1;
+	(this->jumpSem) = 1;
 }
 
 void Player::AcquireFlag(std::shared_ptr<Flag> flag)
@@ -138,3 +120,22 @@ int Player::GetTeamId()
 {
 	return teamId;
 }
+
+ int Player::UseWeapon()
+{
+	return 0;
+}
+
+ // If player is dead, returns 1,  else returns 0
+ int Player::takeDamage(int damage)
+ {
+	 this->hitPoints = this->hitPoints - damage;
+	 if (this->hitPoints <= 0)
+	 {
+		 return 1;
+	 }
+	 else
+	 {
+		 return 0;
+	 }
+ }

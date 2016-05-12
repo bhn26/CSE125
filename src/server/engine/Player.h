@@ -24,7 +24,7 @@ private:
 	btRigidBody* playerRigidBody;
 	std::vector<std::shared_ptr<Flag>> *flags;
 	int jumpSem;
-	int HitPoints;
+	int hitPoints;
 
 public:
 
@@ -61,11 +61,13 @@ public:
 
 	void LoseFlags();
 
-	// return bullet id?
-	int SpawnBullet();
+	// use weapon
+	int UseWeapon();
 
 	int GetObjectId();
 
 	int GetTeamId();
+
+	int takeDamage(int damage);
 };
 
