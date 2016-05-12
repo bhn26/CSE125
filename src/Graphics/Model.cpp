@@ -55,14 +55,14 @@ void Model::ProcessNode(aiNode* node, const aiScene* scene)
 Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
 {
     // Data to fill
-    std::vector<Vertex> vertices;
+    std::vector<Mesh::Vertex> vertices;
     std::vector<GLuint> indices;
-    std::vector<Texture> textures;
+    std::vector<Mesh::Texture> textures;
 
     // Walk through each of the mesh's vertices
     for (GLuint i = 0; i < mesh->mNumVertices; i++)
     {
-        Vertex vertex;
+        Mesh::Vertex vertex;
         glm::vec3 vector; // We declare a placeholder vector since assimp uses its own vector class that doesn't directly convert to glm's vec3 class so we transfer the data to this placeholder glm::vec3 first.
                           // Positions
         vector.x = mesh->mVertices[i].x;
@@ -115,11 +115,11 @@ Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
         // Normal: texture_normalN
 
         // 1. Diffuse maps
-        std::vector<Texture> diffuseMaps = this->LoadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
+        std::vector<Mesh::Texture> diffuseMaps = this->LoadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
         textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
 
         // 2. Specular maps
-        std::vector<Texture> specularMaps = this->LoadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
+        std::vector<Mesh::Texture> specularMaps = this->LoadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
         textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
     }
 
@@ -127,9 +127,9 @@ Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
     return Mesh(vertices, indices, textures);
 }
 
-std::vector<Texture> Model::LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName)
+std::vector<Mesh::Texture> Model::LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName)
 {
-    std::vector<Texture> textures;
+    std::vector<Mesh::Texture> textures;
     for (GLuint i = 0; i < mat->GetTextureCount(type); i++)
     {
         aiString str;
@@ -147,7 +147,7 @@ std::vector<Texture> Model::LoadMaterialTextures(aiMaterial* mat, aiTextureType 
         }
         if (!skip)
         {   // If texture hasn't been loaded already, load it
-            Texture texture;
+            Mesh::Texture texture;
             texture.id = TextureFromFile(str.C_Str(), this->directory);
             texture.type = typeName;
             texture.path = str;
