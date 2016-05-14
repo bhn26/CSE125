@@ -9,6 +9,7 @@
 #include "../Camera.h"
 #include "../../client/Player.h"
 
+static const float SIZE = 200.0f;
 
 Ground::Ground() : Entity(), color(glm::vec3(0.545f, 0.271f, 0.075f))
 {
@@ -16,10 +17,10 @@ Ground::Ground() : Entity(), color(glm::vec3(0.545f, 0.271f, 0.075f))
 
     GLfloat vertices[] =
     {
-        -50.0f, 0.0f, -50.0f,  0.0f,  1.0f, 0.0f,
-        50.0f,  0.0f, -50.0f,  0.0f,  1.0f, 0.0f,
-        -50.0f, 0.0f,  50.0f,  0.0f,  1.0f, 0.0f,
-        50.0f,  0.0f,  50.0f,  0.0f,  1.0f, 0.0f,
+        -SIZE, 0.0f, -SIZE,  0.0f,  1.0f, 0.0f,
+        SIZE,  0.0f, -SIZE,  0.0f,  1.0f, 0.0f,
+        -SIZE, 0.0f,  SIZE,  0.0f,  1.0f, 0.0f,
+        SIZE,  0.0f,  SIZE,  0.0f,  1.0f, 0.0f,
     };
 
     GLuint indices[] =

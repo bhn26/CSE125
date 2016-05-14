@@ -39,12 +39,21 @@ void Scene::Setup()
 	std::unique_ptr<StaticObject> tractor = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/tractor.obj"));
 	tractor->Scale(7.0f);
 	tractor->Rotate(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-	tractor->Translate(glm::vec3(10.0f, 0.0f, -10.0f));
+	tractor->Translate(glm::vec3(17.0f, 0.0f, -13.0f));
 
 	// Silo
 	std::unique_ptr<StaticObject> silo = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/silo.obj"));
 	silo->Scale(3.0f);
 	silo->Translate(glm::vec3(-13.0f, 0.0f, -4.0f));
+
+	// Pumpkin
+	std::unique_ptr<StaticObject> pumpkin = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/pumpkin.obj"));
+	pumpkin->Translate(glm::vec3(0.0f, 0.0f, -1.0f));
+
+	// Bench
+	std::unique_ptr<StaticObject> bench = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/wood_bench.obj"));
+	bench->Scale(0.01f);
+	bench->Translate(glm::vec3(0.0f, 0.0f, -60.0f));
 
     std::unique_ptr<Ground> ground = std::unique_ptr<Ground>(new Ground);
     std::unique_ptr<Cube> cube = std::unique_ptr<Cube>(new Cube);
@@ -59,6 +68,7 @@ void Scene::Setup()
 	entities.push_back(std::move(tractor));
 	entities.push_back(std::move(silo));
     entities.push_back(std::move(ground));
+	entities.push_back(std::move(bench));
    // entities.push_back(std::move(cube));
     entities.push_back(std::move(cubeMap));
 }
