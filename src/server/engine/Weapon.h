@@ -1,16 +1,22 @@
 #pragma once
 
 #include "../../network/GameData.h"
+#include "FireRateReset.h"
 
 class Weapon
 {
 
-private:
+protected:
 	int fireRate;
 	int damage;
+	FireRateReset* frReset;
 
 public:
-	Weapon(int firerate, int wdamage);
+
+	unsigned int nextFireTick;
+	int fireFlag;
+
+	Weapon(int firerate, int wdamage, FireRateReset* frreset);
 	~Weapon();
 
 	void virtual UseWeapon();

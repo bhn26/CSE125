@@ -61,6 +61,9 @@
     <ClInclude Include="..\src\server\engine\Weapon.h">
       <Filter>Source Files\engine</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\server\engine\Reloader.h">
+      <Filter>Source Files\engine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\network\NetworkServices.cpp">

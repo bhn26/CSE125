@@ -16,6 +16,8 @@ void World::Init(pos_list player_poss, pos_list flag_poss) {
 
 	// Init object id counter
 	oid = 0;
+	currentWorldTick = 0;
+
 	int z = 1000; // this is a random number for the walls right now, we need to change this
 
 	// Create Physics world
@@ -193,7 +195,10 @@ void World::UpdateWorld()
 {
 	// Step simulation
 	curWorld->stepSimulation(1 / 60.f, 10);
+	currentWorldTick++;
 
+	// Process Weapon Reloads
+	
 	// Process all collisions
 	int numManifolds = curWorld->getDispatcher()->getNumManifolds();
 	for (int i = 0; i < numManifolds; i++)

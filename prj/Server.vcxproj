@@ -162,6 +162,7 @@
     <ClInclude Include="..\src\server\engine\Flag.h" />
     <ClInclude Include="..\src\server\engine\ObjectId.h" />
     <ClInclude Include="..\src\server\engine\Player.h" />
+    <ClInclude Include="..\src\server\engine\Reloader.h" />
     <ClInclude Include="..\src\server\engine\SeedGun.h" />
     <ClInclude Include="..\src\server\engine\Weapon.h" />
     <ClInclude Include="..\src\server\engine\World.h" />
