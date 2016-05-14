@@ -1,7 +1,7 @@
 
 #include "Weapon.h"
 
-Weapon::Weapon(int firerate, int wdamage, FireRateReset* frreset)
+Weapon::Weapon(int firerate, int wdamage, std::vector<std::shared_ptr<Weapon>>* frreset)
 {
 	this->fireRate = firerate;
 	this->damage = wdamage;
@@ -9,17 +9,10 @@ Weapon::Weapon(int firerate, int wdamage, FireRateReset* frreset)
 	this->frReset = frreset;
 }
 
-Weapon::~Weapon()
-{
-}
+Weapon::~Weapon(){}
 
+// to be overwritten
+void Weapon::UseWeapon(){}
 
-void Weapon::UseWeapon()
-{
-
-}
-
-void Weapon::ReloadWeapon()
-{
-
-}
+// to be overwritten
+void Weapon::ReloadWeapon(){}

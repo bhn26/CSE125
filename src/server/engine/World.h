@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Weapon.h"
 #include "Player.h"
 #include "Flag.h"
 #include "Bullet.h"
@@ -21,6 +22,7 @@ private:
 	// list of game world objects
 	std::vector<std::shared_ptr<Player>> players;
 	std::vector<std::shared_ptr<Flag>> flags;
+	std::vector<std::shared_ptr<Weapon>> usedWeapons;
 	std::vector<std::shared_ptr<Bullet>> bullets;  // this may not be necessary...
 	//TODO list of weapons to check reload
 

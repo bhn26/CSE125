@@ -1,17 +1,21 @@
 #pragma once
 
-#include "Weapon.h"
 #include <vector>
 #include <memory>
+#include "Weapon.h"
+#include "../../network/GameData.h"
 
 class FireRateReset
 {
+
 protected:
-	std::vector<std::shared_ptr<Weapon>> usedWeapons;
+	std::vector<std::shared_ptr<Weapon>> * usedWeapons;
 
 public:
 
-	void AddUsedWeapon(Weapon*);
+	FireRateReset(std::vector<std::shared_ptr<Weapon>> * usedweapons);
+
+	~FireRateReset();
 
 	void ResetWeapons();
 };

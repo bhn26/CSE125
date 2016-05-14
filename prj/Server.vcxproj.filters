@@ -61,7 +61,7 @@
     <ClInclude Include="..\src\server\engine\Weapon.h">
       <Filter>Source Files\engine</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\server\engine\Reloader.h">
+    <ClInclude Include="..\src\server\engine\FireRateReset.h">
       <Filter>Source Files\engine</Filter>
     </ClInclude>
   </ItemGroup>
@@ -101,6 +101,9 @@
       <Filter>Source Files\engine</Filter>
     </ClCompile>
     <ClCompile Include="..\src\server\engine\Weapon.cpp">
+      <Filter>Source Files\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\server\engine\FireRateReset.cpp">
       <Filter>Source Files\engine</Filter>
     </ClCompile>
   </ItemGroup>
