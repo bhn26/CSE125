@@ -18,10 +18,20 @@ public:
 	World * GetWorld() { return world; };
 	// generate map
 	void InitWorld(int num_players);
+
+	// Spawns at random positions
+	void SpawnRandomPlayer();
+	void SpawnRandomFlag();
+
+	// spawn once all players are "ready"
+	void InitialSpawn(int num_players);
+	bool hasInitialSpawned() { return initialSpawned; };
+
 	// move player
 	// attack player
 
 private:
+	bool initialSpawned = false;
 	World * world; // used to communicate with clients
 
 	/* maybe put the world representation in this class so we can 

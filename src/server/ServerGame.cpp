@@ -24,30 +24,33 @@ ServerGame::~ServerGame(void)
 
 void ServerGame::update()
 {
-	// get new clients
-	if (network->acceptNewClient(client_id))
+	// get new clients only if the game hasn't started
+	if (!game_started)
 	{
-		printf("client %d has been connected to the server\n", client_id);
+		if (network->acceptNewClient(client_id))
+		{
+			printf("client %d has been connected to the server\n", client_id);
 
-		// This will be an INIT_CONNECTION packet
-		receiveFromClients();
-		client_id++;
+			// This will be an INIT_CONNECTION packet
+			receiveFromClients();
+			client_id++;
+		}
 	}
-	else
-	{
-		receiveFromClients();
-	}
+	
+	receiveFromClients();
 
 	// Check that all clients are ready
 	if (game_started && ready_clients == client_id)
 	{
+		if(!engine->hasInitialSpawned())
+			engine->InitialSpawn(ready_clients);
 		engine->GetWorld()->updateWorld();
 	}
+
 }
 
 void ServerGame::receiveFromClients()
 {
-
     Packet packet;
 
     // go through all clients
@@ -146,6 +149,7 @@ void ServerGame::receiveInitPacket(int offset)
 
 }
 
+// Unused, we send the init back right away in receive
 // We actually only want to send this back to the client that we received it from, but assume 1 client for now
 void ServerGame::sendInitPacket()
 {
@@ -170,12 +174,15 @@ void ServerGame::receiveStartPacket(int offset) {
 		engine->InitWorld(client_id + 1);
 		game_started = true;
 	}
+	/*else {
+		printf("re-initializing world with %d players", client_id + 1);
+		engine->InitWorld(client_id + 1);
+	}*/
 
 	// add player
 }
 
 void ServerGame::sendStartPacket() { // will add more later based on generated world
-	printf("sent start packet");
 	const unsigned int packet_size = sizeof(Packet);
 	char packet_data[packet_size];
 
@@ -187,6 +194,8 @@ void ServerGame::sendStartPacket() { // will add more later based on generated w
     //p.id = client_id + 1;
 
     packet.dat.game_data_id = POS_OBJ;
+
+	printf("sending start packet with client_id %d\n", client_id + 1);
 
     p.serialize(packet.dat.buf);
     packet.serialize(packet_data);
@@ -288,10 +297,11 @@ void ServerGame::receiveMovePacket(int offset)
 //	sendMovePacket(hdr->sender_id);
 }
 
-void ServerGame::sendMovePacket(int obj_id)
+void ServerGame::sendMovePacket(ClassId class_id, int obj_id)
 {
 		shared_ptr<Player> player = engine->GetWorld()->GetPlayer(obj_id); // change this to getting the object
         Packet packet;
+		packet.hdr.sender_id = SERVER_ID;
         packet.hdr.packet_type = MOVE_EVENT;
 
         PosInfo p;
@@ -301,6 +311,7 @@ void ServerGame::sendMovePacket(int obj_id)
 		btVector3 vec = player->GetPlayerPosition();
 
 		p = player->GetPosition();
+		p.cid = class_id;
 		p.oid = obj_id;
 		p.x = vec.getX();
 		p.y = vec.getY();
@@ -327,9 +338,9 @@ void ServerGame::receiveVRotationPacket(int offset) {
 	shared_ptr<Player> player = engine->GetWorld()->GetPlayer(hdr->sender_id);
 
     // TODO - rotate player in game state
-    player->Rotate(pi->v_rotation, pi->h_rotation);
+    //player->Rotate(pi->v_rotation, pi->h_rotation);
 
-	sendVRotationPacket(hdr->sender_id);
+	//sendVRotationPacket(hdr->sender_id);
 }
 
 void ServerGame::sendVRotationPacket(int client) {
@@ -338,9 +349,8 @@ void ServerGame::sendVRotationPacket(int client) {
 
 	shared_ptr<Player> player = engine->GetWorld()->GetPlayer(client);
     Packet packet;
+	packet.hdr.sender_id = SERVER_ID;
     packet.hdr.packet_type = V_ROTATION_EVENT;
-    packet.hdr.sender_id = client_id;
-    packet.hdr.receiver_id = SERVER_ID;
 
     packet.dat.game_data_id = POS_OBJ;
 
@@ -351,5 +361,5 @@ void ServerGame::sendVRotationPacket(int client) {
     
     packet.serialize(packet_data);
 
-	network->sendToAll(packet_data, packet_size);
+	//network->sendToAll(packet_data, packet_size);
 }

@@ -54,6 +54,7 @@ void Scene::Setup()
 	entities.push_back(std::move(egg));
     //entities.push_back(std::move(cube)); // Don't add cube to scene
     entities.push_back(std::move(cubeMap));*/
+
 }
 
 void Scene::AddPlayer(int client_id) {
@@ -67,7 +68,7 @@ void Scene::AddPlayer(int client_id) {
 
 	if (client_id == ClientGame::GetClientId()) {
 		printf("set main player to %d\n", client_id);
-		player = new_player.get(); // set your player
+//		player = new_player; // set your player
 	}
 }
 
@@ -126,8 +127,13 @@ void Scene::AddEntity(int cid, int oid, float x, float y, float z)
 		player = std::unique_ptr<Player>(new Player);
 		player->SetModelFile("assets/chickens/objects/pinocchio_chicken.obj");
 		player->Spawn(x, y, z);
-		Scene::player = player.get();
 		player->GetShader() = modelShader;
+
+		// set main player if the oid matches
+		if (oid == ClientGame::instance()->GetClientId())
+			Scene::player = player.get();
+		//players.push_back(player);
+
 		AddEntity(cid, oid, std::move(player));
 		break;
 	case ClassId::FLAG:
@@ -145,4 +151,10 @@ void Scene::AddEntity(int cid, int oid, float x, float y, float z)
 void Scene::RemoveEntity(int cid, int oid)
 {
 	int removed = entities.erase(std::make_pair(cid, oid));
+}
+
+std::unique_ptr<Entity>& Scene::GetEntity(int cid, int oid)
+{
+	std::pair<int, int> p = std::pair<int, int>(cid, oid);
+	return entities.find(p)->second;
 }

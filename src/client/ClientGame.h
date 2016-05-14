@@ -11,6 +11,9 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+#include "Player.h"
+#include <memory>
+
 class Window;
 
 class ClientGame
@@ -43,6 +46,10 @@ public:
 
     void receiveVRotationPacket(int offset);
     void sendVRotationPacket(float v_rot, float h_rot); 
+
+	bool hasStarted() { return game_started; }
+
+	std::shared_ptr<Player> FindTarget(int tid);
 
     char network_data[MAX_PACKET_SIZE];
 

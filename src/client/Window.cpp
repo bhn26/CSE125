@@ -197,4 +197,13 @@ void Window::Mouse_button_callback(GLFWwindow* window, int button, int action, i
         mouseCaptured = false;
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
+	else if (button == GLFW_MOUSE_BUTTON_RIGHT && !mouseCaptured)
+	{ // hacky way to start the game
+		printf("client will send start game\n");
+		if (!ClientGame::instance()->hasStarted())
+		{
+			printf("sending start packet\n");
+			ClientGame::instance()->sendStartPacket();
+		}
+	}
 }

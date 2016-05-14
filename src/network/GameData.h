@@ -58,9 +58,16 @@ struct PosInfo : GameInfo
 
     int direction; // remove later?
 
+	//rotation coords
+	float rotw;
+	float rotx;
+	float roty;
+	float rotz;
+	
+
     // rotation
-    float v_rotation;
-    float h_rotation;
+    //float v_rotation;
+    //float h_rotation;
 
     void serialize(char * data) {
         memcpy(data, this, sizeof(PosInfo));

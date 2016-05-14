@@ -66,6 +66,9 @@ public:
     float GetCamAngle() { return camAngle; };
     void SetCamAngle(float newAngle) { camAngle = newAngle; };
 
+	int GetID() { return id; };
+
+
 private:
     int id;
 };

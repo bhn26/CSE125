@@ -10,7 +10,7 @@ World::~World() {
 
 }
 
-void World::Init(pos_list player_poss, pos_list flag_poss) {
+void World::Init() {
 
 	// Init object id counter
 	oid = 0;
@@ -92,7 +92,7 @@ void World::Init(pos_list player_poss, pos_list flag_poss) {
 	colConfig = collisionConfig;
 
 	// Initialize player objects
-	for (int i = 0; i < player_poss.size(); i++) {
+	/*for (int i = 0; i < player_poss.size(); i++) {
 		int teamid = 1;
 		std::shared_ptr<Player> player = std::shared_ptr<Player>(new Player(oid, teamid, player_poss.at(i), curWorld));
 		btVector3 vec = player->GetPlayerPosition();
@@ -125,7 +125,46 @@ void World::Init(pos_list player_poss, pos_list flag_poss) {
 		pi.y = vec.getY();
 		pi.z = vec.getZ();
 		ServerGame::instance()->sendSpawnPacket(pi);
-	}
+	}*/
+}
+
+PosInfo World::SpawnPlayer(PosInfo in)
+{
+
+	int teamid = 1;
+	std::shared_ptr<Player> player = std::shared_ptr<Player>(new Player(oid, teamid, in, curWorld));
+	btVector3 vec = player->GetPlayerPosition();
+	printf("Created player at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
+	//printf("Posinfo player at (%d,%d,%d)\n", player->GetPosition().x, player->GetPosition().y, player->GetPosition().z);
+	players.push_back(player);
+
+	// Send spawn info to the clients
+	PosInfo out;
+	out.cid = ClassId::PLAYER;
+	out.oid = oid++;
+	out.x = vec.getX();
+	out.y = vec.getY();
+	out.z = vec.getZ();
+	ServerGame::instance()->sendSpawnPacket(out);
+	return out;
+}
+
+PosInfo World::SpawnFlag(PosInfo in)
+{
+	std::shared_ptr<Flag> flag = std::shared_ptr<Flag>(new Flag(oid, in, curWorld));
+	btVector3 vec = flag->GetFlagPosition();
+	printf("Created flag at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
+	printf("Posinfo flag at (%d,%d,%d)\n", flag->p.x, flag->p.y, flag->p.z);
+	flags.push_back(flag);
+
+	PosInfo out;
+	out.cid = ClassId::FLAG;
+	out.oid = oid++;
+	out.x = vec.getX();
+	out.y = vec.getY();
+	out.z = vec.getZ();
+	ServerGame::instance()->sendSpawnPacket(out);
+	return out;
 }
 
 void World::updateWorld()
@@ -297,7 +336,7 @@ void World::updateWorld()
 	{
 		for (std::vector<std::shared_ptr<Player> >::iterator it = players.begin(); it != players.end(); ++it)
 		{
-			ServerGame::instance()->sendMovePacket((*it)->GetId());
+			ServerGame::instance()->sendMovePacket(ClassId::PLAYER, (*it)->GetId());
 		}
 	}
 	
