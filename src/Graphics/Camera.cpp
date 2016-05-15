@@ -64,7 +64,6 @@ void Camera::ProcessMouseMovement(GLfloat xoffset, GLfloat yoffset, GLboolean co
 
     // Update Front, Right and Up Vectors using the updated Eular angles
     this->UpdateCameraVectors();
-	ClientGame::instance()->sendRotationPacket();
 }
 
 void Camera::ProcessMouseScroll(GLfloat yoffset)
