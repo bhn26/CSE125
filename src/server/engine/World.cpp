@@ -12,7 +12,7 @@ World::~World() {
 	delete curWorld;
 }
 
-void World::Init(pos_list player_poss, pos_list flag_poss) {
+void World::Init() {
 
 	// Init object id counter
 	oid = 0;
@@ -99,7 +99,7 @@ void World::Init(pos_list player_poss, pos_list flag_poss) {
 	colConfig = collisionConfig;
 
 	// Initialize player objects
-	for (int i = 0; i < player_poss.size(); i++) {
+	/*for (int i = 0; i < player_poss.size(); i++) {
 		int teamid = 1;
 		std::shared_ptr<Player> player = std::shared_ptr<Player>(new Player(oid, teamid, player_poss.at(i), curWorld));
 		btVector3 vec = player->GetPlayerPosition();
@@ -132,48 +132,49 @@ void World::Init(pos_list player_poss, pos_list flag_poss) {
 		pi.y = vec.getY();
 		pi.z = vec.getZ();
 		ServerGame::instance()->sendSpawnPacket(pi);
-	}
+	}*/
 }
 
-void World::SpawnInWorld(int classid, int teamid, int playeridforBullet, int damageforBullet, PosInfo position, btVector3* speed)
+PosInfo World::SpawnPlayer(PosInfo in)
 {
-	switch(classid)
-	{
-		case PLAYER:
-		{
-			std::shared_ptr<Player> player = std::shared_ptr<Player>(new Player(oid0, teamid, position, curWorld));
-			btVector3 vec = player->GetPlayerPosition();
-			printf("SpawnInWorld player at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
-			players.push_back(player);
 
-			// Send spawn info to the clients
-			PosInfo pi;
-			pi.cid = ClassId::PLAYER;
-			pi.oid = oid0++;
-			pi.x = vec.getX();
-			pi.y = vec.getY();
-			pi.z = vec.getZ();
-			ServerGame::instance()->sendSpawnPacket(pi);
-			break;
-		}
-		case FLAG:
-		{
-			std::shared_ptr<Flag> flag = std::shared_ptr<Flag>(new Flag(oid1, position, curWorld));
-			btVector3 vec = flag->GetFlagPosition();
-			printf("Created flag at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
-			flags.push_back(flag);
+	int teamid = 1;
+	std::shared_ptr<Player> player = std::shared_ptr<Player>(new Player(oid, teamid, in, curWorld));
+	btVector3 vec = player->GetPlayerPosition();
+	printf("Created player at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
+	//printf("Posinfo player at (%d,%d,%d)\n", player->GetPosition().x, player->GetPosition().y, player->GetPosition().z);
+	players.push_back(player);
 
-			PosInfo pi;
-			pi.cid = ClassId::FLAG;
-			pi.oid = oid1++;
-			pi.x = vec.getX();
-			pi.y = vec.getY();
-			pi.z = vec.getZ();
-			ServerGame::instance()->sendSpawnPacket(pi);
-			break;
-		}
+	// Send spawn info to the clients
+	PosInfo out;
+	out.cid = ClassId::PLAYER;
+	out.oid = oid++;
+	out.x = vec.getX();
+	out.y = vec.getY();
+	out.z = vec.getZ();
+	ServerGame::instance()->sendSpawnPacket(out);
+	return out;
+}
 
-		case BULLET:
+PosInfo World::SpawnFlag(PosInfo in)
+{
+	std::shared_ptr<Flag> flag = std::shared_ptr<Flag>(new Flag(oid, in, curWorld));
+	btVector3 vec = flag->GetFlagPosition();
+	printf("Created flag at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
+	printf("Posinfo flag at (%d,%d,%d)\n", flag->p.x, flag->p.y, flag->p.z);
+	flags.push_back(flag);
+
+	PosInfo out;
+	out.cid = ClassId::FLAG;
+	out.oid = oid++;
+	out.x = vec.getX();
+	out.y = vec.getY();
+	out.z = vec.getZ();
+	ServerGame::instance()->sendSpawnPacket(out);
+	return out;
+}
+
+		/*case BULLET:
 		{
 			std::shared_ptr<Bullet> bullet = std::shared_ptr<Bullet>(new Bullet(oid2, playeridforBullet, teamid, damageforBullet, position, speed, curWorld));
 			btVector3 vec = bullet->GetBulletPosition();
@@ -188,11 +189,7 @@ void World::SpawnInWorld(int classid, int teamid, int playeridforBullet, int dam
 			pi.z = vec.getZ();
 			ServerGame::instance()->sendSpawnPacket(pi);
 			break;
-		}
-		default:
-			break;
-	}
-}
+		}*/
 
 void World::UpdateWorld()
 {
@@ -422,7 +419,7 @@ void World::UpdateWorld()
 		//}
 		for (std::shared_ptr<Player>& player : players)
 		{
-			ServerGame::instance()->sendMovePacket(player->GetId());
+			ServerGame::instance()->sendMovePacket(ClassId::PLAYER, player->GetId());
 		}
 	}
 	

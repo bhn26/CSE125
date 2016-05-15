@@ -35,10 +35,11 @@ public:
 
     // Returns the direction to be moved, if it can't move there, returns BAD_MOVE
     void receiveMovePacket(int offset);
-    void sendMovePacket(int client);
+	// what type is the object moving and what is the id of the object moving?
+    void sendMovePacket(ClassId class_id, int obj_id);
 
-    void receiveVRotationPacket(int offset);
-    void sendVRotationPacket(int obj_id); 
+    void receiveRotationPacket(int offset);
+    void sendRotationPacket(int obj_id); 
 
 	static void instantiate()
 	{

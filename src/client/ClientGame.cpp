@@ -9,7 +9,6 @@
 
 #include "Window.h"
 #include "../Graphics/Scene.h"
-#include "Player.h"
 #include "../network/NetworkData.h"
 //#define _WIN32
 
@@ -21,7 +20,7 @@ ClientGame::ClientGame(void)
     network = new ClientNetwork();
 
 	sendInitPacket();
-	sendStartPacket(); // temp - will add start button
+	//sendStartPacket(); // temp - will add start button
 
 	Initialize();
     
@@ -56,6 +55,8 @@ void ClientGame::sendInitPacket() {
 	char packet_data[packet_size];
 
 	Packet packet;
+	// no client id yet
+	packet.hdr.receiver_id = SERVER_ID;
 	packet.hdr.packet_type = INIT_CONNECTION;
 
 	packet.serialize(packet_data);
@@ -78,17 +79,19 @@ void ClientGame::sendReadyPacket()
 }
 
 void ClientGame::receiveStartPacket(int offset) {
-	printf("received start packet\n");
 	struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset]);
     struct PacketData* dat = (struct PacketData *) &(network_data[offset + sizeof(PacketHeader)]);
     
 	struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
+	printf("received start packet for %d players\n", pi->id);
+
+	/*Scene::Instance()->ClearPlayers();
 
 	// add players, may have to send a different packet
 	for (int i = 0; i < pi->id; i++) {
 		printf("add player %d\n", i);
 		Scene::Instance()->AddPlayer(i);
-	}
+	}*/
 
 	game_started = true;
 	sendReadyPacket();
@@ -99,6 +102,8 @@ void ClientGame::sendStartPacket() {
 	char packet_data[packet_size];
 
 	Packet packet;
+	//packet.hdr.sender_id = ClientGame::GetClientId();
+	packet.hdr.receiver_id = SERVER_ID;
 	packet.hdr.packet_type = START_GAME;
 	packet.hdr.sender_id = client_id;
 
@@ -114,7 +119,7 @@ void ClientGame::receiveSpawnPacket(int offset)
     struct PosInfo* p = (struct PosInfo *) (dat->buf);
 	
 	// spawn the thing
-	Scene::Instance()->AddEntity(p->cid, p->oid, p->x, p->y, p->z);
+	Scene::Instance()->AddEntity(p->cid, p->oid, p->x, p->y, p->z, p->rotw, p->rotx, p->roty, p->rotz);
 }
 
 void ClientGame::sendSpawnPacket()
@@ -148,9 +153,18 @@ void ClientGame::receiveMovePacket(int offset)
     struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
     struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
 
-    /* probably gonna switch this to coordinates later on */
+	Scene::Instance()->GetEntity(pi->cid, pi->oid)->MoveTo(pi->x, pi->y, pi->z);
+
+/*<<<<<<< HEAD
+    // probably gonna switch this to coordinates later on 
     //Scene::Instance()->GetPlayer()->ProcessKeyboard((DIRECTION) pi->direction, 1); // move (rename method later)
 	Scene::Instance()->GetPlayer()->MoveTo(pi->x, pi->y, pi->z);
+=======
+	std::shared_ptr<Player> target = FindTarget(pi->id);
+	
+	// probably gonna switch this to coordinates later on
+	target->ProcessKeyboard((DIRECTION)pi->direction, 1); // move (rename method 
+>>>>>>> master*/
 }
 
 // Need to know what direction to move in
@@ -166,35 +180,36 @@ void ClientGame::sendMovePacket(int direction)
 
     PosInfo pi;
     pi.direction = direction;
+	glm::quat rot = Scene::Instance()->GetPlayer()->GetOrientation();
+	pi.rotw = rot.w;
+	pi.rotx = rot.x;
+	pi.roty = rot.y;
+	pi.rotz = rot.z;
     pi.serialize(packet.dat.buf);
 
     packet.serialize(packet_data);
-	printf("sending move packet from %d\n", client_id);
     NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
 }
 
-void ClientGame::receiveVRotationPacket(int offset) {
+void ClientGame::receiveRotationPacket(int offset) {
     struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
     struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
 
-/*<<<<<<< 174b3f97e4b370bde6db6b896fe55f3188611e9a
-	printf("rotate player by %d\n", pi->radians);
+	//std::shared_ptr<Player> target = FindTarget(pi->id);
+	Scene::Instance()->GetEntity(pi->cid, pi->oid)->RotateTo(pi->rotw,pi->rotx,pi->roty,pi->rotz);
 
-    glm::mat4 newToWorld = Scene::Instance()->GetPlayer()->GetToWorld() * glm::rotate(glm::mat4(1.0f), pi->radians, glm::vec3(0.0f, 1.0f, 0.0f));
-	Scene::Instance()->GetPlayer()->SetToWorld(newToWorld);
-=======*/
 	// left/right rotation
-    glm::mat4 newToWorld = Scene::Instance()->GetPlayer()->GetToWorld() * glm::rotate(glm::mat4(1.0f), pi->v_rotation, glm::vec3(0.0f, 1.0f, 0.0f));
-	Scene::Instance()->GetPlayer()->SetToWorld(newToWorld);
+	/*glm::mat4 newToWorld = target->GetToWorld() * glm::rotate(glm::mat4(1.0f), pi->v_rotation, glm::vec3(0.0f, 1.0f, 0.0f));
+	target->SetToWorld(newToWorld);
 
 	// up/down rotation
-	float newAngle = Scene::Instance()->GetPlayer()->GetCamAngle() + pi->h_rotation;
-	const static float pi2 = glm::pi<float>()/2;
-	Scene::Instance()->GetPlayer()->SetCamAngle((newAngle > pi2) ? pi2 : ((newAngle < -pi2) ? -pi2 : newAngle));
+	float newAngle = target->GetCamAngle() + pi->h_rotation;
+	const static float pi2 = glm::pi<float>() / 2;
+	target->SetCamAngle((newAngle > pi2) ? pi2 : ((newAngle < -pi2) ? -pi2 : newAngle));*/
 
 }
 
-void ClientGame::sendVRotationPacket(float v_rot, float h_rot) {
+void ClientGame::sendRotationPacket() {
     const unsigned int packet_size = sizeof(Packet);
     char packet_data[packet_size];
 
@@ -203,15 +218,39 @@ void ClientGame::sendVRotationPacket(float v_rot, float h_rot) {
     packet.hdr.sender_id = client_id;
     packet.hdr.receiver_id = SERVER_ID;
 
+
+
     PosInfo pi;
-    pi.v_rotation = v_rot;
-	pi.h_rotation = h_rot;
+	glm::quat rot = Scene::Instance()->GetPlayer()->GetOrientation();
+	pi.rotw = rot.w;
+	pi.rotx = rot.x;
+	pi.roty = rot.y;
+	pi.rotz = rot.z;
+   // pi.v_rotation = v_rot;
+	//pi.h_rotation = h_rot;
     pi.serialize(packet.dat.buf);
 
     packet.serialize(packet_data);
 
-    NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
+    //NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
 }
+
+/*std::shared_ptr<Player> ClientGame::FindTarget(int tid) {
+	if (tid == client_id) {
+		return Scene::Instance()->GetPlayer();
+	}
+	else {
+		std::vector<std::shared_ptr<Player>> players = Scene::Instance()->GetPlayers();
+
+		for (int i = 0; i < players.size(); i++) {
+			int pid = players.at(i)->GetID();
+			if (tid == pid) {
+				return players.at(i);	
+			}
+		}
+	}
+	printf("ERROR - couldn't find target in players");
+}*/
 
 void ClientGame::update()
 {
@@ -257,7 +296,7 @@ void ClientGame::update()
                 break;
 
 			case V_ROTATION_EVENT:
-				receiveVRotationPacket(i + sizeof(PacketHeader));
+				receiveRotationPacket(i + sizeof(PacketHeader));
 				break;
 
             default:

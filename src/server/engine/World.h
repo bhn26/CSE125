@@ -58,7 +58,11 @@ public:
 	int x = 0;
 	int y = 0;
 
-	void Init(pos_list player_poss, pos_list flag_poss);
+	void Init();
+
+	// Spawns based on PosInfo in, will return PosInfo for the object spawned
+	PosInfo SpawnPlayer(PosInfo in);
+	PosInfo SpawnFlag(PosInfo in);
 	std::shared_ptr<Player> GetPlayer(int id) { return players.at(id); };
 
 	// Updates Physics world by one tick
@@ -67,7 +71,5 @@ public:
 
 	// Finds and Removes flag from world list of flags
 	void removeFlag(Flag* collectedFlag);
-
-	void SpawnInWorld(int classid, int teamid, int playeridforBullet, int damageforBullet, PosInfo position, btVector3* speed);
 
 };

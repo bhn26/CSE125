@@ -2,6 +2,8 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "../client/ClientGame.h"
+
 // Default camera values
 const GLfloat Camera::YAW = -90.0f;
 const GLfloat Camera::PITCH = 0.0f;

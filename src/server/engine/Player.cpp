@@ -63,8 +63,8 @@ void Player::Move(btVector3* changeVelocity) {
 }
 
 void Player::Rotate(float v_rotation, float h_rotation) {
-	position.v_rotation = v_rotation;
-	position.h_rotation = h_rotation;
+	//position.v_rotation = v_rotation;
+	//position.h_rotation = h_rotation;
 }
 
 btVector3 Player::GetPlayerPosition()

@@ -66,6 +66,10 @@ public:
     float GetCamAngle() { return camAngle; };
     void SetCamAngle(float newAngle) { camAngle = newAngle; };
 
+	int GetID() { return id; };
+
+	glm::quat GetOrientation() { return Orientation();  }
+
 private:
     int id;
 };

@@ -19,6 +19,7 @@ class Scene
 {
     std::unique_ptr<Camera> camera;
     std::unique_ptr<PointLight> pLight;
+//<<<<<<< HEAD
 	std::unique_ptr<CubeMap> cubeMap;
 	std::unique_ptr<Ground> ground;
 
@@ -28,6 +29,9 @@ class Scene
 	std::shared_ptr<Shader> cubeMapShader;
 
     Player* player;
+/*=======
+	std::shared_ptr<Player> player;
+>>>>>>> master*/
 
     static const int WIDTH;
     static const int HEIGHT;
@@ -49,8 +53,9 @@ public:
     static void Initialize() { Instance()->Setup(); }
 
 	void AddEntity(int cid, int oid, std::unique_ptr<Entity> ent);
-	void AddEntity(int cid, int oid, float x, float y, float z);
+	void AddEntity(int cid, int oid, float x, float y, float z, float rotw, float rotx, float roty, float rotz);
 	void RemoveEntity(int cid, int oid);
+	std::unique_ptr<Entity>& GetEntity(int cid, int oid);
 
 	void AddPlayer(int client_id);
     void Update();
@@ -62,5 +67,7 @@ public:
     glm::mat4 GetPerspectiveMatrix();
 
     std::unique_ptr<PointLight>& GetPointLight() { return pLight; }
-    Player*& GetPlayer() { return player; }
+	Player*& GetPlayer() { return player; }
+	std::vector<std::shared_ptr<Player>>& GetPlayers() { return players; };
+	void ClearPlayers() { players.clear(); };
 };

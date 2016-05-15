@@ -15,10 +15,42 @@ void Engine::InitWorld(int num_players) {
 
 	// we only need to seed once
 	srand(time(NULL));
-    pos_list player_poss = GenerateCoords(num_players);
-    pos_list flag_poss = GenerateCoords(num_players * 2);
+    //pos_list player_poss = GenerateCoords(num_players);
+    //pos_list flag_poss = GenerateCoords(num_players * 2);
 
-	world->Init(player_poss, flag_poss);
+	world->Init();
+}
+
+void Engine::SpawnRandomPlayer()
+{
+	PosInfo p;
+	p.x = rand() % WORLD_WIDTH + 1;
+	p.z = rand() % WORLD_WIDTH + 1;
+	p.y = 3;
+	world->SpawnPlayer(p);
+}
+
+void Engine::SpawnRandomFlag()
+{
+	PosInfo p;
+	p.x = rand() % WORLD_WIDTH + 1;
+	p.z = rand() % WORLD_WIDTH + 1;
+	p.y = 3;
+	world->SpawnFlag(p);
+}
+
+void Engine::InitialSpawn(int n)
+{
+	// Always spawn the players before other dynamic objects
+	for ( int i = 0; i < n; i++)
+	{
+		SpawnRandomPlayer();
+	}
+	for (int i = 0; i < 2 * n; i++)
+	{
+		SpawnRandomFlag();
+	}
+	initialSpawned = true;
 }
 
 pos_list Engine::GenerateCoords(int n) {
@@ -34,8 +66,8 @@ pos_list Engine::GenerateCoords(int n) {
         pos.y = 3;
 
         /* face random direction */
-		pos.v_rotation = 0;
-		pos.h_rotation = 0;
+		//pos.v_rotation = 0;
+		//pos.h_rotation = 0;
         
         poss.push_back(pos);
     }
