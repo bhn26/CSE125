@@ -4,6 +4,7 @@
 
 #include <GL/glew.h>
 #include <glm/glm.hpp>
+#include "../client/Window.h"
 
 struct Material
 {
@@ -31,6 +32,8 @@ public:
 
 	int Width() { return width; };
 	int Height() { return height; };
+
+	static int GetWindowCenter(int width ) { return Window::width / 2 - width / 2; };
 
 private:
     std::string m_fileName;

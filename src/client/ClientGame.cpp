@@ -377,7 +377,7 @@ void ClientGame::Setup_opengl_settings()
     // Disable backface culling to render both sides of polygons
     glDisable(GL_CULL_FACE);
     // Set clear color
-    glClearColor(0.2f, 0.2f, 0.5f, 1.0f);
+    glClearColor(0.28f, 0.65f, 0.89f, 1.0f);
 
 	// Font Rendering
 	glEnable(GL_CULL_FACE);

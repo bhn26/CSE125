@@ -5,6 +5,7 @@
 #include "PlayState.h"
 
 #include "SpriteRenderer.h"
+#include "../Graphics/Texture.h"
 
 
 // Specialization of the CGameState class for 
@@ -17,6 +18,7 @@ public:
 	~CMenuState();
 
 	void OnKeyDown(WPARAM wKey);
+	void OnClick(double x, double y);
 	void Draw();
 	void EnterState();
 
@@ -33,6 +35,8 @@ private:
 	// The player validated the current selection
 	void SelectionChosen();
 
+	void RenderSelection();
+
 	// Index of the current selected menu item
 	int m_iCurrentSelection;
 
@@ -40,6 +44,11 @@ private:
 	CPlayState* m_pCurrentGame;
 
 	SpriteRenderer * sprite_renderer;
+
+	// stuff below is for optimization later
+	Texture *logo;
+	Texture *textbox;
+	Texture *join;
 };
 
 #endif  // _MENUSTATE_H_

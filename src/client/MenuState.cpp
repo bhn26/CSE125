@@ -5,17 +5,16 @@
 #include "Window.h"
 
 #include "../Graphics/Shader.h"
-#include "../Graphics/Texture.h"
 
 
 CMenuState::CMenuState(CStateManager* pManager) 
   : CGameState(pManager), m_iCurrentSelection(0), m_pCurrentGame(NULL)
 {
 	// Create the different images
-	/*m_pBackgroundImg = CImage::CreateImage("bin/MainBackground.png",TRectanglei(0,600,0,800));
-	m_pTitleImg = CImage::CreateImage("bin/MenuTitle.png",TRectanglei(0,600,0,800));
-	m_pItemBckgndNormal = CImage::CreateImage("bin/MenuItems.png",TRectanglei(0,57,0,382));
-	m_pItemBckgndSelected = CImage::CreateImage("bin/MenuItems.png",TRectanglei(58,114,0,382));*/
+	/*panel = new Texture(GL_TEXTURE_2D, "assets/ui/panel.png");
+	logo = new Texture(GL_TEXTURE_2D, "assets/ui/logo.png");
+	textbox = new Texture(GL_TEXTURE_2D, "assets/ui/textbox.png");
+	join = new Texture(GL_TEXTURE_2D, "assets/ui/button_green.png");*/
 
 	// Create the text controls of the menu.
 	sprite_renderer = new SpriteRenderer();
@@ -47,38 +46,63 @@ void CMenuState::OnKeyDown(WPARAM wKey)
 	}
 }
 
+void CMenuState::OnClick(double x, double y) {
+	unsigned char res[4];
+	GLint viewport[3]; // 3 
+
+	// render selection 
+
+	glGetIntegerv(GL_VIEWPORT, viewport);
+	glReadPixels(x, viewport[2] - y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, &res);
+
+	switch(res[0]) {
+		case 0: break;
+		case 1: break;
+		case 2: break;
+		case 3: break;
+		default: break;
+	}
+}
+
+void CMenuState::RenderSelection() {
+
+}
+
 
 void CMenuState::Draw()
 {
-	/*m_pBackgroundImg->BlitImage();
-	m_pTitleImg->BlitImage();
-	// Draw the menu item backgrounds
-	for (int i=0;i<4;i++)
-	{
-		if (i==m_iCurrentSelection)
-			m_pItemBckgndSelected->BlitImage(209,150+i*100);
-		else
-			m_pItemBckgndNormal->BlitImage(209,150+i*100);
-	}*/
+	////////////// USERNAME TEXTBOX /////////////////////////////////
+	Texture textbox = Texture(GL_TEXTURE_2D, "assets/ui/textbox.png");
 
-	////////////////// Background ///////////////////////////////////
-	Texture panel = Texture(GL_TEXTURE_2D, "assets/ui/sprites/blue_panel.png");
-	sprite_renderer->DrawSprite(panel, glm::vec2(0, 0), glm::vec2(Window::width, Window::height), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+	float x = Texture::GetWindowCenter(Window::width / 2);
+	float y = Window::height / 2;
+
+	float tb_width = Window::width / 2;
+	float tb_height = 80;
+
+	sprite_renderer->DrawSprite(textbox, glm::vec2(x, y), glm::vec2(tb_width, tb_height), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 
 	///////////////////// LOGO ///////////////////////////////////////
 	Texture logo = Texture(GL_TEXTURE_2D, "assets/ui/logo.png");
 
-	int x = Window::width/2 - logo.Width()/2;
-	int y = 20;
+	x = Texture::GetWindowCenter(logo.Width());
+	y = y/2 - logo.Height()/2;
 
 	sprite_renderer->DrawSprite(logo, glm::vec2(x, y), glm::vec2(logo.Width(), logo.Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 
-	////////////// USERNAME TEXTBOX /////////////////////////////////
-
 	////////////// JOIN BUTTON /////////////////////////////////////
 
-	// draw text
-	TextRenderer::RenderText("This is sample text", 25.0f, 25.0f, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+	Texture join = Texture(GL_TEXTURE_2D, "assets/ui/button_green.png");
+
+	float btn_width = 200;
+	float btn_height = 50;
+
+	x = Texture::GetWindowCenter(btn_width);
+	y = Window::height/2 + tb_height/2 + 100;
+
+	sprite_renderer->DrawSprite(join, glm::vec2(x, y), glm::vec2(btn_width, btn_height), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+
+	//TextRenderer::RenderText("Join", x, y, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 }
 
 void CMenuState::EnterState()
