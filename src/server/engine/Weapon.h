@@ -17,16 +17,17 @@ protected:
 	int fireRate;
 	int damage;
 	std::vector<std::shared_ptr<Weapon>>* frReset;
+	btDiscreteDynamicsWorld* curWorld;
 
 public:
 
 	unsigned int nextFireTick;
 	int fireFlag;
 
-	Weapon(int firerate, int wdamage, std::vector<std::shared_ptr<Weapon>>* frreset);
+	Weapon(int firerate, int wdamage, std::vector<std::shared_ptr<Weapon>>* frreset, btDiscreteDynamicsWorld* curworld);
 	~Weapon();
 
-	void virtual UseWeapon();
+	void virtual UseWeapon(const btVector3* position, btMatrix3x3* rotation, int playerid, int teamid);
 
 	void virtual ReloadWeapon();
 };

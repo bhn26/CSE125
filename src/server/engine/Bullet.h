@@ -19,7 +19,7 @@ private:
 
 public:
 
-	Bullet(int objectid, int playerid, int teamid, int damage, PosInfo pos, btVector3* velocity, btDiscreteDynamicsWorld* physicsWorld);
+	Bullet(int objectid, int playerid, int teamid, int damage, const btVector3* pos, btVector3* velocity, btDiscreteDynamicsWorld* physicsWorld);
 
 	~Bullet();
 

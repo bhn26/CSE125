@@ -3,12 +3,12 @@
 #include "Bullet.h"
 #include "../../network/GameData.h"
 
-Bullet::Bullet(int objectid, int playerid, int teamid, int damage, PosInfo pos, btVector3* velocity, btDiscreteDynamicsWorld* physicsWorld)
+Bullet::Bullet(int objectid, int playerid, int teamid, int damage, const btVector3* pos, btVector3* velocity, btDiscreteDynamicsWorld* physicsWorld)
 {
 	btCollisionShape* bulletShape = new btSphereShape(btScalar(.1));
 
 	// Create bullet physics object
-	btDefaultMotionState*bulletMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(pos.x, pos.y, pos.z)));
+	btDefaultMotionState*bulletMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(pos->getX(), pos->getY(), pos->getZ())));
 	btScalar mass = 1;
 	btVector3 bulletInertia(0, 0, 0);
 	bulletShape->calculateLocalInertia(mass, bulletInertia);

@@ -2,7 +2,7 @@
 
 #include "SeedGun.h"
 
-SeedGun::SeedGun(std::vector<std::shared_ptr<Weapon>>* frreset): Weapon(gunfireRate, gunDamage, frreset)
+SeedGun::SeedGun(std::vector<std::shared_ptr<Weapon>>* frreset, btDiscreteDynamicsWorld* curworld): Weapon(gunfireRate, gunDamage, frreset, curworld)
 {
 	int reloaded = 1;
 	nextFireTick = 0;
@@ -10,12 +10,13 @@ SeedGun::SeedGun(std::vector<std::shared_ptr<Weapon>>* frreset): Weapon(gunfireR
 
 SeedGun::~SeedGun(){}
 
-void SeedGun::UseWeapon(int playerId)
+void SeedGun::UseWeapon(const btVector3* position, btMatrix3x3* rotation, int playerid, int teamid)
 {
 	if (this->fireFlag)
 	{
-		// fire seed gun
-		//TODO Spawn bullet with this gun's damage and given playerId
+		// Spawns bullet with this gun's damage and ids into world
+		btVector3* newVelocity = &((*rotation) * (*this->gunSpeed));
+		Bullet* fireProjectile = new Bullet(oid2, playerid, teamid, damage, position, newVelocity, curWorld);
 		this->fireFlag = 0;
 		this->nextFireTick = currentWorldTick + gunfireRate;
 
@@ -28,11 +29,4 @@ void SeedGun::UseWeapon(int playerId)
 //TODO change this to reload weapon clip?
 void SeedGun::ReloadWeapon()
 {
-	if (!(this->fireFlag))
-	{
-		if (nextFireTick == currentWorldTick)
-		{
-			this->fireFlag = 1;
-		}
-	}
 }

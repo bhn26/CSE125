@@ -132,7 +132,11 @@ int Player::GetTeamId()
 
  void Player::UseWeapon()
 {
-	playerWeapon->UseWeapon();
+	// passes player position when using weapon
+	btTransform currentTrans;
+	playerRigidBody->getMotionState()->getWorldTransform(currentTrans);
+	btMatrix3x3 currentOrientation = currentTrans.getBasis();
+	playerWeapon->UseWeapon(&(playerRigidBody->getCenterOfMassPosition()), &currentOrientation, this->id, this->teamId);
 }
 
  // If player is dead, returns 1,  else returns 0
