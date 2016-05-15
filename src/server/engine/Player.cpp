@@ -72,12 +72,21 @@ btVector3 Player::GetPlayerPosition()
 	return playerRigidBody->getCenterOfMassPosition();
 }
 
-btMatrix3x3 Player::GetPlayerRotation()
+btQuaternion Player::GetPlayerRotation()
 {
 	btTransform currentTrans;
 	playerRigidBody->getMotionState()->getWorldTransform(currentTrans);
-	btMatrix3x3 currentOrientation = currentTrans.getBasis();
+	btQuaternion currentOrientation = currentTrans.getRotation();
 	return currentOrientation;
+}
+
+void Player::SetPlayerRotation(float x, float y, float z, float w)
+{
+	btQuaternion* playerRotation = new btQuaternion(x, y, z, w);
+	btTransform currentTrans;
+	playerRigidBody->getMotionState()->getWorldTransform(currentTrans);
+	currentTrans.setRotation((*playerRotation));
+	playerRigidBody->setCenterOfMassTransform(currentTrans);
 }
 
 void Player::JumpPlayer()
@@ -121,9 +130,9 @@ int Player::GetTeamId()
 	return teamId;
 }
 
- int Player::UseWeapon()
+ void Player::UseWeapon()
 {
-	return 0;
+	playerWeapon->UseWeapon();
 }
 
  // If player is dead, returns 1,  else returns 0

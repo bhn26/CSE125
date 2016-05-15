@@ -5,6 +5,7 @@
 #include "Flag.h"
 #include "Bullet.h"
 #include "WorldObstacle.h"
+#include "FireRateReset.h"
 #include <vector>
 #include <memory>
 
@@ -25,6 +26,9 @@ private:
 	std::vector<std::shared_ptr<Weapon>> usedWeapons;
 	std::vector<std::shared_ptr<Bullet>> bullets;  // this may not be necessary...
 	//TODO list of weapons to check reload
+
+	// Fire Rate Reseter
+	FireRateReset * fireRateReseter;
 
 	// Physics World attributes
 	btDiscreteDynamicsWorld* curWorld;

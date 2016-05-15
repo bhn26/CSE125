@@ -18,6 +18,9 @@ void World::Init(pos_list player_poss, pos_list flag_poss) {
 	oid = 0;
 	currentWorldTick = 0;
 
+	// Init Fire Rate Reseter
+	this->fireRateReseter = new FireRateReset((&this->usedWeapons));
+
 	int z = 1000; // this is a random number for the walls right now, we need to change this
 
 	// Create Physics world
@@ -198,7 +201,8 @@ void World::UpdateWorld()
 	currentWorldTick++;
 
 	// Process Weapon Reloads
-	
+	this->fireRateReseter->ResetWeapons();
+
 	// Process all collisions
 	int numManifolds = curWorld->getDispatcher()->getNumManifolds();
 	for (int i = 0; i < numManifolds; i++)
@@ -218,8 +222,11 @@ void World::UpdateWorld()
 			if (obB->getUserIndex() == PLAYER)
 			{
 				Player * collidePlayer = (Player *)obB->getUserPointer();
+
+				//TODO send "you got hit"
 				if (collidePlayer->takeDamage(collideBullet->GetDamage()))
 				{
+					printf("Player is dead!");
 					//TODO Handle Player death:  send player death to client
 				}
 			}
