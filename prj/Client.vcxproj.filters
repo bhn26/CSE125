@@ -49,6 +49,9 @@
     <ClCompile Include="..\src\client\Window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Graphics\Objects\Egg.cpp">
+      <Filter>Source Files\Graphics\Objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Graphics\Camera.h">
@@ -114,6 +117,9 @@
     <ClInclude Include="..\src\client\Window.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\Graphics\Objects\Egg.h">
+      <Filter>Source Files\Graphics\Objects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\src\Graphics\Shaders\basic_shader.frag">
@@ -139,6 +145,9 @@
     </None>
     <None Include="..\prj\packages.config">
       <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\src\Graphics\Shaders\diffuse.vert">
+      <Filter>Source Files\Graphics\Shaders</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

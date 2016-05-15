@@ -48,6 +48,7 @@ void ServerPlayer::jumpPlayer()
 		btVector3 curVelocity = playerRigidBody->getLinearVelocity();
 		// setting upward velocity to 5
 		curVelocity[1] = 5;
+		playerRigidBody->setLinearVelocity(curVelocity);
 	}
 }
 
