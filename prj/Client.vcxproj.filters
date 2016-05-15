@@ -194,6 +194,12 @@
     <None Include="..\src\Graphics\Shaders\sprite.vert">
       <Filter>Source Files\Graphics\Shaders</Filter>
     </None>
+    <None Include="..\src\Graphics\Shaders\selection.vert">
+      <Filter>Source Files\Graphics\Shaders</Filter>
+    </None>
+    <None Include="..\src\Graphics\Shaders\selection.frag">
+      <Filter>Source Files\Graphics\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Files">

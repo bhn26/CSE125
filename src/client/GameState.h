@@ -18,6 +18,8 @@ public:
 
 	// The different 'events' functions. Child classes can 
 	// implement the ones in which they are interested in.
+	virtual void OnClick(int button, double x, double y) {}
+
 	virtual void OnKeyDown(WPARAM ) { }
 	virtual void OnKeyUp(WPARAM )   { }
 	virtual void OnChar(WPARAM )   { }

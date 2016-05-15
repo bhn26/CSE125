@@ -167,6 +167,8 @@
     <None Include="..\prj\packages.config" />
     <None Include="..\src\Graphics\Shaders\basic_shader.frag" />
     <None Include="..\src\Graphics\Shaders\basic_shader.vert" />
+    <None Include="..\src\Graphics\Shaders\selection.frag" />
+    <None Include="..\src\Graphics\Shaders\selection.vert" />
     <None Include="..\src\Graphics\Shaders\sprite.frag" />
     <None Include="..\src\Graphics\Shaders\sprite.vert" />
     <None Include="..\src\Graphics\Shaders\text.frag" />

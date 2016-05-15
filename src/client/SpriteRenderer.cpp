@@ -9,6 +9,7 @@
 
 SpriteRenderer::SpriteRenderer() {
 	this->shader = new Shader();
+	this->selectionShader = new Shader();
 	this->initialized = false; // need to wait for glew init before initializing 
 }
 
@@ -29,6 +30,9 @@ void SpriteRenderer::DrawSprite(Texture &texture, glm::vec2 position, glm::vec2 
 {
 	if (!initialized) {
 		shader = new Shader("src/Graphics/Shaders/sprite.vert", "src/Graphics/Shaders/sprite.frag");
+		selectionShader = new Shader("src/Graphics/Shaders/selection.vert", "src/Graphics/Shaders/selection.frag");
+		//glBindFragDataLocation(selectionShader->GetProgram(), 0, "outputF");
+
 		initRenderData();
 		initialized = true;
 	}
@@ -65,6 +69,46 @@ void SpriteRenderer::DrawSprite(Texture &texture, glm::vec2 position, glm::vec2 
     glBindVertexArray(this->quadVAO);
     glDrawArrays(GL_TRIANGLES, 0, 6);
     glBindVertexArray(0);
+}
+
+void SpriteRenderer::RenderSelection(int selection_code, Texture &texture, glm::vec2 position, glm::vec2 size, GLfloat rotate) {
+	if (!initialized) {
+		shader = new Shader("src/Graphics/Shaders/sprite.vert", "src/Graphics/Shaders/sprite.frag");
+		selectionShader = new Shader("src/Graphics/Shaders/selection.vert", "src/Graphics/Shaders/selection.frag");
+		//glBindFragDataLocation(selectionShader->GetProgram(), 0, "outputF");
+
+		initRenderData();
+		initialized = true;
+	}
+
+	// Prepare transformations
+	this->selectionShader->Use();
+	glm::mat4 model;
+	model = glm::translate(model, glm::vec3(position, 0.0f));  // First translate (transformations are: scale happens first, then rotation and then finall translation happens; reversed order)
+
+	model = glm::translate(model, glm::vec3(0.5f * size.x, 0.5f * size.y, 0.0f)); // Move origin of rotation to center of quad
+	model = glm::rotate(model, rotate, glm::vec3(0.0f, 0.0f, 1.0f)); // Then rotate
+	model = glm::translate(model, glm::vec3(-0.5f * size.x, -0.5f * size.y, 0.0f)); // Move origin back
+
+	model = glm::scale(model, glm::vec3(size, 1.0f)); // Last scale
+
+	GLint model_loc = selectionShader->GetUniform("model");
+	glUniformMatrix4fv(model_loc, 1, false, glm::value_ptr(model));
+
+	glm::mat4 projection = glm::ortho(0.0f, static_cast<GLfloat>(Window::width),
+		static_cast<GLfloat>(Window::height), 0.0f, -1.0f, 1.0f);
+	GLint projection_loc = selectionShader->GetUniform("projection");
+
+	glUniformMatrix4fv(projection_loc, 1, false, glm::value_ptr(projection));
+	GLint code_loc = selectionShader->GetUniform("code");
+	glUniform1i(code_loc, selection_code);
+
+	//glActiveTexture(GL_TEXTURE0);
+	texture.Bind(GL_TEXTURE0);
+
+	glBindVertexArray(this->quadVAO);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+	glBindVertexArray(0);
 }
 
 void SpriteRenderer::initRenderData()

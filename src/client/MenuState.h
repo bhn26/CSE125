@@ -18,7 +18,7 @@ public:
 	~CMenuState();
 
 	void OnKeyDown(WPARAM wKey);
-	void OnClick(double x, double y);
+	void OnClick(int button, double x, double y);
 	void Draw();
 	void EnterState();
 
