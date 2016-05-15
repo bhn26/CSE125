@@ -8,9 +8,10 @@
 class Shader
 {
 private:
-    GLuint program;
+    
 
 public:
+	GLuint program;
     Shader() : program((GLuint)0) {};
     Shader(const char* vertex_file_path, const char* fragment_file_path);
     Shader(const Shader& rhs) { program = rhs.program; }

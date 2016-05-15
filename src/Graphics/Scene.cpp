@@ -80,8 +80,8 @@ void Scene::Update()
 	cubeMap->Update();
 	grass->Update();
 	ground->Update();
-	for (auto& const entity : entities)
-		entity.second->Update();
+	/*for (auto& const entity : entities)
+		entity.second->Update();*/
 }
 
 void Scene::Draw()
@@ -89,13 +89,13 @@ void Scene::Draw()
 	cubeMap->Draw();
 	grass->Draw();
 	ground->Draw();
-	for (auto& const entity : entities)
+/*	for (auto& const entity : entities)
         entity.second->Draw();
 
     // Redrawing players??
 	for (int i = 0; i < players.size(); i++) {
 		players.at(i)->Draw();
-	}
+	}*/
 }
 
 

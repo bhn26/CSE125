@@ -30,7 +30,7 @@ public:
 	Grass();
 	~Grass();
 
-	Model* model;
+	Model* grass;
 	glm::mat4* modelMatrices;
 	GLuint amount;
 
