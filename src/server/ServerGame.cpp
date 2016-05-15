@@ -111,7 +111,7 @@ void ServerGame::receiveFromClients()
                     break;
 
                 case V_ROTATION_EVENT:
-                    receiveVRotationPacket(i + sizeof(PacketHeader));
+                    receiveRotationPacket(i + sizeof(PacketHeader));
                 
                     break;
 
@@ -272,22 +272,22 @@ void ServerGame::receiveMovePacket(int offset)
 	btVector3* vec;
 	switch (pi->direction) {
 	case MOVE_FORWARD:
-		vec = new btVector3(0, 0, -3);
+		vec = new btVector3(pi->rotw, 0, pi->roty*-3);
 		player->Move(vec);
 		delete vec;
 		break;
 	case MOVE_BACKWARD:
-		vec = new btVector3(0, 0, 3);
+		vec = new btVector3(pi->rotw, 0, pi->roty*3);
 		player->Move(vec);
 		delete vec;
 		break;
 	case MOVE_LEFT:
-		vec = new btVector3(-3, 0, 0);
+		vec = new btVector3(pi->rotw*-3, 0, pi->roty);
 		player->Move(vec);
 		delete vec;
 		break;
 	case MOVE_RIGHT:
-		vec = new btVector3(3, 0, 0);
+		vec = new btVector3(pi->rotw*3, 0, pi->roty);
 		player->Move(vec);
 		delete vec;
 		break;
@@ -328,7 +328,7 @@ void ServerGame::sendMovePacket(ClassId class_id, int obj_id)
         //printf("Sent move packet to clients\n");
 }
 
-void ServerGame::receiveVRotationPacket(int offset) {
+void ServerGame::receiveRotationPacket(int offset) {
 
     struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
     struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
@@ -343,7 +343,7 @@ void ServerGame::receiveVRotationPacket(int offset) {
 	//sendVRotationPacket(hdr->sender_id);
 }
 
-void ServerGame::sendVRotationPacket(int client) {
+void ServerGame::sendRotationPacket(int client) {
     const unsigned int packet_size = sizeof(Packet);
     char packet_data[packet_size];
 

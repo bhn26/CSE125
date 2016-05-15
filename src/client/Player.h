@@ -68,6 +68,7 @@ public:
 
 	int GetID() { return id; };
 
+	glm::quat GetOrientation() { return Orientation();  }
 
 private:
     int id;

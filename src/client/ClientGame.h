@@ -44,8 +44,8 @@ public:
     void receiveMovePacket(int offset);
     void sendMovePacket(int direction);
 
-    void receiveVRotationPacket(int offset);
-    void sendVRotationPacket(float v_rot, float h_rot); 
+    void receiveRotationPacket(int offset);
+    void sendRotationPacket(); 
 
 	bool hasStarted() { return game_started; }
 

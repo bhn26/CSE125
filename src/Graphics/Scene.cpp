@@ -117,7 +117,7 @@ void Scene::AddEntity(int cid, int oid, std::unique_ptr<Entity> ent)
 	entities.insert(std::make_pair(p, std::move(ent)));
 }
 
-void Scene::AddEntity(int cid, int oid, float x, float y, float z)
+void Scene::AddEntity(int cid, int oid, float x, float y, float z, float rotw, float rotx, float roty, float rotz)
 {
 	std::unique_ptr<Player> player;
 	std::unique_ptr<Egg> egg;
@@ -128,7 +128,7 @@ void Scene::AddEntity(int cid, int oid, float x, float y, float z)
 		player->SetModelFile("assets/chickens/objects/pinocchio_chicken.obj");
 		player->Spawn(x, y, z);
 		player->GetShader() = modelShader;
-
+		//player->RotateTo(rotw, rotx, roty, rotz);
 		// set main player if the oid matches
 		if (oid == ClientGame::instance()->GetClientId())
 			Scene::player = player.get();

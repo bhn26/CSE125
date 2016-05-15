@@ -2,6 +2,8 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "../client/ClientGame.h"
+
 // Default camera values
 const GLfloat Camera::YAW = -90.0f;
 const GLfloat Camera::PITCH = 0.0f;
@@ -62,6 +64,7 @@ void Camera::ProcessMouseMovement(GLfloat xoffset, GLfloat yoffset, GLboolean co
 
     // Update Front, Right and Up Vectors using the updated Eular angles
     this->UpdateCameraVectors();
+	ClientGame::instance()->sendRotationPacket();
 }
 
 void Camera::ProcessMouseScroll(GLfloat yoffset)

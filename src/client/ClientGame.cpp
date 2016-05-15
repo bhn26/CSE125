@@ -119,7 +119,7 @@ void ClientGame::receiveSpawnPacket(int offset)
     struct PosInfo* p = (struct PosInfo *) (dat->buf);
 	
 	// spawn the thing
-	Scene::Instance()->AddEntity(p->cid, p->oid, p->x, p->y, p->z);
+	Scene::Instance()->AddEntity(p->cid, p->oid, p->x, p->y, p->z, p->rotw, p->rotx, p->roty, p->rotz);
 }
 
 void ClientGame::sendSpawnPacket()
@@ -180,13 +180,19 @@ void ClientGame::sendMovePacket(int direction)
 
     PosInfo pi;
     pi.direction = direction;
+	glm::quat rot = Scene::Instance()->GetPlayer()->GetOrientation();
+	pi.rotw = rot.w;
+	pi.rotx = rot.x;
+	pi.roty = rot.y;
+	pi.rotz = rot.z;
+	printf("WXYZ: %f, %f, %f, %f\n", pi.rotw, pi.rotx, pi.roty, pi.rotz);
     pi.serialize(packet.dat.buf);
 
     packet.serialize(packet_data);
     NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
 }
 
-void ClientGame::receiveVRotationPacket(int offset) {
+void ClientGame::receiveRotationPacket(int offset) {
     struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
     struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
 
@@ -204,7 +210,7 @@ void ClientGame::receiveVRotationPacket(int offset) {
 
 }
 
-void ClientGame::sendVRotationPacket(float v_rot, float h_rot) {
+void ClientGame::sendRotationPacket() {
     const unsigned int packet_size = sizeof(Packet);
     char packet_data[packet_size];
 
@@ -213,7 +219,14 @@ void ClientGame::sendVRotationPacket(float v_rot, float h_rot) {
     packet.hdr.sender_id = client_id;
     packet.hdr.receiver_id = SERVER_ID;
 
+
+
     PosInfo pi;
+	glm::quat rot = Scene::Instance()->GetPlayer()->GetOrientation();
+	pi.rotw = rot.w;
+	pi.rotx = rot.x;
+	pi.roty = rot.y;
+	pi.rotz = rot.z;
    // pi.v_rotation = v_rot;
 	//pi.h_rotation = h_rot;
     pi.serialize(packet.dat.buf);
@@ -284,7 +297,7 @@ void ClientGame::update()
                 break;
 
 			case V_ROTATION_EVENT:
-				receiveVRotationPacket(i + sizeof(PacketHeader));
+				receiveRotationPacket(i + sizeof(PacketHeader));
 				break;
 
             default:
