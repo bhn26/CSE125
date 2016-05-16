@@ -8,7 +8,7 @@
 #include <GL/glew.h> // Contains all the necessery OpenGL includes
 #include <glm/gtc/matrix_transform.hpp>
 
-Mesh::Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices, std::vector<TextureData> textures)
+Mesh::Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices, std::vector<Texture> textures)
 {
     this->vertices = vertices;
     this->indices = indices;

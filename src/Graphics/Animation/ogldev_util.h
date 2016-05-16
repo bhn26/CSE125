@@ -33,14 +33,8 @@ bool ReadFile(const char* fileName, std::string& outFile);
 #define ZERO_MEM(a) memset(a, 0, sizeof(a))
 #define ARRAY_SIZE_IN_ELEMENTS(a) (sizeof(a)/sizeof(a[0]))
 
-void OgldevFileError(const char* fileName, unsigned int line, const char* fileError);
-
-#define OGLDEV_FILE_ERROR(FileError) OgldevFileError(__FILE__, __LINE__, FileError);
 
 #define INVALID_UNIFORM_LOCATION 0xffffffff
-#define INVALID_OGL_VALUE 0xffffffff
-
-#define SAFE_DELETE(p) if (p) { delete p; p = NULL; }
 
 long long GetCurrentTimeMillis();
 

@@ -45,21 +45,10 @@ bool ReadFile(const char* fileName, std::string& outFile)
         ret = true;
     }
     else {
-        OGLDEV_FILE_ERROR(fileName);
+        fprintf(stderr,"Impossible to open %s. Are you in the right directory ? Don't forget to read the FAQ !\n", fileName);
     }
     
     return ret;
-}
-
-void OgldevFileError(const char* fileName, unsigned int line, const char* fileError)
-{
-#ifdef WIN32
-    char msg[1000];
-    _snprintf_s(msg, sizeof(msg), "%s:%d: unable to open file `%s`", fileName, line, fileError);
-    MessageBoxA(NULL, msg, NULL, 0);
-#else
-    fprintf(stderr, "%s:%d: unable to open file `%s`\n", pFileName, line, pFileError);
-#endif    
 }
 
 long long GetCurrentTimeMillis()

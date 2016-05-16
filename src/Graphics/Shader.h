@@ -15,6 +15,9 @@ public:
     Shader(const char* vertex_file_path, const char* fragment_file_path);
     ~Shader();
 
+    // Copy Constructor and Copy Assignment cannot be implemented. If a copied Shader were deleted
+    // the other shaders using the same program would be invalidated. If a shader must be shared,
+    // use a pointer to a heap-allocated Shader
     Shader(const Shader& rhs) = delete;
     Shader& operator=(Shader& rhs) = delete;
     Shader(Shader&& rhs) : program(rhs.program) { rhs.program = 0; }

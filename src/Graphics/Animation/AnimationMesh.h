@@ -7,7 +7,7 @@
 #include <memory>
 
 #include "ogldev_util.h"
-#include "ogldev_texture.h"
+#include "../Texture.h"
 #include "skinning_technique.h"
 
 struct aiScene;
