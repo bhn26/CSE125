@@ -31,7 +31,6 @@ void SpriteRenderer::DrawSprite(Texture &texture, glm::vec2 position, glm::vec2 
 	if (!initialized) {
 		shader = new Shader("src/Graphics/Shaders/sprite.vert", "src/Graphics/Shaders/sprite.frag");
 		selectionShader = new Shader("src/Graphics/Shaders/selection.vert", "src/Graphics/Shaders/selection.frag");
-		//glBindFragDataLocation(selectionShader->GetProgram(), 0, "outputF");
 
 		initRenderData();
 		initialized = true;
@@ -52,9 +51,6 @@ void SpriteRenderer::DrawSprite(Texture &texture, glm::vec2 position, glm::vec2 
 	glUniformMatrix4fv(model_loc, 1, false, glm::value_ptr(model));
 
     // Render textured quad
-	GLint color_loc = shader->GetUniform("spriteColor"); // ignored in sprite.frag
-	glUniform3fv(color_loc, 1, glm::value_ptr(color));
-
 	GLint image_loc = shader->GetUniform("image");
 	glUniform1i(image_loc, 0);
 
@@ -75,11 +71,12 @@ void SpriteRenderer::RenderSelection(int selection_code, Texture &texture, glm::
 	if (!initialized) {
 		shader = new Shader("src/Graphics/Shaders/sprite.vert", "src/Graphics/Shaders/sprite.frag");
 		selectionShader = new Shader("src/Graphics/Shaders/selection.vert", "src/Graphics/Shaders/selection.frag");
-		//glBindFragDataLocation(selectionShader->GetProgram(), 0, "outputF");
 
 		initRenderData();
 		initialized = true;
 	}
+
+	initRenderData();
 
 	// Prepare transformations
 	this->selectionShader->Use();
@@ -98,12 +95,11 @@ void SpriteRenderer::RenderSelection(int selection_code, Texture &texture, glm::
 	glm::mat4 projection = glm::ortho(0.0f, static_cast<GLfloat>(Window::width),
 		static_cast<GLfloat>(Window::height), 0.0f, -1.0f, 1.0f);
 	GLint projection_loc = selectionShader->GetUniform("projection");
-
 	glUniformMatrix4fv(projection_loc, 1, false, glm::value_ptr(projection));
+
 	GLint code_loc = selectionShader->GetUniform("code");
 	glUniform1i(code_loc, selection_code);
 
-	//glActiveTexture(GL_TEXTURE0);
 	texture.Bind(GL_TEXTURE0);
 
 	glBindVertexArray(this->quadVAO);
