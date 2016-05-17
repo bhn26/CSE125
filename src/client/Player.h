@@ -36,7 +36,8 @@ class Player : public Entity
 
 public:
 
-    Player();
+    Player(float x = 0.0f, float y = 0.0f, float z = 0.0f,
+		float rotW = 0.0f, float rotX = 0.0f, float rotY = 0.0f, float rotZ = 0.0f);
     Player(int client_id);
     ~Player();
 

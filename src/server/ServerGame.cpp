@@ -338,8 +338,6 @@ void ServerGame::receiveRotationPacket(int offset) {
 	shared_ptr<Player> player = engine->GetWorld()->GetPlayer(hdr->sender_id);
 	player->SetPlayerRotation(pi->rotw, pi->rotx, pi->roty, pi->rotz);
 	printf("received a rotation packet with: %f, %f, %f, %f\n", pi->rotw, pi->rotx, pi->roty, pi->rotz);
-    // TODO - rotate player in game state
-    //player->Rotate(pi->v_rotation, pi->h_rotation);
 
 	sendRotationPacket(hdr->sender_id);
 }
@@ -364,6 +362,8 @@ void ServerGame::sendRotationPacket(int client) {
 	p.rotx = q.getX();
 	p.roty = q.getY();
 	p.rotz = q.getZ();
+
+	printf("sending a rotation packet with: %f, %f, %f, %f\n", p.rotw, p.rotx, p.roty, p.rotz);
 
     p.serialize(packet.dat.buf);
     

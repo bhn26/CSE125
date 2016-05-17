@@ -419,10 +419,6 @@ void World::UpdateWorld()
 	// send updates every x or so ticks?
 	if (x % 5 == 0)
 	{
-		//for (std::vector<std::shared_ptr<Player> >::iterator it = players.begin(); it != players.end(); ++it)
-		//{
-		//	ServerGame::instance()->sendMovePacket((*it)->GetId());
-		//}
 		for (std::shared_ptr<Player>& player : players)
 		{
 			ServerGame::instance()->sendMovePacket(ClassId::PLAYER, player->GetId());

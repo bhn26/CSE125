@@ -125,11 +125,11 @@ void Scene::AddEntity(int cid, int oid, float x, float y, float z, float rotw, f
 
 	switch (cid) {
 	case ClassId::PLAYER:
-		player = std::unique_ptr<Player>(new Player);
+		player = std::unique_ptr<Player>(new Player(x,y,z,rotw,rotx,roty,rotz));
 		player->SetModelFile("assets/chickens/objects/pinocchio_chicken.obj");
 		player->Spawn(x, y, z);
 		player->GetShader() = modelShader;
-		player->RotateTo(rotw, rotx, roty, rotz);
+		//player->RotateTo(rotw, rotx, roty, rotz);
 		// set main player if the oid matches
 		if (oid == ClientGame::instance()->GetClientId())
 			Scene::player = player.get();

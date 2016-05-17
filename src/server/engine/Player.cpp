@@ -82,7 +82,7 @@ btQuaternion Player::GetPlayerRotation()
 
 void Player::SetPlayerRotation(float x, float y, float z, float w)
 {
-	btQuaternion* playerRotation = new btQuaternion(x, y, z, w);
+	btQuaternion* playerRotation = new btQuaternion(w, x, y, z);
 	btTransform currentTrans;
 	playerRigidBody->getMotionState()->getWorldTransform(currentTrans);
 	currentTrans.setRotation((*playerRotation));
