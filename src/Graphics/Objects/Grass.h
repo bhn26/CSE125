@@ -35,7 +35,8 @@ public:
 	GLuint amount;
 
 	glm::vec3 color;
-
+	static GLfloat deltaTime;
+	static GLfloat lastFrame;
 	void Draw() const override;
 	void Update() override;
 	void SetColor(glm::vec3 color);

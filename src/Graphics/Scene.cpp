@@ -39,7 +39,7 @@ void Scene::Setup()
 	player->SetModelFile("assets/chickens/objects/pinocchio_chicken.obj");
     Scene::player = player.get();*/
 	grass = std::unique_ptr<Grass>(new Grass);
-    ground = std::unique_ptr<Ground>(new Ground);
+    //ground = std::unique_ptr<Ground>(new Ground);
     //std::unique_ptr<Cube> cube = std::unique_ptr<Cube>(new Cube);
 	/*std::unique_ptr<Egg> egg = std::unique_ptr<Egg>(new Egg(glm::vec3(10.0f, 3.0f, 10.0f)));
 	egg->SetColor(glm::vec3(0.27f, 0.16f, 0.0f));*/
@@ -48,9 +48,9 @@ void Scene::Setup()
 	
     //cube->GetShader() = basicShader;
 	//egg->GetShader() = diffuseShader;
-	grass->GetShader() = instanceShader;
-    ground->GetShader() = diffuseShader;
+    //ground->GetShader() = diffuseShader;
     //player->GetShader() = modelShader;
+	grass->GetShader() = instanceShader;
     cubeMap->GetShader() = cubeMapShader;
 
     /*entities.push_back(std::move(ground));
@@ -77,18 +77,18 @@ void Scene::AddPlayer(int client_id) {
 
 void Scene::Update()
 {
-	cubeMap->Update();
+	//cubeMap->Update();
 	grass->Update();
-	ground->Update();
+	//ground->Update();
 	/*for (auto& const entity : entities)
 		entity.second->Update();*/
 }
 
 void Scene::Draw()
 {
-	cubeMap->Draw();
+	//cubeMap->Draw();
 	grass->Draw();
-	ground->Draw();
+	//ground->Draw();
 /*	for (auto& const entity : entities)
         entity.second->Draw();
 

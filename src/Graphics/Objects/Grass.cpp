@@ -12,7 +12,9 @@
 
 Grass::Grass() : Entity()
 {
-	grass = new Model("assets/map/objects/stump.obj");
+	grass = new Model("assets/map/objects/tractor.obj");
+	//deltaTime = 0.0f;
+	//lastFrame = 0.0f;
 
 	// Generate large list of semi-random transformation matrices
 	amount = 1000;
@@ -45,20 +47,20 @@ Grass::Grass() : Entity()
 
 		// 1. Translation: Randomly displace along circle with radius 'radius' in range [-offset, offset]
         GLfloat angle = (GLfloat)i / (GLfloat)amount * 360.0f;
-        GLfloat displacement = (rand() % (GLint)(2 * offset * 100)) / 100.0f - offset;
+        GLfloat displacement = (100/*rand()*/ % (GLint)(2 * offset * 100)) / 100.0f - offset;
         GLfloat x = sin(angle) * radius + displacement;
-        displacement = (rand() % (GLint)(2 * offset * 100)) / 100.0f - offset;
+        displacement = (100/*rand()*/ % (GLint)(2 * offset * 100)) / 100.0f - offset;
         GLfloat y = -2.5f + displacement * 0.4f; // Keep height of asteroid field smaller compared to width of x and z
-        displacement = (rand() % (GLint)(2 * offset * 100)) / 100.0f - offset;
+        displacement = (100/*rand()*/ % (GLint)(2 * offset * 100)) / 100.0f - offset;
         GLfloat z = cos(angle) * radius + displacement;
         model = glm::translate(model, glm::vec3(x, y, z));
         
         // 2. Scale: Scale between 0.05 and 0.25f
-        GLfloat scale = (rand() % 20) / 100.0f + 0.05;
+        GLfloat scale = (100/*rand()*/ % 20) / 100.0f + 0.05;
         model = glm::scale(model, glm::vec3(scale));		
         
         // 3. Rotation: add random rotation around a (semi)randomly picked rotation axis vector
-        GLfloat rotAngle = (rand() % 360);
+        GLfloat rotAngle = (100/*rand()*/ % 360);
         model = glm::rotate(model, rotAngle, glm::vec3(0.4f, 0.6f, 0.8f));
 
         // 4. Now add to list of matrices
@@ -68,26 +70,26 @@ Grass::Grass() : Entity()
 	for (GLuint i = 0; i < grass->meshes.size(); i++)
 	{
 		GLuint VAO = grass->meshes[i].VAO;
-		GLuint buffer;
-		glBindVertexArray(VAO);
-		glGenBuffers(1, &buffer);
-		glBindBuffer(GL_ARRAY_BUFFER, buffer);
-		glBufferData(GL_ARRAY_BUFFER, amount * sizeof(glm::mat4), &modelMatrices[0], GL_STATIC_DRAW);
+        GLuint buffer;
+        glBindVertexArray(VAO);
+        glGenBuffers(1, &buffer);
+        glBindBuffer(GL_ARRAY_BUFFER, buffer);
+        glBufferData(GL_ARRAY_BUFFER, amount * sizeof(glm::mat4), &modelMatrices[0], GL_STATIC_DRAW);
+        // Set attribute pointers for matrix (4 times vec4)
+        glEnableVertexAttribArray(3); 
+        glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (GLvoid*)0);
+        glEnableVertexAttribArray(4); 
+        glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (GLvoid*)(sizeof(glm::vec4)));
+        glEnableVertexAttribArray(5); 
+        glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (GLvoid*)(2 * sizeof(glm::vec4)));
+        glEnableVertexAttribArray(6); 
+        glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (GLvoid*)(3 * sizeof(glm::vec4)));
 
-		// Set attribute pointers for matrix (4 * vec4)
-		glEnableVertexAttribArray(3);
-		glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (GLvoid*)0);
-		glEnableVertexAttribArray(4);
-		glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (GLvoid*)0);
-		glEnableVertexAttribArray(5);
-		glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (GLvoid*)0);
-		glEnableVertexAttribArray(6);
-		glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (GLvoid*)0);
+        glVertexAttribDivisor(3, 1);
+        glVertexAttribDivisor(4, 1);
+        glVertexAttribDivisor(5, 1);
+        glVertexAttribDivisor(6, 1);
 
-		glVertexAttribDivisor(3, 1);
-		glVertexAttribDivisor(4, 1);
-		glVertexAttribDivisor(5, 1);
-		glVertexAttribDivisor(6, 1);
 		glBindVertexArray(0);
 	}
 }
@@ -99,6 +101,11 @@ Grass::~Grass()
 
 void Grass::Draw() const
 {
+	// Set frame time
+	//GLfloat currentFrame = glfwGetTime();
+	//deltaTime = currentFrame - lastFrame;
+	//lastFrame = currentFrame;
+
 	// Draw the loaded model
 	shader->Use();
 	GLint viewLoc = shader->GetUniform("view");
