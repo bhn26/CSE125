@@ -1,7 +1,7 @@
 #include "EntitySpawner.h"
 #include "ObjectId.h"
 
-Flag::Flag(int id, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld): Entity(physicsWorld)
+Flag::Flag(int id, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld): Collectable(physicsWorld)
 {
 	p = pos;
 
@@ -19,6 +19,7 @@ Flag::Flag(int id, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld): Entity(p
 	// Set Flag's protected fields
 	this->id = id;
 	this->flagRigidBody = pRigidBody;
+	this->entityRigidBody = pRigidBody;
 
 	// Set RigidBody to point to Flag
 	pRigidBody->setUserPointer(this);
@@ -27,19 +28,24 @@ Flag::Flag(int id, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld): Entity(p
 
 Flag::~Flag()
 {
+	this->curWorld->removeCollisionObject(entityRigidBody);
+	delete entityRigidBody->getMotionState();
+	delete entityRigidBody->getCollisionShape();
+	delete entityRigidBody;
 }
 
 btRigidBody* Flag::getRigidBody()
 {
-	return this->flagRigidBody;
-}
-
-btVector3 Flag::GetFlagPosition()
-{
-	return flagRigidBody->getCenterOfMassPosition();
+	return this->entityRigidBody;
 }
 
 int Flag::GetObjectId()
 {
 	return id;
+}
+
+void Flag::HandleCollectable(Player* collidedPlayer)
+{
+	// add 'this' to player
+	// delete flag from EntitySpawnermap
 }

@@ -70,6 +70,9 @@
     <ClInclude Include="..\src\server\engine\EntitySpawner.h">
       <Filter>Source Files\engine</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\server\engine\Collectable.h">
+      <Filter>Source Files\engine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\network\NetworkServices.cpp">
@@ -116,6 +119,9 @@
       <Filter>Source Files\engine</Filter>
     </ClCompile>
     <ClCompile Include="..\src\server\engine\EntitySpawner.cpp">
+      <Filter>Source Files\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\server\engine\Collectable.cpp">
       <Filter>Source Files\engine</Filter>
     </ClCompile>
   </ItemGroup>

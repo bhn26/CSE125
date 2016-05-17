@@ -158,6 +158,7 @@
     <ClInclude Include="..\src\network\NetworkData.h" />
     <ClInclude Include="..\src\network\NetworkServices.h" />
     <ClInclude Include="..\src\server\engine\Bullet.h" />
+    <ClInclude Include="..\src\server\engine\Collectable.h" />
     <ClInclude Include="..\src\server\engine\engine.h" />
     <ClInclude Include="..\src\server\engine\Entity.h" />
     <ClInclude Include="..\src\server\engine\EntitySpawner.h" />
@@ -176,6 +177,7 @@
   <ItemGroup>
     <ClCompile Include="..\src\network\NetworkServices.cpp" />
     <ClCompile Include="..\src\server\engine\Bullet.cpp" />
+    <ClCompile Include="..\src\server\engine\Collectable.cpp" />
     <ClCompile Include="..\src\server\engine\engine.cpp" />
     <ClCompile Include="..\src\server\engine\Entity.cpp" />
     <ClCompile Include="..\src\server\engine\EntitySpawner.cpp" />

@@ -308,7 +308,7 @@ void ServerGame::sendMovePacket(ClassId class_id, int obj_id)
         packet.dat.game_data_id = POS_OBJ;
 	
 		// Extract the vector and send it with the posinfo object
-		btVector3 vec = player->GetPlayerPosition();
+		btVector3 vec = player->GetEntityPosition();
 
 		p = player->GetPosition();
 		p.cid = class_id;

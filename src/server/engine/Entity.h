@@ -13,6 +13,7 @@ class Entity
 protected:
 
 	btDiscreteDynamicsWorld* curWorld;
+	btRigidBody* entityRigidBody;
 
 public:
 
@@ -20,8 +21,8 @@ public:
 
 	virtual ~Entity();
 
-	btVector3 GetPlayerPosition();
+	btVector3 GetEntityPosition();
 
 	// Return current rotation quaternion of Player
-	btQuaternion GetPlayerRotation();
+	btQuaternion GetEntityRotation();
 };

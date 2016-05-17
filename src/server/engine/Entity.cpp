@@ -9,6 +9,13 @@ Entity::Entity(btDiscreteDynamicsWorld* physicsworld)
 
 Entity::~Entity(){};
 
-btVector3 Entity::GetPlayerPosition() { return btVector3{ 0, 0, 0 }; };
+btVector3 Entity::GetEntityPosition() { 
+	return entityRigidBody->getCenterOfMassPosition(); 
+}
 
-btQuaternion Entity::GetPlayerRotation() { return btQuaternion{ 0, 0, 0, 0 }; };
+btQuaternion Entity::GetEntityRotation() { 
+	btTransform currentTrans;
+	entityRigidBody->getMotionState()->getWorldTransform(currentTrans);
+	btQuaternion currentOrientation = currentTrans.getRotation();
+	return currentOrientation;
+}

@@ -1,11 +1,11 @@
 #pragma once
 
-#include "Entity.h"
+#include "Collectable.h"
 
 #include "../../network/GameData.h"
 
 
-class Flag : public Entity
+class Flag : public Collectable
 {
 	int id;
 	btDiscreteDynamicsWorld* curWorld;
@@ -14,16 +14,16 @@ class Flag : public Entity
 
 public:
 
+	PosInfo p;
+
 	Flag(int id, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld);
 
 	~Flag();
 
 	btRigidBody* getRigidBody();
 
-	btVector3 GetFlagPosition();
-
-	PosInfo p;
-
 	int GetObjectId();
+
+	void HandleCollectable(Player* collidedPlayer);
 
 };

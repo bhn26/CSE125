@@ -5,6 +5,7 @@
 #include "Bullet.h"
 #include "Player.h"
 #include "Flag.h"
+#include "Collectable.h"
 #include <map>
 
 

@@ -15,10 +15,10 @@ Player::Player(int id, int teamid, PosInfo pos, btDiscreteDynamicsWorld* physics
 	pRigidBody->forceActivationState(DISABLE_DEACTIVATION);
 	physicsWorld->addRigidBody(pRigidBody);
 
-	// Set Player's protected fields
+	// Set Entity and Player protected fields
+	this->entityRigidBody = pRigidBody;
 	this->id = id;
 	this->teamId = teamid;
-	this->playerRigidBody = pRigidBody;
 	this->jumpSem = 1;
 	this->hitPoints = 100;
 	this->flags = new std::vector<std::shared_ptr<Flag>>;
@@ -30,10 +30,10 @@ Player::Player(int id, int teamid, PosInfo pos, btDiscreteDynamicsWorld* physics
 }
 
 Player::~Player() {
-	this->curWorld->removeCollisionObject(playerRigidBody);
-	delete playerRigidBody->getMotionState();
-	delete playerRigidBody->getCollisionShape();
-	delete playerRigidBody;
+	this->curWorld->removeCollisionObject(entityRigidBody);
+	delete entityRigidBody->getMotionState();
+	delete entityRigidBody->getCollisionShape();
+	delete entityRigidBody;
 	flags->clear();
 	delete flags;
 }
@@ -42,23 +42,23 @@ void Player::PrintPlayerVelocity()
 {
 	//Calculate new velocity
 	btTransform currentTrans;
-	playerRigidBody->getMotionState()->getWorldTransform(currentTrans);
+	entityRigidBody->getMotionState()->getWorldTransform(currentTrans);
 	btMatrix3x3 currentOrientation = currentTrans.getBasis();
-	printf("current velocity %f, %f, %f\n", float(playerRigidBody->getLinearVelocity()[0]), float(playerRigidBody->getLinearVelocity()[1]), float(playerRigidBody->getLinearVelocity()[2]));
+	printf("current velocity %f, %f, %f\n", float(entityRigidBody->getLinearVelocity()[0]), float(playerRigidBody->getLinearVelocity()[1]), float(playerRigidBody->getLinearVelocity()[2]));
 }
 
 void Player::Move(btVector3* changeVelocity) {
 	//Calculate new velocity
 	btTransform currentTrans;
-	playerRigidBody->getMotionState()->getWorldTransform(currentTrans);
+	entityRigidBody->getMotionState()->getWorldTransform(currentTrans);
 	btMatrix3x3 currentOrientation = currentTrans.getBasis();
 	btVector3 newVelocity = currentOrientation * (*changeVelocity);
 
 	// set new velocity
-	playerRigidBody->setLinearVelocity(newVelocity);
+	entityRigidBody->setLinearVelocity(newVelocity);
 	//printf("%d: world pos object = %f,%f,%f\n", id, float(currentTrans.getOrigin().getX()), float(currentTrans.getOrigin().getY()), float(currentTrans.getOrigin().getZ()));
-	printf("current velocity %f, %f, %f\n", float(playerRigidBody->getLinearVelocity()[0]), float( playerRigidBody->getLinearVelocity()[1]), float(playerRigidBody->getLinearVelocity()[2]));
-	//playerRigidBody->activate();
+	printf("current velocity %f, %f, %f\n", float(entityRigidBody->getLinearVelocity()[0]), float( playerRigidBody->getLinearVelocity()[1]), float(playerRigidBody->getLinearVelocity()[2]));
+	//entityRigidBody->activate();
 }
 
 void Player::Rotate(float v_rotation, float h_rotation) {
@@ -66,26 +66,20 @@ void Player::Rotate(float v_rotation, float h_rotation) {
 	//position.h_rotation = h_rotation;
 }
 
-btVector3 Player::GetPlayerPosition()
-{
-	return playerRigidBody->getCenterOfMassPosition();
-}
 
 btQuaternion Player::GetPlayerRotation()
 {
-	btTransform currentTrans;
-	playerRigidBody->getMotionState()->getWorldTransform(currentTrans);
-	btQuaternion currentOrientation = currentTrans.getRotation();
-	return currentOrientation;
+	printf("ERROR!!  Should call GetEntityRotation()");
+	return GetEntityRotation();
 }
 
 void Player::SetPlayerRotation(float x, float y, float z, float w)
 {
 	btQuaternion* playerRotation = new btQuaternion(x, y, z, w);
 	btTransform currentTrans;
-	playerRigidBody->getMotionState()->getWorldTransform(currentTrans);
+	entityRigidBody->getMotionState()->getWorldTransform(currentTrans);
 	currentTrans.setRotation((*playerRotation));
-	playerRigidBody->setCenterOfMassTransform(currentTrans);
+	entityRigidBody->setCenterOfMassTransform(currentTrans);
 }
 
 void Player::JumpPlayer()
@@ -94,10 +88,10 @@ void Player::JumpPlayer()
 	{
 		// Change jump semaphore, change upward y-axis velocity
 		jumpSem = 0;
-		btVector3 curVelocity = playerRigidBody->getLinearVelocity();
+		btVector3 curVelocity = entityRigidBody->getLinearVelocity();
 		// setting upward velocity to 5
 		curVelocity[1] = 5;
-		playerRigidBody->setLinearVelocity(curVelocity);
+		entityRigidBody->setLinearVelocity(curVelocity);
 	}
 }
 
@@ -133,9 +127,9 @@ int Player::GetTeamId()
 {
 	// passes player position when using weapon
 	btTransform currentTrans;
-	playerRigidBody->getMotionState()->getWorldTransform(currentTrans);
+	entityRigidBody->getMotionState()->getWorldTransform(currentTrans);
 	btMatrix3x3 currentOrientation = currentTrans.getBasis();
-	playerWeapon->UseWeapon(&(playerRigidBody->getCenterOfMassPosition()), &currentOrientation, this->id, this->teamId);
+	playerWeapon->UseWeapon(&(entityRigidBody->getCenterOfMassPosition()), &currentOrientation, this->id, this->teamId);
 }
 
  // If player is dead, returns 1,  else returns 0

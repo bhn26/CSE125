@@ -149,7 +149,7 @@ PosInfo World::SpawnPlayer(PosInfo in)
 	*/
 	
 	Player* player = EntitySpawner::instance()->spawnPlayer(teamid, in, curWorld);
-	btVector3 vec = player->GetPlayerPosition();
+	btVector3 vec = player->GetEntityPosition();
 	printf("Created player at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
 	
 	// Send spawn info to the clients
@@ -167,14 +167,14 @@ PosInfo World::SpawnFlag(PosInfo in)
 {
 	/*
 	std::shared_ptr<Flag> flag = std::shared_ptr<Flag>(new Flag(oid, in, curWorld));
-	btVector3 vec = flag->GetFlagPosition();
+	btVector3 vec = flag->GetEntityPosition();
 	printf("Created flag at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
 	printf("Posinfo flag at (%d,%d,%d)\n", flag->p.x, flag->p.y, flag->p.z);
 	flags.push_back(flag);
 	*/
 
 	Flag* flag = EntitySpawner::instance()->spawnFlag(in, curWorld);
-	btVector3 vec = flag->GetFlagPosition();
+	btVector3 vec = flag->GetEntityPosition();
 	printf("Created flag at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
 
 	PosInfo out;
@@ -319,8 +319,8 @@ void World::UpdateWorld()
 
 						// Reset Jump Semaphore, detects collision off of non-player, error of .1
 						// TODO: FIX MAGIC NUMBER OF PLAYER HALFEXTENT = 1
-						if ((collidePlayer->GetPlayerPosition()).getY() - 1 > (ptB.getY() - .1) &&
-							(collidePlayer->GetPlayerPosition()).getY() - 1 < (ptB.getY() + .1))
+						if ((collidePlayer->GetEntityPosition()).getY() - 1 > (ptB.getY() - .1) &&
+							(collidePlayer->GetEntityPosition()).getY() - 1 < (ptB.getY() + .1))
 						{
 							collidePlayer->ResetJump();
 						}
@@ -375,8 +375,8 @@ void World::UpdateWorld()
 
 						// Reset Jump Semaphore, detects collision off of non-player, error of .1
 						// TODO: FIX MAGIC NUMBER OF PLAYER HALFEXTENT = 1
-						if ((collidePlayer->GetPlayerPosition()).getY() - 1 > (ptA.getY()- .1) &&
-							(collidePlayer->GetPlayerPosition()).getY() - 1 < (ptA.getY() + .1))
+						if ((collidePlayer->GetEntityPosition()).getY() - 1 > (ptA.getY()- .1) &&
+							(collidePlayer->GetEntityPosition()).getY() - 1 < (ptA.getY() + .1))
 						{
 							collidePlayer->ResetJump();
 						}
@@ -410,14 +410,14 @@ void World::UpdateWorld()
 
 		for (std::vector<std::shared_ptr<Player> >::iterator it = players.begin(); it != players.end(); ++it)
 		{
-			btVector3 vec = (*it)->GetPlayerPosition();
+			btVector3 vec = (*it)->GetEntityPosition();
 			printf(" player at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
 		}
 
 		/*
 		for (std::vector<std::shared_ptr<Flag> >::iterator it = flags.begin(); it != flags.end(); ++it)
 		{
-			btVector3 vec = (*it)->GetFlagPosition();
+			btVector3 vec = (*it)->GetEntityPosition();
 			printf(" flag at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
 		}
 		*/
