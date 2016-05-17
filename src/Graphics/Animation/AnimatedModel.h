@@ -36,6 +36,8 @@ namespace Animation
         void ToggleAnimating() { m_animPlayer.ToggleAnimation(); }
         void RestartAnimation() { m_animPlayer.RestartAnimation(); }
 
+        void RegisterListener(AnimationPlayer::Listener* listener) { m_animPlayer.RegisterListener(listener); }
+
         const Mesh& GetMesh() const { return m_mesh; }
         const AnimationPlayer& GetAnimPlayer() const { return m_animPlayer; }
     };

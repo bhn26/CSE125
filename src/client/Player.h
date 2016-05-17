@@ -5,11 +5,19 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+#include <string>
+#include <unordered_map>
 #include "../Graphics/Objects/Entity.h"
+#include "../Graphics/Animation/AnimationPlayer.h"
 
 class Camera;
 class Model;
 class Shader;
+
+namespace Animation
+{
+    class AnimatedModel;
+}
 
 enum DIRECTION
 {
@@ -21,16 +29,32 @@ enum DIRECTION
     D_DOWN
 };
 
-class Player : public Entity
+
+class Player : public Entity, public Animation::AnimationPlayer::Listener
 {
+    // Player is made up of a model with a camera following it
     std::unique_ptr<Camera> camera;
     std::unique_ptr<Model> model;
+    //std::unique_ptr<Animation::AnimatedModel> m_model;
 
-    glm::mat4 cameraTransOffset;
+    std::unordered_map<std::string, std::string> m_animNames;
+
+    // How up/down camera is
     float camAngle;
     int id;
 
+    // Path name for chicken model texture
+    std::string modelFile;
+
 public:
+    enum STATE
+    {
+        IDLE,
+        JUMP,
+        WALK,
+        DANCE,
+        PECK,
+    };
 
     Player();
     Player(int client_id);
@@ -40,6 +64,13 @@ public:
     virtual void Update() override;
     virtual void Spawn(float x, float y, float z) override;
     virtual void Draw() const override;
+
+    virtual void MoveTo(float x, float y, float z) override;
+    virtual void RotateTo(float w, float x, float y, float z) override { RotateTo(glm::quat(w, x, y, z)); }
+    virtual void RotateTo(const glm::quat& newOrientation) override;
+    virtual void RotateTo(const glm::mat3& newOrientation) override;
+
+    void SetModelFile(std::string fileName);
 
     // Process movement
     void ProcessKeyboard(DIRECTION direction, GLfloat deltaTime);
@@ -55,11 +86,19 @@ public:
     glm::mat4 GetPerspectiveMatrix() const;
     glm::mat3 GetNormalMatrix() const;
 
-    glm::mat4 GetToWorld() { return toWorld; };
-    void SetToWorld(glm::mat4 newToWorld) { toWorld = newToWorld;  };
+	int GetID() { return id; };
 
-    float GetCamAngle() { return camAngle; };
-    void SetCamAngle(float newAngle) { camAngle = newAngle; };
+	glm::quat GetOrientation() { return Orientation();  }
 
-    int GetID() { return id; };
+    void ChangeState(STATE state);                  // Will change model state and player state
+    void SetState(STATE state) { m_state = state; }     // Simply Sets the state without changing the model
+
+private:
+    STATE m_state;
+    float m_lastTime_t;     // Test
+    glm::vec3 m_lastPos_t;
+
+    // Inherited via Listener
+    virtual void OnFinish() override;
+
 };

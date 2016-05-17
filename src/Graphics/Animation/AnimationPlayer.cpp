@@ -176,7 +176,8 @@ namespace Animation
                 timeInTicks = fmod(timeInTicks, currAnim._duration);
             else
             {
-                m_animating = false;
+                Finish();
+                //m_animating = false;
                 return;
             }
         }
@@ -202,5 +203,12 @@ namespace Animation
         {
             EvaluateChildren(child, time, globalTransform);
         }
+    }
+
+    ///////////////////////////////////////////////////////////////////////
+    void AnimationPlayer::OnFinish()
+    {
+        for (Listener* listener : m_listeners)
+            listener->OnFinish();
     }
 }

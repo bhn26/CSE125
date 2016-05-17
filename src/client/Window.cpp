@@ -154,6 +154,9 @@ void Window::Key_callback(GLFWwindow* window, int key, int scancode, int action,
             case GLFW_KEY_Z:
                 Scene::Instance()->GetPlayer()->ProcessKeyboard(DIRECTION::D_DOWN, 1);
                 break;
+            case GLFW_KEY_C:
+                Scene::Instance()->GetPlayer()->SetModelFile("assets/chickens/objects/pinocchio_chicken.obj");
+                break;
             default:
                 break;
         }
@@ -194,4 +197,13 @@ void Window::Mouse_button_callback(GLFWwindow* window, int button, int action, i
         mouseCaptured = false;
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
+	else if (button == GLFW_MOUSE_BUTTON_RIGHT && !mouseCaptured)
+	{ // hacky way to start the game
+		printf("client will send start game\n");
+		if (!ClientGame::instance()->hasStarted())
+		{
+			printf("sending start packet\n");
+			ClientGame::instance()->sendStartPacket();
+		}
+	}
 }

@@ -70,16 +70,16 @@ namespace Animation
     // the mesh
     class AnimationPlayer
     {
-    private:
-        Mesh* m_mesh;
-
-        std::vector<Animation> m_animations;
-        std::unordered_map<std::string, int> m_animMap;
-        int m_currAnimationIndex;
-        float m_playTimer;
-        bool m_animating;
-
     public:
+        ///////////////////////////////////////////////////////////////////////
+        // Listener
+        class Listener
+        {
+        public:
+            virtual void OnFinish() = 0;
+        };
+
+        ///////////////////////////////////////////////////////////////////////
         AnimationPlayer(Mesh* mesh) : m_mesh(mesh) { }
 
         void InitBones0();
@@ -92,12 +92,28 @@ namespace Animation
         void ToggleAnimation() { m_animating = !m_animating; }
         void RestartAnimation() { m_animating = true; m_playTimer = 0.0f; }
         void Reset() { Pause(); m_playTimer = 0.0f; InitBones0(); }
+        void Finish() { Reset(); OnFinish(); }
 
         void Update(float delta);
+
+        void RegisterListener(Listener* listener) { m_listeners.push_back(listener); }
 
     private:
         void Evaluate();
         void EvaluateChildren(const std::unique_ptr<Mesh::Node>&, float time, glm::mat4 parentTransform = glm::mat4(1.0f)) const;
+
+        void OnFinish();
+
+        Mesh* m_mesh;
+
+        std::vector<Animation> m_animations;
+        std::unordered_map<std::string, int> m_animMap;
+        std::vector<Listener*> m_listeners;
+
+        int m_currAnimationIndex;
+        float m_playTimer;
+        bool m_animating;
+
     };
 
 

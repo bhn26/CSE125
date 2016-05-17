@@ -42,6 +42,19 @@
     <ClInclude Include="..\src\server\engine\Player.h">
       <Filter>Source Files\engine</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\server\ServerPlayer.h" />
+    <ClInclude Include="..\src\server\engine\Flag.h">
+      <Filter>Source Files\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\server\engine\ObjectId.h">
+      <Filter>Source Files\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\server\engine\Bullet.h">
+      <Filter>Source Files\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\server\engine\WorldObstacle.h">
+      <Filter>Source Files\engine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\network\NetworkServices.cpp">
@@ -63,6 +76,16 @@
       <Filter>Source Files\engine</Filter>
     </ClCompile>
     <ClCompile Include="..\src\server\engine\Player.cpp">
+      <Filter>Source Files\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\server\ServerPlayer.cpp" />
+    <ClCompile Include="..\src\server\engine\Flag.cpp">
+      <Filter>Source Files\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\server\engine\Bullet.cpp">
+      <Filter>Source Files\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\server\engine\WorldObstacle.cpp">
       <Filter>Source Files\engine</Filter>
     </ClCompile>
   </ItemGroup>

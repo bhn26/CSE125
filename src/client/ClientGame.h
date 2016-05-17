@@ -25,10 +25,12 @@ public:
     GLFWwindow* window;
 
 #ifdef _WIN32
-    void sendActionPackets();
 
     void receiveInitPacket(int offset);
 	void sendInitPacket();
+
+	// Tell the server this client is ready, this is like an ACK to prevent a race condition
+	void sendReadyPacket();
 
 	void receiveStartPacket(int offset);
 	void sendStartPacket();
@@ -37,11 +39,15 @@ public:
     void receiveSpawnPacket(int offset);
     void sendSpawnPacket();
 
+	void receiveRemovePacket(int offset);
+
     void receiveMovePacket(int offset);
     void sendMovePacket(int direction);
 
-    void receiveVRotationPacket(int offset);
-    void sendVRotationPacket(float v_rot, float h_rot); 
+    void receiveRotationPacket(int offset);
+    void sendRotationPacket(); 
+
+	bool hasStarted() { return game_started; }
 
 	std::shared_ptr<Player> FindTarget(int tid);
 
@@ -68,6 +74,8 @@ private:
     double lastTime;
     int nbFrames;
     int client_id; // should know what client number we are so we can fill out packet headers
+
+	bool game_started = false;
 
     static ClientGame* cg;
 

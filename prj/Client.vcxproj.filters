@@ -22,10 +22,7 @@
     <Filter Include="Source Files\Network">
       <UniqueIdentifier>{67d853c1-4103-4f93-b43e-9980b4a2edb9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Graphics\Animation">
-      <UniqueIdentifier>{0d2e5aff-8417-45e4-8b80-b80cf6d54683}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Graphics\Basic">
+    <Filter Include="Source Files\Basic">
       <UniqueIdentifier>{25b1c28e-b776-46aa-a4f8-a47876f7b93b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -123,6 +120,9 @@
     <ClCompile Include="..\src\Graphics\Objects\ChickenAnim.cpp">
       <Filter>Source Files\Graphics\Objects</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Graphics\Objects\Egg.cpp">
+      <Filter>Source Files\Graphics\Objects</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\Graphics\Objects\Entity.cpp">
       <Filter>Source Files\Graphics\Objects</Filter>
     </ClCompile>
@@ -139,7 +139,7 @@
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Basic\Utils.cpp">
-      <Filter>Source Files\Graphics\Basic</Filter>
+      <Filter>Source Files\Basic</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -188,6 +188,9 @@
     <ClInclude Include="..\src\Graphics\Objects\Ground.h">
       <Filter>Source Files\Graphics\Objects</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\Graphics\Objects\Egg.h">
+      <Filter>Source Files\Graphics\Objects</Filter>
+    </ClInclude>
     <ClInclude Include="..\src\Graphics\Objects\Entity.h">
       <Filter>Source Files\Graphics\Objects</Filter>
     </ClInclude>
@@ -231,7 +234,53 @@
       <Filter>Source Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Basic\Utils.h">
-      <Filter>Source Files\Graphics\Basic</Filter>
+      <Filter>Source Files\Basic</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\src\Graphics\Shaders\basic_shader.frag">
+      <Filter>Source Files\Graphics\Shaders</Filter>
+    </None>
+    <None Include="..\src\Graphics\Shaders\basic_shader.vert">
+      <Filter>Source Files\Graphics\Shaders</Filter>
+    </None>
+    <None Include="..\src\Graphics\Shaders\cubemap.vert">
+      <Filter>Source Files\Graphics\Shaders</Filter>
+    </None>
+    <None Include="..\src\Graphics\Shaders\diffuse.frag">
+      <Filter>Source Files\Graphics\Shaders</Filter>
+    </None>
+    <None Include="..\src\Graphics\Shaders\cubemap.frag">
+      <Filter>Source Files\Graphics\Shaders</Filter>
+    </None>
+    <None Include="..\src\Graphics\Shaders\model_loading.frag">
+      <Filter>Source Files\Graphics\Shaders</Filter>
+    </None>
+    <None Include="..\src\Graphics\Shaders\model_loading.vert">
+      <Filter>Source Files\Graphics\Shaders</Filter>
+    </None>
+    <None Include="..\src\Graphics\Shaders\diffuse.vert">
+      <Filter>Source Files\Graphics\Shaders</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{5355bb2e-f720-43d3-a56d-1ecdcac620be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Graphics">
+      <UniqueIdentifier>{5c465b61-ab11-4ae6-9788-c8805e76951e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Graphics\Animation">
+      <UniqueIdentifier>{0d2e5aff-8417-45e4-8b80-b80cf6d54683}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Graphics\Shaders">
+      <UniqueIdentifier>{6e378534-bdb2-4e96-86f5-d62e8c08b3ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Graphics\Objects">
+      <UniqueIdentifier>{15abbdbb-ea4b-49cc-b0aa-9cc6e86ec603}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Network">
+      <UniqueIdentifier>{ef9abc4c-0746-4562-bfab-d02cd140fa26}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>
