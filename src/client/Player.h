@@ -64,4 +64,5 @@ public:
 
 private:
 	int id;
+	int team_id;
 };

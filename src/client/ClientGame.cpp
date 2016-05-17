@@ -78,6 +78,31 @@ void ClientGame::sendInitPacket() {
 	NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
 }
 
+void ClientGame::receiveJoinPacket(int offset) {
+	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
+	struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
+
+	printf("receiveJoinPacket for player %d on team %d\n", pi->id, pi->team_id);
+};
+
+void ClientGame::sendJoinPacket(int team) {
+	const unsigned int packet_size = sizeof(Packet);
+	char packet_data[packet_size];
+
+	Packet packet;
+	packet.hdr.sender_id = client_id;
+	packet.hdr.receiver_id = SERVER_ID;
+	packet.hdr.packet_type = JOIN_TEAM;
+
+	PosInfo pi;
+	pi.id = client_id;
+	pi.team_id = team;
+	pi.serialize(packet.dat.buf);
+
+	packet.serialize(packet_data);
+	NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
+};
+
 void ClientGame::receiveStartPacket(int offset) {
 	struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset]);
     struct PacketData* dat = (struct PacketData *) &(network_data[offset + sizeof(PacketHeader)]);
@@ -98,7 +123,7 @@ void ClientGame::sendStartPacket() {
 	char packet_data[packet_size];
 
 	Packet packet;
-	//packet.hdr.sender_id = ClientGame::GetClientId();
+	packet.hdr.sender_id = client_id;
 	packet.hdr.receiver_id = SERVER_ID;
 	packet.hdr.packet_type = START_GAME;
 
@@ -236,6 +261,10 @@ void ClientGame::update()
                 // offset for this will be the packet header
                 receiveInitPacket(i);
                 break;
+
+			case JOIN_TEAM:
+				receiveJoinPacket(i + sizeof(PacketHeader));
+				break;
 
 			case START_GAME:
 				receiveStartPacket(i);

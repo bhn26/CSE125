@@ -30,6 +30,9 @@ public:
     void receiveInitPacket(int offset);
 	void sendInitPacket();
 
+	void receiveJoinPacket(int offset);
+	void sendJoinPacket(int team);
+
 	void receiveStartPacket(int offset);
 	void sendStartPacket();
 

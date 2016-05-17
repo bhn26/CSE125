@@ -36,10 +36,11 @@ struct GameInfo
 
 struct PosInfo : GameInfo
 {
-
+	// general info
 	int id;
-	// object coordinates
+	int team_id;
 
+	// object coordinates
     int x;
     int y;
     int z;

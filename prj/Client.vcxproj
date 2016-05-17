@@ -176,6 +176,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\client\GameState.cpp" />
+    <ClCompile Include="..\src\client\LobbyState.cpp" />
     <ClCompile Include="..\src\client\MenuState.cpp" />
     <ClCompile Include="..\src\client\PlayState.cpp" />
     <ClCompile Include="..\src\client\SpriteRenderer.cpp" />
@@ -201,6 +202,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\client\GameState.h" />
+    <ClInclude Include="..\src\client\LobbyState.h" />
     <ClInclude Include="..\src\client\MenuState.h" />
     <ClInclude Include="..\src\client\PlayState.h" />
     <ClInclude Include="..\src\client\SpriteRenderer.h" />

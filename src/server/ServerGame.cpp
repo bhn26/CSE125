@@ -1,5 +1,6 @@
 
 #include "ServerGame.h"
+#include <algorithm>
 
 unsigned int ServerGame::client_id; 
 
@@ -110,6 +111,9 @@ void ServerGame::receiveFromClients()
 
                     break;
 
+				case JOIN_TEAM:
+					receiveJoinPacket(i);
+
 				case START_GAME:
 					receiveStartPacket(i);
 					sendStartPacket();
@@ -207,6 +211,48 @@ void ServerGame::sendInitPacket()
 
 	network->sendToClient(packet_data, packet_size, client_id);
 }
+
+
+void ServerGame::receiveJoinPacket(int offset) {
+	struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset]);
+	
+	struct PacketData* dat = (struct PacketData *) &(network_data[offset + sizeof(PacketHeader)]);
+	struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
+
+	printf("recieved join packet from %d for %d\n", hdr->sender_id, pi->team_id);
+
+	int client = hdr->sender_id;
+
+	team_map[client] = pi->team_id;
+
+	sendJoinPacket(client);
+};
+
+void ServerGame::sendJoinPacket(int client) {
+	const unsigned int packet_size = sizeof(Packet);
+	char packet_data[packet_size];
+
+	Packet packet;
+	packet.hdr.packet_type = JOIN_TEAM;
+
+
+	PosInfo p;
+	p.id = client;
+	p.team_id = team_map[client];
+
+	printf("sending join packet for client %d in team %d\n", client, p.team_id);
+
+	packet.dat.obj_id = POS_OBJ;
+
+	p.serialize(packet.dat.buf);
+	packet.serialize(packet_data);
+
+	packet.hdr.sender_id = SERVER_ID;
+
+	packet.serialize(packet_data);
+
+	network->sendToAll(packet_data, packet_size);
+};
 
 void ServerGame::receiveStartPacket(int offset) {
 	struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset]);

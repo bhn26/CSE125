@@ -8,7 +8,9 @@ class ServerPlayer
 	btDiscreteDynamicsWorld* curWorld;
 	btRigidBody* playerRigidBody;
 	int jumpSem;
-	int playerId;
+
+	int playerId; // == client id
+	int team_id;
 
 public:
 

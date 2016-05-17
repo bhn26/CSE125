@@ -31,9 +31,6 @@ private:
 	void RenderSelection();
 	void InitTextures();
 
-	// A pointer to the current active game (if any).
-	CPlayState* m_pCurrentGame;
-
 	SpriteRenderer * sprite_renderer;
 
 	// stuff below is for optimization later

@@ -5,6 +5,8 @@
 #include "engine/engine.h"
 #include <btBulletDynamicsCommon.h>
 
+#include <map>
+
 class ServerGame
 {
 
@@ -39,6 +41,9 @@ public:
     void receiveInitPacket(int offset);
     void sendInitPacket();
 
+	void receiveJoinPacket(int offset);
+	void sendJoinPacket(int client);
+
 	void receiveStartPacket(int offset);
 	void sendStartPacket();
 
@@ -57,6 +62,8 @@ private:
 
    // IDs for the clients connecting for table in ServerNetwork 
     static unsigned int client_id;
+
+	std::map <int, int> team_map; // <player, team>
 
 	bool game_started = false;
 
