@@ -28,17 +28,8 @@ protected:
 	CMenuState(CStateManager* pManager);
 
 private:
-	// The player went up or down in 
-	// the menu
-	void SelectionUp();
-	void SelectionDown();
-	// The player validated the current selection
-	void SelectionChosen();
-
 	void RenderSelection();
-
-	// Index of the current selected menu item
-	int m_iCurrentSelection;
+	void InitTextures();
 
 	// A pointer to the current active game (if any).
 	CPlayState* m_pCurrentGame;
@@ -49,6 +40,8 @@ private:
 	Texture *logo;
 	Texture *textbox;
 	Texture *join;
+
+	bool initialized;
 };
 
 #endif  // _MENUSTATE_H_
