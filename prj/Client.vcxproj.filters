@@ -52,6 +52,9 @@
     <ClCompile Include="..\src\Graphics\Objects\StaticObject.cpp">
       <Filter>Source Files\Graphics\Objects</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Graphics\Objects\Grass.cpp">
+      <Filter>Source Files\Graphics\Objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Graphics\Camera.h">
@@ -146,6 +149,12 @@
     <None Include="..\prj\packages.config">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="..\src\Graphics\Shaders\instancing.frag">
+      <Filter>Source Files\Graphics\Shaders</Filter>
+    </None>
+    <None Include="..\src\Graphics\Shaders\instancing.vert">
+      <Filter>Source Files\Graphics\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Files">
@@ -163,5 +172,10 @@
     <Filter Include="Source Files\Network">
       <UniqueIdentifier>{ef9abc4c-0746-4562-bfab-d02cd140fa26}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\src\Graphics\Objects\Grass.h">
+      <Filter>Source Files\Graphics\Objects</Filter>
+    </Text>
   </ItemGroup>
 </Project>

@@ -4,6 +4,7 @@
 #include "Objects/Cube.h"
 #include "Objects/Chicken.h"
 #include "Objects/Ground.h"
+#include "Objects/Grass.h"
 #include "Camera.h"
 #include "PointLight.h"
 #include "Objects/StaticObject.h"
@@ -26,6 +27,7 @@ void Scene::Setup()
     std::shared_ptr<Shader> basicShader = std::make_shared<Shader>("src/Graphics/Shaders/basic_shader.vert", "src/Graphics/Shaders/basic_shader.frag");
     std::shared_ptr<Shader> diffuseShader = std::make_shared<Shader>("src/Graphics/Shaders/basic_shader.vert", "src/Graphics/Shaders/diffuse.frag");
     std::shared_ptr<Shader> cubeMapShader = std::make_shared<Shader>("src/Graphics/Shaders/cubemap.vert", "src/Graphics/Shaders/cubemap.frag");
+	std::shared_ptr<Shader> instanceShader = std::make_shared<Shader>("src/Graphics/Shaders/instancing.vert", "src/Graphics/Shaders/instancing.frag");
 
     camera = std::unique_ptr<Camera>(new Camera(glm::vec3(0.0f, 9.0f, -15.0f), glm::vec3(0.0f, 1.0f, 0.0f), 90.0f, -25.0f));
     pLight = std::unique_ptr<PointLight>(new PointLight(glm::vec3(0.0f, 20.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)));
@@ -55,22 +57,25 @@ void Scene::Setup()
 	bench->Scale(0.01f);
 	bench->Translate(glm::vec3(0.0f, 0.0f, -60.0f));
 
+	std::unique_ptr<Grass> grass = std::unique_ptr<Grass>(new Grass);
     std::unique_ptr<Ground> ground = std::unique_ptr<Ground>(new Ground);
     std::unique_ptr<Cube> cube = std::unique_ptr<Cube>(new Cube);
     std::unique_ptr<CubeMap> cubeMap = std::unique_ptr<CubeMap>(new CubeMap);
     cubeMap->LoadCubeMap();
 
    // cube->GetShader() = basicShader;
+	grass->GetShader() = instanceShader;
     ground->GetShader() = diffuseShader;
     cubeMap->GetShader() = cubeMapShader;
 
-	entities.push_back(std::move(barn));
+	entities.push_back(std::move(grass));
+	/*entities.push_back(std::move(barn));
 	entities.push_back(std::move(tractor));
 	entities.push_back(std::move(silo));
     entities.push_back(std::move(ground));
 	entities.push_back(std::move(bench));
    // entities.push_back(std::move(cube));
-    entities.push_back(std::move(cubeMap));
+    entities.push_back(std::move(cubeMap));*/
 }
 
 void Scene::AddPlayer(int client_id) {

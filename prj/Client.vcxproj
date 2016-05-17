@@ -161,6 +161,8 @@
     <None Include="..\src\Graphics\Shaders\cubemap.frag" />
     <None Include="..\src\Graphics\Shaders\cubemap.vert" />
     <None Include="..\src\Graphics\Shaders\diffuse.frag" />
+    <None Include="..\src\Graphics\Shaders\instancing.frag" />
+    <None Include="..\src\Graphics\Shaders\instancing.vert" />
     <None Include="..\src\Graphics\Shaders\model_loading.frag" />
     <None Include="..\src\Graphics\Shaders\model_loading.vert" />
     <None Include="..\prj\packages.config" />
@@ -174,6 +176,7 @@
     <ClCompile Include="..\src\client\main.cpp" />
     <ClCompile Include="..\src\client\Player.cpp" />
     <ClCompile Include="..\src\client\Window.cpp" />
+    <ClCompile Include="..\src\Graphics\Objects\Grass.cpp" />
     <ClCompile Include="..\src\Graphics\Objects\Ground.cpp" />
     <ClCompile Include="..\src\Graphics\Mesh.cpp" />
     <ClCompile Include="..\src\Graphics\Model.cpp" />
@@ -208,6 +211,9 @@
     <ClInclude Include="..\src\Graphics\Scenegraph.h" />
     <ClInclude Include="..\src\Graphics\Nodes.h" />
     <ClInclude Include="..\src\Graphics\Shader.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\src\Graphics\Objects\Grass.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
