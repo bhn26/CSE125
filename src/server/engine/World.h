@@ -1,13 +1,11 @@
 #pragma once
 
-#include "Weapon.h"
-#include "Player.h"
-#include "Flag.h"
-#include "Bullet.h"
-#include "WorldObstacle.h"
+#include "EntitySpawner.h"
 #include "FireRateReset.h"
+#include "WorldObstacle.h"
 #include <vector>
 #include <memory>
+#include <map>
 
 #include "../../network/GameData.h"
 // Game Obstacle is already existing
@@ -21,7 +19,7 @@ class World {
 private:
 
 	// list of game world objects
-	std::vector<std::shared_ptr<Player>> players;
+	std::vector<std::shared_ptr<Player>> players;   
 	std::vector<std::shared_ptr<Flag>> flags;
 	std::vector<std::shared_ptr<Weapon>> usedWeapons;
 	std::vector<std::shared_ptr<Bullet>> bullets;  // this may not be necessary...

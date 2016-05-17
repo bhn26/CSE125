@@ -1,6 +1,6 @@
 
 #include "FireRateReset.h"
-
+#include "Weapon.h"
 
 FireRateReset::FireRateReset(std::vector<std::shared_ptr<Weapon>> * usedweapons)
 {

@@ -2,8 +2,9 @@
 
 #include <vector>
 #include <memory>
-#include "Weapon.h"
 #include "../../network/GameData.h"
+
+class Weapon;
 
 class FireRateReset
 {

@@ -1,9 +1,8 @@
 
 
-#include "Bullet.h"
-#include "../../network/GameData.h"
+#include "EntitySpawner.h"
 
-Bullet::Bullet(int objectid, int playerid, int teamid, int damage, const btVector3* pos, btVector3* velocity, btDiscreteDynamicsWorld* physicsWorld)
+Bullet::Bullet(int objectid, int playerid, int teamid, int damage, const btVector3* pos, btVector3* velocity, btDiscreteDynamicsWorld* physicsWorld): Entity(physicsWorld)
 {
 	btCollisionShape* bulletShape = new btSphereShape(btScalar(.1));
 
@@ -28,7 +27,6 @@ Bullet::Bullet(int objectid, int playerid, int teamid, int damage, const btVecto
 	this->playerId = playerid;
 	this->teamId = teamid;
 	this->damage = damage;
-	this->curWorld = physicsWorld;
 	this->bulletRigidBody = bRigidBody;
 }
 

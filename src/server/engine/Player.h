@@ -1,19 +1,14 @@
 #pragma once
+#include "Entity.h"
 #include "Flag.h"
 #include "Weapon.h"
 #include <memory>
 #include <vector>
 
-#ifndef BULLET_PHYSICS
-#define BULLET_PHYSICS
-#include <BulletPhysics\btBulletDynamicsCommon.h>
-#include <BulletPhysics\btBulletCollisionCommon.h>
-#endif
-
 #include "../../network/GameData.h"
 
 
-class Player 
+class Player : public Entity 
 {
 
 private:
@@ -21,7 +16,6 @@ private:
 	int id;
 	int teamId;
 	PosInfo position;
-	btDiscreteDynamicsWorld* curWorld;
 	btRigidBody* playerRigidBody;
 	std::vector<std::shared_ptr<Flag>> *flags;
 	int jumpSem;
@@ -49,7 +43,7 @@ public:
 	// Return current positioning of Player
 	btVector3 GetPlayerPosition();
 
-	// Return current rotation matrix of Player
+	// Return current rotation quaternion of Player
 	btQuaternion GetPlayerRotation();
 
 	// Sets player rotation using quarternion

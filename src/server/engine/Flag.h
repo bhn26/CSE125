@@ -1,14 +1,11 @@
 #pragma once
-#ifndef BULLET_PHYSICS
-#define BULLET_PHYSICS
-#include <BulletPhysics\btBulletDynamicsCommon.h>
-#include <BulletPhysics\btBulletCollisionCommon.h>
-#endif
+
+#include "Entity.h"
 
 #include "../../network/GameData.h"
 
 
-class Flag
+class Flag : public Entity
 {
 	int id;
 	btDiscreteDynamicsWorld* curWorld;

@@ -1,8 +1,8 @@
-#include "Player.h"
+#include "EntitySpawner.h"
 #include "ObjectId.h"
 
 
-Player::Player(int id, int teamid, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld) {
+Player::Player(int id, int teamid, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld) : Entity(physicsWorld) {
 
 	btCollisionShape* playerShape = new btCylinderShape(btVector3(1, 1, 1));
 	// Create player physics object
@@ -18,7 +18,6 @@ Player::Player(int id, int teamid, PosInfo pos, btDiscreteDynamicsWorld* physics
 	// Set Player's protected fields
 	this->id = id;
 	this->teamId = teamid;
-	this->curWorld = physicsWorld;
 	this->playerRigidBody = pRigidBody;
 	this->jumpSem = 1;
 	this->hitPoints = 100;

@@ -1,7 +1,7 @@
-#include "Flag.h"
+#include "EntitySpawner.h"
 #include "ObjectId.h"
 
-Flag::Flag(int id, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld)
+Flag::Flag(int id, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld): Entity(physicsWorld)
 {
 	p = pos;
 
@@ -18,7 +18,6 @@ Flag::Flag(int id, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld)
 
 	// Set Flag's protected fields
 	this->id = id;
-	this->curWorld = physicsWorld;
 	this->flagRigidBody = pRigidBody;
 
 	// Set RigidBody to point to Flag

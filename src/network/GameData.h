@@ -10,9 +10,11 @@
 const int WORLD_WIDTH = 50;
 const int WORLD_HEIGHT = 50;
 
+/*
 static int oid0 = 0;
 static int oid1 = 0;
 static int oid2 = 0;
+*/
 
 static unsigned int currentWorldTick;
 

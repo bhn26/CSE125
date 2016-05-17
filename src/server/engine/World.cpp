@@ -1,6 +1,5 @@
 #include "World.h"
 #include "ObjectId.h"
-#include "Bullet.h"
 #include "../ServerGame.h"
 
 World::World() {
@@ -137,18 +136,25 @@ void World::Init() {
 
 PosInfo World::SpawnPlayer(PosInfo in)
 {
-
+	
 	int teamid = 1;
+	
+	/*
 	std::shared_ptr<Player> player = std::shared_ptr<Player>(new Player(oid, teamid, in, curWorld));
 	btVector3 vec = player->GetPlayerPosition();
 	printf("Created player at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
 	//printf("Posinfo player at (%d,%d,%d)\n", player->GetPosition().x, player->GetPosition().y, player->GetPosition().z);
 	players.push_back(player);
-
+	*/
+	
+	Player* player = EntitySpawner::instance()->spawnPlayer(teamid, in, curWorld);
+	btVector3 vec = player->GetPlayerPosition();
+	printf("Created player at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
+	
 	// Send spawn info to the clients
 	PosInfo out;
 	out.cid = ClassId::PLAYER;
-	out.oid = oid++;
+	out.oid = player->GetId();
 	out.x = vec.getX();
 	out.y = vec.getY();
 	out.z = vec.getZ();
@@ -158,11 +164,17 @@ PosInfo World::SpawnPlayer(PosInfo in)
 
 PosInfo World::SpawnFlag(PosInfo in)
 {
+	/*
 	std::shared_ptr<Flag> flag = std::shared_ptr<Flag>(new Flag(oid, in, curWorld));
 	btVector3 vec = flag->GetFlagPosition();
 	printf("Created flag at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
 	printf("Posinfo flag at (%d,%d,%d)\n", flag->p.x, flag->p.y, flag->p.z);
 	flags.push_back(flag);
+	*/
+
+	Flag* flag = EntitySpawner::instance()->spawnFlag(in, curWorld);
+	btVector3 vec = flag->GetFlagPosition();
+	printf("Created flag at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
 
 	PosInfo out;
 	out.cid = ClassId::FLAG;

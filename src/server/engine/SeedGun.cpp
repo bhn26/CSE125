@@ -16,7 +16,7 @@ void SeedGun::UseWeapon(const btVector3* position, btMatrix3x3* rotation, int pl
 	{
 		// Spawns bullet with this gun's damage and ids into world
 		btVector3* newVelocity = &((*rotation) * (*this->gunSpeed));
-		Bullet* fireProjectile = new Bullet(oid2, playerid, teamid, damage, position, newVelocity, curWorld);
+		//Bullet* fireProjectile = new Bullet(oid2, playerid, teamid, damage, position, newVelocity, curWorld);
 		this->fireFlag = 0;
 		this->nextFireTick = currentWorldTick + gunfireRate;
 

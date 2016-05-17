@@ -64,6 +64,10 @@
     <ClInclude Include="..\src\server\engine\FireRateReset.h">
       <Filter>Source Files\engine</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\server\engine\Entity.h">
+      <Filter>Source Files\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\server\engine\EntitySpawner.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\network\NetworkServices.cpp">
@@ -104,6 +108,12 @@
       <Filter>Source Files\engine</Filter>
     </ClCompile>
     <ClCompile Include="..\src\server\engine\FireRateReset.cpp">
+      <Filter>Source Files\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\server\engine\Entity.cpp">
+      <Filter>Source Files\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\server\engine\EntitySpawner.cpp">
       <Filter>Source Files\engine</Filter>
     </ClCompile>
   </ItemGroup>

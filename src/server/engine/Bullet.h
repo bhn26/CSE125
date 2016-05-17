@@ -1,13 +1,10 @@
 #pragma once
 
+#include "Entity.h"
 #include "../../network/GameData.h"
-#ifndef BULLET_PHYSICS
-#define BULLET_PHYSICS
-#include <BulletPhysics\btBulletDynamicsCommon.h>
-#include <BulletPhysics\btBulletCollisionCommon.h>
-#endif
 
-class Bullet
+
+class Bullet : public Entity
 {
 private:
 	int id;
