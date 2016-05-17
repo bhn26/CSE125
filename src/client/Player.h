@@ -72,4 +72,5 @@ public:
 
 private:
     int id;
+	int tick = 0;
 };

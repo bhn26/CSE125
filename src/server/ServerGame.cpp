@@ -276,7 +276,7 @@ void ServerGame::receiveMovePacket(int offset)
 		player->Move(vec);
 		delete vec;
 		break;
-	case MOVE_BACKWARD:
+	case MOVE_BACKWARD:	
 		vec = new btVector3(0, 0, 3);
 		player->Move(vec);
 		delete vec;
@@ -336,11 +336,12 @@ void ServerGame::receiveRotationPacket(int offset) {
 	struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset - sizeof(PacketHeader)]);
 
 	shared_ptr<Player> player = engine->GetWorld()->GetPlayer(hdr->sender_id);
-
+	player->SetPlayerRotation(pi->rotw, pi->rotx, pi->roty, pi->rotz);
+	printf("received a rotation packet with: %f, %f, %f, %f\n", pi->rotw, pi->rotx, pi->roty, pi->rotz);
     // TODO - rotate player in game state
     //player->Rotate(pi->v_rotation, pi->h_rotation);
 
-	//sendVRotationPacket(hdr->sender_id);
+	sendRotationPacket(hdr->sender_id);
 }
 
 void ServerGame::sendRotationPacket(int client) {
@@ -354,12 +355,19 @@ void ServerGame::sendRotationPacket(int client) {
 
     packet.dat.game_data_id = POS_OBJ;
 
-	PosInfo p = player->GetPosition();
+	PosInfo p;
+	p.cid = ClassId::PLAYER;
 	p.oid = client;
+
+	btQuaternion q = player->GetPlayerRotation();
+	p.rotw = q.getW();
+	p.rotx = q.getX();
+	p.roty = q.getY();
+	p.rotz = q.getZ();
 
     p.serialize(packet.dat.buf);
     
     packet.serialize(packet_data);
 
-	//network->sendToAll(packet_data, packet_size);
+	network->sendToAll(packet_data, packet_size);
 }

@@ -145,6 +145,8 @@ PosInfo World::SpawnPlayer(PosInfo in)
 	//printf("Posinfo player at (%d,%d,%d)\n", player->GetPosition().x, player->GetPosition().y, player->GetPosition().z);
 	players.push_back(player);
 
+	btQuaternion quat = player->GetPlayerRotation();
+
 	// Send spawn info to the clients
 	PosInfo out;
 	out.cid = ClassId::PLAYER;
@@ -152,6 +154,10 @@ PosInfo World::SpawnPlayer(PosInfo in)
 	out.x = vec.getX();
 	out.y = vec.getY();
 	out.z = vec.getZ();
+	out.rotw = quat.getW();
+	out.rotx = quat.getX();
+	out.roty = quat.getY();
+	out.rotz = quat.getZ();
 	ServerGame::instance()->sendSpawnPacket(out);
 	return out;
 }

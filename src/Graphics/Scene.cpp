@@ -129,7 +129,7 @@ void Scene::AddEntity(int cid, int oid, float x, float y, float z, float rotw, f
 		player->SetModelFile("assets/chickens/objects/pinocchio_chicken.obj");
 		player->Spawn(x, y, z);
 		player->GetShader() = modelShader;
-		//player->RotateTo(rotw, rotx, roty, rotz);
+		player->RotateTo(rotw, rotx, roty, rotz);
 		// set main player if the oid matches
 		if (oid == ClientGame::instance()->GetClientId())
 			Scene::player = player.get();
