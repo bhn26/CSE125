@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Weapon.h"
-#include "Bullet.h"
+#include "EntitySpawner.h"
 
 class SeedGun : public Weapon
 {
@@ -13,7 +13,7 @@ protected:
 	// resets the reloaded flag when tick reaches nextFireTick
 
 public:
-	SeedGun(std::vector<std::shared_ptr<Weapon>>* frreset, btDiscreteDynamicsWorld* curworld);
+	SeedGun(btDiscreteDynamicsWorld* curworld);
 	~SeedGun();
 
 	void virtual UseWeapon(const btVector3* position, btMatrix3x3* rotation, int playerid, int teamid);

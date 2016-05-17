@@ -1,13 +1,12 @@
 
 #include "Weapon.h"
 
-Weapon::Weapon(int firerate, int wdamage, std::vector<std::shared_ptr<Weapon>>* frreset, btDiscreteDynamicsWorld* curWorld)
+Weapon::Weapon(int firerate, int wdamage, btDiscreteDynamicsWorld* curWorld)
 {
 	this->curWorld;
 	this->fireRate = firerate;
 	this->damage = wdamage;
 	this->fireFlag = 1;
-	this->frReset = frreset;
 }
 
 Weapon::~Weapon(){}

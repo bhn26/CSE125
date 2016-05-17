@@ -13,15 +13,14 @@ class EntitySpawner
 private:
 	std::map<std::pair<int, unsigned int>, Entity* > entities;
 	static EntitySpawner *spawnInstance;
-	int test;
-	EntitySpawner(){
-		test = 0;
-	};
-	unsigned int oid0 = 0;  // player
-	unsigned int oid1 = 0;  // flag
-	unsigned int oid2 = 0;  // bullet
+	EntitySpawner();
+	unsigned int oid0;  // player
+	unsigned int oid1;  // flag
+	unsigned int oid2;  // bullet
 
 public:
+
+	~EntitySpawner();
 
 	static EntitySpawner *instance();
 

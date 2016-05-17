@@ -11,6 +11,15 @@ EntitySpawner* EntitySpawner::instance()
 	return spawnInstance;
 }
 
+EntitySpawner::EntitySpawner()
+{
+	oid0 = 0;
+	oid1 = 0;
+	oid2 = 0;
+}
+
+EntitySpawner::~EntitySpawner(){}
+
 Player* EntitySpawner::spawnPlayer(int teamid, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld)
 {
 	Player* newPlayer = new Player(oid0, teamid, pos, physicsWorld);

@@ -1,6 +1,7 @@
 #include "World.h"
 #include "ObjectId.h"
 #include "../ServerGame.h"
+#include "FireRateReset.h"
 
 World::World() {
 	// initialize map objects 
@@ -18,7 +19,7 @@ void World::Init() {
 	currentWorldTick = 0;
 
 	// Init Fire Rate Reseter
-	this->fireRateReseter = new FireRateReset((&this->usedWeapons));
+	FireRateReset::instance();
 
 	int z = 1000; // this is a random number for the walls right now, we need to change this
 
@@ -209,8 +210,8 @@ void World::UpdateWorld()
 	curWorld->stepSimulation(1 / 60.f, 10);
 	currentWorldTick++;
 
-	// Process Weapon Reloads
-	this->fireRateReseter->ResetWeapons();
+	// Process Weapon Fire Rate Reset
+	FireRateReset::instance()->ResetWeapons();
 
 	// Process all collisions
 	int numManifolds = curWorld->getDispatcher()->getNumManifolds();

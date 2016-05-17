@@ -67,7 +67,9 @@
     <ClInclude Include="..\src\server\engine\Entity.h">
       <Filter>Source Files\engine</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\server\engine\EntitySpawner.h" />
+    <ClInclude Include="..\src\server\engine\EntitySpawner.h">
+      <Filter>Source Files\engine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\network\NetworkServices.cpp">
