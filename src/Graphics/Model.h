@@ -28,14 +28,6 @@ public:
             this->meshes[i].Draw(shader);
     }
 
-	const std::vector<Mesh>& Meshes() const {
-		return meshes;
-	}
-
-	const std::vector<Texture>& Textures() const {
-		return textures_loaded;
-	}
-
 private:
     /*  Model Data  */
     std::vector<Mesh> meshes;
@@ -53,3 +45,63 @@ private:
     // The required info is returned as a Texture struct.
     std::vector<Texture> LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
 };
+
+
+/*
+
+
+// Std. Includes
+#include <string>
+#include <vector>
+#include <assimp/types.h>
+#include <assimp/scene.h>
+
+#include "Mesh.h"
+#include "Texture.h"
+
+GLint TextureFromFile(const char* path, std::string directory);
+
+class Model
+{
+public:
+
+	// Constructor, expects a filepath to a 3D model.
+	// "assets/model
+	Model(const GLchar* path) { this->LoadModel(path); }
+
+	// Draws the model, and thus all its meshes
+	void Draw(const Shader* shader)
+	{
+		for (GLuint i = 0; i < this->meshes.size(); i++)
+			this->meshes[i].Draw(shader);
+	}
+
+	const std::vector<Mesh>& Meshes() const {
+		return meshes;
+	}
+
+	const std::vector<Mesh::Texture>& Textures() const {
+		return textures_loaded;
+	}
+
+	const std::vector<Material>& Materials() const { return materials; }
+
+private:
+
+	std::vector<Mesh> meshes;
+	std::string directory;
+	std::vector<Mesh::Texture> textures_loaded;   // Stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
+	std::vector<Material> materials;
+
+	void LoadModel(std::string path);  // Loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes vector.
+
+									   // Processes a node in a recursive fashion. Processes each individual mesh located at the node and repeats this process on its children nodes (if any).
+	void ProcessNode(aiNode* node, const aiScene* scene);
+	Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene);
+
+	// Checks all material textures of a given type and loads the textures if they're not loaded yet.
+	// The required info is returned as a Texture struct.
+	std::vector<Mesh::Texture> LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
+};
+
+*/

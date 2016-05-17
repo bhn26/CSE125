@@ -27,7 +27,7 @@ class Model;
 class Grass : public Entity
 {
 public:
-	Grass();
+	Grass(GLfloat size);
 	~Grass();
 
 	Model* grass;

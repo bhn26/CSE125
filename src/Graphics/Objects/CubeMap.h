@@ -18,9 +18,10 @@
 class CubeMap : public Entity
 {
 public:
-    CubeMap();
+    CubeMap(GLfloat size);
     ~CubeMap();
     
+	static GLfloat size;
     GLuint textureID;
     std::vector<const GLchar*> faces;
     

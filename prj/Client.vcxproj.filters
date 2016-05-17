@@ -55,6 +55,9 @@
     <ClCompile Include="..\src\Graphics\Objects\Grass.cpp">
       <Filter>Source Files\Graphics\Objects</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Graphics\Texture.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Graphics\Camera.h">
@@ -122,6 +125,9 @@
     </ClInclude>
     <ClInclude Include="..\src\Graphics\Objects\StaticObject.h">
       <Filter>Source Files\Graphics\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Graphics\Texture.h">
+      <Filter>Source Files\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

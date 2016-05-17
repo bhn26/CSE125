@@ -14,6 +14,8 @@
 #include <algorithm>
 #include <vector>
 
+#define WORLDSIZE 100.0f
+
 Scene::Scene() : camera(std::unique_ptr<Camera>(nullptr)), pLight(std::unique_ptr<PointLight>(nullptr)),
     player(nullptr), entities(std::vector<std::unique_ptr<Entity>>()), players(std::vector<std::shared_ptr<Player>>())
 {
@@ -54,14 +56,15 @@ void Scene::Setup()
 
 	// Bench
 	std::unique_ptr<StaticObject> bench = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/wood_bench.obj"));
-	bench->Scale(0.01f);
+	bench->Scale(10.0f);
 	bench->Translate(glm::vec3(0.0f, 0.0f, -60.0f));
 
-	std::unique_ptr<Grass> grass = std::unique_ptr<Grass>(new Grass);
+	std::unique_ptr<Grass> grass = std::unique_ptr<Grass>(new Grass(WORLDSIZE));
     std::unique_ptr<Ground> ground = std::unique_ptr<Ground>(new Ground);
     std::unique_ptr<Cube> cube = std::unique_ptr<Cube>(new Cube);
-    std::unique_ptr<CubeMap> cubeMap = std::unique_ptr<CubeMap>(new CubeMap);
+    std::unique_ptr<CubeMap> cubeMap = std::unique_ptr<CubeMap>(new CubeMap(WORLDSIZE));
     cubeMap->LoadCubeMap();
+
 
    // cube->GetShader() = basicShader;
 	grass->GetShader() = instanceShader;
@@ -69,13 +72,13 @@ void Scene::Setup()
     cubeMap->GetShader() = cubeMapShader;
 
 	entities.push_back(std::move(grass));
-	/*entities.push_back(std::move(barn));
+	entities.push_back(std::move(barn));
 	entities.push_back(std::move(tractor));
 	entities.push_back(std::move(silo));
     entities.push_back(std::move(ground));
 	entities.push_back(std::move(bench));
    // entities.push_back(std::move(cube));
-    entities.push_back(std::move(cubeMap));*/
+    entities.push_back(std::move(cubeMap));
 }
 
 void Scene::AddPlayer(int client_id) {
