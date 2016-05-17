@@ -1,4 +1,10 @@
 #include "EntitySpawner.h"
+#include "Entity.h"
+#include "Bullet.h"
+#include "Player.h"
+#include "Flag.h"
+#include "Collectable.h"
+#include "../ServerGame.h"
 
 EntitySpawner* EntitySpawner::spawnInstance = nullptr;
 
@@ -22,17 +28,43 @@ EntitySpawner::~EntitySpawner(){}
 
 Player* EntitySpawner::spawnPlayer(int teamid, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld)
 {
+	// Create player and add to Entity Map
 	Player* newPlayer = new Player(oid0, teamid, pos, physicsWorld);
 	AddEntity(0, oid0, newPlayer);
 	oid0++;
+
+	// Send Player Spawn packet
+	btVector3 vec = newPlayer->GetEntityPosition();
+	printf("Created player at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
+	// Send spawn info to the clients
+	PosInfo out;
+	out.cid = ClassId::PLAYER;
+	out.oid = newPlayer->GetId();
+	out.x = vec.getX();
+	out.y = vec.getY();
+	out.z = vec.getZ();
+	ServerGame::instance()->sendSpawnPacket(out);
 	return newPlayer;
 }
 
 Flag*  EntitySpawner::spawnFlag(PosInfo pos, btDiscreteDynamicsWorld* physicsWorld)
 {
+	// Create flag and add to Entity Map
 	Flag* newFlag = new Flag(oid1, pos, physicsWorld);
 	AddEntity(1, oid1, newFlag);
 	oid1++;
+
+	// Send Flag Spawn packet
+	btVector3 vec = newFlag->GetEntityPosition();
+	printf("Created flag at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
+
+	PosInfo out;
+	out.cid = ClassId::FLAG;
+	out.oid = newFlag->GetObjectId();
+	out.x = vec.getX();
+	out.y = vec.getY();
+	out.z = vec.getZ();
+	ServerGame::instance()->sendSpawnPacket(out);
 	return newFlag;
 }
 

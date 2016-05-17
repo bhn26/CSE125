@@ -22,8 +22,6 @@ public:
 
 	btRigidBody* getRigidBody();
 
-	int GetObjectId();
-
 	void HandleCollectable(Player* collidedPlayer);
 
 };

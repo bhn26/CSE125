@@ -1,8 +1,5 @@
 #pragma once
 
-#ifndef GAME_DATA
-#define GAME_DATA
-
 #include <string.h>
 #include <stdio.h>
 #include "../server/engine/ObjectId.h"
@@ -100,5 +97,3 @@ struct RemInfo : GameInfo
 		memcpy(this, data, sizeof(RemInfo));
 	}
 };
-
-#endif

@@ -1,8 +1,8 @@
 
-
+#include "Bullet.h"
 #include "EntitySpawner.h"
 
-Bullet::Bullet(int objectid, int playerid, int teamid, int damage, const btVector3* pos, btVector3* velocity, btDiscreteDynamicsWorld* physicsWorld): Entity(physicsWorld)
+Bullet::Bullet(int objectid, int playerid, int teamid, int damage, const btVector3* pos, btVector3* velocity, btDiscreteDynamicsWorld* physicsWorld): Entity(objectid, physicsWorld)
 {
 	btCollisionShape* bulletShape = new btSphereShape(btScalar(.1));
 
@@ -41,11 +41,6 @@ Bullet::~Bullet()
 btVector3 Bullet::GetBulletPosition()
 {
 	return (this->bulletRigidBody)->getCenterOfMassPosition();
-}
-
-int Bullet::GetObjectId()
-{
-	return this->id;
 }
 
 int Bullet::GetPlayerId()

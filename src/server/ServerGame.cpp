@@ -1,5 +1,6 @@
 
 #include "ServerGame.h"
+#include "engine\Player.h"
 
 unsigned int ServerGame::client_id; 
 

@@ -1,13 +1,12 @@
 #pragma once
 
 #include "EntitySpawner.h"
-#include "WorldObstacle.h"
 #include <vector>
 #include <memory>
 #include <map>
 
 #include "../../network/GameData.h"
-// Game Obstacle is already existing
+class WorldObstacle;
 
 using namespace std;
 
@@ -20,7 +19,7 @@ private:
 	// list of game world objects
 	std::vector<std::shared_ptr<Player>> players;   
 	std::vector<std::shared_ptr<Flag>> flags;
-	std::vector<std::shared_ptr<Weapon>> usedWeapons;
+	//std::vector<std::shared_ptr<Weapon>> usedWeapons;
 	std::vector<std::shared_ptr<Bullet>> bullets;  // this may not be necessary...
 	//TODO list of weapons to check reload
 
@@ -55,8 +54,8 @@ public:
 	void Init();
 
 	// Spawns based on PosInfo in, will return PosInfo for the object spawned
-	PosInfo SpawnPlayer(PosInfo in);
-	PosInfo SpawnFlag(PosInfo in);
+	void SpawnPlayer(PosInfo in);
+	void SpawnFlag(PosInfo in);
 	std::shared_ptr<Player> GetPlayer(int id) { return players.at(id); };
 
 	// Updates Physics world by one tick

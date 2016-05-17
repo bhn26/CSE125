@@ -14,10 +14,11 @@ protected:
 
 	btDiscreteDynamicsWorld* curWorld;
 	btRigidBody* entityRigidBody;
+	int id;
 
 public:
 
-	Entity(btDiscreteDynamicsWorld* physicsworld);
+	Entity(int objectid, btDiscreteDynamicsWorld* physicsworld);
 
 	virtual ~Entity();
 
@@ -25,4 +26,8 @@ public:
 
 	// Return current rotation quaternion of Player
 	btQuaternion GetEntityRotation();
+
+	// Returns object id
+	int GetObjectId();
+
 };

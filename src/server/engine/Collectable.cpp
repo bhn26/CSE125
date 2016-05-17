@@ -1,7 +1,7 @@
-
+#include "Collectable.h"
 #include "EntitySpawner.h"
 
-Collectable::Collectable(btDiscreteDynamicsWorld* curworld) : Entity(curworld)
+Collectable::Collectable(int id, btDiscreteDynamicsWorld* curworld) : Entity(id, curworld)
 {
 	this->curWorld = curworld;
 }

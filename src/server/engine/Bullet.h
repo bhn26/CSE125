@@ -24,9 +24,6 @@ public:
 
 	//maybe handleBulletCollision(obA, obB);
 
-	// get bullet object id
-	int GetObjectId();
-
 	// get player id
 	int GetPlayerId();
 

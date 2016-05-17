@@ -2,8 +2,9 @@
 
 #include "Entity.h"
 
-Entity::Entity(btDiscreteDynamicsWorld* physicsworld)
+Entity::Entity(int objectid, btDiscreteDynamicsWorld* physicsworld)
 {
+	this->id = objectid;
 	this->curWorld = physicsworld;
 }
 
@@ -18,4 +19,9 @@ btQuaternion Entity::GetEntityRotation() {
 	entityRigidBody->getMotionState()->getWorldTransform(currentTrans);
 	btQuaternion currentOrientation = currentTrans.getRotation();
 	return currentOrientation;
+}
+
+int Entity::GetObjectId()
+{
+	return id;
 }

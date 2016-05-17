@@ -1,12 +1,12 @@
 #pragma once
-#include "Entity.h"
-#include "Flag.h"
-#include "Weapon.h"
 #include <memory>
 #include <vector>
 
 #include "../../network/GameData.h"
 
+class Entity;
+class Flag;
+class Weapon;
 
 class Player : public Entity 
 {
@@ -24,7 +24,7 @@ private:
 
 public:
 
-	Player(int id, int teamid, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld);
+	Player(int objectid, int teamid, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld);
 
 	~Player();
 

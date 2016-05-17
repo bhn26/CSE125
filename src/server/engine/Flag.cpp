@@ -1,7 +1,9 @@
 #include "EntitySpawner.h"
+#include "Flag.h"
+#include "Player.h"
 #include "ObjectId.h"
 
-Flag::Flag(int id, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld): Collectable(physicsWorld)
+Flag::Flag(int id, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld): Collectable(id, physicsWorld)
 {
 	p = pos;
 
@@ -37,11 +39,6 @@ Flag::~Flag()
 btRigidBody* Flag::getRigidBody()
 {
 	return this->entityRigidBody;
-}
-
-int Flag::GetObjectId()
-{
-	return id;
 }
 
 void Flag::HandleCollectable(Player* collidedPlayer)

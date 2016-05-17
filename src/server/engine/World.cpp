@@ -2,6 +2,11 @@
 #include "ObjectId.h"
 #include "../ServerGame.h"
 #include "FireRateReset.h"
+#include "Player.h"
+#include "Flag.h"
+#include "Bullet.h"
+#include "WorldObstacle.h"
+
 
 World::World() {
 	// initialize map objects 
@@ -135,74 +140,18 @@ void World::Init() {
 	}*/
 }
 
-PosInfo World::SpawnPlayer(PosInfo in)
+void World::SpawnPlayer(PosInfo in)
 {
-	
 	int teamid = 1;
-	
-	/*
-	std::shared_ptr<Player> player = std::shared_ptr<Player>(new Player(oid, teamid, in, curWorld));
-	btVector3 vec = player->GetPlayerPosition();
-	printf("Created player at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
-	//printf("Posinfo player at (%d,%d,%d)\n", player->GetPosition().x, player->GetPosition().y, player->GetPosition().z);
-	players.push_back(player);
-	*/
-	
 	Player* player = EntitySpawner::instance()->spawnPlayer(teamid, in, curWorld);
-	btVector3 vec = player->GetEntityPosition();
-	printf("Created player at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
-	
-	// Send spawn info to the clients
-	PosInfo out;
-	out.cid = ClassId::PLAYER;
-	out.oid = player->GetId();
-	out.x = vec.getX();
-	out.y = vec.getY();
-	out.z = vec.getZ();
-	ServerGame::instance()->sendSpawnPacket(out);
-	return out;
 }
 
-PosInfo World::SpawnFlag(PosInfo in)
+
+void World::SpawnFlag(PosInfo in)
 {
-	/*
-	std::shared_ptr<Flag> flag = std::shared_ptr<Flag>(new Flag(oid, in, curWorld));
-	btVector3 vec = flag->GetEntityPosition();
-	printf("Created flag at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
-	printf("Posinfo flag at (%d,%d,%d)\n", flag->p.x, flag->p.y, flag->p.z);
-	flags.push_back(flag);
-	*/
-
 	Flag* flag = EntitySpawner::instance()->spawnFlag(in, curWorld);
-	btVector3 vec = flag->GetEntityPosition();
-	printf("Created flag at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
-
-	PosInfo out;
-	out.cid = ClassId::FLAG;
-	out.oid = oid++;
-	out.x = vec.getX();
-	out.y = vec.getY();
-	out.z = vec.getZ();
-	ServerGame::instance()->sendSpawnPacket(out);
-	return out;
 }
 
-		/*case BULLET:
-		{
-			std::shared_ptr<Bullet> bullet = std::shared_ptr<Bullet>(new Bullet(oid2, playeridforBullet, teamid, damageforBullet, position, speed, curWorld));
-			btVector3 vec = bullet->GetBulletPosition();
-			printf("Created flag at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
-			bullets.push_back(bullet);
-
-			PosInfo pi;
-			pi.cid = ClassId::BULLET;
-			pi.oid = oid2++;
-			pi.x = vec.getX();
-			pi.y = vec.getY();
-			pi.z = vec.getZ();
-			ServerGame::instance()->sendSpawnPacket(pi);
-			break;
-		}*/
 
 void World::UpdateWorld()
 {

@@ -1,13 +1,14 @@
 #pragma once
 
 // NOTE:  Only use by  EntitySpawner::instance()->"...methodcall..."
-
-#include "Bullet.h"
-#include "Player.h"
-#include "Flag.h"
-#include "Collectable.h"
 #include <map>
-
+#include "Entity.h"
+#include "../../network/GameData.h"
+//class Entity;
+class Player;
+class Flag;
+class Bullet;
+class Collectable;
 
 class EntitySpawner
 {

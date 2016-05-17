@@ -1,8 +1,11 @@
 #include "EntitySpawner.h"
 #include "ObjectId.h"
+#include "Player.h"
+#include "Flag.h"
+#include "Weapon.h"
 
 
-Player::Player(int id, int teamid, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld) : Entity(physicsWorld) {
+Player::Player(int objectid, int teamid, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld) : Entity(objectid, physicsWorld) {
 
 	btCollisionShape* playerShape = new btCylinderShape(btVector3(1, 1, 1));
 	// Create player physics object
@@ -17,7 +20,7 @@ Player::Player(int id, int teamid, PosInfo pos, btDiscreteDynamicsWorld* physics
 
 	// Set Entity and Player protected fields
 	this->entityRigidBody = pRigidBody;
-	this->id = id;
+	this->id = objectid;
 	this->teamId = teamid;
 	this->jumpSem = 1;
 	this->hitPoints = 100;
@@ -111,11 +114,6 @@ void Player::LoseFlags()
 {
 	// Change this, we need the flags to come out of the player back into the world
 	flags->clear();
-}
-
-int Player::GetObjectId()
-{
-	return id;
 }
 
 int Player::GetTeamId()
