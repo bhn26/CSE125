@@ -272,22 +272,22 @@ void ServerGame::receiveMovePacket(int offset)
 	btVector3* vec;
 	switch (pi->direction) {
 	case MOVE_FORWARD:
-		vec = new btVector3(0, 0, -3);
-		player->Move(vec);
-		delete vec;
-		break;
-	case MOVE_BACKWARD:	
 		vec = new btVector3(0, 0, 3);
 		player->Move(vec);
 		delete vec;
 		break;
+	case MOVE_BACKWARD:	
+		vec = new btVector3(0, 0, -3);
+		player->Move(vec);
+		delete vec;
+		break;
 	case MOVE_LEFT:
-		vec = new btVector3(-3, 0, 0);
+		vec = new btVector3(3, 0, 0);
 		player->Move(vec);
 		delete vec;
 		break;
 	case MOVE_RIGHT:
-		vec = new btVector3(3, 0, 0);
+		vec = new btVector3(-3, 0, 0);
 		player->Move(vec);
 		delete vec;
 		break;
@@ -327,7 +327,7 @@ void ServerGame::sendMovePacket(ClassId class_id, int obj_id)
         network->sendToAll(packet_data, packet_size);
         //printf("Sent move packet to clients\n");
 }
-
+bool first = true;
 void ServerGame::receiveRotationPacket(int offset) {
 
     struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
@@ -336,13 +336,27 @@ void ServerGame::receiveRotationPacket(int offset) {
 	struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset - sizeof(PacketHeader)]);
 
 	shared_ptr<Player> player = engine->GetWorld()->GetPlayer(hdr->sender_id);
-	player->SetPlayerRotation(pi->rotw, pi->rotx, pi->roty, pi->rotz);
+
+	if (first)
+	{
+		btQuaternion q = player->GetPlayerRotation();
+		printf("Q INITIALLY IS :  %f, %f, %f, %f\n", q.getW(), q.getX(), q.getY(), q.getZ());
+	}
+
+	player->SetPlayerRotation(-1 * pi->roty, pi->rotx, -1 * pi->rotw, pi->rotz);
+	if (first)
+	{
+		btQuaternion q = player->GetPlayerRotation();
+		printf("Q AFTER SET IS :  %f, %f, %f, %f\n", q.getW(), q.getX(), q.getY(), q.getZ());
+		//first = false;
+	}
+
 	printf("received a rotation packet with: %f, %f, %f, %f\n", pi->rotw, pi->rotx, pi->roty, pi->rotz);
 
-	sendRotationPacket(hdr->sender_id);
+	sendRotationPacket(hdr->sender_id, pi->rotw, pi->rotx, pi->roty, pi->rotz);
 }
 
-void ServerGame::sendRotationPacket(int client) {
+void ServerGame::sendRotationPacket(int client, float w, float x, float y, float z) {
     const unsigned int packet_size = sizeof(Packet);
     char packet_data[packet_size];
 
@@ -357,7 +371,12 @@ void ServerGame::sendRotationPacket(int client) {
 	p.cid = ClassId::PLAYER;
 	p.oid = client;
 
+	// why do we switch w and y and multiply by negative, we don't know but it fixes it
 	btQuaternion q = player->GetPlayerRotation();
+	btVector3 v = player->GetPlayerPosition();
+	p.x = v.getX();
+	p.y = v.getY();
+	p.z = v.getZ();
 	p.rotw = q.getW();
 	p.rotx = q.getX();
 	p.roty = q.getY();

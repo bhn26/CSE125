@@ -53,8 +53,10 @@ void Player::Move(btVector3* changeVelocity) {
 	btTransform currentTrans;
 	playerRigidBody->getMotionState()->getWorldTransform(currentTrans);
 	btMatrix3x3 currentOrientation = currentTrans.getBasis();
+	btQuaternion q = GetPlayerRotation();
+	//btVector3 newVelocity = btVector3(q.getW() * 3, 0, q.getY() * 3);
 	btVector3 newVelocity = currentOrientation * (*changeVelocity);
-
+	printf("Q OF PLAYER MOVING IS :  %f, %f, %f, %f\n", q.getW(), q.getX(), q.getY(), q.getZ());
 	// set new velocity
 	playerRigidBody->setLinearVelocity(newVelocity);
 	//printf("%d: world pos object = %f,%f,%f\n", id, float(currentTrans.getOrigin().getX()), float(currentTrans.getOrigin().getY()), float(currentTrans.getOrigin().getZ()));
@@ -86,6 +88,7 @@ void Player::SetPlayerRotation(float x, float y, float z, float w)
 	btTransform currentTrans;
 	playerRigidBody->getMotionState()->getWorldTransform(currentTrans);
 	currentTrans.setRotation((*playerRotation));
+	playerRigidBody->getMotionState()->setWorldTransform(currentTrans);
 	playerRigidBody->setCenterOfMassTransform(currentTrans);
 }
 
