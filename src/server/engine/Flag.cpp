@@ -3,7 +3,7 @@
 #include "Player.h"
 #include "ObjectId.h"
 
-Flag::Flag(int id, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld): Collectable(id, physicsWorld)
+Flag::Flag(int id, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld): Entity(id, physicsWorld)
 {
 	p = pos;
 
@@ -20,7 +20,6 @@ Flag::Flag(int id, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld): Collecta
 
 	// Set Flag's protected fields
 	this->id = id;
-	this->flagRigidBody = pRigidBody;
 	this->entityRigidBody = pRigidBody;
 
 	// Set RigidBody to point to Flag

@@ -1,14 +1,16 @@
 #pragma once
 
 #include "Entity.h";
+#include "../../network/GameData.h"
 class Player;
 
 class Collectable : public Entity
 {
 private:
-	int id;
+
 public:
-	Collectable(int id, btDiscreteDynamicsWorld* curworld);
+	Collectable(int objectid, PosInfo pos, btDiscreteDynamicsWorld* curworld);
 	virtual ~Collectable();
-	void virtual HandleCollectable(Player* collidedPlayer);
+	void virtual HandleCollect(Player* collidedPlayer);
 };
+

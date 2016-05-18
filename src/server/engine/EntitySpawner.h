@@ -19,6 +19,7 @@ private:
 	unsigned int oid0;  // player
 	unsigned int oid1;  // flag
 	unsigned int oid2;  // bullet
+	unsigned int oid3;  // collectable
 
 public:
 
@@ -32,6 +33,9 @@ public:
 
 	Bullet* spawnBullet(int playerid, int teamid, int damage, const btVector3* pos, btVector3* velocity, btDiscreteDynamicsWorld* physicsWorld);
 
+	Collectable* spawnCollectable(int objectid, PosInfo pos, btDiscreteDynamicsWorld* curworld);
+
 	void AddEntity(int cid, unsigned int oid, Entity* ent);
 
+	Entity* GetEntity(int cid, unsigned int oid);
 };

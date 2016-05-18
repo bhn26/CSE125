@@ -5,12 +5,8 @@
 #include "../../network/GameData.h"
 
 
-class Flag : public Collectable
+class Flag : public Entity
 {
-	int id;
-	btDiscreteDynamicsWorld* curWorld;
-	btRigidBody* flagRigidBody;
-	
 
 public:
 

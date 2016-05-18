@@ -53,13 +53,12 @@ public:
 
 	void Init();
 
-	// Spawns based on PosInfo in, will return PosInfo for the object spawned
-	void SpawnPlayer(PosInfo in);
-	void SpawnFlag(PosInfo in);
+	//TODO: Replace references with EntitySpawner  GetEntity() method
 	std::shared_ptr<Player> GetPlayer(int id) { return players.at(id); };
 
+	btDiscreteDynamicsWorld* GetPhysicsWorld();
+
 	// Updates Physics world by one tick
-	// Handles egg collisions with players
 	void UpdateWorld();
 
 	// Finds and Removes flag from world list of flags

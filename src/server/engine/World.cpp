@@ -140,18 +140,10 @@ void World::Init() {
 	}*/
 }
 
-void World::SpawnPlayer(PosInfo in)
+btDiscreteDynamicsWorld* World::GetPhysicsWorld()
 {
-	int teamid = 1;
-	Player* player = EntitySpawner::instance()->spawnPlayer(teamid, in, curWorld);
+	return curWorld;
 }
-
-
-void World::SpawnFlag(PosInfo in)
-{
-	Flag* flag = EntitySpawner::instance()->spawnFlag(in, curWorld);
-}
-
 
 void World::UpdateWorld()
 {
@@ -236,8 +228,10 @@ void World::UpdateWorld()
 			// Grab Player Object
 			Player * collidePlayer = (Player *)obA->getUserPointer();
 
+			// TODO, if Obj B is collectable, HandleCollectable();
+
 			// if Obj B is Flag
-			if (obB->getUserIndex() == FLAG)
+			if (obB->getUserIndex() == FLAG) //|| obB->getUserIndex() == WEAPON)
 			{
 				// Handle Flag Collection
 				Flag * collideFlag = (Flag *)obB->getUserPointer();
@@ -250,8 +244,6 @@ void World::UpdateWorld()
 				//TODO remove flag from Vector causes strange issues...
 				removeFlag(collideFlag);
 			}
-			//else if   TODO Handle Bullet Collision
-			//...
 
 			// Handles Jump Semaphore
 			else // if (++y % 50000 == 0) 
@@ -306,8 +298,6 @@ void World::UpdateWorld()
 				//TODO remove flag from Vector causes strange issues...
 				removeFlag(collideFlag);
 			}
-			//else if   TODO Handle Bullet Collision
-			//...
 
 			// Handles Jump Semaphore
 			else //if (++y % 50000 == 0) 
