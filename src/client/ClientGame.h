@@ -13,6 +13,7 @@
 
 #include "Player.h"
 #include <memory>
+#include <vector>
 
 class Window;
 
@@ -64,13 +65,19 @@ public:
     static ClientGame* instance() {return cg;}
 	static int GetClientId() { return cg->client_id; }
 
+	static std::vector<int> Team0() { return cg->team0; }
+	static std::vector<int> Team1() { return cg->team1; }
+
 private:
     ClientGame(void);
     ~ClientGame(void);
 
     double lastTime;
     int nbFrames;
+
     int client_id; // should know what client number we are so we can fill out packet headers
+	std::vector <int> team0;
+	std::vector <int> team1;
 
     static ClientGame* cg;
 

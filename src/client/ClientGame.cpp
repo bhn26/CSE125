@@ -83,6 +83,16 @@ void ClientGame::receiveJoinPacket(int offset) {
 	struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
 
 	printf("receiveJoinPacket for player %d on team %d\n", pi->id, pi->team_id);
+	int player = pi->id;
+	int team = pi->team_id;
+	
+	if (team == 0) {
+		team1.erase(std::remove(team1.begin(), team1.end(), player), team1.end());
+		team0.push_back(player);
+	} else {
+		team0.erase(std::remove(team0.begin(), team0.end(), player), team0.end());
+		team1.push_back(player);
+	}
 };
 
 void ClientGame::sendJoinPacket(int team) {

@@ -223,35 +223,41 @@ void ServerGame::receiveJoinPacket(int offset) {
 
 	int client = hdr->sender_id;
 
+	if (team_map.find(client) == team_map.end()) { // if new client send all client team data
+		for (std::map<int, int>::iterator it = team_map.begin(); it != team_map.end(); it++) {
+			sendJoinPacket(it->first);
+		}
+	}
+		
 	team_map[client] = pi->team_id;
-
 	sendJoinPacket(client);
 };
 
 void ServerGame::sendJoinPacket(int client) {
 	const unsigned int packet_size = sizeof(Packet);
-	char packet_data[packet_size];
 
-	Packet packet;
-	packet.hdr.packet_type = JOIN_TEAM;
+		// found
+		char packet_data[packet_size];
 
+		Packet packet;
+		packet.hdr.packet_type = JOIN_TEAM;
 
-	PosInfo p;
-	p.id = client;
-	p.team_id = team_map[client];
+		PosInfo p;
+		p.id = client;
+		p.team_id = team_map[client];
 
-	printf("sending join packet for client %d in team %d\n", client, p.team_id);
+		printf("sending join packet for client %d in team %d\n", client, p.team_id);
 
-	packet.dat.obj_id = POS_OBJ;
+		packet.dat.obj_id = POS_OBJ;
 
-	p.serialize(packet.dat.buf);
-	packet.serialize(packet_data);
+		p.serialize(packet.dat.buf);
+		packet.serialize(packet_data);
 
-	packet.hdr.sender_id = SERVER_ID;
+		packet.hdr.sender_id = SERVER_ID;
 
-	packet.serialize(packet_data);
+		packet.serialize(packet_data);
 
-	network->sendToAll(packet_data, packet_size);
+		network->sendToAll(packet_data, packet_size);
 };
 
 void ServerGame::receiveStartPacket(int offset) {
@@ -277,7 +283,6 @@ void ServerGame::sendStartPacket() { // will add more later based on generated w
 
 	Packet packet;
 	packet.hdr.packet_type = START_GAME;
-
 
     PosInfo p;
     p.id = client_id + 1;
