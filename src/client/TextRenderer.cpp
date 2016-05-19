@@ -13,7 +13,7 @@ GLuint TextRenderer::VAO, TextRenderer::VBO;
 void TextRenderer::Initialize() {
 	shader = Shader("src/Graphics/Shaders/text.vert", "src/Graphics/Shaders/text.frag");
 
-	glm::mat4 projection = glm::ortho(0.0f, static_cast<GLfloat>(Window::width), 0.0f, static_cast<GLfloat>(Window::height));
+	glm::mat4 projection = glm::ortho(0.0f, static_cast<GLfloat>(Window::width), static_cast<GLfloat>(Window::height), 0.0f);
 	shader.Use();
 	glUniformMatrix4fv(glGetUniformLocation(shader.GetProgram(), "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
@@ -92,6 +92,7 @@ void TextRenderer::Initialize() {
 
 void TextRenderer::RenderText(std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::vec3 color)
 {
+	glDisable(GL_CULL_FACE);
 	// Activate corresponding render state	
 	shader.Use();
 	glUniform3f(glGetUniformLocation(shader.GetProgram(), "textColor"), color.x, color.y, color.z);
@@ -105,21 +106,19 @@ void TextRenderer::RenderText(std::string text, GLfloat x, GLfloat y, GLfloat sc
 		Character ch = Characters[*c];
 
 		GLfloat xpos = x + ch.Bearing.x * scale;
-		
-		GLfloat ypos = y - (ch.Size.y - ch.Bearing.y) * scale;
-		ypos = Window::height - ypos;
+		GLfloat ypos = y + (Characters['H'].Bearing.y - ch.Bearing.y) * scale;
 
 		GLfloat w = ch.Size.x * scale;
 		GLfloat h = ch.Size.y * scale;
 		// Update VBO for each character
 		GLfloat vertices[6][4] = {
-			{ xpos,     ypos + h,   0.0, 0.0 },
-			{ xpos,     ypos,       0.0, 1.0 },
-			{ xpos + w, ypos,       1.0, 1.0 },
+			{ xpos,     ypos + h,   0.0, 1.0 },
+			{ xpos + w, ypos,       1.0, 0.0 },
+			{ xpos,     ypos,       0.0, 0.0 },
 
-			{ xpos,     ypos + h,   0.0, 0.0 },
-			{ xpos + w, ypos,       1.0, 1.0 },
-			{ xpos + w, ypos + h,   1.0, 0.0 }
+			{ xpos,     ypos + h,   0.0, 1.0 },
+			{ xpos + w, ypos + h,   1.0, 1.0 },
+			{ xpos + w, ypos,       1.0, 0.0 }
 		};
 		// Render glyph texture over quad
 		glBindTexture(GL_TEXTURE_2D, ch.TextureID);
@@ -130,8 +129,8 @@ void TextRenderer::RenderText(std::string text, GLfloat x, GLfloat y, GLfloat sc
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		// Render quad
 		glDrawArrays(GL_TRIANGLES, 0, 6);
-		// Now advance cursors for next glyph (note that advance is number of 1/64 pixels)
-		x += (ch.Advance >> 6) * scale; // Bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
+		// Now advance cursors for next glyph
+		x += (ch.Advance >> 6) * scale; // Bitshift by 6 to get value in pixels (1/64th times 2^6 = 64)
 	}
 	glBindVertexArray(0);
 	glBindTexture(GL_TEXTURE_2D, 0);
