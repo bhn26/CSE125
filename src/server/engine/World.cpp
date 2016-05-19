@@ -1,5 +1,6 @@
 #include "World.h"
 #include "ObjectId.h"
+#include "Bullet.h"
 #include "../ServerGame.h"
 
 World::World() {
@@ -7,13 +8,19 @@ World::World() {
 }
 
 World::~World() {
-
+	//TODO handle vector deletes...
+	delete curWorld;
 }
 
 void World::Init() {
 
 	// Init object id counter
 	oid = 0;
+	currentWorldTick = 0;
+
+	// Init Fire Rate Reseter
+	this->fireRateReseter = new FireRateReset((&this->usedWeapons));
+
 	int z = 1000; // this is a random number for the walls right now, we need to change this
 
 	// Create Physics world
@@ -138,6 +145,8 @@ PosInfo World::SpawnPlayer(PosInfo in)
 	//printf("Posinfo player at (%d,%d,%d)\n", player->GetPosition().x, player->GetPosition().y, player->GetPosition().z);
 	players.push_back(player);
 
+	btQuaternion quat = player->GetPlayerRotation();
+
 	// Send spawn info to the clients
 	PosInfo out;
 	out.cid = ClassId::PLAYER;
@@ -145,6 +154,10 @@ PosInfo World::SpawnPlayer(PosInfo in)
 	out.x = vec.getX();
 	out.y = vec.getY();
 	out.z = vec.getZ();
+	out.rotw = quat.getW();
+	out.rotx = quat.getX();
+	out.roty = quat.getY();
+	out.rotz = quat.getZ();
 	ServerGame::instance()->sendSpawnPacket(out);
 	return out;
 }
@@ -167,10 +180,31 @@ PosInfo World::SpawnFlag(PosInfo in)
 	return out;
 }
 
-void World::updateWorld()
+		/*case BULLET:
+		{
+			std::shared_ptr<Bullet> bullet = std::shared_ptr<Bullet>(new Bullet(oid2, playeridforBullet, teamid, damageforBullet, position, speed, curWorld));
+			btVector3 vec = bullet->GetBulletPosition();
+			printf("Created flag at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
+			bullets.push_back(bullet);
+
+			PosInfo pi;
+			pi.cid = ClassId::BULLET;
+			pi.oid = oid2++;
+			pi.x = vec.getX();
+			pi.y = vec.getY();
+			pi.z = vec.getZ();
+			ServerGame::instance()->sendSpawnPacket(pi);
+			break;
+		}*/
+
+void World::UpdateWorld()
 {
 	// Step simulation
 	curWorld->stepSimulation(1 / 60.f, 10);
+	currentWorldTick++;
+
+	// Process Weapon Reloads
+	this->fireRateReseter->ResetWeapons();
 
 	// Process all collisions
 	int numManifolds = curWorld->getDispatcher()->getNumManifolds();
@@ -180,15 +214,66 @@ void World::updateWorld()
 		const btCollisionObject* obA = contactManifold->getBody0();
 		const btCollisionObject* obB = contactManifold->getBody1();
 
-		//       Check if obA is Bullet
-		//       else if objB is Bullet
-		//          if obB is Player or obA is Player, else delete bullet
-		//Notes: else if ObA is Player
-		//			if ObB Flag
-		//          else if obB is Bullet
-		//          else if collision is from the bottom, reset jump semaphore
+		// Handle Bullet Collisions--------------------------
+		// If object A of collision is a Bullet
+		if (obA->getUserIndex() == BULLET)
+		{
+			// Grab Bullet Object
+			Bullet * collideBullet = (Bullet *)obA->getUserPointer();
+
+			// If it hit a player
+			if (obB->getUserIndex() == PLAYER)
+			{
+				Player * collidePlayer = (Player *)obB->getUserPointer();
+
+				//TODO send "you got hit"
+				if (collidePlayer->takeDamage(collideBullet->GetDamage()))
+				{
+					printf("Player is dead!");
+					//TODO Handle Player death:  send player death to client
+				}
+			}
+
+			// If it hit a bullet
+			else if (obB->getUserIndex() == BULLET)
+			{
+				Bullet * collideBullet2 = (Bullet *)obB->getUserPointer();
+				delete collideBullet2;
+			}
+
+			// deletes bulletA regardless
+			delete collideBullet;
+		}
+
+		// If object B of collision is a Bullet
+		else if (obB->getUserIndex() == BULLET)
+		{
+			// Grab Bullet Object
+			Bullet * collideBullet = (Bullet *)obB->getUserPointer();
+
+			// If it hit a player
+			if (obA->getUserIndex() == PLAYER)
+			{
+				Player * collidePlayer = (Player *)obA->getUserPointer();
+				if (collidePlayer->takeDamage(collideBullet->GetDamage()))
+				{
+					//TODO Handle Player death:  send player death to client
+				}
+			}
+
+			// If it hit a bullet
+			else if (obA->getUserIndex() == BULLET)
+			{
+				Bullet * collideBullet2 = (Bullet *)obA->getUserPointer();
+				delete collideBullet2;
+			}
+
+			// deletes bulletA regardless
+			delete collideBullet;
+		}
 
 
+		// Handle Player Collisions -------------------------------------------------
 		// Obj A is Player
 		if (obA->getUserIndex() == PLAYER)
 		{
@@ -207,7 +292,7 @@ void World::updateWorld()
 				//TODO send a packet for the player to acquire the item
 
 				//TODO remove flag from Vector causes strange issues...
-				//removeFlag((std::shared_ptr<Flag>)collideFlag);
+				removeFlag(collideFlag);
 			}
 			//else if   TODO Handle Bullet Collision
 			//...
@@ -263,7 +348,7 @@ void World::updateWorld()
 				//TODO send a packet for the player to acquire the item
 
 				//TODO remove flag from Vector causes strange issues...
-				//removeFlag((std::shared_ptr<Flag>)collideFlag);
+				removeFlag(collideFlag);
 			}
 			//else if   TODO Handle Bullet Collision
 			//...
@@ -334,20 +419,20 @@ void World::updateWorld()
 	// send updates every x or so ticks?
 	if (x % 5 == 0)
 	{
-		for (std::vector<std::shared_ptr<Player> >::iterator it = players.begin(); it != players.end(); ++it)
+		for (std::shared_ptr<Player>& player : players)
 		{
-			ServerGame::instance()->sendMovePacket(ClassId::PLAYER, (*it)->GetId());
+			ServerGame::instance()->sendMovePacket(ClassId::PLAYER, player->GetId());
 		}
 	}
 	
 }
 
-void World::removeFlag(std::shared_ptr<Flag> collectedFlag)
+void World::removeFlag(Flag* collectedFlag)
 {
 
-	for (std::vector<std::shared_ptr<Flag> >::iterator it = flags.begin(); it != flags.end(); ++it)
+	for (auto it = flags.begin(); it != flags.end(); ++it)
 	{
-		if (collectedFlag == (*it))
+		if (collectedFlag == it->get())
 		{
 			flags.erase(it);
 			printf("Flag has been removed from world list \n");

@@ -21,7 +21,7 @@ Player::Player(int id, int teamid, PosInfo pos, btDiscreteDynamicsWorld* physics
 	this->curWorld = physicsWorld;
 	this->playerRigidBody = pRigidBody;
 	this->jumpSem = 1;
-	this->HitPoints = 100;
+	this->hitPoints = 100;
 	this->flags = new std::vector<std::shared_ptr<Flag>>;
 	this->position = pos;
 
@@ -46,7 +46,6 @@ void Player::PrintPlayerVelocity()
 	playerRigidBody->getMotionState()->getWorldTransform(currentTrans);
 	btMatrix3x3 currentOrientation = currentTrans.getBasis();
 	printf("current velocity %f, %f, %f\n", float(playerRigidBody->getLinearVelocity()[0]), float(playerRigidBody->getLinearVelocity()[1]), float(playerRigidBody->getLinearVelocity()[2]));
-
 }
 
 void Player::Move(btVector3* changeVelocity) {
@@ -54,30 +53,15 @@ void Player::Move(btVector3* changeVelocity) {
 	btTransform currentTrans;
 	playerRigidBody->getMotionState()->getWorldTransform(currentTrans);
 	btMatrix3x3 currentOrientation = currentTrans.getBasis();
+	btQuaternion q = GetPlayerRotation();
+	//btVector3 newVelocity = btVector3(q.getW() * 3, 0, q.getY() * 3);
 	btVector3 newVelocity = currentOrientation * (*changeVelocity);
-
+	printf("Q OF PLAYER MOVING IS :  %f, %f, %f, %f\n", q.getW(), q.getX(), q.getY(), q.getZ());
 	// set new velocity
 	playerRigidBody->setLinearVelocity(newVelocity);
 	//printf("%d: world pos object = %f,%f,%f\n", id, float(currentTrans.getOrigin().getX()), float(currentTrans.getOrigin().getY()), float(currentTrans.getOrigin().getZ()));
 	printf("current velocity %f, %f, %f\n", float(playerRigidBody->getLinearVelocity()[0]), float( playerRigidBody->getLinearVelocity()[1]), float(playerRigidBody->getLinearVelocity()[2]));
 	//playerRigidBody->activate();
-
-	/*position.direction = direction;
-	 
-	switch (direction) {
-	case MOVE_FORWARD: 
-		position.y ++;
-		break;
-	case MOVE_BACKWARD:
-		position.y--;
-		break;
-	case MOVE_LEFT:
-		position.x++;
-		break;
-	case MOVE_RIGHT:
-		position.x--;
-		break;
-	}*/
 }
 
 void Player::Rotate(float v_rotation, float h_rotation) {
@@ -90,12 +74,22 @@ btVector3 Player::GetPlayerPosition()
 	return playerRigidBody->getCenterOfMassPosition();
 }
 
-btMatrix3x3 Player::GetPlayerRotation()
+btQuaternion Player::GetPlayerRotation()
 {
 	btTransform currentTrans;
 	playerRigidBody->getMotionState()->getWorldTransform(currentTrans);
-	btMatrix3x3 currentOrientation = currentTrans.getBasis();
+	btQuaternion currentOrientation = currentTrans.getRotation();
 	return currentOrientation;
+}
+
+void Player::SetPlayerRotation(float x, float y, float z, float w)
+{
+	btQuaternion* playerRotation = new btQuaternion(w, x, y, z);
+	btTransform currentTrans;
+	playerRigidBody->getMotionState()->getWorldTransform(currentTrans);
+	currentTrans.setRotation((*playerRotation));
+	playerRigidBody->getMotionState()->setWorldTransform(currentTrans);
+	playerRigidBody->setCenterOfMassTransform(currentTrans);
 }
 
 void Player::JumpPlayer()
@@ -113,7 +107,7 @@ void Player::JumpPlayer()
 
 void Player::ResetJump()
 {
-	jumpSem = 1;
+	(this->jumpSem) = 1;
 }
 
 void Player::AcquireFlag(std::shared_ptr<Flag> flag)
@@ -138,3 +132,22 @@ int Player::GetTeamId()
 {
 	return teamId;
 }
+
+ void Player::UseWeapon()
+{
+	playerWeapon->UseWeapon();
+}
+
+ // If player is dead, returns 1,  else returns 0
+ int Player::takeDamage(int damage)
+ {
+	 this->hitPoints = this->hitPoints - damage;
+	 if (this->hitPoints <= 0)
+	 {
+		 return 1;
+	 }
+	 else
+	 {
+		 return 0;
+	 }
+ }

@@ -114,7 +114,8 @@ glm::mat4 Scene::GetPerspectiveMatrix()
 void Scene::AddEntity(int cid, int oid, std::unique_ptr<Entity> ent)
 {
 	std::pair<int, int> p = std::pair<int, int>(cid, oid);
-	entities.insert(std::make_pair(p, std::move(ent)));
+	//entities.insert(std::make_pair(p, std::move(ent)));
+	entities[p] = std::move(ent);
 }
 
 void Scene::AddEntity(int cid, int oid, float x, float y, float z, float rotw, float rotx, float roty, float rotz)
@@ -124,7 +125,7 @@ void Scene::AddEntity(int cid, int oid, float x, float y, float z, float rotw, f
 
 	switch (cid) {
 	case ClassId::PLAYER:
-		player = std::unique_ptr<Player>(new Player);
+		player = std::unique_ptr<Player>(new Player(x,y,z,rotw,rotx,roty,rotz));
 		player->SetModelFile("assets/chickens/objects/pinocchio_chicken.obj");
 		player->Spawn(x, y, z);
 		player->GetShader() = modelShader;
