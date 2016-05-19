@@ -64,7 +64,9 @@ public:
 	// Pass in current rotation and position
 	void UseWeapon();
 
-	int GetObjectId();
+	void EquipWeapon(Weapon* newWeapon);
+
+	bool HasWeapon();
 
 	int GetTeamId();
 

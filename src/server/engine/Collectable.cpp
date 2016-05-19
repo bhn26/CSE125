@@ -1,11 +1,14 @@
 #include "Collectable.h"
 #include "EntitySpawner.h"
 #include "Player.h"
+#include <time.h>
 
+//List of weapons
+#include "SeedGun.h"
 
 Collectable::Collectable(int objectid, PosInfo pos, btDiscreteDynamicsWorld* curworld) : Entity(objectid, curworld)
 {
-
+	srand(time(NULL));
 	this->curWorld = curworld;
 	btCollisionShape* collectableShape = new btBoxShape(btVector3(1, 1, 1));
 
@@ -27,10 +30,29 @@ Collectable::Collectable(int objectid, PosInfo pos, btDiscreteDynamicsWorld* cur
 	pRigidBody->setUserIndex(COLLECTABLE);
 }
 
+//NOTE***  Version if Weapon is only thing collectable
 void Collectable::HandleCollect(Player* collidedPlayer)
 {
-	// Randomize what type of weapon or powerup that player would get...
-	// limit 2 weapons
+	//Remove collectable rigidBody
+	this->curWorld->removeCollisionObject(entityRigidBody);
+	delete entityRigidBody->getMotionState();
+	delete entityRigidBody->getCollisionShape();
+	delete entityRigidBody;
+
+	//Remove collectable object from entity Spawner
+
+	if (collidedPlayer->HasWeapon())
+	{
+		return;
+	}
+
+	// Randomize what type of weapon or powerup that player would get
+	int ranPower = rand() % 2;
+//	switch (ranPower)
+//	{
+//	}
+		//Handle weapon
+		Weapon* seedGun = new SeedGun(curWorld);
 }
 
 Collectable::~Collectable()

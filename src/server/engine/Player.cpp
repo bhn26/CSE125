@@ -26,6 +26,7 @@ Player::Player(int objectid, int teamid, PosInfo pos, btDiscreteDynamicsWorld* p
 	this->hitPoints = 100;
 	this->flags = new std::vector<std::shared_ptr<Flag>>;
 	this->position = pos;
+	this->playerWeapon = nullptr;
 
 	// Set RigidBody to point to Player
 	pRigidBody->setUserPointer(this);
@@ -130,16 +131,29 @@ int Player::GetTeamId()
 	playerWeapon->UseWeapon(&(entityRigidBody->getCenterOfMassPosition()), &currentOrientation, this->id, this->teamId);
 }
 
+void Player::EquipWeapon(Weapon* newWeapon)
+{
+	this->playerWeapon = newWeapon;
+}
+
+bool Player::HasWeapon()
+{
+	if(this->playerWeapon)
+		return true;
+	else
+		return false;
+}
+
  // If player is dead, returns 1,  else returns 0
- int Player::takeDamage(int damage)
- {
-	 this->hitPoints = this->hitPoints - damage;
-	 if (this->hitPoints <= 0)
-	 {
-		 return 1;
-	 }
-	 else
-	 {
-		 return 0;
-	 }
- }
+int Player::takeDamage(int damage)
+{
+	this->hitPoints = this->hitPoints - damage;
+	if (this->hitPoints <= 0)
+	{
+		return 1;
+	}
+	else
+	{
+		return 0;
+	}
+}
