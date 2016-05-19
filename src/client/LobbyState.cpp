@@ -107,6 +107,11 @@ void LobbyState::Draw()
 		y = y + panel_height + 10;
 	}
 
+	if (std::find(team0.begin(), team0.end(), ClientGame::GetClientId()) == team0.end()) {
+		// add join button
+		sprite_renderer->DrawSprite(*start_button, glm::vec2(x, y), glm::vec2(panel_width, panel_height), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+	}
+
 	///////////// TEAM 1 //////////////////////////////////////////////
 	std::vector<int> team1 = ClientGame::Team1();
 	x = (Window::width / 2) + 10;
@@ -115,6 +120,11 @@ void LobbyState::Draw()
 	for (int i = 0; i < team1.size(); i++) {
 		sprite_renderer->DrawSprite(*panel, glm::vec2(x, y), glm::vec2(panel_width, panel_height), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 		y = y + panel_height + 10;
+	}
+
+	if (std::find(team1.begin(), team1.end(), ClientGame::GetClientId()) == team1.end()) {
+		// add join button
+		sprite_renderer->DrawSprite(*start_button, glm::vec2(x, y), glm::vec2(panel_width, panel_height), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 	}
 }
 

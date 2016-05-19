@@ -87,10 +87,14 @@ void ClientGame::receiveJoinPacket(int offset) {
 	int team = pi->team_id;
 	
 	if (team == 0) {
+		team0.erase(std::remove(team0.begin(), team0.end(), player), team0.end()); // erase from both lists
 		team1.erase(std::remove(team1.begin(), team1.end(), player), team1.end());
+
 		team0.push_back(player);
 	} else {
 		team0.erase(std::remove(team0.begin(), team0.end(), player), team0.end());
+		team1.erase(std::remove(team1.begin(), team1.end(), player), team1.end());
+
 		team1.push_back(player);
 	}
 };
