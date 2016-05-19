@@ -337,19 +337,8 @@ void ServerGame::receiveRotationPacket(int offset) {
 
 	shared_ptr<Player> player = engine->GetWorld()->GetPlayer(hdr->sender_id);
 
-	if (first)
-	{
-		btQuaternion q = player->GetPlayerRotation();
-		printf("Q INITIALLY IS :  %f, %f, %f, %f\n", q.getW(), q.getX(), q.getY(), q.getZ());
-	}
-
+	// We need to multiply by -1 and swap w and y, for some reason
 	player->SetPlayerRotation(-1 * pi->roty, pi->rotx, -1 * pi->rotw, pi->rotz);
-	if (first)
-	{
-		btQuaternion q = player->GetPlayerRotation();
-		printf("Q AFTER SET IS :  %f, %f, %f, %f\n", q.getW(), q.getX(), q.getY(), q.getZ());
-		//first = false;
-	}
 
 	printf("received a rotation packet with: %f, %f, %f, %f\n", pi->rotw, pi->rotx, pi->roty, pi->rotz);
 
