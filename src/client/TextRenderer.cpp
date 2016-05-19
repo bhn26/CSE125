@@ -105,7 +105,9 @@ void TextRenderer::RenderText(std::string text, GLfloat x, GLfloat y, GLfloat sc
 		Character ch = Characters[*c];
 
 		GLfloat xpos = x + ch.Bearing.x * scale;
+		
 		GLfloat ypos = y - (ch.Size.y - ch.Bearing.y) * scale;
+		ypos = Window::height - ypos;
 
 		GLfloat w = ch.Size.x * scale;
 		GLfloat h = ch.Size.y * scale;

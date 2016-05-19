@@ -114,7 +114,8 @@ void CMenuState::Draw()
 
 	sprite_renderer->DrawSprite(*join, glm::vec2(x, y), glm::vec2(btn_width, btn_height), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 
-	//TextRenderer::RenderText("Join", x, y, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+	//y = 0;
+	TextRenderer::RenderText("Join", x, y, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 }
 
 void CMenuState::EnterState()
