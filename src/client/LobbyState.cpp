@@ -1,10 +1,13 @@
 #include "LobbyState.h"
+#include "PlayState.h"
 #include "StateManager.h"
 #include "TextRenderer.h"
 #include "Window.h"
 
 #include "../Graphics/Shader.h"
 #include "ClientGame.h"
+
+#include <string.h>
 
 
 LobbyState::LobbyState(CStateManager* pManager)
@@ -45,7 +48,7 @@ void LobbyState::OnClick(int button, double x, double y) {
 	case 0: printf("None clicked\n"); break;
 	case 1: printf("Logo clicked\n"); break;
 	case 2: printf("Start Button clicked\n"); 
-		// start game
+		m_pStateManager->ChangeState(CPlayState::GetInstance(m_pStateManager)); // start game
 		break;
 	case 3: printf("Join T0 clicked\n"); 
 		ClientGame::instance()->sendJoinPacket(0);
@@ -132,6 +135,7 @@ void LobbyState::Draw()
 	y = Window::height - btn_height - 50;
 
 	sprite_renderer->DrawSprite(*start_button, glm::vec2(x, y), glm::vec2(btn_width, btn_height), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+	TextRenderer::RenderText("Start!", x, y, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 
 	///////////// TEAM 0 //////////////////////////////////////////////
 	std::vector<int> team0 = ClientGame::Team0();
@@ -144,12 +148,18 @@ void LobbyState::Draw()
 
 	for (int i = 0; i < team0.size(); i++) {
 		sprite_renderer->DrawSprite(*panel, glm::vec2(x, y), glm::vec2(panel_width, panel_height), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+		char name[20];
+		strcpy_s(name, "Player ");
+		strcat_s(name, std::to_string(team0.at(i)).c_str());
+		TextRenderer::RenderText(name, x, y, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+
 		y = y + panel_height + 10;
 	}
 
 	if (std::find(team0.begin(), team0.end(), ClientGame::GetClientId()) == team0.end()) {
 		// add join button
 		sprite_renderer->DrawSprite(*start_button, glm::vec2(x, y), glm::vec2(panel_width, panel_height), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+		TextRenderer::RenderText("+", x, y, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 	}
 
 	///////////// TEAM 1 //////////////////////////////////////////////
@@ -159,12 +169,18 @@ void LobbyState::Draw()
 
 	for (int i = 0; i < team1.size(); i++) {
 		sprite_renderer->DrawSprite(*panel, glm::vec2(x, y), glm::vec2(panel_width, panel_height), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+		char name[20];
+		strcpy_s(name, "Player ");
+		strcat_s(name, std::to_string(team1.at(i)).c_str());
+		TextRenderer::RenderText(name, x, y, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+
 		y = y + panel_height + 10;
 	}
 
 	if (std::find(team1.begin(), team1.end(), ClientGame::GetClientId()) == team1.end()) {
 		// add join button
 		sprite_renderer->DrawSprite(*start_button, glm::vec2(x, y), glm::vec2(panel_width, panel_height), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+		TextRenderer::RenderText("+", x, y, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 	}
 }
 
