@@ -44,7 +44,15 @@ void LobbyState::OnClick(int button, double x, double y) {
 	switch (res[0]) {
 	case 0: printf("None clicked\n"); break;
 	case 1: printf("Logo clicked\n"); break;
-	case 2: printf("Start Button clicked\n"); break;
+	case 2: printf("Start Button clicked\n"); 
+		// start game
+		break;
+	case 3: printf("Join T0 clicked\n"); 
+		ClientGame::instance()->sendJoinPacket(0);
+		break;
+	case 4: printf("Join T1 clicked\n");
+		ClientGame::instance()->sendJoinPacket(1);
+		break;
 	default: printf("%d clicked%s\n", res[0]);
 	}
 }
@@ -69,6 +77,38 @@ void LobbyState::RenderSelection() {
 	y = Window::height - btn_height - 50;
 
 	sprite_renderer->RenderSelection(2, *start_button, glm::vec2(x, y), glm::vec2(btn_width, btn_height), 0.0f);
+
+	///////////// TEAM 0 //////////////////////////////////////////////
+	std::vector<int> team0 = ClientGame::Team0();
+
+	float panel_width = (Window::width / 2) - 20;
+	float panel_height = 50;
+
+	x = 10;
+	y = 50 + logo->Height() + 50;
+
+	for (int i = 0; i < team0.size(); i++) {
+		y = y + panel_height + 10;
+	}
+
+	if (std::find(team0.begin(), team0.end(), ClientGame::GetClientId()) == team0.end()) {
+		// add join button
+		sprite_renderer->RenderSelection(3, *start_button, glm::vec2(x, y), glm::vec2(panel_width, panel_height), 0.0f);
+	}
+
+	///////////// TEAM 1 //////////////////////////////////////////////
+	std::vector<int> team1 = ClientGame::Team1();
+	x = (Window::width / 2) + 10;
+	y = 50 + logo->Height() + 50;
+
+	for (int i = 0; i < team1.size(); i++) {
+		y = y + panel_height + 10;
+	}
+
+	if (std::find(team1.begin(), team1.end(), ClientGame::GetClientId()) == team1.end()) {
+		// add join button
+		sprite_renderer->RenderSelection(4, *start_button, glm::vec2(x, y), glm::vec2(panel_width, panel_height), 0.0f);
+	}
 
 	glClearColor(0.28f, 0.65f, 0.89f, 1.0f); // reset color
 }
