@@ -4,7 +4,6 @@
 #include "Objects/Cube.h"
 #include "Objects/Egg.h"
 #include "Objects/Chicken.h"
-#include "Objects/Ground.h"
 #include "Camera.h"
 #include "PointLight.h"
 #include "Objects/Entity.h"
@@ -25,6 +24,8 @@ const int Scene::HEIGHT = 100;
 void Scene::Setup()
 {
     entities.clear();
+
+	instanceShader = std::make_shared<Shader>("src/Graphics/Shaders/instancing.vert", "src/Graphics/Shaders/instancing.frag");
     basicShader = std::make_shared<Shader>("src/Graphics/Shaders/basic_shader.vert", "src/Graphics/Shaders/basic_shader.frag");
     diffuseShader = std::make_shared<Shader>("src/Graphics/Shaders/basic_shader.vert", "src/Graphics/Shaders/diffuse.frag");
     modelShader = std::make_shared<Shader>("src/Graphics/Shaders/model_loading.vert", "src/Graphics/Shaders/model_loading.frag");
@@ -33,21 +34,69 @@ void Scene::Setup()
     camera = std::unique_ptr<Camera>(new Camera(glm::vec3(0.0f, 9.0f, -15.0f), glm::vec3(0.0f, 1.0f, 0.0f), 90.0f, -25.0f));
     pLight = std::unique_ptr<PointLight>(new PointLight(glm::vec3(0.0f, 20.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)));
 
+	// Barn
+	std::unique_ptr<StaticObject> barn = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/barn.obj"));
+	barn->Scale(8.0f);
+	barn->Translate(glm::vec3(0.0f, 0.0f, 10.0f));
+
+	// Tractor
+	std::unique_ptr<StaticObject> tractor = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/tractor.obj"));
+	tractor->Scale(7.0f);
+	tractor->Rotate(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+	tractor->Translate(glm::vec3(17.0f, 0.0f, -13.0f));
+
+	// Silo
+	std::unique_ptr<StaticObject> silo = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/silo.obj"));
+	silo->Scale(3.0f);
+	silo->Translate(glm::vec3(-13.0f, 0.0f, -4.0f));
+
+	// Pumpkin
+	std::unique_ptr<StaticObject> pumpkin = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/pumpkin.obj"));
+	pumpkin->Translate(glm::vec3(0.0f, 0.0f, -1.0f));
+
+	// Bench
+	std::unique_ptr<StaticObject> bench = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/wood_bench.obj"));
+	bench->Scale(0.01f);
+	bench->Translate(glm::vec3(0.0f, 0.0f, -60.0f));
+
+	// Ground
+	std::unique_ptr<StaticObject> ground = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/ground.obj"));
+	ground->Translate(glm::vec3(0.0f, 6.8f, 0.0f));
+	//bench->Translate(glm::vec3(0.0f, 0.0f, -60.0f));
+
+	grass = std::unique_ptr<Grass>(new Grass);
+    //std::unique_ptr<Ground> ground = std::unique_ptr<Ground>(new Ground);
+    //std::unique_ptr<Cube> cube = std::unique_ptr<Cube>(new Cube);
+    cubeMap = std::unique_ptr<CubeMap>(new CubeMap);
+    cubeMap->LoadCubeMap();
+
+   // cube->GetShader() = basicShader;
+	grass->GetShader() = instanceShader;
+   // ground->GetShader() = diffuseShader;
+    cubeMap->GetShader() = cubeMapShader;
+
+	//static_objects.push_back(std::move(grass));
+	static_objects.push_back(std::move(barn));
+	static_objects.push_back(std::move(tractor));
+	static_objects.push_back(std::move(silo));
+	static_objects.push_back(std::move(ground));
+  //  entities.push_back(std::move(ground));
+	static_objects.push_back(std::move(bench));
+   // entities.push_back(std::move(cube));
+	//static_objects.push_back(std::move(cubeMap));
+
     /*std::unique_ptr<Player> player = std::unique_ptr<Player>(new Player);
 	player->SetModelFile("assets/chickens/objects/pinocchio_chicken.obj");
     Scene::player = player.get();*/
-    ground = std::unique_ptr<Ground>(new Ground);
+    //ground = std::unique_ptr<Ground>(new Ground);
     //std::unique_ptr<Cube> cube = std::unique_ptr<Cube>(new Cube);
 	/*std::unique_ptr<Egg> egg = std::unique_ptr<Egg>(new Egg(glm::vec3(10.0f, 3.0f, 10.0f)));
 	egg->SetColor(glm::vec3(0.27f, 0.16f, 0.0f));*/
-    cubeMap = std::unique_ptr<CubeMap>(new CubeMap);
-    cubeMap->LoadCubeMap();
-	
+
     //cube->GetShader() = basicShader;
 	//egg->GetShader() = diffuseShader;
-    ground->GetShader() = diffuseShader;
+    //ground->GetShader() = diffuseShader;
     //player->GetShader() = modelShader;
-    cubeMap->GetShader() = cubeMapShader;
 
     /*entities.push_back(std::move(ground));
     entities.push_back(std::move(player));
@@ -75,7 +124,7 @@ void Scene::AddPlayer(int client_id) {
 void Scene::Update()
 {
 	cubeMap->Update();
-	ground->Update();
+	//ground->Update();
 	for (auto& const entity : entities)
 		entity.second->Update();
 }
@@ -83,7 +132,12 @@ void Scene::Update()
 void Scene::Draw()
 {
 	cubeMap->Draw();
-	ground->Draw();
+	grass->Draw();
+
+	for (auto& const obj : static_objects)
+		obj->Draw();
+
+	//ground->Draw();
 	for (auto& const entity : entities)
         entity.second->Draw();
 

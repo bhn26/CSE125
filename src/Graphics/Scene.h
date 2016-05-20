@@ -9,6 +9,8 @@
 #include "Objects/Entity.h"
 #include "Objects/CubeMap.h"
 #include "Objects/Ground.h"
+#include "Objects/StaticObject.h"
+#include "Objects/Grass.h"
 
 class Camera;
 class Player;
@@ -22,11 +24,13 @@ class Scene
 //<<<<<<< HEAD
 	std::unique_ptr<CubeMap> cubeMap;
 	std::unique_ptr<Ground> ground;
+	std::unique_ptr<Grass> grass;
 
 	std::shared_ptr<Shader> basicShader;
 	std::shared_ptr<Shader> diffuseShader;
 	std::shared_ptr<Shader> modelShader;
 	std::shared_ptr<Shader> cubeMapShader;
+	std::shared_ptr<Shader> instanceShader;
 
     Player* player;
 /*=======
@@ -38,6 +42,7 @@ class Scene
 
 	std::map<std::pair<int, int>, std::unique_ptr<Entity> > entities;
     std::vector<std::shared_ptr<Player>> players;
+	std::vector<std::unique_ptr<StaticObject> > static_objects;
 
     Scene();
 

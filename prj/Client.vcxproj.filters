@@ -49,6 +49,10 @@
     <ClCompile Include="..\src\client\Window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Graphics\Objects\StaticObject.cpp">
+      <Filter>Source Files\Graphics\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Graphics\Objects\Grass.cpp">
     <ClCompile Include="..\src\Graphics\Objects\Egg.cpp">
       <Filter>Source Files\Graphics\Objects</Filter>
     </ClCompile>
@@ -117,6 +121,7 @@
     <ClInclude Include="..\src\client\Window.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\Graphics\Objects\StaticObject.h">
     <ClInclude Include="..\src\Graphics\Objects\Egg.h">
       <Filter>Source Files\Graphics\Objects</Filter>
     </ClInclude>
@@ -146,6 +151,10 @@
     <None Include="..\prj\packages.config">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="..\src\Graphics\Shaders\instancing.frag">
+      <Filter>Source Files\Graphics\Shaders</Filter>
+    </None>
+    <None Include="..\src\Graphics\Shaders\instancing.vert">
     <None Include="..\src\Graphics\Shaders\diffuse.vert">
       <Filter>Source Files\Graphics\Shaders</Filter>
     </None>
@@ -166,5 +175,10 @@
     <Filter Include="Source Files\Network">
       <UniqueIdentifier>{ef9abc4c-0746-4562-bfab-d02cd140fa26}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\src\Graphics\Objects\Grass.h">
+      <Filter>Source Files\Graphics\Objects</Filter>
+    </Text>
   </ItemGroup>
 </Project>

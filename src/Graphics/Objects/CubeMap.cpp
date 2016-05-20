@@ -17,7 +17,7 @@
 // Other Libs
 #include <SOIL.h>
 
-CubeMap::CubeMap() : Entity(glm::scale(glm::mat4(1.0f), glm::vec3(50.0f)))
+CubeMap::CubeMap() : Entity(glm::scale(glm::mat4(1.0f), glm::vec3(200.0f)))
 {
     GLfloat skyboxVertices[] = {
         // Positions
