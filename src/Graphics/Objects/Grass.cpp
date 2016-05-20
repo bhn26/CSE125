@@ -12,7 +12,7 @@
 
 Grass::Grass() : Entity()
 {
-	grass = new Model("assets/map/objects/tractor.obj");
+	grass = new Model("assets/map/objects/plant.obj");
 
 	// Generate large list of semi-random transformation matrices
 	amount = 10000;
@@ -20,31 +20,22 @@ Grass::Grass() : Entity()
 	srand(glfwGetTime()); // initialize random seed
 	GLfloat radius = 150.0f;
 	GLfloat offset = 25.0f;
-	for (GLuint i = 0; i < amount; i++)
+	int index = 0;
+	for (GLfloat i = -50.0f; i < 50.0f; i++)
 	{
-		glm::mat4 model;
+		for (GLfloat j = -50.0f; j < 50.0f; j++) {
+			glm::mat4 model;
+			model = glm::translate(model, glm::vec3(0.0f, 0.0f, i));
+			model = glm::translate(model, glm::vec3(j, 0.0f, 0.0f));
+			GLfloat scale = ((rand() % 20) / 100.0f + 0.05) * 5.0f;
+			model = glm::scale(model, glm::vec3(scale));
 
-		// 1. Translation: Randomly displace along circle with radius 'radius' in range [-offset, offset]
-       /* GLfloat angle = (GLfloat)i / (GLfloat)amount * 360.0f;
-        GLfloat displacement = (rand() % (GLint)(2 * offset * 100)) / 100.0f - offset;
-        GLfloat x = sin(angle) * radius + displacement;
-        displacement = (rand() % (GLint)(2 * offset * 100)) / 100.0f - offset;
-        GLfloat y = -2.5f + displacement * 0.4f; // Keep height of asteroid field smaller compared to width of x and z
-        displacement = (rand() % (GLint)(2 * offset * 100)) / 100.0f - offset;
-        GLfloat z = cos(angle) * radius + displacement;*/
-        model = glm::translate(model, glm::vec3(i+1.0f, i+1.0f, i+1.0f));
-        
-        // 2. Scale: Scale between 0.05 and 0.25f
-        //GLfloat scale = (rand() % 20) / 100.0f + 0.05;
-        model = glm::scale(model, glm::vec3(i%10));		
-        
-        // 3. Rotation: add random rotation around a (semi)randomly picked rotation axis vector
-      //  GLfloat rotAngle = (rand() % 360);
-       // model = glm::rotate(model, rotAngle, glm::vec3(0.4f, 0.6f, 0.8f));
+			GLfloat rotAngle = (rand() % 360);
+			model = glm::rotate(model, rotAngle, glm::vec3(0.0f, 0.8f, 0.0f));
 
-        // 4. Now add to list of matrices
-		//model = glm::mat4(1.0f);
-        modelMatrices[i] = model;
+			modelMatrices[index] = model;
+			index++;
+		}
 	}
 
 	for (GLuint i = 0; i < grass->Meshes().size(); i++)
