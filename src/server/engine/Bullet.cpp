@@ -36,6 +36,7 @@ Bullet::~Bullet()
 	delete bulletRigidBody->getMotionState();
 	delete bulletRigidBody->getCollisionShape();
 	delete bulletRigidBody;
+	EntitySpawner::instance()->RemoveEntity(ClassId::BULLET,id);
 }
 
 btVector3 Bullet::GetBulletPosition()

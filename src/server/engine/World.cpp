@@ -229,20 +229,22 @@ void World::UpdateWorld()
 			Player * collidePlayer = (Player *)obA->getUserPointer();
 
 			// TODO, if Obj B is collectable, HandleCollectable();
+			if (obB->getUserIndex() == COLLECTABLE)
+			{
+				// Handle Collectable Collection
+				Collectable* collectObj = (Collectable*)obB->getUserPointer();
+				collectObj->HandleCollect(collidePlayer);
+				ServerGame::instance()->sendRemovePacket(ClassId::COLLECTABLE, collectObj->GetObjectId());
+			}
 
 			// if Obj B is Flag
-			if (obB->getUserIndex() == FLAG) //|| obB->getUserIndex() == WEAPON)
+			else if (obB->getUserIndex() == FLAG)
 			{
 				// Handle Flag Collection
 				Flag * collideFlag = (Flag *)obB->getUserPointer();
-
-				collidePlayer->AcquireFlag((std::shared_ptr<Flag>)collideFlag);
-				curWorld->removeRigidBody(collideFlag->getRigidBody());
+				collideFlag->HandleCollectable(collidePlayer);
 				ServerGame::instance()->sendRemovePacket(ClassId::FLAG, collideFlag->GetObjectId());
-				//TODO send a packet for the player to acquire the item
-
-				//TODO remove flag from Vector causes strange issues...
-				removeFlag(collideFlag);
+				//TODO send a packet for the player to acquire the item for GUI
 			}
 
 			// Handles Jump Semaphore
@@ -284,19 +286,23 @@ void World::UpdateWorld()
 			// Grab Player Object
 			Player * collidePlayer = (Player *)obB->getUserPointer();
 
+			// If Obj A is collectable, HandleCollectable();
+			if (obA->getUserIndex() == COLLECTABLE)
+			{
+				// Handle Collectable Collection
+				Collectable* collectObj = (Collectable*)obA->getUserPointer();
+				collectObj->HandleCollect(collidePlayer);
+				ServerGame::instance()->sendRemovePacket(ClassId::COLLECTABLE, collectObj->GetObjectId());
+			}
+
 			// if Obj A is Flag
-			if ((obA->getUserIndex()) == FLAG)
+			else if (obA->getUserIndex() == FLAG)
 			{
 				// Handle Flag Collection
 				Flag * collideFlag = (Flag *)obA->getUserPointer();
-
-				collidePlayer->AcquireFlag((std::shared_ptr<Flag>)collideFlag);
-				curWorld->removeRigidBody(collideFlag->getRigidBody());
+				collideFlag->HandleCollectable(collidePlayer);
 				ServerGame::instance()->sendRemovePacket(ClassId::FLAG, collideFlag->GetObjectId());
-				//TODO send a packet for the player to acquire the item
-
-				//TODO remove flag from Vector causes strange issues...
-				removeFlag(collideFlag);
+				//TODO send a packet for the player to acquire the item for GUI
 			}
 
 			// Handles Jump Semaphore

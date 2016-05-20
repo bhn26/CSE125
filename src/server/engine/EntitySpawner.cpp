@@ -124,3 +124,16 @@ Entity* EntitySpawner::GetEntity(int cid, unsigned int oid)
 	std::pair<int, unsigned int> key = std::pair<int, unsigned int>(cid, oid);
 	return entities[key];
 }
+
+void EntitySpawner::RemoveEntity(int cid, unsigned int oid)
+{
+	std::map<std::pair<int, unsigned int>, Entity*>::iterator it;
+	std::pair<int, unsigned int> key = std::pair<int, unsigned int>(cid, oid);
+	it = this->entities.find(key);
+	entities.erase(it);
+}
+
+std::map<std::pair<int, unsigned int>, Entity* > *EntitySpawner::GetMap()
+{
+	return (&entities);
+}

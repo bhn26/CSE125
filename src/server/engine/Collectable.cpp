@@ -39,20 +39,24 @@ void Collectable::HandleCollect(Player* collidedPlayer)
 	delete entityRigidBody->getCollisionShape();
 	delete entityRigidBody;
 
-	//Remove collectable object from entity Spawner
+	//Remove collectable object from EntitySpawner Map
+	EntitySpawner::instance()->RemoveEntity(ClassId::COLLECTABLE,id);
 
+	// If player already has usable
 	if (collidedPlayer->HasWeapon())
 	{
 		return;
 	}
 
+	// Otherwise, give random useable
 	// Randomize what type of weapon or powerup that player would get
 	int ranPower = rand() % 2;
 //	switch (ranPower)
 //	{
 //	}
-		//Handle weapon
-		Weapon* seedGun = new SeedGun(curWorld);
+
+	Weapon* seedGun = new SeedGun(curWorld);
+	collidedPlayer->EquipWeapon(seedGun);
 }
 
 Collectable::~Collectable()

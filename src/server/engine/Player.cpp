@@ -106,7 +106,7 @@ void Player::ResetJump()
 
 void Player::AcquireFlag(std::shared_ptr<Flag> flag)
 {
-	// need to remove the flag from the map
+	// player collects flag, remove from entity list
 	flags->push_back(flag);
 	printf("FLAG ACQUIRED\n");
 }
@@ -124,11 +124,17 @@ int Player::GetTeamId()
 
  void Player::UseWeapon()
 {
+	// If player weapon doesn't exist, exit
+	if(!playerWeapon)
+	{
+		return;
+	}
 	// passes player position when using weapon
 	btTransform currentTrans;
 	entityRigidBody->getMotionState()->getWorldTransform(currentTrans);
 	btMatrix3x3 currentOrientation = currentTrans.getBasis();
 	playerWeapon->UseWeapon(&(entityRigidBody->getCenterOfMassPosition()), &currentOrientation, this->id, this->teamId);
+	printf("player with objId: %d used weapon\n", id);
 }
 
 void Player::EquipWeapon(Weapon* newWeapon)
@@ -138,10 +144,7 @@ void Player::EquipWeapon(Weapon* newWeapon)
 
 bool Player::HasWeapon()
 {
-	if(this->playerWeapon)
-		return true;
-	else
-		return false;
+	return (this->playerWeapon != nullptr);
 }
 
  // If player is dead, returns 1,  else returns 0

@@ -38,4 +38,8 @@ public:
 	void AddEntity(int cid, unsigned int oid, Entity* ent);
 
 	Entity* GetEntity(int cid, unsigned int oid);
+
+	void RemoveEntity(int cid, unsigned int oid);
+
+	std::map<std::pair<int, unsigned int>, Entity* > * GetMap();
 };

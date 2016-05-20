@@ -29,10 +29,13 @@ Flag::Flag(int id, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld): Entity(i
 
 Flag::~Flag()
 {
-	this->curWorld->removeCollisionObject(entityRigidBody);
-	delete entityRigidBody->getMotionState();
-	delete entityRigidBody->getCollisionShape();
-	delete entityRigidBody;
+	if (entityRigidBody)
+	{
+		this->curWorld->removeCollisionObject(entityRigidBody);
+		delete entityRigidBody->getMotionState();
+		delete entityRigidBody->getCollisionShape();
+		delete entityRigidBody;
+	}
 }
 
 btRigidBody* Flag::getRigidBody()
@@ -44,4 +47,10 @@ void Flag::HandleCollectable(Player* collidedPlayer)
 {
 	// add 'this' to player
 	// delete flag from EntitySpawnermap
+	collidedPlayer->AcquireFlag(std::shared_ptr<Flag>(this));
+	this->curWorld->removeCollisionObject(entityRigidBody);
+	delete entityRigidBody->getMotionState();
+	delete entityRigidBody->getCollisionShape();
+	delete entityRigidBody;
+	EntitySpawner::instance()->RemoveEntity(ClassId::FLAG, (id));
 }
