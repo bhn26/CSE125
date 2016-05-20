@@ -53,6 +53,7 @@
       <Filter>Source Files\Graphics\Objects</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Graphics\Objects\Grass.cpp">
+    <ClCompile Include="..\src\Graphics\Objects\Egg.cpp">
       <Filter>Source Files\Graphics\Objects</Filter>
     </ClCompile>
   </ItemGroup>
@@ -121,6 +122,7 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Graphics\Objects\StaticObject.h">
+    <ClInclude Include="..\src\Graphics\Objects\Egg.h">
       <Filter>Source Files\Graphics\Objects</Filter>
     </ClInclude>
   </ItemGroup>
@@ -153,6 +155,7 @@
       <Filter>Source Files\Graphics\Shaders</Filter>
     </None>
     <None Include="..\src\Graphics\Shaders\instancing.vert">
+    <None Include="..\src\Graphics\Shaders\diffuse.vert">
       <Filter>Source Files\Graphics\Shaders</Filter>
     </None>
   </ItemGroup>

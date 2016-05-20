@@ -75,6 +75,7 @@
     <IntDir>$(ProjectName)\$(Configuration)\</IntDir>
     <LibraryPath>$(SolutionDir)lib;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86</LibraryPath>
     <IncludePath>$(SolutionDir)include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <ReferencePath>$(ProjectDir); $(VC_ReferencesPath_x86);</ReferencePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -163,6 +164,7 @@
     <None Include="..\src\Graphics\Shaders\diffuse.frag" />
     <None Include="..\src\Graphics\Shaders\instancing.frag" />
     <None Include="..\src\Graphics\Shaders\instancing.vert" />
+    <None Include="..\src\Graphics\Shaders\diffuse.vert" />
     <None Include="..\src\Graphics\Shaders\model_loading.frag" />
     <None Include="..\src\Graphics\Shaders\model_loading.vert" />
     <None Include="..\prj\packages.config" />
@@ -177,6 +179,7 @@
     <ClCompile Include="..\src\client\Player.cpp" />
     <ClCompile Include="..\src\client\Window.cpp" />
     <ClCompile Include="..\src\Graphics\Objects\Grass.cpp" />
+    <ClCompile Include="..\src\Graphics\Objects\Egg.cpp" />
     <ClCompile Include="..\src\Graphics\Objects\Ground.cpp" />
     <ClCompile Include="..\src\Graphics\Mesh.cpp" />
     <ClCompile Include="..\src\Graphics\Model.cpp" />
@@ -191,6 +194,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Graphics\Objects\CubeMap.h" />
+    <ClInclude Include="..\src\Graphics\Objects\Egg.h" />
     <ClInclude Include="..\src\Graphics\Objects\Entity.h" />
     <ClInclude Include="..\src\client\ClientGame.h" />
     <ClInclude Include="..\src\client\ClientNetwork.h" />

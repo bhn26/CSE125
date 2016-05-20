@@ -8,19 +8,17 @@
 #include "ServerGame.h"
 #include <iostream>
 
-ServerGame * server;
-
 void serverLoop(void * arg)
 {
     while (true)
     {
-        server->update();
+        ServerGame::instance()->update();
     }
 }
 
 int main()
 {
-    server = new ServerGame();
+    ServerGame::instantiate();
 
     serverLoop((void*)12);
 }

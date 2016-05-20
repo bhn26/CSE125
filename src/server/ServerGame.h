@@ -8,30 +8,13 @@
 class ServerGame
 {
 
-	btDiscreteDynamicsWorld* curWorld;
-	btDefaultCollisionConfiguration* colConfig;
-	btCollisionDispatcher* disp;
-	btBroadphaseInterface* pairCache;
-	btSequentialImpulseConstraintSolver* solv;
-	std::vector <btRigidBody*> bullets;
-	std::vector <btRigidBody*> players;
-	btRigidBody * ground;
-
 public:
-
-    ServerGame(void);
-    ~ServerGame(void);
-
-	// Initialize Game World (physics world)
-	void initGameInstance();
 
     static unsigned int NumClients() {return client_id;}
 
     void update();
 
 	void receiveFromClients();
-
-	void sendActionPackets();
     
     // Want singleton for the world, if we receive an init packet from a new client
     // we want to send them the current world data, not reset the world
@@ -39,26 +22,46 @@ public:
     void receiveInitPacket(int offset);
     void sendInitPacket();
 
+	// Starting the game packets
 	void receiveStartPacket(int offset);
 	void sendStartPacket();
 
     // The data we want in network_data should have an offset if any
     void receiveSpawnPacket(int offset);
-    void sendSpawnPacket();
+    void sendSpawnPacket(PosInfo pi); // Spawn an object with position pi, pi holds obj type and obj id
+
+	// Send what you want to remove, with the object's ids
+	void sendRemovePacket(ClassId cid, int oid);
 
     // Returns the direction to be moved, if it can't move there, returns BAD_MOVE
     void receiveMovePacket(int offset);
-    void sendMovePacket(int client);
+	// what type is the object moving and what is the id of the object moving?
+    void sendMovePacket(ClassId class_id, int obj_id);
 
-    void receiveVRotationPacket(int offset);
-    void sendVRotationPacket(int client); 
+    void receiveRotationPacket(int offset);
+    void sendRotationPacket(int obj_id, float w, float x, float y, float z);
+
+	static void instantiate()
+	{
+		if (sg == NULL)
+			sg = new ServerGame();
+	}
+
+	static ServerGame* instance() { return sg; }
 
 private:
+	ServerGame(void);
+	~ServerGame(void);
 
-   // IDs for the clients connecting for table in ServerNetwork 
+    // IDs for the clients connecting for table in ServerNetwork 
     static unsigned int client_id;
 
+	// Singleton servergame
+	static ServerGame* sg;
+
+	// variables for starting the game
 	bool game_started = false;
+	int ready_clients = 0; // # of clients ready for the game
 
 	Engine * engine;
 

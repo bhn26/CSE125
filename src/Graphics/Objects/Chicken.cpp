@@ -17,11 +17,13 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-Chicken::Chicken()
+Chicken::Chicken() : Chicken (0.0f, 0.0f, 0.0f)
 {
-    this->toWorld = glm::mat4(1.0f);
-  
-    model = new Model("assets/chickens/objects/chicken.obj");
+}
+
+Chicken::Chicken(float x, float y, float z) : Entity(glm::vec3(x, y, z))
+{
+	model = new Model("assets/chickens/objects/chicken.obj");
 }
 
 Chicken::~Chicken()
