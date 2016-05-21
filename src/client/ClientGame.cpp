@@ -212,6 +212,12 @@ void ClientGame::receiveRotationPacket(int offset) {
 		glm::quat quat = Scene::Instance()->GetEntity(pi->cid, pi->oid)->Orientation();
 		printf("rotation of player %d on client is %f, %f, %f, %f\n", pi->oid, quat.w, quat.x, quat.y, quat.z);
 	}
+	
+	// Rotate it if it's not a player
+	if (pi->cid != ClassId::PLAYER)
+	{
+		Scene::Instance()->GetEntity(pi->cid, pi->oid)->RotateTo(pi->rotw, pi->rotx, pi->roty, pi->rotz);
+	}
 
 
 	// left/right rotation
