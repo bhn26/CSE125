@@ -85,12 +85,21 @@ void Scene::Draw()
 	cubeMap->Draw();
 	ground->Draw();
 	for (auto& const entity : entities)
-        entity.second->Draw();
+	{
+		entity.second->Draw();
+		//printf("entity ids are %d, %d\n", entity.second->GetClassId(), entity.second->GetObjId());
+		if (entity.second->GetClassId() == 0 && entity.second->GetObjId() == 1)
+		{
+			//printf("Vector for player being drawn is: %f, %f, %f\n", entity.second->Position().x, entity.second->Position().y,
+				//entity.second->Position().z);
+
+		}
+	}
 
     // Redrawing players??
-	for (int i = 0; i < players.size(); i++) {
+	/*for (int i = 0; i < players.size(); i++) {
 		players.at(i)->Draw();
-	}
+	}*/
 }
 
 
@@ -129,6 +138,8 @@ void Scene::AddEntity(int cid, int oid, float x, float y, float z, float rotw, f
 		player->SetModelFile("assets/chickens/objects/pinocchio_chicken.obj");
 		player->Spawn(x, y, z);
 		player->GetShader() = modelShader;
+		player->SetObjId(oid);
+		player->SetClassId(cid);
 		//player->RotateTo(rotw, rotx, roty, rotz);
 		// set main player if the oid matches
 		if (oid == ClientGame::instance()->GetClientId())
@@ -141,6 +152,8 @@ void Scene::AddEntity(int cid, int oid, float x, float y, float z, float rotw, f
 		egg = std::unique_ptr<Egg>(new Egg(x,y,z));
 		egg->SetColor(glm::vec3(0.27f, 0.16f, 0.0f));
 		egg->GetShader() = diffuseShader;
+		egg->SetClassId(cid);
+		egg->SetObjId(oid);
 		AddEntity(cid, oid, std::move(egg));
 		break;
 	default:

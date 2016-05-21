@@ -68,6 +68,7 @@ public:
     void SetCamAngle(float newAngle) { camAngle = newAngle; };
 
 	int GetID() { return id; };
+	int GetClassId() { return class_id; }
 
 	glm::quat GetOrientation() { return Orientation();  }
 

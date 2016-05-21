@@ -87,11 +87,7 @@ void Player::ProcessMouseMovement(GLfloat xoffset, GLfloat yoffset, GLboolean co
     camAngle += glm::radians(yoffset);
     const static float pi2 = glm::pi<float>()/2;
     camAngle = (camAngle > pi2) ? pi2 : ((camAngle < -pi2) ? -pi2 : camAngle);
-	if (++tick % 5 == 0)
-	{
-		ClientGame::instance()->sendRotationPacket();
-		tick = 0;
-	}
+
 }
 
 // Processes input received from a mouse scroll-wheel event. Only requires input on the vertical wheel-axis
