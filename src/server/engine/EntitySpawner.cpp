@@ -40,7 +40,7 @@ Player* EntitySpawner::spawnPlayer(int teamid, PosInfo pos, btDiscreteDynamicsWo
 	// Send spawn info to the clients
 	PosInfo out;
 	out.cid = ClassId::PLAYER;
-	out.oid = newPlayer->GetId();
+	out.oid = newPlayer->GetObjectId();
 	out.x = vec.getX();
 	out.y = vec.getY();
 	out.z = vec.getZ();

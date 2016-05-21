@@ -63,7 +63,7 @@ void Player::Move(btVector3* changeVelocity) {
 	// set new velocity
 	entityRigidBody->setLinearVelocity(newVelocity);
 	//printf("%d: world pos object = %f,%f,%f\n", id, float(currentTrans.getOrigin().getX()), float(currentTrans.getOrigin().getY()), float(currentTrans.getOrigin().getZ()));
-	printf("current velocity %f, %f, %f\n", float(entityRigidBody->getLinearVelocity()[0]), float( playerRigidBody->getLinearVelocity()[1]), float(playerRigidBody->getLinearVelocity()[2]));
+	//printf("current velocity %f, %f, %f\n", float(entityRigidBody->getLinearVelocity()[0]), float( playerRigidBody->getLinearVelocity()[1]), float(playerRigidBody->getLinearVelocity()[2]));
 	//entityRigidBody->activate();
 }
 

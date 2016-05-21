@@ -267,7 +267,7 @@ void ServerGame::receiveMovePacket(int offset)
 	printf("recieved move packet from %d\n", hdr->sender_id);
     struct PacketData* dat = (struct PacketData *) &(network_data[offset + sizeof(PacketHeader)]);
     struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
-	shared_ptr<Player> player = engine->GetWorld()->GetPlayer(hdr->sender_id);
+	Player* player = (Player*)(EntitySpawner::instance()->GetEntity(ClassId::PLAYER, hdr->sender_id));
 
     //printf("dummy's current pos is (%d,%d)\n", dpi.x, dpi.y);
 	btVector3* vec;
@@ -294,13 +294,14 @@ void ServerGame::receiveMovePacket(int offset)
 		break;
 	}
 
-//	player->Move(pi->direction);
-//	sendMovePacket(hdr->sender_id);
+	//player->Move(pi->direction);
+	//sendMovePacket(hdr->sender_id);
 }
 
 void ServerGame::sendMovePacket(ClassId class_id, int obj_id)
 {
-		shared_ptr<Player> player = engine->GetWorld()->GetPlayer(obj_id); // change this to getting the object
+		Player* player = (Player*)(EntitySpawner::instance()->GetEntity(class_id, obj_id));
+
         Packet packet;
 		packet.hdr.sender_id = SERVER_ID;
         packet.hdr.packet_type = MOVE_EVENT;

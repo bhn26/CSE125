@@ -353,6 +353,11 @@ void World::UpdateWorld()
 		printf(" back wall at (%f,%f,%f)\n", vecg.getX(), vecg.getY(), vecg.getZ());
 		*/
 
+		// TODO!!! HACK TO PRINT OUT UPDATE FOR ONE PLAYER.  Change to use Map in EntitySpawner
+		Player* myPlayer = (Player *)(EntitySpawner::instance()->GetEntity(ClassId::PLAYER, 0));
+		btVector3 vec = (myPlayer)->GetEntityPosition();
+		printf(" player at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
+
 		for (std::vector<std::shared_ptr<Player> >::iterator it = players.begin(); it != players.end(); ++it)
 		{
 			btVector3 vec = (*it)->GetEntityPosition();
@@ -368,16 +373,18 @@ void World::UpdateWorld()
 		*/
 	}
 
+	//TODO!!!! This isn't working because it needs to go through all Map objects in ServerEntity
 	// send updates every x or so ticks?
 	if (x % 5 == 0)
 	{
-		//for (std::vector<std::shared_ptr<Player> >::iterator it = players.begin(); it != players.end(); ++it)
-		//{
-		//	ServerGame::instance()->sendMovePacket((*it)->GetId());
-		//}
+		//TODO!!!
+		//Hack to update 1 player
+		Player* myPlayer = (Player *)(EntitySpawner::instance()->GetEntity(ClassId::PLAYER, 0));
+		ServerGame::instance()->sendMovePacket(ClassId::PLAYER, myPlayer->GetObjectId());
+
 		for (std::shared_ptr<Player>& player : players)
 		{
-			ServerGame::instance()->sendMovePacket(ClassId::PLAYER, player->GetId());
+			ServerGame::instance()->sendMovePacket(ClassId::PLAYER, player->GetObjectId());
 		}
 	}
 	

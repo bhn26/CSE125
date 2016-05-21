@@ -28,8 +28,6 @@ public:
 
 	~Player();
 
-	int GetId() { return id; }
-
 	PosInfo GetPosition() { return position; };
 
 	void Move(btVector3 *changeVelocity);
