@@ -319,10 +319,10 @@ void ServerGame::sendMovePacket(ClassId class_id, int obj_id)
 
         p.serialize(packet.dat.buf);
 
-		if (p.oid == 1)
+		/*if (p.oid == 1)
 		{
 			printf("position of 1 when server sends is %f, %f, %f\n", p.x, p.y, p.z);
-		}
+		}*/
 
         const unsigned int packet_size = sizeof(Packet);
         char packet_data[packet_size];
@@ -376,7 +376,7 @@ void ServerGame::sendRotationPacket(int client, float w, float x, float y, float
 	p.roty = q.getY();
 	p.rotz = q.getZ();
 
-	//printf("sending a rotation packet with: %f, %f, %f, %f\n", p.rotw, p.rotx, p.roty, p.rotz);
+	printf("sending a rotation packet with: %f, %f, %f, %f\n", p.rotw, p.rotx, p.roty, p.rotz);
 
     p.serialize(packet.dat.buf);
     

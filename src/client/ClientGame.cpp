@@ -117,9 +117,14 @@ void ClientGame::receiveSpawnPacket(int offset)
 
     struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
     struct PosInfo* p = (struct PosInfo *) (dat->buf);
-	
+
 	// spawn the thing
 	Scene::Instance()->AddEntity(p->cid, p->oid, p->x, p->y, p->z, p->rotw, p->rotx, p->roty, p->rotz);
+
+	if (!iSpawned && p->oid == client_id)
+	{
+		iSpawned = true;
+	}
 }
 
 void ClientGame::sendSpawnPacket()
@@ -204,6 +209,8 @@ void ClientGame::receiveRotationPacket(int offset) {
 	//server don't tell us how we rotate
 	if (pi->oid != client_id) {
 		Scene::Instance()->GetEntity(pi->cid, pi->oid)->RotateTo(pi->rotw, pi->rotx, pi->roty, pi->rotz);
+		glm::quat quat = Scene::Instance()->GetEntity(pi->cid, pi->oid)->Orientation();
+		printf("rotation of player %d on client is %f, %f, %f, %f\n", pi->oid, quat.w, quat.x, quat.y, quat.z);
 	}
 
 
@@ -370,7 +377,7 @@ void ClientGame::GameLoop()
         // Idle callback. Updating objects, etc. can be done here.
         Window::Idle_callback();
 
-		if (++tick % 10 == 0 && game_started)
+		if (++tick % 20 == 0 && iSpawned)
 		{
 			ClientGame::instance()->sendRotationPacket();
 			tick = 0;

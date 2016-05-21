@@ -77,6 +77,7 @@ private:
 	int tick = 0;
 
 	bool game_started = false;
+	bool iSpawned = false;
 
     static ClientGame* cg;
 
