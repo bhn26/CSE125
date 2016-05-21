@@ -84,5 +84,7 @@ private:
     void Setup_glew();
     void Setup_opengl_settings();
     void Print_versions();
+    void PrintFrameRate();
+    void CheckController();
 };
 

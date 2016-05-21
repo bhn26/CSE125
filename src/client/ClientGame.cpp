@@ -352,14 +352,9 @@ void ClientGame::GameLoop()
 #endif
 
         // Measure speed
-        double currentTime = glfwGetTime();
-        nbFrames++;
-        if (currentTime - lastTime >= 5.0) // If last prinf() was more than 1 sec ago
-        {
-            printf("%f ms/frame\n", 5000.0/double(nbFrames));   // printf and reset timer
-            nbFrames = 0;
-            lastTime += 5.0;
-        }
+        //PrintFrameRate();
+
+        CheckController();
 
         // Main render display callback. Rendering of objects is done here.
         Window::Display_callback(window);
@@ -429,4 +424,60 @@ void ClientGame::Print_versions()
 #ifdef GL_SHADING_LANGUAGE_VERSION
     std::printf("Supported GLSL version is %s.\n", (char *)glGetString(GL_SHADING_LANGUAGE_VERSION));
 #endif
+}
+
+void ClientGame::PrintFrameRate()
+{
+    double currentTime = glfwGetTime();
+    nbFrames++;
+    if (currentTime - lastTime >= 5.0) // If last prinf() was more than 1 sec ago
+    {
+        printf("%f ms/frame\n", 5000.0/double(nbFrames));   // printf and reset timer
+        nbFrames = 0;
+        lastTime += 5.0;
+    }
+}
+
+#include <iostream>
+
+
+// Checks the controller input on Microsoft PC-joystick driver
+// axis[0] = (left) right
+// axis[1] = (left) down
+// axis[2] = 
+// axis[3] = (right) right
+// axis[4] = (right) down
+// button[0-3] = a, b, x, y
+// button[4-5] = LB, RB
+// button[6-7] = Back, Start
+// button[8-9] = left/right joystick
+// button[10-13] = d-pad up, right, down, left
+void ClientGame::CheckController()
+{
+    static double last_time = glfwGetTime();
+    if (glfwGetTime() - last_time < 4.0f)
+        return;
+
+    if (glfwJoystickPresent(GLFW_JOYSTICK_1))
+    {
+        int axesCount;
+        const float *axes = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &axesCount);
+        //std::cout << count << std::endl;
+
+        for (int axis = 0; axis < axesCount; axis++)
+            std::cout << "axes[" << axis << "]: " << axes[axis] << std::endl;
+
+        int buttonCount;
+        const unsigned char *buttons = glfwGetJoystickButtons(GLFW_JOYSTICK_1, &buttonCount);
+        for (int button = 0; button < buttonCount; button++)
+        {
+            if (buttons[button] == GLFW_PRESS)
+                std::cout << "buttons[" << button << "]: " << buttons[button] << std::endl;
+        }
+
+        const char *name = glfwGetJoystickName(GLFW_JOYSTICK_1);
+        std::cout << name << std::endl;
+    }
+    std::cout << std::endl;
+    last_time = glfwGetTime();
 }
