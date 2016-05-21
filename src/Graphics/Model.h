@@ -28,6 +28,14 @@ public:
             this->meshes[i].Draw(shader);
     }
 
+	const std::vector<Mesh>& Meshes() const {
+		return meshes;
+	}
+
+	const std::vector<Mesh::Texture>& Textures() const {
+		return textures_loaded;
+	}
+
 private:
     /*  Model Data  */
     std::vector<Mesh> meshes;

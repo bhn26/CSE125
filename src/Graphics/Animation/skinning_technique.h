@@ -19,7 +19,6 @@
 #define	SKINNING_TECHNIQUE_H
 
 #include "technique.h"
-#include "ogldev_util.h"
 #include <glm/glm.hpp>
 
 struct Material;

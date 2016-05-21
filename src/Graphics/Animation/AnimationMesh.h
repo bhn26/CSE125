@@ -6,9 +6,9 @@
 #include <glm/glm.hpp>
 #include <memory>
 
-#include "ogldev_util.h"
 #include "../Texture.h"
 #include "skinning_technique.h"
+#include "Basic/Utils.h"
 
 struct aiScene;
 template<typename TReal> class aiMatrix4x4t;

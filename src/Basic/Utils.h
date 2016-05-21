@@ -10,5 +10,5 @@
 namespace Utils
 {
     bool ReadFile(const char* filename, std::string& outString);
-    long long GetCurrentTimeMillis();
+    double CurrentTime();        // In seconds
 }

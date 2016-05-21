@@ -1,5 +1,6 @@
 #pragma once
 #include "Flag.h"
+#include "Weapon.h"
 #include <memory>
 #include <vector>
 
@@ -24,7 +25,8 @@ private:
 	btRigidBody* playerRigidBody;
 	std::vector<std::shared_ptr<Flag>> *flags;
 	int jumpSem;
-	int HitPoints;
+	int hitPoints;
+	Weapon* playerWeapon;
 
 public:
 
@@ -48,7 +50,10 @@ public:
 	btVector3 GetPlayerPosition();
 
 	// Return current rotation matrix of Player
-	btMatrix3x3 GetPlayerRotation();
+	btQuaternion GetPlayerRotation();
+
+	// Sets player rotation using quarternion
+	void SetPlayerRotation(float x, float y, float z, float w);
 
 	// Makes the player jump
 	void JumpPlayer();
@@ -61,11 +66,14 @@ public:
 
 	void LoseFlags();
 
-	// return bullet id?
-	int SpawnBullet();
+	// use weapon
+	// Pass in current rotation and position
+	void UseWeapon();
 
 	int GetObjectId();
 
 	int GetTeamId();
+
+	int takeDamage(int damage);
 };
 

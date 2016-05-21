@@ -1,8 +1,11 @@
 #pragma once
 
+#include "Weapon.h"
 #include "Player.h"
 #include "Flag.h"
+#include "Bullet.h"
 #include "WorldObstacle.h"
+#include "FireRateReset.h"
 #include <vector>
 #include <memory>
 
@@ -16,18 +19,25 @@ typedef vector<PosInfo> pos_list;
 class World {
 
 private:
-	// list of map objects
-	// list (vector) of players sorted by client id
+
+	// list of game world objects
 	std::vector<std::shared_ptr<Player>> players;
 	std::vector<std::shared_ptr<Flag>> flags;
+	std::vector<std::shared_ptr<Weapon>> usedWeapons;
+	std::vector<std::shared_ptr<Bullet>> bullets;  // this may not be necessary...
+	//TODO list of weapons to check reload
 
+	// Fire Rate Reseter
+	FireRateReset * fireRateReseter;
+
+	// Physics World attributes
 	btDiscreteDynamicsWorld* curWorld;
 	btDefaultCollisionConfiguration* colConfig;
 	btCollisionDispatcher* disp;
 	btBroadphaseInterface* pairCache;
 	btSequentialImpulseConstraintSolver* solv;
-	std::vector <btRigidBody*> bullets;
-	//std::vector <btRigidBody*> players;
+
+	// Map objects
 	WorldObstacle * ground;
 	WorldObstacle * frontWall;
 	WorldObstacle * backWall;
@@ -36,6 +46,9 @@ private:
 
 	// object ids
 	int oid;
+
+	// list of fields to check.  Explosions and mounts.  Maybe decouple into a class of it's own.  Have a TTL
+
 
 public:
 	World();
@@ -54,9 +67,9 @@ public:
 
 	// Updates Physics world by one tick
 	// Handles egg collisions with players
-	void updateWorld();
+	void UpdateWorld();
 
 	// Finds and Removes flag from world list of flags
-	void removeFlag(std::shared_ptr<Flag> collectedFlag);
+	void removeFlag(Flag* collectedFlag);
 
 };

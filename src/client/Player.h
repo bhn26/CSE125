@@ -32,19 +32,6 @@ enum DIRECTION
 
 class Player : public Entity, public Animation::AnimationPlayer::Listener
 {
-    // Player is made up of a model with a camera following it
-    std::unique_ptr<Camera> camera;
-    std::unique_ptr<Model> model;
-    //std::unique_ptr<Animation::AnimatedModel> m_model;
-
-    std::unordered_map<std::string, std::string> m_animNames;
-
-    // How up/down camera is
-    float camAngle;
-    int id;
-
-    // Path name for chicken model texture
-    std::string modelFile;
 
 public:
     enum STATE
@@ -56,7 +43,8 @@ public:
         PECK,
     };
 
-    Player();
+    Player(float x = 0.0f, float y = 0.0f, float z = 0.0f,
+		float rotW = 0.0f, float rotX = 0.0f, float rotY = 0.0f, float rotZ = 0.0f);
     Player(int client_id);
     ~Player();
 
@@ -94,6 +82,21 @@ public:
     void SetState(STATE state) { m_state = state; }     // Simply Sets the state without changing the model
 
 private:
+    // Player is made up of a model with a camera following it
+    std::unique_ptr<Camera> camera;
+    std::unique_ptr<Model> model;
+    //std::unique_ptr<Animation::AnimatedModel> m_model;
+
+    std::unordered_map<std::string, std::string> m_animNames;
+
+    // How up/down camera is
+    float camAngle;
+    int id;
+    int tick = 0;
+
+    // Path name for chicken model texture
+    std::string modelFile;
+
     STATE m_state;
     float m_lastTime_t;     // Test
     glm::vec3 m_lastPos_t;

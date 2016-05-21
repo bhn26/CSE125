@@ -1,6 +1,6 @@
 #pragma once
 
-
+#include "../../network/GameData.h"
 #ifndef BULLET_PHYSICS
 #define BULLET_PHYSICS
 #include <BulletPhysics\btBulletDynamicsCommon.h>
@@ -13,10 +13,13 @@ private:
 	int id;
 	int playerId;
 	int teamId;
+	int damage;
+	btDiscreteDynamicsWorld* curWorld;
+	btRigidBody* bulletRigidBody;
 
 public:
 
-	Bullet(int objectid, int playerid, int teamid);
+	Bullet(int objectid, int playerid, int teamid, int damage, PosInfo pos, btVector3* velocity, btDiscreteDynamicsWorld* physicsWorld);
 
 	~Bullet();
 
@@ -32,4 +35,6 @@ public:
 
 	// get team id
 	int GetTeamId();
+
+	int GetDamage();
 };

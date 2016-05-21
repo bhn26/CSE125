@@ -5,10 +5,8 @@
 #include <BulletPhysics\btBulletCollisionCommon.h>
 #endif
 
-#ifndef GAME_DATA
-#define GAME_DATA
 #include "../../network/GameData.h"
-#endif
+
 
 class Flag
 {

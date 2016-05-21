@@ -15,7 +15,7 @@
 #include <memory>
 #include <SFML/Audio.hpp>
 
-#include "../Animation/ogldev_util.h"
+#include "Basic/Utils.h"
 #include "../Shader.h"
 
 class Entity
@@ -54,7 +54,7 @@ public:
     bool PlaySound(std::string soundFile);
     float GetRunningTime()
     {
-        return (float)((double)GetCurrentTimeMillis() - (double)m_startTime) / 1000.0f;
+        return (float)(Utils::CurrentTime() - m_startTime);
     }
 
     virtual void Draw() const = 0;

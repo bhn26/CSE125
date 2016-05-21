@@ -185,7 +185,6 @@ void ClientGame::sendMovePacket(int direction)
 	pi.rotx = rot.x;
 	pi.roty = rot.y;
 	pi.rotz = rot.z;
-	printf("WXYZ: %f, %f, %f, %f\n", pi.rotw, pi.rotx, pi.roty, pi.rotz);
     pi.serialize(packet.dat.buf);
 
     packet.serialize(packet_data);
@@ -196,8 +195,13 @@ void ClientGame::receiveRotationPacket(int offset) {
     struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
     struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
 
+	printf("received a rotation packet with: %f, %f, %f, %f\n", pi->rotw, pi->rotx, pi->roty, pi->rotz);
+
 	//std::shared_ptr<Player> target = FindTarget(pi->id);
-	Scene::Instance()->GetEntity(pi->cid, pi->oid)->RotateTo(pi->rotw,pi->rotx,pi->roty,pi->rotz);
+	//server don't tell us how we rotate
+	if (pi->oid != client_id) {
+		Scene::Instance()->GetEntity(pi->cid, pi->oid)->RotateTo(pi->rotw, pi->rotx, pi->roty, pi->rotz);
+	}
 
 	// left/right rotation
 	/*glm::mat4 newToWorld = target->GetToWorld() * glm::rotate(glm::mat4(1.0f), pi->v_rotation, glm::vec3(0.0f, 1.0f, 0.0f));
@@ -219,21 +223,22 @@ void ClientGame::sendRotationPacket() {
     packet.hdr.sender_id = client_id;
     packet.hdr.receiver_id = SERVER_ID;
 
-
-
+	// send the rotation of the main player
     PosInfo pi;
 	glm::quat rot = Scene::Instance()->GetPlayer()->GetOrientation();
 	pi.rotw = rot.w;
 	pi.rotx = rot.x;
 	pi.roty = rot.y;
 	pi.rotz = rot.z;
+
+	printf("sending a rotation packet with: %f, %f, %f, %f\n", pi.rotw, pi.rotx, pi.roty, pi.rotz);
    // pi.v_rotation = v_rot;
 	//pi.h_rotation = h_rot;
     pi.serialize(packet.dat.buf);
 
     packet.serialize(packet_data);
 
-    //NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
+    NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
 }
 
 /*std::shared_ptr<Player> ClientGame::FindTarget(int tid) {

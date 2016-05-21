@@ -111,7 +111,7 @@ namespace Animation
         std::vector<Listener*> m_listeners;
 
         int m_currAnimationIndex;
-        float m_playTimer;
+        float m_playTimer;      // Timer in seconds
         bool m_animating;
 
     };

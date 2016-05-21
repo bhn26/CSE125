@@ -22,7 +22,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "skinning_technique.h"
-#include "ogldev_util.h"
+#include "Basic/Utils.h"
 #include "../Texture.h"
 
 SkinningTechnique::SkinningTechnique()

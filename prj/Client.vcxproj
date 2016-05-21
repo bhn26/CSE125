@@ -100,6 +100,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <ShowIncludes>false</ShowIncludes>
+      <AdditionalIncludeDirectories>$(SolutionDir)src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -138,6 +139,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <ShowIncludes>false</ShowIncludes>
+      <AdditionalIncludeDirectories>$(SolutionDir)src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -177,6 +179,8 @@
     <None Include="..\src\Graphics\Shaders\cubemap.frag" />
     <None Include="..\src\Graphics\Shaders\cubemap.vert" />
     <None Include="..\src\Graphics\Shaders\diffuse.frag" />
+    <None Include="..\src\Graphics\Shaders\instancing.frag" />
+    <None Include="..\src\Graphics\Shaders\instancing.vert" />
     <None Include="..\src\Graphics\Shaders\diffuse.vert" />
     <None Include="..\src\Graphics\Shaders\model_loading.frag" />
     <None Include="..\src\Graphics\Shaders\model_loading.vert" />
@@ -190,7 +194,6 @@
     <ClCompile Include="..\src\Graphics\Animation\AnimatedModel.cpp" />
     <ClCompile Include="..\src\Graphics\Animation\AnimationMesh.cpp" />
     <ClCompile Include="..\src\Graphics\Animation\AnimationPlayer.cpp" />
-    <ClCompile Include="..\src\Graphics\Animation\ogldev_util.cpp" />
     <ClCompile Include="..\src\Graphics\Animation\skinning_technique.cpp" />
     <ClCompile Include="..\src\Graphics\Animation\technique.cpp" />
     <ClCompile Include="..\src\Graphics\Objects\ChickenAnim.cpp" />
@@ -201,11 +204,13 @@
     <ClCompile Include="..\src\client\main.cpp" />
     <ClCompile Include="..\src\client\Player.cpp" />
     <ClCompile Include="..\src\client\Window.cpp" />
+    <ClCompile Include="..\src\Graphics\Objects\Grass.cpp" />
     <ClCompile Include="..\src\Graphics\Objects\Egg.cpp" />
     <ClCompile Include="..\src\Graphics\Objects\Ground.cpp" />
     <ClCompile Include="..\src\Graphics\Mesh.cpp" />
     <ClCompile Include="..\src\Graphics\Model.cpp" />
     <ClCompile Include="..\src\Graphics\Objects\Chicken.cpp" />
+    <ClCompile Include="..\src\Graphics\Objects\StaticObject.cpp" />
     <ClCompile Include="..\src\network\NetworkServices.cpp" />
     <ClCompile Include="..\src\Graphics\Camera.cpp" />
     <ClCompile Include="..\src\Graphics\Scene.cpp" />
@@ -219,7 +224,6 @@
     <ClInclude Include="..\src\Graphics\Animation\AnimatedModel.h" />
     <ClInclude Include="..\src\Graphics\Animation\AnimationMesh.h" />
     <ClInclude Include="..\src\Graphics\Animation\AnimationPlayer.h" />
-    <ClInclude Include="..\src\Graphics\Animation\ogldev_util.h" />
     <ClInclude Include="..\src\Graphics\Animation\skinning_technique.h" />
     <ClInclude Include="..\src\Graphics\Animation\technique.h" />
     <ClInclude Include="..\src\Graphics\Objects\ChickenAnim.h" />
@@ -234,6 +238,7 @@
     <ClInclude Include="..\src\Graphics\Mesh.h" />
     <ClInclude Include="..\src\Graphics\Model.h" />
     <ClInclude Include="..\src\Graphics\Objects\Chicken.h" />
+    <ClInclude Include="..\src\Graphics\Objects\StaticObject.h" />
     <ClInclude Include="..\src\Graphics\PointLight.h" />
     <ClInclude Include="..\src\network\GameData.h" />
     <ClInclude Include="..\src\network\NetworkData.h" />
@@ -244,6 +249,9 @@
     <ClInclude Include="..\src\Graphics\Scenegraph.h" />
     <ClInclude Include="..\src\Graphics\Nodes.h" />
     <ClInclude Include="..\src\Graphics\Shader.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\src\Graphics\Objects\Grass.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -169,7 +169,7 @@ namespace Animation
     {
         const Animation& currAnim = m_animations[m_currAnimationIndex];
         float ticksPerSecond = (currAnim._ticksPerSecond != 0) ? currAnim._ticksPerSecond : 25.0f;
-        float timeInTicks = m_playTimer/1000 * ticksPerSecond;
+        float timeInTicks = m_playTimer * ticksPerSecond;       // Timer in seconds
         if (timeInTicks > currAnim._duration)
         {
             if (currAnim._loops)

@@ -19,7 +19,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "ogldev_util.h"
+#include "Basic/Utils.h"
 #include "technique.h"
 
 Technique::Technique()
@@ -62,7 +62,7 @@ bool Technique::AddShader(GLenum shaderType, const char* filename)
 {
     std::string s;
     
-    if (!ReadFile(filename, s))
+    if (!Utils::ReadFile(filename, s))
     {
         return false;
     }

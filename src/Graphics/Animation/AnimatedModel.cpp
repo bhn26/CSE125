@@ -1,4 +1,5 @@
 #include "AnimatedModel.h"
+#include "Basic/Utils.h"
 
 #include <assimp/scene.h>
 #include <assimp/Importer.hpp>
@@ -9,7 +10,7 @@ namespace Animation
     ///////////////////////////////////////////////////////////////////////
     AnimatedModel::AnimatedModel() : m_animPlayer(&m_mesh)
     {
-        double lastTime = (double)GetCurrentTimeMillis();
+        double lastTime = Utils::CurrentTime();
     }
 
     ///////////////////////////////////////////////////////////////////////
@@ -58,7 +59,7 @@ namespace Animation
     ///////////////////////////////////////////////////////////////////////
     void AnimatedModel::Update()
     {
-        double nextTime = (double)GetCurrentTimeMillis();
+        double nextTime = Utils::CurrentTime();
         float delta = (float)(nextTime - lastTime);
         lastTime = nextTime;
         m_animPlayer.Update(delta);

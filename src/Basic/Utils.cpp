@@ -2,6 +2,7 @@
 
 #include <Windows.h>
 #include <fstream>
+#include <GLFW/glfw3.h>
 
 bool Utils::ReadFile(const char* filename, std::string& outString)
 {
@@ -22,7 +23,7 @@ bool Utils::ReadFile(const char* filename, std::string& outString)
     return true;
 }
 
-long long Utils::GetCurrentTimeMillis()
+double Utils::CurrentTime()
 {
-    return GetTickCount();
+    return glfwGetTime();
 }

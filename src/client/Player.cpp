@@ -2,23 +2,25 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
-#include "../Graphics/Camera.h"
-#include "../Graphics/Objects/Chicken.h"
-#include "../Graphics/Shader.h"
-#include "../Graphics/Scene.h"
-#include "../Graphics/PointLight.h"
-#include "../Graphics/Model.h"
-#include "../Graphics/Animation/AnimatedModel.h"
-#include "../client/ClientGame.h"
-#include "../Basic/Utils.h"
+#include "Graphics/Camera.h"
+#include "Graphics/Objects/Chicken.h"
+#include "Graphics/Shader.h"
+#include "Graphics/Scene.h"
+#include "Graphics/PointLight.h"
+#include "Graphics/Model.h"
+#include "Graphics/Animation/AnimatedModel.h"
+#include "client/ClientGame.h"
+#include "Basic/Utils.h"
 
-Player::Player() : Entity(), camAngle(0.0f), modelFile("assets/chickens/objects/chicken.obj")
+Player::Player(float x, float y, float z, float rotW, float rotX, float rotY, float rotZ) : Entity(x,y,z), camAngle(0.0f), modelFile("assets/chickens/objects/chicken.obj")
 {
     //for (int col = 0; col < 3; col++)
     //    for (int row = 0; row < 3; row++)
     //        toWorld[col][row] *= 0.01;
     model = std::unique_ptr<Model>(new Model(modelFile.c_str()));
     camera = std::unique_ptr<Camera>(new Camera(glm::vec3(-1.5f, 4.5f, -7.0f), glm::vec3(0.0f, 1.0f, 0.0f), 90.0f, -15.0f));
+    //camera = std::unique_ptr<Camera>(new Camera(glm::vec3(1.5f, 4.5f, 7.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, -15.0f));
+    Entity::RotateTo(rotW, rotX, rotY, rotZ);
 
     //m_model = std::unique_ptr<Animation::AnimatedModel>(new Animation::AnimatedModel);
     //m_animNames["dance"] = m_model->FBXLoadClean("assets/chickens/chicken_dance.fbx", true);
@@ -126,11 +128,14 @@ void Player::ProcessMouseMovement(GLfloat xoffset, GLfloat yoffset, GLboolean co
 
     this->toWorld = this->toWorld * glm::rotate(glm::mat4(1.0f), glm::radians(-xoffset), glm::vec3(0.0f, 1.0f, 0.0f));
                                   //* glm::rotate(glm::mat4(1.0f), glm::radians(-yoffset), glm::vec3(1.0f, 0.0f, 0.0f));
-    /*camAngle += glm::radians(yoffset);
+    camAngle += glm::radians(yoffset);
     const static float pi2 = glm::pi<float>()/2;
-    camAngle = (camAngle > pi2) ? pi2 : ((camAngle < -pi2) ? -pi2 : camAngle);*/
-
-	ClientGame::instance()->sendRotationPacket();
+    camAngle = (camAngle > pi2) ? pi2 : ((camAngle < -pi2) ? -pi2 : camAngle);
+    if (++tick % 5 == 0)
+    {
+        ClientGame::instance()->sendRotationPacket();
+        tick = 0;
+    }
 }
 
 // Processes input received from a mouse scroll-wheel event. Only requires input on the vertical wheel-axis
@@ -169,7 +174,7 @@ void Player::ChangeState(STATE state)
     //        break;
     //    case STATE::WALK:
     //        m_model->PlayAnimation(m_animNames["walk"]);
-    //        m_lastTime_t = Utils::GetCurrentTimeMillis();
+    //        m_lastTime_t = Utils::CurrentTime();
     //        m_lastPos_t = Position();
     //        break;
     //    case STATE::JUMP:
@@ -191,7 +196,7 @@ void Player::Update()
 {
     //if (m_state == STATE::WALK)
     //{
-    //    if (Utils::GetCurrentTimeMillis() - m_lastTime_t > 1000.0f)
+    //    if (Utils::CurrentTime() - m_lastTime_t > 1.0f)
     //    {
     //        if (m_lastPos_t == Position())
     //            ChangeState(STATE::IDLE);
