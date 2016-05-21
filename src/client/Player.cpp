@@ -84,22 +84,6 @@ void Player::MoveTo(float x, float y, float z)
     ChangeState(STATE::WALK);
 }
 
-void Player::RotateTo(const glm::quat & newOrientation)
-{
-    toWorld = glm::translate(static_cast<glm::mat4>(glm::quat(newOrientation)), glm::vec3(toWorld[3]));
-    for (int col = 0; col < 3; col++)
-        for (int row = 0; row < 3; row++)
-            toWorld[col][row] *= 0.01;
-}
-
-void Player::RotateTo(const glm::mat3 & newOrientation)
-{
-    toWorld = glm::translate(glm::mat4(newOrientation), glm::vec3(toWorld[3]));
-    for (int col = 0; col < 3; col++)
-        for (int row = 0; row < 3; row++)
-            toWorld[col][row] *= 0.01;
-}
-
 // Process movement
 void Player::ProcessKeyboard(DIRECTION direction, GLfloat deltaTime)
 {
@@ -131,11 +115,6 @@ void Player::ProcessMouseMovement(GLfloat xoffset, GLfloat yoffset, GLboolean co
     camAngle += glm::radians(yoffset);
     const static float pi2 = glm::pi<float>()/2;
     camAngle = (camAngle > pi2) ? pi2 : ((camAngle < -pi2) ? -pi2 : camAngle);
-    if (++tick % 5 == 0)
-    {
-        ClientGame::instance()->sendRotationPacket();
-        tick = 0;
-    }
 }
 
 // Processes input received from a mouse scroll-wheel event. Only requires input on the vertical wheel-axis

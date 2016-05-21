@@ -62,11 +62,21 @@ public:
 
     virtual void Spawn(/*Scene* scene, */float x, float y, float z) = 0;      // Maybe to spawn into the world, rather than using a constructor
 
-    virtual void MoveTo(float x, float y, float z) { MoveTo(glm::vec3(x, y, z)); }
+    virtual void MoveTo(float x, float y, float z) { MoveTo(glm::vec3(x, y, z));}
     virtual void MoveTo(const glm::vec3& newPosition) { toWorld[3] = glm::vec4(newPosition, 1.0f); }
     virtual void RotateTo(float w, float x, float y, float z) { RotateTo(glm::quat(w, x, y, z)); }
-    virtual void RotateTo(const glm::quat& newOrientation) { toWorld = glm::translate(static_cast<glm::mat4>(glm::quat(newOrientation)), glm::vec3(toWorld[3])); }
-    virtual void RotateTo(const glm::mat3& newOrientation) { toWorld = glm::translate(glm::mat4(newOrientation), glm::vec3(toWorld[3])); }
+    virtual void RotateTo(const glm::quat& newOrientation)
+    {
+        glm::mat4 temp = static_cast<glm::mat4>(glm::quat(newOrientation));
+        temp[3] = toWorld[3];
+        toWorld = std::move(temp);
+    }
+    virtual void RotateTo(const glm::mat3& newOrientation)
+    {
+        glm::mat4 temp = glm::mat4(newOrientation);
+        temp[3] = toWorld[3];
+        toWorld = std::move(temp);
+    }
 
     glm::quat Orientation() const { return static_cast<glm::quat>(toWorld); }
 
@@ -74,6 +84,11 @@ public:
     const glm::mat3& NormalMatrix() const { return normalMatrix; }
     //const std::shared_ptr<Shader>& Shader() const { return shader; }      // Creates error with typename Shader
     const glm::vec3& Position() const { return glm::vec3(toWorld[3]); }
+
+	int GetClassId() { return class_id; }
+	int GetObjId() { return obj_id; }
+	void SetClassId(int cid) { class_id = cid; }
+	void SetObjId(int oid) { obj_id = oid; }
 
     std::shared_ptr<Shader>& GetShader() { return shader; }
 
