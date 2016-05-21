@@ -5,22 +5,24 @@
 #define MAX_PACKET_SIZE 1000000
 #define DATA_SIZE 100 // Change this to the largest data size that is needed
 
-enum PacketTypes 
+enum PacketTypes
 {
 
-    INIT_CONNECTION = 0, // Initial connection setup
+	INIT_CONNECTION = 0, // Initial connection setup
 
 	READY_GAME = 1,  // The clients send this to say they're ready
 
 	START_GAME = 2, // A client would send this to start the game
 
-    SPAWN_EVENT = 3, // Creating a new object, sent to the client
+	SPAWN_EVENT = 3, // Creating a new object, sent to the client
 
 	REMOVE_EVENT = 4, // Removing an object, sent to the client
 
-    MOVE_EVENT = 5, //3
+	MOVE_EVENT = 5, //3
 
-    V_ROTATION_EVENT = 6 //4
+	V_ROTATION_EVENT = 6, //4
+
+	JUMP_EVENT = 7
 
 };
 
