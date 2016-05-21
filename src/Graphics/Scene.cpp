@@ -5,12 +5,15 @@
 #include "Objects/Egg.h"
 #include "Objects/Chicken.h"
 #include "Objects/Ground.h"
+#include "Objects/ModelEntity.h"
+#include "Objects/Entity.h"
+
 #include "Camera.h"
 #include "PointLight.h"
-#include "Objects/Entity.h"
 #include "../client/Player.h"
 #include "../client/ClientGame.h"
 #include "../server/engine/ObjectId.h"
+
 #include <algorithm>
 #include <vector>
 #include <map>
@@ -143,6 +146,13 @@ void Scene::AddEntity(int cid, int oid, float x, float y, float z, float rotw, f
 		egg->GetShader() = diffuseShader;
 		AddEntity(cid, oid, std::move(egg));
 		break;
+    case ClassId::BULLET:
+    {
+        std::unique_ptr<ModelEntity> bullet = std::unique_ptr<ModelEntity>(new ModelEntity("assets/eggs/objects/egg.obj"));
+        //bullet->GetShader() = modelShader;        // Set in ModelEntity
+        AddEntity(cid, oid, std::move(bullet));
+        break;
+    }
 	default:
 		break;
 	}

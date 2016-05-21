@@ -52,6 +52,9 @@
     <ClCompile Include="..\src\Graphics\Objects\Egg.cpp">
       <Filter>Source Files\Graphics\Objects</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Graphics\Objects\ModelEntity.cpp">
+      <Filter>Source Files\Graphics\Objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Graphics\Camera.h">
@@ -120,6 +123,9 @@
     <ClInclude Include="..\src\Graphics\Objects\Egg.h">
       <Filter>Source Files\Graphics\Objects</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\Graphics\Objects\ModelEntity.h">
+      <Filter>Source Files\Graphics\Objects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\src\Graphics\Shaders\basic_shader.frag">
@@ -143,12 +149,10 @@
     <None Include="..\src\Graphics\Shaders\model_loading.vert">
       <Filter>Source Files\Graphics\Shaders</Filter>
     </None>
-    <None Include="..\prj\packages.config">
-      <Filter>Source Files</Filter>
-    </None>
     <None Include="..\src\Graphics\Shaders\diffuse.vert">
       <Filter>Source Files\Graphics\Shaders</Filter>
     </None>
+    <None Include="..\prj\packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Files">
