@@ -1,6 +1,65 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>
+      </Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\Graphics">
+      <UniqueIdentifier>{11c5cd61-ddbc-4339-af83-58e16b9927f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Graphics\Shaders">
+      <UniqueIdentifier>{db32f9ed-7f8e-4408-944b-5e0cedee253a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Graphics\Objects">
+      <UniqueIdentifier>{9d78fb24-74ca-46ec-887b-e5124dd70425}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Network">
+      <UniqueIdentifier>{67d853c1-4103-4f93-b43e-9980b4a2edb9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Basic">
+      <UniqueIdentifier>{25b1c28e-b776-46aa-a4f8-a47876f7b93b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\src\Graphics\Shaders\basic_shader.frag">
+      <Filter>Source Files\Graphics\Shaders</Filter>
+    </None>
+    <None Include="..\src\Graphics\Shaders\basic_shader.vert">
+      <Filter>Source Files\Graphics\Shaders</Filter>
+    </None>
+    <None Include="..\src\Graphics\Shaders\cubemap.frag">
+      <Filter>Source Files\Graphics\Shaders</Filter>
+    </None>
+    <None Include="..\src\Graphics\Shaders\cubemap.vert">
+      <Filter>Source Files\Graphics\Shaders</Filter>
+    </None>
+    <None Include="..\src\Graphics\Shaders\diffuse.frag">
+      <Filter>Source Files\Graphics\Shaders</Filter>
+    </None>
+    <None Include="..\prj\packages.config" />
+    <None Include="..\src\Graphics\Shaders\model_loading.frag">
+      <Filter>Source Files\Graphics\Shaders</Filter>
+    </None>
+    <None Include="..\src\Graphics\Shaders\model_loading.vert">
+      <Filter>Source Files\Graphics\Shaders</Filter>
+    </None>
+    <None Include="..\src\Graphics\Shaders\skinning.frag">
+      <Filter>Source Files\Graphics\Shaders</Filter>
+    </None>
+    <None Include="..\src\Graphics\Shaders\skinning.vert">
+      <Filter>Source Files\Graphics\Shaders</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\Graphics\Objects\Cube.cpp">
+      <Filter>Source Files\Graphics\Objects</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\Graphics\Camera.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
@@ -49,8 +108,41 @@
     <ClCompile Include="..\src\client\Window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Graphics\Animation\skinning_technique.cpp">
+      <Filter>Source Files\Graphics\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Graphics\Animation\technique.cpp">
+      <Filter>Source Files\Graphics\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Graphics\Objects\ChickenAnim.cpp">
+      <Filter>Source Files\Graphics\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Graphics\Objects\StaticObject.cpp">
+      <Filter>Source Files\Graphics\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Graphics\Objects\Grass.cpp">
+      <Filter>Source Files\Graphics\Objects</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\Graphics\Objects\Egg.cpp">
       <Filter>Source Files\Graphics\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Graphics\Objects\Entity.cpp">
+      <Filter>Source Files\Graphics\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Graphics\Animation\AnimationMesh.cpp">
+      <Filter>Source Files\Graphics\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Graphics\Animation\AnimationPlayer.cpp">
+      <Filter>Source Files\Graphics\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Graphics\Animation\AnimatedModel.cpp">
+      <Filter>Source Files\Graphics\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Graphics\Texture.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Basic\Utils.cpp">
+      <Filter>Source Files\Basic</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -99,6 +191,9 @@
     <ClInclude Include="..\src\Graphics\Objects\Ground.h">
       <Filter>Source Files\Graphics\Objects</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\Graphics\Objects\Egg.h">
+      <Filter>Source Files\Graphics\Objects</Filter>
+    </ClInclude>
     <ClInclude Include="..\src\Graphics\Objects\Entity.h">
       <Filter>Source Files\Graphics\Objects</Filter>
     </ClInclude>
@@ -117,8 +212,35 @@
     <ClInclude Include="..\src\client\Window.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\Graphics\Animation\skinning_technique.h">
+      <Filter>Source Files\Graphics\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Graphics\Animation\technique.h">
+      <Filter>Source Files\Graphics\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Graphics\Objects\ChickenAnim.h">
+      <Filter>Source Files\Graphics\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Graphics\Objects\StaticObject.h">
+      <Filter>Source Files\Graphics\Objects</Filter>
+    </ClInclude>
     <ClInclude Include="..\src\Graphics\Objects\Egg.h">
       <Filter>Source Files\Graphics\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Graphics\Animation\AnimationMesh.h">
+      <Filter>Source Files\Graphics\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Graphics\Animation\AnimationPlayer.h">
+      <Filter>Source Files\Graphics\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Graphics\Animation\AnimatedModel.h">
+      <Filter>Source Files\Graphics\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Graphics\Texture.h">
+      <Filter>Source Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Basic\Utils.h">
+      <Filter>Source Files\Basic</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -143,8 +265,11 @@
     <None Include="..\src\Graphics\Shaders\model_loading.vert">
       <Filter>Source Files\Graphics\Shaders</Filter>
     </None>
-    <None Include="..\prj\packages.config">
-      <Filter>Source Files</Filter>
+    <None Include="..\src\Graphics\Shaders\instancing.frag">
+      <Filter>Source Files\Graphics\Shaders</Filter>
+    </None>
+    <None Include="..\src\Graphics\Shaders\instancing.vert">
+      <Filter>Source Files\Graphics\Shaders</Filter>
     </None>
     <None Include="..\src\Graphics\Shaders\diffuse.vert">
       <Filter>Source Files\Graphics\Shaders</Filter>
@@ -157,6 +282,9 @@
     <Filter Include="Source Files\Graphics">
       <UniqueIdentifier>{5c465b61-ab11-4ae6-9788-c8805e76951e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Graphics\Animation">
+      <UniqueIdentifier>{0d2e5aff-8417-45e4-8b80-b80cf6d54683}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source Files\Graphics\Shaders">
       <UniqueIdentifier>{6e378534-bdb2-4e96-86f5-d62e8c08b3ba}</UniqueIdentifier>
     </Filter>
@@ -166,5 +294,10 @@
     <Filter Include="Source Files\Network">
       <UniqueIdentifier>{ef9abc4c-0746-4562-bfab-d02cd140fa26}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\src\Graphics\Objects\Grass.h">
+      <Filter>Source Files\Graphics\Objects</Filter>
+    </Text>
   </ItemGroup>
 </Project>

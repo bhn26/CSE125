@@ -28,11 +28,19 @@ public:
             this->meshes[i].Draw(shader);
     }
 
+	const std::vector<Mesh>& Meshes() const {
+		return meshes;
+	}
+
+	const std::vector<Mesh::Texture>& Textures() const {
+		return textures_loaded;
+	}
+
 private:
     /*  Model Data  */
     std::vector<Mesh> meshes;
     std::string directory;
-    std::vector<Texture> textures_loaded;   // Stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
+    std::vector<Mesh::Texture> textures_loaded;   // Stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
 
      /*  Functions   */
     void LoadModel(std::string path);  // Loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes vector.
@@ -43,5 +51,5 @@ private:
 
     // Checks all material textures of a given type and loads the textures if they're not loaded yet.
     // The required info is returned as a Texture struct.
-    std::vector<Texture> LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
+    std::vector<Mesh::Texture> LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
 };

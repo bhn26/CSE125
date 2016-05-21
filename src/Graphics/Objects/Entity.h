@@ -1,3 +1,10 @@
+//
+//  Entity.hpp
+//  egg scramble
+//
+//  Created by Phoebe on 4/14/16.
+//  Copyright © 2016 sunny side up. All rights reserved.
+//
 #pragma once
 
 #include <glm/glm.hpp>
@@ -6,11 +13,15 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <memory>
+#include <SFML/Audio.hpp>
 
+#include "Basic/Utils.h"
 #include "../Shader.h"
 
 class Entity
 {
+    long long m_startTime;
+    sf::Music musicPlayer;
 protected:
     glm::mat4 toWorld;
     glm::mat3 normalMatrix;
@@ -40,26 +51,33 @@ public:
     {
     }
 
+    bool PlaySound(std::string soundFile);
+    float GetRunningTime()
+    {
+        return (float)(Utils::CurrentTime() - m_startTime);
+    }
+
     virtual void Draw() const = 0;
     virtual void Update() = 0;
 
     virtual void Spawn(/*Scene* scene, */float x, float y, float z) = 0;      // Maybe to spawn into the world, rather than using a constructor
 
-    void MoveTo(float x, float y, float z) { MoveTo(glm::vec3(x, y, z));}
-    void MoveTo(const glm::vec3& newPosition) { toWorld[3] = glm::vec4(newPosition, 1.0f); }
-    void RotateTo(float w, float x, float y, float z) { RotateTo(glm::quat(w, x, y, z)); }
-    void RotateTo(const glm::quat& newOrientation)
+    virtual void MoveTo(float x, float y, float z) { MoveTo(glm::vec3(x, y, z));}
+    virtual void MoveTo(const glm::vec3& newPosition) { toWorld[3] = glm::vec4(newPosition, 1.0f); }
+    virtual void RotateTo(float w, float x, float y, float z) { RotateTo(glm::quat(w, x, y, z)); }
+    virtual void RotateTo(const glm::quat& newOrientation)
     {
         glm::mat4 temp = static_cast<glm::mat4>(glm::quat(newOrientation));
         temp[3] = toWorld[3];
         toWorld = std::move(temp);
     }
-    void RotateTo(const glm::mat3& newOrientation)
+    virtual void RotateTo(const glm::mat3& newOrientation)
     {
         glm::mat4 temp = glm::mat4(newOrientation);
         temp[3] = toWorld[3];
         toWorld = std::move(temp);
     }
+
     glm::quat Orientation() const { return static_cast<glm::quat>(toWorld); }
 
     const glm::mat4& ToWorld() const { return toWorld; }
