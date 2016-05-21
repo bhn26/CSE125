@@ -9,10 +9,8 @@
 
 #include "../Scene.h"
 
-
 Cube::Cube() : Entity(0.0f, 0.5f, 0.0f), color(glm::vec3(1.0f, 0.2f, 0.1f))
 {
-
     GLfloat vertices[] =
     {
         -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
@@ -130,4 +128,5 @@ void Cube::Spin(float deg)
 void Cube::Spawn(float x, float y, float z)
 {
 }
+
 

@@ -13,22 +13,23 @@
 
 #include "Shader.h"
 
-struct Vertex
-{
-    glm::vec3 position;     // Position
-    glm::vec3 normal;       // Normal
-    glm::vec2 texCoords;    // TexCoords
-};
-
-struct Texture
-{
-    GLuint id;
-    std::string type;
-    aiString path;
-};
-
 class Mesh
 {
+    friend class Model;
+    struct Vertex
+    {
+        glm::vec3 position;     // Position
+        glm::vec3 normal;       // Normal
+        glm::vec2 texCoords;    // TexCoords
+    };
+
+    struct Texture
+    {
+        GLuint id;
+        std::string type;
+        aiString path;
+    };
+
 public:
     /*  Mesh Data  */
     std::vector<Vertex> vertices;

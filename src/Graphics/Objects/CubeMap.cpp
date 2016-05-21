@@ -15,7 +15,7 @@
 #include <cstdio>
 
 // Other Libs
-#include <SOIL.h>
+#include <SOIL/SOIL.h>
 
 CubeMap::CubeMap() : Entity(glm::scale(glm::mat4(1.0f), glm::vec3(200.0f)))
 {

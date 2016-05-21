@@ -6,9 +6,11 @@
 #include "Objects/Chicken.h"
 #include "Camera.h"
 #include "PointLight.h"
+
 #include "Objects/Entity.h"
 #include "../client/Player.h"
 #include "../client/ClientGame.h"
+
 #include "../server/engine/ObjectId.h"
 #include <algorithm>
 #include <vector>
@@ -106,14 +108,15 @@ void Scene::Setup()
 
 }
 
-void Scene::AddPlayer(int client_id) {
-	//TODO - add client_id field to player
-	std::shared_ptr<Player> new_player = std::shared_ptr<Player>(new Player(client_id));
+void Scene::AddPlayer(int client_id)
+{
+    //TODO - add client_id field to player
+    std::shared_ptr<Player> new_player = std::shared_ptr<Player>(new Player(client_id));
 
-	std::shared_ptr<Shader> modelShader = std::make_shared<Shader>("src/Graphics/Shaders/model_loading.vert", "src/Graphics/Shaders/model_loading.frag");
-	new_player->GetShader() = modelShader;
+    std::shared_ptr<Shader> modelShader = std::make_shared<Shader>("src/Graphics/Shaders/model_loading.vert", "src/Graphics/Shaders/model_loading.frag");
+    new_player->GetShader() = modelShader;
 
-	players.push_back(new_player);
+    players.push_back(new_player);
 
 	if (client_id == ClientGame::GetClientId()) {
 		printf("set main player to %d\n", client_id);
@@ -142,9 +145,8 @@ void Scene::Draw()
         entity.second->Draw();
 
     // Redrawing players??
-	for (int i = 0; i < players.size(); i++) {
-		players.at(i)->Draw();
-	}
+    for (std::shared_ptr<Player>& player : players)
+        player->Draw();
 }
 
 
@@ -162,6 +164,7 @@ glm::vec3 Scene::GetCameraPosition()
 
 glm::mat4 Scene::GetPerspectiveMatrix()
 {
+    if (player) return player->GetPerspectiveMatrix();
     return camera->GetPerspectiveMatrix();
 }
 
@@ -181,7 +184,7 @@ void Scene::AddEntity(int cid, int oid, float x, float y, float z, float rotw, f
 	case ClassId::PLAYER:
 		player = std::unique_ptr<Player>(new Player(x,y,z,rotw,rotx,roty,rotz));
 		player->SetModelFile("assets/chickens/objects/pinocchio_chicken.obj");
-		player->Spawn(x, y, z);
+        player->Spawn(x, y, z);
 		player->GetShader() = modelShader;
 		//player->RotateTo(rotw, rotx, roty, rotz);
 		// set main player if the oid matches

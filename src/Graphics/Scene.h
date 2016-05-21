@@ -16,6 +16,7 @@ class Camera;
 class Player;
 
 struct PointLight;
+class ChickenAnim;
 
 class Scene
 {
@@ -45,7 +46,6 @@ class Scene
 	std::vector<std::unique_ptr<StaticObject> > static_objects;
 
     Scene();
-
     void Setup();
 
 public:
@@ -64,10 +64,11 @@ public:
 
 	void AddPlayer(int client_id);
     void Update();
+
     void Draw();
 
     // Interface to camera
-	glm::mat4 GetViewMatrix();
+    glm::mat4 GetViewMatrix();
     glm::vec3 GetCameraPosition();
     glm::mat4 GetPerspectiveMatrix();
 
