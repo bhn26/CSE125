@@ -47,8 +47,6 @@ public:
     void receiveRotationPacket(int offset);
     void sendRotationPacket(); 
 
-	void sendJumpPacket();
-
 	bool hasStarted() { return game_started; }
 
 	std::shared_ptr<Player> FindTarget(int tid);

@@ -258,20 +258,6 @@ void ClientGame::sendRotationPacket() {
     NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
 }
 
-void ClientGame::sendJumpPacket()
-{
-    const unsigned int packet_size = sizeof(Packet);
-    char packet_data[packet_size];
-
-    Packet packet;
-    packet.hdr.packet_type = JUMP_EVENT;
-    packet.hdr.sender_id = client_id;
-    packet.hdr.receiver_id = SERVER_ID;
-
-    packet.serialize(packet_data);
-
-    NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
-}
 /*std::shared_ptr<Player> ClientGame::FindTarget(int tid) {
 	if (tid == client_id) {
 		return Scene::Instance()->GetPlayer();
@@ -397,7 +383,7 @@ void ClientGame::GameLoop()
         // Idle callback. Updating objects, etc. can be done here.
         Window::Idle_callback();
 
-		if (++tick % 15 == 0 && iSpawned)
+		if (++tick % 20 == 0 && iSpawned)
 		{
 			ClientGame::instance()->sendRotationPacket();
 			tick = 0;
