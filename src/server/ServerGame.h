@@ -41,6 +41,8 @@ public:
     void receiveRotationPacket(int offset);
     void sendRotationPacket(int obj_id, float w, float x, float y, float z);
 
+	void receiveJumpPacket(int offset);
+
 	static void instantiate()
 	{
 		if (sg == NULL)

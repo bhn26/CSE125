@@ -101,6 +101,10 @@ void ServerGame::receiveFromClients()
                     receiveMovePacket(i);
                     break;
 
+				case JUMP_EVENT:
+					receiveJumpPacket(i);
+					break;
+
                 case SPAWN_EVENT: // This will probably be deleted, only server spawns things i think
 
                     // Receive packet
@@ -383,4 +387,14 @@ void ServerGame::sendRotationPacket(int client, float w, float x, float y, float
     packet.serialize(packet_data);
 
 	network->sendToAll(packet_data, packet_size);
+}
+
+void ServerGame::receiveJumpPacket(int offset)
+{
+	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
+	struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
+
+	struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset - sizeof(PacketHeader)]);
+
+	engine->GetWorld()->GetPlayer(hdr->sender_id)->JumpPlayer();
 }
