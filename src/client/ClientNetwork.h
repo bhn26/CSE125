@@ -5,11 +5,13 @@
 #include "../network/NetworkServices.h"
 #include <ws2tcpip.h>
 #include <stdio.h> 
+#include <string>
 #include "../network/NetworkData.h"
 
 // size of our buffer
 #define DEFAULT_BUFLEN 512
 // port to connect sockets through 
+#define DEFAULT_IP "127.0.0.1"
 #define DEFAULT_PORT "6881"
 // Need to link with Ws2_32.lib, Mswsock.lib, and Advapi32.lib
 #pragma comment (lib, "Ws2_32.lib")
@@ -32,5 +34,9 @@ public:
     ~ClientNetwork(void);
 
 	int receivePackets(char *);
+
+private:
+	std::string ip;
+	std::string port;
 };
 

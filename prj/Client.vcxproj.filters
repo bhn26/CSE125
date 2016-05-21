@@ -144,6 +144,9 @@
     <ClCompile Include="..\src\Basic\Utils.cpp">
       <Filter>Source Files\Basic</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\ConfigManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Graphics\Camera.h">
@@ -241,6 +244,9 @@
     </ClInclude>
     <ClInclude Include="..\src\Basic\Utils.h">
       <Filter>Source Files\Basic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ConfigManager.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
