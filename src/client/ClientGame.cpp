@@ -117,9 +117,14 @@ void ClientGame::receiveSpawnPacket(int offset)
 
     struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
     struct PosInfo* p = (struct PosInfo *) (dat->buf);
-	
+
 	// spawn the thing
 	Scene::Instance()->AddEntity(p->cid, p->oid, p->x, p->y, p->z, p->rotw, p->rotx, p->roty, p->rotz);
+
+	if (!iSpawned && p->oid == client_id)
+	{
+		iSpawned = true;
+	}
 }
 
 void ClientGame::sendSpawnPacket()
@@ -152,6 +157,9 @@ void ClientGame::receiveMovePacket(int offset)
 
     struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
     struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
+
+	//if(pi->oid == 1)
+		//printf("received move packet for obj id %d. Its coordinates are: %f, %f, %f\n", pi->oid, pi->x, pi->y, pi->z);
 
 	Scene::Instance()->GetEntity(pi->cid, pi->oid)->MoveTo(pi->x, pi->y, pi->z);
 
@@ -195,13 +203,22 @@ void ClientGame::receiveRotationPacket(int offset) {
     struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
     struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
 
-	printf("received a rotation packet with: %f, %f, %f, %f\n", pi->rotw, pi->rotx, pi->roty, pi->rotz);
+	//printf("received a rotation packet with: %f, %f, %f, %f\n", pi->rotw, pi->rotx, pi->roty, pi->rotz);
 
 	//std::shared_ptr<Player> target = FindTarget(pi->id);
 	//server don't tell us how we rotate
 	if (pi->oid != client_id) {
 		Scene::Instance()->GetEntity(pi->cid, pi->oid)->RotateTo(pi->rotw, pi->rotx, pi->roty, pi->rotz);
+		glm::quat quat = Scene::Instance()->GetEntity(pi->cid, pi->oid)->Orientation();
+		printf("rotation of player %d on client is %f, %f, %f, %f\n", pi->oid, quat.w, quat.x, quat.y, quat.z);
 	}
+	
+	// Rotate it if it's not a player
+	if (pi->cid != ClassId::PLAYER)
+	{
+		Scene::Instance()->GetEntity(pi->cid, pi->oid)->RotateTo(pi->rotw, pi->rotx, pi->roty, pi->rotz);
+	}
+
 
 	// left/right rotation
 	/*glm::mat4 newToWorld = target->GetToWorld() * glm::rotate(glm::mat4(1.0f), pi->v_rotation, glm::vec3(0.0f, 1.0f, 0.0f));
@@ -231,7 +248,7 @@ void ClientGame::sendRotationPacket() {
 	pi.roty = rot.y;
 	pi.rotz = rot.z;
 
-	printf("sending a rotation packet with: %f, %f, %f, %f\n", pi.rotw, pi.rotx, pi.roty, pi.rotz);
+	//printf("sending a rotation packet with: %f, %f, %f, %f\n", pi.rotw, pi.rotx, pi.roty, pi.rotz);
    // pi.v_rotation = v_rot;
 	//pi.h_rotation = h_rot;
     pi.serialize(packet.dat.buf);
@@ -365,6 +382,12 @@ void ClientGame::GameLoop()
         Window::Display_callback(window);
         // Idle callback. Updating objects, etc. can be done here.
         Window::Idle_callback();
+
+		if (++tick % 20 == 0 && iSpawned)
+		{
+			ClientGame::instance()->sendRotationPacket();
+			tick = 0;
+		}
     }
 }
 

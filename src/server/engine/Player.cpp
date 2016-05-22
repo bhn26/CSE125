@@ -56,11 +56,11 @@ void Player::Move(btVector3* changeVelocity) {
 	btQuaternion q = GetPlayerRotation();
 	//btVector3 newVelocity = btVector3(q.getW() * 3, 0, q.getY() * 3);
 	btVector3 newVelocity = currentOrientation * (*changeVelocity);
-	printf("Q OF PLAYER MOVING IS :  %f, %f, %f, %f\n", q.getW(), q.getX(), q.getY(), q.getZ());
+	//printf("Q OF PLAYER MOVING IS :  %f, %f, %f, %f\n", q.getW(), q.getX(), q.getY(), q.getZ());
 	// set new velocity
 	playerRigidBody->setLinearVelocity(newVelocity);
 	//printf("%d: world pos object = %f,%f,%f\n", id, float(currentTrans.getOrigin().getX()), float(currentTrans.getOrigin().getY()), float(currentTrans.getOrigin().getZ()));
-	printf("current velocity %f, %f, %f\n", float(playerRigidBody->getLinearVelocity()[0]), float( playerRigidBody->getLinearVelocity()[1]), float(playerRigidBody->getLinearVelocity()[2]));
+	//printf("current velocity %f, %f, %f\n", float(playerRigidBody->getLinearVelocity()[0]), float( playerRigidBody->getLinearVelocity()[1]), float(playerRigidBody->getLinearVelocity()[2]));
 	//playerRigidBody->activate();
 }
 
@@ -84,7 +84,7 @@ btQuaternion Player::GetPlayerRotation()
 
 void Player::SetPlayerRotation(float x, float y, float z, float w)
 {
-	btQuaternion* playerRotation = new btQuaternion(w, x, y, z);
+	btQuaternion* playerRotation = new btQuaternion(x, y, z, w);
 	btTransform currentTrans;
 	playerRigidBody->getMotionState()->getWorldTransform(currentTrans);
 	currentTrans.setRotation((*playerRotation));
