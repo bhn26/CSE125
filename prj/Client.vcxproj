@@ -190,6 +190,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Basic\Utils.cpp" />
+    <ClCompile Include="..\src\ConfigManager.cpp" />
     <ClCompile Include="..\src\Graphics\Texture.cpp" />
     <ClCompile Include="..\src\Graphics\Animation\AnimatedModel.cpp" />
     <ClCompile Include="..\src\Graphics\Animation\AnimationMesh.cpp" />
@@ -220,6 +221,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Basic\Utils.h" />
+    <ClInclude Include="..\src\ConfigManager.h" />
     <ClInclude Include="..\src\Graphics\Texture.h" />
     <ClInclude Include="..\src\Graphics\Animation\AnimatedModel.h" />
     <ClInclude Include="..\src\Graphics\Animation\AnimationMesh.h" />
