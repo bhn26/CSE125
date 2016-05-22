@@ -33,7 +33,6 @@ void ServerGame::update()
 
 			// This will be an INIT_CONNECTION packet
 			receiveFromClients();
-			client_id++;
 		}
 	}
 	
@@ -150,6 +149,7 @@ void ServerGame::receiveInitPacket(int offset)
 
     network->sendToClient(packet_data, packet_size, client_id);
     printf("server sent init packet to client %d\n", client_id);
+	client_id++;
 
 }
 
