@@ -54,9 +54,6 @@ public:
     virtual void Draw() const override;
 
     virtual void MoveTo(float x, float y, float z) override;
-    virtual void RotateTo(float w, float x, float y, float z) override { RotateTo(glm::quat(w, x, y, z)); }
-    virtual void RotateTo(const glm::quat& newOrientation) override;
-    virtual void RotateTo(const glm::mat3& newOrientation) override;
 
     void SetModelFile(std::string fileName);
 
@@ -75,6 +72,7 @@ public:
     glm::mat3 GetNormalMatrix() const;
 
 	int GetID() { return id; };
+	int GetClassId() { return class_id; }
 
 	glm::quat GetOrientation() { return Orientation();  }
 

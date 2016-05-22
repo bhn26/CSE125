@@ -74,8 +74,10 @@ private:
     double lastTime;
     int nbFrames;
     int client_id; // should know what client number we are so we can fill out packet headers
+	int tick = 0;
 
 	bool game_started = false;
+	bool iSpawned = false;
 
     static ClientGame* cg;
 
