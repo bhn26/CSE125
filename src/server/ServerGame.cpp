@@ -276,22 +276,22 @@ void ServerGame::receiveMovePacket(int offset)
 	btVector3* vec;
 	switch (pi->direction) {
 	case MOVE_FORWARD:
-		vec = new btVector3(0, 0, 3);
+		vec = new btVector3(0, 0, 2);
 		player->Move(vec);
 		delete vec;
 		break;
 	case MOVE_BACKWARD:	
-		vec = new btVector3(0, 0, -3);
+		vec = new btVector3(0, 0, -2);
 		player->Move(vec);
 		delete vec;
 		break;
 	case MOVE_LEFT:
-		vec = new btVector3(3, 0, 0);
+		vec = new btVector3(2, 0, 0);
 		player->Move(vec);
 		delete vec;
 		break;
 	case MOVE_RIGHT:
-		vec = new btVector3(-3, 0, 0);
+		vec = new btVector3(-2, 0, 0);
 		player->Move(vec);
 		delete vec;
 		break;
@@ -391,10 +391,7 @@ void ServerGame::sendRotationPacket(int client, float w, float x, float y, float
 
 void ServerGame::receiveJumpPacket(int offset)
 {
-	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
-	struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
-
-	struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset - sizeof(PacketHeader)]);
+    struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset]);
 
 	engine->GetWorld()->GetPlayer(hdr->sender_id)->JumpPlayer();
 }
