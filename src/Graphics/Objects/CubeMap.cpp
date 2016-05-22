@@ -75,12 +75,20 @@ CubeMap::CubeMap() : Entity(glm::scale(glm::mat4(1.0f), glm::vec3(200.0f)))
     glBindVertexArray(0);
     
     // Cubemap (Skybox)
+	faces.push_back("assets/cubemap/hills_rt.jpg");
+	faces.push_back("assets/cubemap/hills_lf.jpg");
+	faces.push_back("assets/cubemap/hills_up.jpg");
+	faces.push_back("assets/cubemap/hills_dn.jpg");
+	faces.push_back("assets/cubemap/hills_bk.jpg");
+	faces.push_back("assets/cubemap/hills_ft.jpg");
+	/*
     faces.push_back("assets/cubemap/right.jpg");
     faces.push_back("assets/cubemap/left.jpg");
     faces.push_back("assets/cubemap/top.jpg");
     faces.push_back("assets/cubemap/bottom.jpg");
     faces.push_back("assets/cubemap/back.jpg");
     faces.push_back("assets/cubemap/front.jpg");
+	*/
 }
 
 CubeMap::~CubeMap()
