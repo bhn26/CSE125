@@ -54,6 +54,7 @@ Release/
 Debug/
 
 *.txt
+eggs.cfg
 
 
 # Ignore NuGet packages

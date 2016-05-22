@@ -20,6 +20,7 @@ class ConfigManager {
 public:
     std::map<std::string, std::string> cfg_map;
     
+	// use this to load the file into the manager
     void LoadConfigs(std::string file_name)
 	{
         std::string line;
@@ -30,12 +31,13 @@ public:
         {
             std::istringstream iss(line);
             std::string field, equal, value;
-            if (!(iss >> field >> equal >> value)) { break; } // error
+            if (!(iss >> field >> equal >> value)) { continue; } // error, skip this line
 			cfg_map.insert(std::pair<std::string, std::string>(field, value));
         }
 		infile.close();
     }
 
+	// use this to get the value read from the config file
 	std::string GetConfigValue(std::string key)
 	{
 		if (cfg_map.find(key) != cfg_map.end())
