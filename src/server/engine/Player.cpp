@@ -13,6 +13,7 @@ Player::Player(int id, int teamid, PosInfo pos, btDiscreteDynamicsWorld* physics
 	btRigidBody* pRigidBody = new btRigidBody(playerRigidBodyCI);
 	pRigidBody->forceActivationState(DISABLE_DEACTIVATION);
     pRigidBody->setDamping((btScalar)0.1, (btScalar)1);
+	pRigidBody->setFriction((btScalar) 10);
 	physicsWorld->addRigidBody(pRigidBody);
 
 	// Set Player's protected fields
