@@ -33,7 +33,6 @@ void ServerGame::update()
 
 			// This will be an INIT_CONNECTION packet
 			receiveFromClients();
-			client_id++;
 		}
 	}
 	
@@ -101,6 +100,10 @@ void ServerGame::receiveFromClients()
                     receiveMovePacket(i);
                     break;
 
+				case JUMP_EVENT:
+					receiveJumpPacket(i);
+					break;
+
                 case SPAWN_EVENT: // This will probably be deleted, only server spawns things i think
 
                     // Receive packet
@@ -146,6 +149,7 @@ void ServerGame::receiveInitPacket(int offset)
 
     network->sendToClient(packet_data, packet_size, client_id);
     printf("server sent init packet to client %d\n", client_id);
+	client_id++;
 
 }
 
@@ -272,22 +276,22 @@ void ServerGame::receiveMovePacket(int offset)
 	btVector3* vec;
 	switch (pi->direction) {
 	case MOVE_FORWARD:
-		vec = new btVector3(0, 0, 3);
+		vec = new btVector3(0, 0, 2);
 		player->Move(vec);
 		delete vec;
 		break;
 	case MOVE_BACKWARD:	
-		vec = new btVector3(0, 0, -3);
+		vec = new btVector3(0, 0, -2);
 		player->Move(vec);
 		delete vec;
 		break;
 	case MOVE_LEFT:
-		vec = new btVector3(3, 0, 0);
+		vec = new btVector3(2, 0, 0);
 		player->Move(vec);
 		delete vec;
 		break;
 	case MOVE_RIGHT:
-		vec = new btVector3(-3, 0, 0);
+		vec = new btVector3(-2, 0, 0);
 		player->Move(vec);
 		delete vec;
 		break;
@@ -383,4 +387,11 @@ void ServerGame::sendRotationPacket(int client, float w, float x, float y, float
     packet.serialize(packet_data);
 
 	network->sendToAll(packet_data, packet_size);
+}
+
+void ServerGame::receiveJumpPacket(int offset)
+{
+    struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset]);
+
+	engine->GetWorld()->GetPlayer(hdr->sender_id)->JumpPlayer();
 }

@@ -1,7 +1,6 @@
 #include "Player.h"
 #include "ObjectId.h"
 
-
 Player::Player(int id, int teamid, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld) {
 
 	btCollisionShape* playerShape = new btCylinderShape(btVector3(1, 1, 1));
@@ -13,6 +12,8 @@ Player::Player(int id, int teamid, PosInfo pos, btDiscreteDynamicsWorld* physics
 	btRigidBody::btRigidBodyConstructionInfo playerRigidBodyCI(mass, playerMotionState, playerShape, playerInertia);
 	btRigidBody* pRigidBody = new btRigidBody(playerRigidBodyCI);
 	pRigidBody->forceActivationState(DISABLE_DEACTIVATION);
+    pRigidBody->setDamping((btScalar)0.1, (btScalar)1);
+	pRigidBody->setFriction((btScalar) 10);
 	physicsWorld->addRigidBody(pRigidBody);
 
 	// Set Player's protected fields
@@ -100,7 +101,7 @@ void Player::JumpPlayer()
 		jumpSem = 0;
 		btVector3 curVelocity = playerRigidBody->getLinearVelocity();
 		// setting upward velocity to 5
-		curVelocity[1] = 5;
+		curVelocity[1] = 3;
 		playerRigidBody->setLinearVelocity(curVelocity);
 	}
 }
