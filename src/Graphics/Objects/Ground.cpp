@@ -9,7 +9,7 @@
 #include "../Camera.h"
 #include "../../client/Player.h"
 
-const float Ground::SIZE = 200.0f;
+static const float SIZE = 300.0f;
 
 Ground::Ground() : Entity(), color(glm::vec3(0.545f, 0.271f, 0.075f))
 {
