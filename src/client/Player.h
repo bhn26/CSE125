@@ -79,9 +79,13 @@ public:
     void ChangeState(STATE state);                  // Will change model state and player state
     void SetState(STATE state) { m_state = state; }     // Simply Sets the state without changing the model
 
+	int GetScore() { return num_eggs; };
+	void SetScore(int n) { num_eggs = n; };
+
 private:
 	int id;
 	int team_id;
+	int num_eggs;
 
     // Player is made up of a model with a camera following it
     std::unique_ptr<Camera> camera;

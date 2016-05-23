@@ -23,7 +23,7 @@ private:
 	PosInfo position;
 	btDiscreteDynamicsWorld* curWorld;
 	btRigidBody* playerRigidBody;
-	std::vector<std::shared_ptr<Flag>> *flags;
+	std::vector<std::shared_ptr<Flag>> *flags; // eggs collected 
 	int jumpSem;
 	int hitPoints;
 	Weapon* playerWeapon;
@@ -73,6 +73,8 @@ public:
 	int GetObjectId();
 
 	int GetTeamId();
+
+	int GetScore() { return flags->size(); };
 
 	int takeDamage(int damage);
 };

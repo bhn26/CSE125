@@ -9,12 +9,12 @@
 #include "../Graphics/Scene.h"
 #include "Player.h"
 #include "client\ClientGame.h"
+#include "client\TextRenderer.h"
 
 using namespace std;
 
 CPlayState::CPlayState(CStateManager* pManager)
- : CGameState(pManager), 
-  m_ulCurrentScore(0), m_bGameOver(false)
+ : CGameState(pManager), m_bGameOver(false)
 {
 	//glfwSetInputMode(ClientGame::instance()->window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }
@@ -32,7 +32,6 @@ CPlayState* CPlayState::GetInstance(CStateManager* pManager)
 
 void CPlayState::Reset()
 {
-	m_ulCurrentScore = 0;
 	m_bGameOver = false;
 }
 
@@ -89,13 +88,30 @@ void CPlayState::Update(DWORD dwCurrentTime)
 {
 	if (!m_bGameOver)
 	{
+		// update scene
 		Scene::Instance()->Update();
+
+		// update scores
+		std::vector<std::shared_ptr<Player>> players = Scene::Instance()->GetPlayers();
+	
+		scores[0] = 0; // clear score
+		std::vector<int> team0 = ClientGame::Team0();
+		for (int i = 0; i < team0.size(); i++) {
+			scores[0] += players.at(team0.at(i))->GetScore();
+		}
+
+		scores[1] = 0; //clear score
+		std::vector<int> team1 = ClientGame::Team1();
+		for (int i = 0; i < team1.size(); i++) {
+			scores[1] += players.at(team1.at(i))->GetScore();
+		}
 	}
 }
 
 void CPlayState::Draw()  
 { 
-
+	TextRenderer::RenderText("Team 0: ", 50, 50, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+	TextRenderer::RenderText("Team 0: ", Window::width - 50, 50, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 
 	/*stringstream ssScore;
 	ssScore << m_ulCurrentScore;

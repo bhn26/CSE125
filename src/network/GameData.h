@@ -65,18 +65,15 @@ struct PosInfo : GameInfo
 	float y;
 	float z;
 
-    int direction; // remove later?
+    int direction; // client -> server move data
 
 	//rotation coords
 	float rotw;
 	float rotx;
 	float roty;
 	float rotz;
-	
 
-    // rotation
-    //float v_rotation;
-    //float h_rotation;
+	int num_eggs; // num eggs this player has 
 
     void serialize(char * data) {
         memcpy(data, this, sizeof(PosInfo));

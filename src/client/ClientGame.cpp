@@ -186,6 +186,7 @@ void ClientGame::receiveMovePacket(int offset)
 		//printf("received move packet for obj id %d. Its coordinates are: %f, %f, %f\n", pi->oid, pi->x, pi->y, pi->z);
 
 	Scene::Instance()->GetEntity(pi->cid, pi->oid)->MoveTo(pi->x, pi->y, pi->z);
+	Scene::Instance()->GetEntity(pi->cid, pi->oid)->SetScore(pi->num_eggs);
 
 }
 

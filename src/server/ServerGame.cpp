@@ -352,6 +352,8 @@ void ServerGame::sendMovePacket(ClassId class_id, int obj_id)
 		p.y = vec.getY();
 		p.z = vec.getZ();
 
+		p.num_eggs = player->GetScore();
+
         p.serialize(packet.dat.buf);
 
 		/*if (p.oid == 1)
