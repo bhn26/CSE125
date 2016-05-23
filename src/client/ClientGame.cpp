@@ -525,7 +525,7 @@ void ClientGame::PrintFrameRate()
 // button[0-3] = a, b, x, y
 // button[4-5] = LB, RB
 // button[6-7] = Back, Start
-// button[8-9] = left/right joystick
+// button[8-9] = left/right analog
 // button[10-13] = d-pad up, right, down, left
 void ClientGame::CheckController()
 {
