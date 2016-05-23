@@ -15,6 +15,5 @@
 int main()
 {
     ClientGame::instantiate();
-    
     ClientGame::instance()->GameLoop();
 }

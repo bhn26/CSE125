@@ -35,7 +35,7 @@ void Scene::Setup()
     pLight = std::unique_ptr<PointLight>(new PointLight(glm::vec3(0.0f, 20.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)));
 
 	// Barn
-	std::unique_ptr<StaticObject> barn = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/barn.obj"));
+	std::unique_ptr<StaticObject> barn = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/barn2.obj"));
 	barn->Scale(17.0f);
 	barn->Translate(glm::vec3(0.0f, 0.0f, 20.0f));
 
@@ -64,6 +64,11 @@ void Scene::Setup()
 	std::unique_ptr<StaticObject> rocks = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/rocks.obj"));
 	rocks->Scale(4.0f);
 	rocks->Translate(glm::vec3(28.0f, 0.2f, -20.0f));
+
+	// Rocks
+	std::unique_ptr<StaticObject> stump = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/stump.obj"));
+	stump->Scale(4.0f);
+	stump->Translate(glm::vec3(-28.0f, 0.2f, -20.0f));
 
 	// Ground
 	std::unique_ptr<StaticObject> ground = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/ground.obj"));

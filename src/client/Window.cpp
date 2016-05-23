@@ -45,6 +45,8 @@ GLFWwindow* Window::Create_window(int width, int height)
         return NULL;
     }
 
+	glEnable(GL_CULL_FACE);
+
     // enable highest version supported by the OS
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
