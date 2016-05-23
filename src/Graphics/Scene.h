@@ -69,4 +69,7 @@ public:
 
     std::unique_ptr<PointLight>& GetPointLight() { return pLight; }
 	Player*& GetPlayer() { return player; }
+
+	// helpers 
+	static glm::vec2 Get2D(glm::vec3 coords, glm::mat4 view, glm::mat4 projection/*perspective matrix */, int width, int height);
 };

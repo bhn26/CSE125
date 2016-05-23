@@ -5,6 +5,7 @@
 #include "StateManager.h"
 #include "MenuState.h"
 #include <sstream>
+#include <math.h>
 
 #include "../Graphics/Scene.h"
 #include "Player.h"
@@ -109,4 +110,6 @@ void CPlayState::Draw()
 	}
 
 }
+
+
 

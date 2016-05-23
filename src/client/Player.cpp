@@ -12,6 +12,10 @@
 #include "client/ClientGame.h"
 #include "Basic/Utils.h"
 
+//// rendering text about the player
+#include "client\Window.h"
+#include "client\TextRenderer.h"
+
 Player::Player(float x, float y, float z, float rotW, float rotX, float rotY, float rotZ) : Entity(x,y,z), camAngle(0.0f), modelFile("assets/chickens/objects/chicken.obj")
 {
     //for (int col = 0; col < 3; col++)
@@ -76,6 +80,11 @@ void Player::Draw() const
     //skinTechnique->SetWorldMatrix(toWorld);
 
     //m_model->Draw();
+
+	////////////// DRAW SCORE /////////////////////////
+	//glm::vec3 coords, glm::mat4 view, glm::mat4 projection/*perspective matrix */, int width, int height);
+	glm::vec2 screen_coords = Scene::Get2D(Position(), GetViewMatrix(), GetPerspectiveMatrix(), Window::width, Window::height);
+	TextRenderer::RenderText(std::to_string(num_eggs).c_str(), screen_coords.x, screen_coords.y, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 }
 
 void Player::MoveTo(float x, float y, float z)
