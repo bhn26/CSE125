@@ -36,74 +36,57 @@ void Scene::Setup()
 
 	// Barn
 	std::unique_ptr<StaticObject> barn = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/barn.obj"));
-	barn->Scale(8.0f);
-	barn->Translate(glm::vec3(0.0f, 0.0f, 10.0f));
+	barn->Scale(17.0f);
+	barn->Translate(glm::vec3(0.0f, 0.0f, 20.0f));
 
 	// Tractor
 	std::unique_ptr<StaticObject> tractor = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/tractor.obj"));
-	tractor->Scale(7.0f);
+	tractor->Scale(12.0f);
 	tractor->Rotate(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 	tractor->Translate(glm::vec3(17.0f, 0.0f, -13.0f));
 
 	// Silo
 	std::unique_ptr<StaticObject> silo = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/silo.obj"));
-	silo->Scale(3.0f);
-	silo->Translate(glm::vec3(-13.0f, 0.0f, -4.0f));
+	silo->Scale(10.0f);
+	silo->Translate(glm::vec3(-28.0f, 0.0f, -4.0f));
 
 	// Pumpkin
 	std::unique_ptr<StaticObject> pumpkin = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/pumpkin.obj"));
 	pumpkin->Translate(glm::vec3(0.0f, 0.0f, -1.0f));
 
 	// Bench
-	std::unique_ptr<StaticObject> bench = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/wood_bench.obj"));
-	bench->Scale(0.01f);
-	bench->Translate(glm::vec3(0.0f, 0.0f, -60.0f));
+	std::unique_ptr<StaticObject> bench = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/bench3.obj"));
+	bench->Scale(4.0f);
+	bench->Translate(glm::vec3(40.0f, 3.2f, 0.0f));
+	bench->Rotate(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+
+	// Rocks
+	std::unique_ptr<StaticObject> rocks = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/rocks.obj"));
+	rocks->Scale(4.0f);
+	rocks->Translate(glm::vec3(28.0f, 0.2f, -20.0f));
 
 	// Ground
 	std::unique_ptr<StaticObject> ground = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/ground.obj"));
-	ground->Translate(glm::vec3(0.0f, 6.8f, 0.0f));
-	//bench->Translate(glm::vec3(0.0f, 0.0f, -60.0f));
+	ground->Scale(4.0f);
+	ground->Translate(glm::vec3(0.0f, 27.3f, 0.0f));
 
+
+	//std::unique_ptr<Ground> ground = std::unique_ptr<Ground>(new Ground);
+	//std::unique_ptr<Cube> cube = std::unique_ptr<Cube>(new Cube);
 	grass = std::unique_ptr<Grass>(new Grass);
-    //std::unique_ptr<Ground> ground = std::unique_ptr<Ground>(new Ground);
-    //std::unique_ptr<Cube> cube = std::unique_ptr<Cube>(new Cube);
     cubeMap = std::unique_ptr<CubeMap>(new CubeMap);
     cubeMap->LoadCubeMap();
 
-   // cube->GetShader() = basicShader;
 	grass->GetShader() = instanceShader;
-   // ground->GetShader() = diffuseShader;
     cubeMap->GetShader() = cubeMapShader;
 
 	//static_objects.push_back(std::move(grass));
 	static_objects.push_back(std::move(barn));
 	static_objects.push_back(std::move(tractor));
 	static_objects.push_back(std::move(silo));
-	static_objects.push_back(std::move(ground));
-  //  entities.push_back(std::move(ground));
+	static_objects.push_back(std::move(rocks));
 	static_objects.push_back(std::move(bench));
-   // entities.push_back(std::move(cube));
-	//static_objects.push_back(std::move(cubeMap));
-
-    /*std::unique_ptr<Player> player = std::unique_ptr<Player>(new Player);
-	player->SetModelFile("assets/chickens/objects/pinocchio_chicken.obj");
-    Scene::player = player.get();*/
-    //ground = std::unique_ptr<Ground>(new Ground);
-    //std::unique_ptr<Cube> cube = std::unique_ptr<Cube>(new Cube);
-	/*std::unique_ptr<Egg> egg = std::unique_ptr<Egg>(new Egg(glm::vec3(10.0f, 3.0f, 10.0f)));
-	egg->SetColor(glm::vec3(0.27f, 0.16f, 0.0f));*/
-
-    //cube->GetShader() = basicShader;
-	//egg->GetShader() = diffuseShader;
-    //ground->GetShader() = diffuseShader;
-    //player->GetShader() = modelShader;
-
-    /*entities.push_back(std::move(ground));
-    entities.push_back(std::move(player));
-	entities.push_back(std::move(egg));
-    //entities.push_back(std::move(cube)); // Don't add cube to scene
-    entities.push_back(std::move(cubeMap));*/
-
+	static_objects.push_back(std::move(ground));
 }
 
 void Scene::AddPlayer(int client_id) {
@@ -193,8 +176,7 @@ void Scene::AddEntity(int cid, int oid, float x, float y, float z, float rotw, f
 		break;
 	case ClassId::FLAG:
 		egg = std::unique_ptr<Egg>(new Egg(x,y,z));
-		egg->SetColor(glm::vec3(0.27f, 0.16f, 0.0f));
-		egg->GetShader() = diffuseShader;
+		egg->GetShader() = modelShader;
 		AddEntity(cid, oid, std::move(egg));
 		break;
 	default:

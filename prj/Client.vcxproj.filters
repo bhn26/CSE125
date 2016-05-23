@@ -26,7 +26,7 @@
       <Filter>Source Files\Graphics\Objects</Filter>
     </ClCompile>
     <ClCompile Include="..\src\network\NetworkServices.cpp">
-      <Filter>Source Files\Network</Filter>
+      <Filter>Source Files\Graphics\Network</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Graphics\Objects\Ground.cpp">
       <Filter>Source Files\Graphics\Objects</Filter>
@@ -53,6 +53,8 @@
       <Filter>Source Files\Graphics\Objects</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Graphics\Objects\Grass.cpp">
+      <Filter>Source Files\Graphics\Objects</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\Graphics\Objects\Egg.cpp">
       <Filter>Source Files\Graphics\Objects</Filter>
     </ClCompile>
@@ -89,13 +91,13 @@
       <Filter>Source Files\Graphics\Objects</Filter>
     </ClInclude>
     <ClInclude Include="..\src\network\GameData.h">
-      <Filter>Source Files\Network</Filter>
+      <Filter>Source Files\Graphics\Network</Filter>
     </ClInclude>
     <ClInclude Include="..\src\network\NetworkData.h">
-      <Filter>Source Files\Network</Filter>
+      <Filter>Source Files\Graphics\Network</Filter>
     </ClInclude>
     <ClInclude Include="..\src\network\NetworkServices.h">
-      <Filter>Source Files\Network</Filter>
+      <Filter>Source Files\Graphics\Network</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Graphics\Objects\Cube.h">
       <Filter>Source Files\Graphics\Objects</Filter>
@@ -122,6 +124,8 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Graphics\Objects\StaticObject.h">
+      <Filter>Source Files\Graphics\Objects</Filter>
+    </ClInclude>
     <ClInclude Include="..\src\Graphics\Objects\Egg.h">
       <Filter>Source Files\Graphics\Objects</Filter>
     </ClInclude>
@@ -155,6 +159,8 @@
       <Filter>Source Files\Graphics\Shaders</Filter>
     </None>
     <None Include="..\src\Graphics\Shaders\instancing.vert">
+      <Filter>Source Files\Graphics\Shaders</Filter>
+    </None>
     <None Include="..\src\Graphics\Shaders\diffuse.vert">
       <Filter>Source Files\Graphics\Shaders</Filter>
     </None>
@@ -172,7 +178,7 @@
     <Filter Include="Source Files\Graphics\Objects">
       <UniqueIdentifier>{15abbdbb-ea4b-49cc-b0aa-9cc6e86ec603}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Network">
+    <Filter Include="Source Files\Graphics\Network">
       <UniqueIdentifier>{ef9abc4c-0746-4562-bfab-d02cd140fa26}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
