@@ -3,7 +3,7 @@
 #include "Player.h"
 #include "ObjectId.h"
 
-Flag::Flag(int id, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld): Entity(id, physicsWorld)
+Flag::Flag(int objid, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld): Entity(ClassId::FLAG, objid, physicsWorld)
 {
 	p = pos;
 
@@ -19,7 +19,6 @@ Flag::Flag(int id, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld): Entity(i
 	physicsWorld->addRigidBody(pRigidBody);
 
 	// Set Flag's protected fields
-	this->id = id;
 	this->entityRigidBody = pRigidBody;
 
 	// Set RigidBody to point to Flag
@@ -52,5 +51,5 @@ void Flag::HandleCollectable(Player* collidedPlayer)
 	delete entityRigidBody->getMotionState();
 	delete entityRigidBody->getCollisionShape();
 	delete entityRigidBody;
-	EntitySpawner::instance()->RemoveEntity(ClassId::FLAG, (id));
+	EntitySpawner::instance()->RemoveEntity(ClassId::FLAG, (objectId));
 }

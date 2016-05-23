@@ -1,10 +1,10 @@
 #pragma once
 #include <memory>
 #include <vector>
+#include "Entity.h"
 
 #include "../../network/GameData.h"
 
-class Entity;
 class Flag;
 class Weapon;
 
@@ -13,7 +13,6 @@ class Player : public Entity
 
 private:
 
-	int id;
 	int teamId;
 	PosInfo position;
 	btRigidBody* playerRigidBody;
@@ -21,6 +20,7 @@ private:
 	int jumpSem;
 	int hitPoints;
 	Weapon* playerWeapon;
+	Weapon* peckWeapon;
 
 public:
 
@@ -69,5 +69,7 @@ public:
 	int GetTeamId();
 
 	int takeDamage(int damage);
+
+	void UsePeck();
 };
 

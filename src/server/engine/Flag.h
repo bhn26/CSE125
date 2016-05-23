@@ -12,7 +12,7 @@ public:
 
 	PosInfo p;
 
-	Flag(int id, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld);
+	Flag(int objid, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld);
 
 	~Flag();
 

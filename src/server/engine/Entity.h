@@ -14,11 +14,12 @@ protected:
 
 	btDiscreteDynamicsWorld* curWorld;
 	btRigidBody* entityRigidBody;
-	int id;
+	int objectId;
+	int classId;
 
 public:
 
-	Entity(int objectid, btDiscreteDynamicsWorld* physicsworld);
+	Entity(int classid, int objectid, btDiscreteDynamicsWorld* physicsworld);
 
 	virtual ~Entity();
 
@@ -29,5 +30,7 @@ public:
 
 	// Returns object id
 	int GetObjectId();
+
+	int GetClassId();
 
 };

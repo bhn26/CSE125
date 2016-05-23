@@ -2,9 +2,10 @@
 
 #include "Entity.h"
 
-Entity::Entity(int objectid, btDiscreteDynamicsWorld* physicsworld)
+Entity::Entity(int classid, int objectid, btDiscreteDynamicsWorld* physicsworld)
 {
-	this->id = objectid;
+	this->classId = classid;
+	this->objectId = objectid;
 	this->curWorld = physicsworld;
 }
 
@@ -23,5 +24,10 @@ btQuaternion Entity::GetEntityRotation() {
 
 int Entity::GetObjectId()
 {
-	return id;
+	return objectId;
+}
+
+int Entity::GetClassId()
+{
+	return classId;
 }

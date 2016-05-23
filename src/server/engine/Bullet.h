@@ -7,7 +7,6 @@
 class Bullet : public Entity
 {
 private:
-	int id;
 	int playerId;
 	int teamId;
 	int damage;

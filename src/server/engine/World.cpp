@@ -6,7 +6,7 @@
 #include "Flag.h"
 #include "Bullet.h"
 #include "WorldObstacle.h"
-
+#include "BulletCollision\CollisionDispatch\btGhostObject.h"
 
 World::World() {
 	// initialize map objects 
@@ -19,8 +19,7 @@ World::~World() {
 
 void World::Init() {
 
-	// Init object id counter
-	oid = 0;
+	// Init world tick counter
 	currentWorldTick = 0;
 
 	// Init Fire Rate Reseter
@@ -103,41 +102,9 @@ void World::Init() {
 	disp = dispatcher;
 	colConfig = collisionConfig;
 
-	// Initialize player objects
-	/*for (int i = 0; i < player_poss.size(); i++) {
-		int teamid = 1;
-		std::shared_ptr<Player> player = std::shared_ptr<Player>(new Player(oid, teamid, player_poss.at(i), curWorld));
-		btVector3 vec = player->GetPlayerPosition();
-		printf("Created player at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
-		//printf("Posinfo player at (%d,%d,%d)\n", player->GetPosition().x, player->GetPosition().y, player->GetPosition().z);
-		players.push_back(player);
+	// set up physics world for field detection
+	dynamicsWorld->getBroadphase()->getOverlappingPairCache()->setInternalGhostPairCallback(new btGhostPairCallback());
 
-		// Send spawn info to the clients
-		PosInfo pi;
-		pi.cid = ClassId::PLAYER;
-		pi.oid = oid++;
-		pi.x = vec.getX();
-		pi.y = vec.getY();
-		pi.z = vec.getZ();
-		ServerGame::instance()->sendSpawnPacket(pi);
-	}
-
-	// Initialize egg objects
-	for (int i = 0; i < flag_poss.size(); i++) {
-		std::shared_ptr<Flag> flag = std::shared_ptr<Flag>(new Flag(oid, flag_poss.at(i), curWorld));
-		btVector3 vec = flag->GetFlagPosition();
-		printf("Created flag at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
-		printf("Posinfo flag at (%d,%d,%d)\n", flag->p.x, flag->p.y, flag->p.z);
-		flags.push_back(flag);
-
-		PosInfo pi;
-		pi.cid = ClassId::FLAG;
-		pi.oid = oid++;
-		pi.x = vec.getX();
-		pi.y = vec.getY();
-		pi.z = vec.getZ();
-		ServerGame::instance()->sendSpawnPacket(pi);
-	}*/
 }
 
 btDiscreteDynamicsWorld* World::GetPhysicsWorld()
@@ -354,14 +321,14 @@ void World::UpdateWorld()
 		*/
 
 		// TODO!!! HACK TO PRINT OUT UPDATE FOR ONE PLAYER.  Change to use Map in EntitySpawner
-		Player* myPlayer = (Player *)(EntitySpawner::instance()->GetEntity(ClassId::PLAYER, 0));
-		btVector3 vec = (myPlayer)->GetEntityPosition();
-		printf(" player at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
 
-		for (std::vector<std::shared_ptr<Player> >::iterator it = players.begin(); it != players.end(); ++it)
+		Player* myPlayer = (Player *)(EntitySpawner::instance()->GetEntity(ClassId::PLAYER, 0));
+
+		std::map<std::pair<int,unsigned int>, Entity* > * dynamicMap = EntitySpawner::instance()->GetMap();
+		for (std::map<std::pair<int, unsigned int>, Entity*>::iterator it = dynamicMap->begin(); it != dynamicMap->end(); it++)
 		{
-			btVector3 vec = (*it)->GetEntityPosition();
-			printf(" player at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
+			btVector3 vec = it->second->GetEntityPosition();
+			printf(" Dynamic object classid: %d, objid: %d, at (%f,%f,%f)\n", it->second->GetClassId(), it->second->GetObjectId(), vec.getX(), vec.getY(), vec.getZ());
 		}
 
 		/*
@@ -373,18 +340,16 @@ void World::UpdateWorld()
 		*/
 	}
 
-	//TODO!!!! This isn't working because it needs to go through all Map objects in ServerEntity
-	// send updates every x or so ticks?
+	// Send position updates of all dynamic objects
 	if (x % 5 == 0)
 	{
-		//TODO!!!
-		//Hack to update 1 player
-		Player* myPlayer = (Player *)(EntitySpawner::instance()->GetEntity(ClassId::PLAYER, 0));
-		ServerGame::instance()->sendMovePacket(ClassId::PLAYER, myPlayer->GetObjectId());
-
-		for (std::shared_ptr<Player>& player : players)
+		// Iterates through all dynamic objects in the Map and sends position updates to client
+		std::map<std::pair<int, unsigned int>, Entity* > * dynamicMap = EntitySpawner::instance()->GetMap();
+		for (std::map<std::pair<int, unsigned int>, Entity*>::iterator it = dynamicMap->begin(); it != dynamicMap->end(); it++)
 		{
-			ServerGame::instance()->sendMovePacket(ClassId::PLAYER, player->GetObjectId());
+			btVector3 vec = it->second->GetEntityPosition();
+			printf(" Dynamic object classid: %d, objid: %d, at (%f,%f,%f)\n", it->second->GetClassId(), it->second->GetObjectId(), vec.getX(), vec.getY(), vec.getZ());
+			ServerGame::instance()->sendMovePacket((ClassId)it->second->GetClassId(), it->second->GetObjectId());
 		}
 	}
 	
@@ -402,5 +367,4 @@ void World::removeFlag(Flag* collectedFlag)
 			return;
 		}
 	}
-
 }

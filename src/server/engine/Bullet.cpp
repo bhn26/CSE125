@@ -2,7 +2,7 @@
 #include "Bullet.h"
 #include "EntitySpawner.h"
 
-Bullet::Bullet(int objectid, int playerid, int teamid, int damage, const btVector3* pos, btVector3* velocity, btDiscreteDynamicsWorld* physicsWorld): Entity(objectid, physicsWorld)
+Bullet::Bullet(int objectid, int playerid, int teamid, int damage, const btVector3* pos, btVector3* velocity, btDiscreteDynamicsWorld* physicsWorld): Entity(ClassId::BULLET, objectid, physicsWorld)
 {
 	btCollisionShape* bulletShape = new btSphereShape(btScalar(.1));
 
@@ -19,15 +19,15 @@ Bullet::Bullet(int objectid, int playerid, int teamid, int damage, const btVecto
 	bRigidBody->forceActivationState(DISABLE_DEACTIVATION);
 	physicsWorld->addRigidBody(bRigidBody);
 
-	// Set RigidBody to point to Bullet
-	bRigidBody->setUserPointer(this);
-	bRigidBody->setUserIndex(BULLET);
-
-	this->id = objectid;
+	// Set Bullet's protected fields
 	this->playerId = playerid;
 	this->teamId = teamid;
 	this->damage = damage;
 	this->bulletRigidBody = bRigidBody;
+
+	// Set RigidBody to point to Bullet
+	bRigidBody->setUserPointer(this);
+	bRigidBody->setUserIndex(BULLET);
 }
 
 Bullet::~Bullet()
@@ -36,7 +36,7 @@ Bullet::~Bullet()
 	delete bulletRigidBody->getMotionState();
 	delete bulletRigidBody->getCollisionShape();
 	delete bulletRigidBody;
-	EntitySpawner::instance()->RemoveEntity(ClassId::BULLET,id);
+	EntitySpawner::instance()->RemoveEntity(ClassId::BULLET,objectId);
 }
 
 btVector3 Bullet::GetBulletPosition()

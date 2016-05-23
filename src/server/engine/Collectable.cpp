@@ -6,13 +6,13 @@
 //List of weapons
 #include "SeedGun.h"
 
-Collectable::Collectable(int objectid, PosInfo pos, btDiscreteDynamicsWorld* curworld) : Entity(objectid, curworld)
+Collectable::Collectable(int objectid, PosInfo pos, btDiscreteDynamicsWorld* curworld) : Entity(ClassId::COLLECTABLE, objectid, curworld)
 {
 	srand(time(NULL));
 	this->curWorld = curworld;
 	btCollisionShape* collectableShape = new btBoxShape(btVector3(1, 1, 1));
 
-	// Create Flag physics object
+	// Create Collectable physics object
 	btDefaultMotionState*collectableMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(pos.x, pos.y, pos.z)));
 	btScalar mass = 1;
 	btVector3 collectableInertia(0, 0, 0);
@@ -21,11 +21,10 @@ Collectable::Collectable(int objectid, PosInfo pos, btDiscreteDynamicsWorld* cur
 	btRigidBody* pRigidBody = new btRigidBody(collectableRigidBodyCI);
 	curWorld->addRigidBody(pRigidBody);
 
-	// Set Flag's protected fields
-	this->id = id;
+	// Set Collectable's protected fields
 	this->entityRigidBody = pRigidBody;
 
-	// Set RigidBody to point to Flag
+	// Set RigidBody to point to Collectable
 	pRigidBody->setUserPointer(this);
 	pRigidBody->setUserIndex(COLLECTABLE);
 }
@@ -40,7 +39,7 @@ void Collectable::HandleCollect(Player* collidedPlayer)
 	delete entityRigidBody;
 
 	//Remove collectable object from EntitySpawner Map
-	EntitySpawner::instance()->RemoveEntity(ClassId::COLLECTABLE,id);
+	EntitySpawner::instance()->RemoveEntity(ClassId::COLLECTABLE, objectId);
 
 	// If player already has usable
 	if (collidedPlayer->HasWeapon())

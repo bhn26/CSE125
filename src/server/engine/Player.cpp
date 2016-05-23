@@ -2,10 +2,10 @@
 #include "ObjectId.h"
 #include "Player.h"
 #include "Flag.h"
-#include "Weapon.h"
+#include "Peck.h"
 
 
-Player::Player(int objectid, int teamid, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld) : Entity(objectid, physicsWorld) {
+Player::Player(int objectid, int teamid, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld) : Entity(ClassId::PLAYER, objectid, physicsWorld) {
 
 	btCollisionShape* playerShape = new btCylinderShape(btVector3(1, 1, 1));
 	// Create player physics object
@@ -20,15 +20,15 @@ Player::Player(int objectid, int teamid, PosInfo pos, btDiscreteDynamicsWorld* p
 	pRigidBody->forceActivationState(DISABLE_DEACTIVATION);
 	physicsWorld->addRigidBody(pRigidBody);
 
-	// Set Entity and Player protected fields
+	// Set Player protected fields
 	this->entityRigidBody = pRigidBody;
-	this->id = objectid;
 	this->teamId = teamid;
 	this->jumpSem = 1;
 	this->hitPoints = 100;
 	this->flags = new std::vector<std::shared_ptr<Flag>>;
 	this->position = pos;
 	this->playerWeapon = nullptr;
+	this->peckWeapon = new Peck(curWorld);
 
 	// Set RigidBody to point to Player
 	pRigidBody->setUserPointer(this);
@@ -135,8 +135,8 @@ int Player::GetTeamId()
 	btTransform currentTrans;
 	entityRigidBody->getMotionState()->getWorldTransform(currentTrans);
 	btMatrix3x3 currentOrientation = currentTrans.getBasis();
-	playerWeapon->UseWeapon(&(entityRigidBody->getCenterOfMassPosition()), &currentOrientation, this->id, this->teamId);
-	printf("player with objId: %d used weapon\n", id);
+	playerWeapon->UseWeapon(&(entityRigidBody->getCenterOfMassPosition()), &currentOrientation, this->objectId, this->teamId);
+	printf("player with objId: %d used weapon\n", objectId);
 }
 
 void Player::EquipWeapon(Weapon* newWeapon)
@@ -161,4 +161,14 @@ int Player::takeDamage(int damage)
 	{
 		return 0;
 	}
+}
+
+void Player::UsePeck()
+{
+	// passes player position when using weapon
+	btTransform currentTrans;
+	entityRigidBody->getMotionState()->getWorldTransform(currentTrans);
+	btMatrix3x3 currentOrientation = currentTrans.getBasis();
+	peckWeapon->UseWeapon(&(entityRigidBody->getCenterOfMassPosition()), &currentOrientation, this->objectId, this->teamId);
+	printf("player with objId: %d used peck! \n", objectId);
 }
