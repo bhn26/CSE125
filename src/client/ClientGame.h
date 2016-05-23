@@ -116,6 +116,12 @@ private:
     void Setup_opengl_settings();
     void Print_versions();
     void PrintFrameRate();
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // Controller handling
     void CheckController();
+    void HandleLeftAnalog(const float* axes);
+    void HandleRightAnalog(const float* axes);
+    void HandleButtonPress(const unsigned char* buttons);
 };
 
