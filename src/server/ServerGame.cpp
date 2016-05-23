@@ -1,5 +1,6 @@
 
 #include "ServerGame.h"
+#include <algorithm>
 
 unsigned int ServerGame::client_id; 
 
@@ -33,7 +34,6 @@ void ServerGame::update()
 
 			// This will be an INIT_CONNECTION packet
 			receiveFromClients();
-			client_id++;
 		}
 	}
 	
@@ -85,6 +85,10 @@ void ServerGame::receiveFromClients()
 
                     break;
 
+				case JOIN_TEAM:
+					receiveJoinPacket(i);
+					break;
+
 				case READY_GAME:
 					ready_clients++;
 					//printf("ready clients: %d\nclient_id: %d\n", ready_clients, client_id);
@@ -101,14 +105,9 @@ void ServerGame::receiveFromClients()
                     receiveMovePacket(i);
                     break;
 
-                case SPAWN_EVENT: // This will probably be deleted, only server spawns things i think
-
-                    // Receive packet
-                    // Check validity of event
-                    // If check passes, send update to clients
-                    receiveSpawnPacket(i);
-              
-                    break;
+				case JUMP_EVENT:
+					receiveJumpPacket(i);
+					break;
 
                 case V_ROTATION_EVENT:
                     receiveRotationPacket(i + sizeof(PacketHeader));
@@ -146,6 +145,7 @@ void ServerGame::receiveInitPacket(int offset)
 
     network->sendToClient(packet_data, packet_size, client_id);
     printf("server sent init packet to client %d\n", client_id);
+	client_id++;
 
 }
 
@@ -164,6 +164,54 @@ void ServerGame::sendInitPacket()
 
 	network->sendToClient(packet_data, packet_size, client_id);
 }
+
+
+void ServerGame::receiveJoinPacket(int offset) {
+	struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset]);
+	
+	struct PacketData* dat = (struct PacketData *) &(network_data[offset + sizeof(PacketHeader)]);
+	struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
+
+	printf("recieved join packet from %d for %d\n", hdr->sender_id, pi->team_id);
+
+	int client = hdr->sender_id;
+
+	if (team_map.find(client) == team_map.end()) { // if new client send all client team data
+		for (std::map<int, int>::iterator it = team_map.begin(); it != team_map.end(); it++) {
+			sendJoinPacket(it->first);
+		}
+	}
+		
+	team_map[client] = pi->team_id;
+	sendJoinPacket(client);
+};
+
+void ServerGame::sendJoinPacket(int client) {
+	const unsigned int packet_size = sizeof(Packet);
+
+		// found
+		char packet_data[packet_size];
+
+		Packet packet;
+		packet.hdr.packet_type = JOIN_TEAM;
+
+		PosInfo p;
+		p.id = client;
+		p.team_id = team_map[client];
+
+		printf("sending join packet for client %d in team %d\n", client, p.team_id);
+
+		packet.dat.game_data_id = POS_OBJ;
+
+		p.serialize(packet.dat.buf);
+		packet.serialize(packet_data);
+
+		packet.hdr.sender_id = SERVER_ID;
+
+		packet.serialize(packet_data);
+
+		network->sendToAll(packet_data, packet_size);
+};
 
 void ServerGame::receiveStartPacket(int offset) {
 	struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset]);
@@ -189,7 +237,6 @@ void ServerGame::sendStartPacket() { // will add more later based on generated w
 	Packet packet;
 	packet.hdr.packet_type = START_GAME;
 
-
     PosInfo p;
     //p.id = client_id + 1;
 
@@ -206,18 +253,6 @@ void ServerGame::sendStartPacket() { // will add more later based on generated w
 
 	network->sendToAll(packet_data, packet_size);
 }
-
-// Assume one client for now, we're going to need to send client id with each packet probably
-// in order to distinguish the owner of the event, right now we don't do this.
-void ServerGame::receiveSpawnPacket(int offset)
-{
-    struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset]);
-    
-    printf("Received spawn packet from client %d\n", hdr->sender_id);
-
-    // Check if valid spawn and stuff like that
-}
-
 
 void ServerGame::sendSpawnPacket(PosInfo pi)
 {
@@ -272,22 +307,22 @@ void ServerGame::receiveMovePacket(int offset)
 	btVector3* vec;
 	switch (pi->direction) {
 	case MOVE_FORWARD:
-		vec = new btVector3(0, 0, 3);
+		vec = new btVector3(0, 0, 2);
 		player->Move(vec);
 		delete vec;
 		break;
 	case MOVE_BACKWARD:	
-		vec = new btVector3(0, 0, -3);
+		vec = new btVector3(0, 0, -2);
 		player->Move(vec);
 		delete vec;
 		break;
 	case MOVE_LEFT:
-		vec = new btVector3(3, 0, 0);
+		vec = new btVector3(2, 0, 0);
 		player->Move(vec);
 		delete vec;
 		break;
 	case MOVE_RIGHT:
-		vec = new btVector3(-3, 0, 0);
+		vec = new btVector3(-2, 0, 0);
 		player->Move(vec);
 		delete vec;
 		break;
@@ -383,4 +418,11 @@ void ServerGame::sendRotationPacket(int client, float w, float x, float y, float
     packet.serialize(packet_data);
 
 	network->sendToAll(packet_data, packet_size);
+}
+
+void ServerGame::receiveJumpPacket(int offset)
+{
+    struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset]);
+
+	engine->GetWorld()->GetPlayer(hdr->sender_id)->JumpPlayer();
 }

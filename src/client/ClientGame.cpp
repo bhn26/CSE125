@@ -11,6 +11,8 @@
 #include "Graphics/Scene.h"
 #include "network/GameData.h"
 #include "network/NetworkData.h"
+#include "TextRenderer.h"
+#include "../client/PlayState.h"
 //#define _WIN32
 
 ClientGame* ClientGame::cg = nullptr;
@@ -65,12 +67,54 @@ void ClientGame::sendInitPacket() {
 	NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
 }
 
+void ClientGame::receiveJoinPacket(int offset) {
+	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
+	struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
+
+	printf("receiveJoinPacket for player %d on team %d\n", pi->id, pi->team_id);
+	int player = pi->id;
+	int team = pi->team_id;
+	
+	if (team == 0) {
+		team0.erase(std::remove(team0.begin(), team0.end(), player), team0.end()); // erase from both lists
+		team1.erase(std::remove(team1.begin(), team1.end(), player), team1.end());
+
+		team0.push_back(player);
+	} else {
+		team0.erase(std::remove(team0.begin(), team0.end(), player), team0.end());
+		team1.erase(std::remove(team1.begin(), team1.end(), player), team1.end());
+
+		team1.push_back(player);
+	}
+};
+
+void ClientGame::sendJoinPacket(int team) {
+	const unsigned int packet_size = sizeof(Packet);
+	char packet_data[packet_size];
+
+	Packet packet;
+
+	packet.hdr.sender_id = client_id;
+	packet.hdr.receiver_id = SERVER_ID;
+	packet.hdr.packet_type = JOIN_TEAM;
+
+	PosInfo pi;
+	pi.id = client_id;
+	pi.team_id = team;
+	pi.serialize(packet.dat.buf);
+
+	packet.serialize(packet_data);
+	NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
+};
+
+
 void ClientGame::sendReadyPacket()
 {
 	const unsigned int packet_size = sizeof(Packet);
 	char packet_data[packet_size];
 
 	Packet packet;
+
 	packet.hdr.packet_type = READY_GAME;
 	packet.hdr.sender_id = client_id;
 
@@ -86,13 +130,7 @@ void ClientGame::receiveStartPacket(int offset) {
 	struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
 	printf("received start packet for %d players\n", pi->id);
 
-	/*Scene::Instance()->ClearPlayers();
-
-	// add players, may have to send a different packet
-	for (int i = 0; i < pi->id; i++) {
-		printf("add player %d\n", i);
-		Scene::Instance()->AddPlayer(i);
-	}*/
+	Window::m_pStateManager->ChangeState(CPlayState::GetInstance(Window::m_pStateManager)); // start game
 
 	game_started = true;
 	sendReadyPacket();
@@ -103,7 +141,7 @@ void ClientGame::sendStartPacket() {
 	char packet_data[packet_size];
 
 	Packet packet;
-	//packet.hdr.sender_id = ClientGame::GetClientId();
+	packet.hdr.sender_id = client_id;
 	packet.hdr.receiver_id = SERVER_ID;
 	packet.hdr.packet_type = START_GAME;
 	packet.hdr.sender_id = client_id;
@@ -128,21 +166,6 @@ void ClientGame::receiveSpawnPacket(int offset)
 	}
 }
 
-void ClientGame::sendSpawnPacket()
-{
-    const unsigned int packet_size = sizeof(Packet);
-    char packet_data[packet_size];
-
-    Packet packet;
-    packet.hdr.packet_type = SPAWN_EVENT;
-    packet.hdr.sender_id = client_id;
-    packet.hdr.receiver_id = SERVER_ID;
-
-    packet.serialize(packet_data);
-
-    NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
-}
-
 void ClientGame::receiveRemovePacket(int offset)
 {
 	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
@@ -164,16 +187,6 @@ void ClientGame::receiveMovePacket(int offset)
 
 	Scene::Instance()->GetEntity(pi->cid, pi->oid)->MoveTo(pi->x, pi->y, pi->z);
 
-/*<<<<<<< HEAD
-    // probably gonna switch this to coordinates later on 
-    //Scene::Instance()->GetPlayer()->ProcessKeyboard((DIRECTION) pi->direction, 1); // move (rename method later)
-	Scene::Instance()->GetPlayer()->MoveTo(pi->x, pi->y, pi->z);
-=======
-	std::shared_ptr<Player> target = FindTarget(pi->id);
-	
-	// probably gonna switch this to coordinates later on
-	target->ProcessKeyboard((DIRECTION)pi->direction, 1); // move (rename method 
->>>>>>> master*/
 }
 
 // Need to know what direction to move in
@@ -221,6 +234,7 @@ void ClientGame::receiveRotationPacket(int offset) {
 	}
 
 
+
 	// left/right rotation
 	/*glm::mat4 newToWorld = target->GetToWorld() * glm::rotate(glm::mat4(1.0f), pi->v_rotation, glm::vec3(0.0f, 1.0f, 0.0f));
 	target->SetToWorld(newToWorld);
@@ -259,6 +273,20 @@ void ClientGame::sendRotationPacket() {
     NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
 }
 
+void ClientGame::sendJumpPacket()
+{
+    const unsigned int packet_size = sizeof(Packet);
+    char packet_data[packet_size];
+
+    Packet packet;
+    packet.hdr.packet_type = JUMP_EVENT;
+    packet.hdr.sender_id = client_id;
+    packet.hdr.receiver_id = SERVER_ID;
+
+    packet.serialize(packet_data);
+
+    NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
+}
 /*std::shared_ptr<Player> ClientGame::FindTarget(int tid) {
 	if (tid == client_id) {
 		return Scene::Instance()->GetPlayer();
@@ -299,6 +327,10 @@ void ClientGame::update()
                 receiveInitPacket(i);
                 break;
 
+			case JOIN_TEAM:
+				receiveJoinPacket(i + sizeof(PacketHeader));
+				break;
+
 			case START_GAME:
 				receiveStartPacket(i);
 				break;
@@ -324,7 +356,7 @@ void ClientGame::update()
 				break;
 
             default:
-                printf("error in packet types\n");
+                printf("error in packet types %d\n", packet.hdr.packet_type);
                 break;
         }
         i += sizeof(Packet);
@@ -335,7 +367,7 @@ void ClientGame::update()
 void ClientGame::Initialize()
 {
     // Create the GLFW window
-    window = Window::Create_window(640, 480);
+    window = Window::Create_window(1024, 768);
     // Print OpenGL and GLSL versions
     Print_versions();
     // Setup callbacks
@@ -345,6 +377,7 @@ void ClientGame::Initialize()
     // Initialize objects/pointers for rendering
     Window::Initialize_objects();
 
+	TextRenderer::Initialize();
     Scene::Initialize();
 
     double lastTime = glfwGetTime();
@@ -379,7 +412,7 @@ void ClientGame::GameLoop()
         // Idle callback. Updating objects, etc. can be done here.
         Window::Idle_callback();
 
-		if (++tick % 20 == 0 && iSpawned)
+		if (++tick % 15 == 0 && iSpawned)
 		{
 			ClientGame::instance()->sendRotationPacket();
 			tick = 0;
@@ -435,7 +468,12 @@ void ClientGame::Setup_opengl_settings()
     // Disable backface culling to render both sides of polygons
     glDisable(GL_CULL_FACE);
     // Set clear color
-    glClearColor(0.2f, 0.2f, 0.5f, 1.0f);
+    glClearColor(0.28f, 0.65f, 0.89f, 1.0f);
+
+	// Font Rendering
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 void ClientGame::Print_versions()

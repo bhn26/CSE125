@@ -5,6 +5,8 @@
 #include "engine/engine.h"
 #include <btBulletDynamicsCommon.h>
 
+#include <map>
+
 class ServerGame
 {
 
@@ -22,12 +24,14 @@ public:
     void receiveInitPacket(int offset);
     void sendInitPacket();
 
+	void receiveJoinPacket(int offset);
+	void sendJoinPacket(int client);
+
 	// Starting the game packets
 	void receiveStartPacket(int offset);
 	void sendStartPacket();
 
     // The data we want in network_data should have an offset if any
-    void receiveSpawnPacket(int offset);
     void sendSpawnPacket(PosInfo pi); // Spawn an object with position pi, pi holds obj type and obj id
 
 	// Send what you want to remove, with the object's ids
@@ -40,6 +44,8 @@ public:
 
     void receiveRotationPacket(int offset);
     void sendRotationPacket(int obj_id, float w, float x, float y, float z);
+
+	void receiveJumpPacket(int offset);
 
 	static void instantiate()
 	{
@@ -56,10 +62,13 @@ private:
     // IDs for the clients connecting for table in ServerNetwork 
     static unsigned int client_id;
 
+	std::map <int, int> team_map; // <player, team>
+
 	// Singleton servergame
 	static ServerGame* sg;
 
 	// variables for starting the game
+
 	bool game_started = false;
 	int ready_clients = 0; // # of clients ready for the game
 

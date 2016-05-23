@@ -105,7 +105,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>assimp-vc130-mt.lib;SOIL.lib;opengl32.lib;glu32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>assimp-vc130-mt.lib;SOIL.lib;opengl32.lib;DevIL.lib;ILU.lib;ILUT.lib;glu32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>XCOPY "$(SolutionDir)"\lib\*.DLL "$(TargetDir)" /D /K /Y</Command>
@@ -174,6 +174,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="..\eggs.cfg" />
     <None Include="..\src\Graphics\Shaders\skinning.frag" />
     <None Include="..\src\Graphics\Shaders\skinning.vert" />
     <None Include="..\src\Graphics\Shaders\cubemap.frag" />
@@ -187,10 +188,23 @@
     <None Include="..\prj\packages.config" />
     <None Include="..\src\Graphics\Shaders\basic_shader.frag" />
     <None Include="..\src\Graphics\Shaders\basic_shader.vert" />
+    <None Include="..\src\Graphics\Shaders\selection.frag" />
+    <None Include="..\src\Graphics\Shaders\selection.vert" />
+    <None Include="..\src\Graphics\Shaders\sprite.frag" />
+    <None Include="..\src\Graphics\Shaders\sprite.vert" />
+    <None Include="..\src\Graphics\Shaders\text.frag" />
+    <None Include="..\src\Graphics\Shaders\text.vert" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\client\GameState.cpp" />
+    <ClCompile Include="..\src\client\LobbyState.cpp" />
+    <ClCompile Include="..\src\client\MenuState.cpp" />
+    <ClCompile Include="..\src\client\PlayState.cpp" />
+    <ClCompile Include="..\src\client\SpriteRenderer.cpp" />
+    <ClCompile Include="..\src\client\StateManager.cpp" />
+    <ClCompile Include="..\src\client\TextRenderer.cpp" />
     <ClCompile Include="..\src\Basic\Utils.cpp" />
-    <ClCompile Include="..\src\Graphics\Texture.cpp" />
+    <ClCompile Include="..\src\ConfigManager.cpp" />
     <ClCompile Include="..\src\Graphics\Animation\AnimatedModel.cpp" />
     <ClCompile Include="..\src\Graphics\Animation\AnimationMesh.cpp" />
     <ClCompile Include="..\src\Graphics\Animation\AnimationPlayer.cpp" />
@@ -217,10 +231,18 @@
     <ClCompile Include="..\src\Graphics\Nodes.cpp" />
     <ClCompile Include="..\src\Graphics\Objects\Cube.cpp" />
     <ClCompile Include="..\src\Graphics\Shader.cpp" />
+    <ClCompile Include="..\src\Graphics\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\src\client\GameState.h" />
+    <ClInclude Include="..\src\client\LobbyState.h" />
+    <ClInclude Include="..\src\client\MenuState.h" />
+    <ClInclude Include="..\src\client\PlayState.h" />
+    <ClInclude Include="..\src\client\SpriteRenderer.h" />
+    <ClInclude Include="..\src\client\StateManager.h" />
+    <ClInclude Include="..\src\client\TextRenderer.h" />
     <ClInclude Include="..\src\Basic\Utils.h" />
-    <ClInclude Include="..\src\Graphics\Texture.h" />
+    <ClInclude Include="..\src\ConfigManager.h" />
     <ClInclude Include="..\src\Graphics\Animation\AnimatedModel.h" />
     <ClInclude Include="..\src\Graphics\Animation\AnimationMesh.h" />
     <ClInclude Include="..\src\Graphics\Animation\AnimationPlayer.h" />
@@ -249,6 +271,7 @@
     <ClInclude Include="..\src\Graphics\Scenegraph.h" />
     <ClInclude Include="..\src\Graphics\Nodes.h" />
     <ClInclude Include="..\src\Graphics\Shader.h" />
+    <ClInclude Include="..\src\Graphics\Texture.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\src\Graphics\Objects\Grass.h" />
@@ -258,6 +281,8 @@
     <Import Project="..\packages\nupengl.core.redist.0.1.0.1\build\native\nupengl.core.redist.targets" Condition="Exists('..\packages\nupengl.core.redist.0.1.0.1\build\native\nupengl.core.redist.targets')" />
     <Import Project="..\packages\nupengl.core.0.1.0.1\build\native\nupengl.core.targets" Condition="Exists('..\packages\nupengl.core.0.1.0.1\build\native\nupengl.core.targets')" />
     <Import Project="..\packages\glm.0.9.7.1\build\native\glm.targets" Condition="Exists('..\packages\glm.0.9.7.1\build\native\glm.targets')" />
+    <Import Project="..\packages\freetype.redist.2.6.2.1\build\native\freetype.redist.targets" Condition="Exists('..\packages\freetype.redist.2.6.2.1\build\native\freetype.redist.targets')" />
+    <Import Project="..\packages\freetype.2.6.2.1\build\native\freetype.targets" Condition="Exists('..\packages\freetype.2.6.2.1\build\native\freetype.targets')" />
     <Import Project="..\packages\sfml-audio.redist.2.3.2.0\build\native\sfml-audio.redist.targets" Condition="Exists('..\packages\sfml-audio.redist.2.3.2.0\build\native\sfml-audio.redist.targets')" />
     <Import Project="..\packages\sfml-system.redist.2.3.2.0\build\native\sfml-system.redist.targets" Condition="Exists('..\packages\sfml-system.redist.2.3.2.0\build\native\sfml-system.redist.targets')" />
     <Import Project="..\packages\sfml-system.2.3.2.0\build\native\sfml-system.targets" Condition="Exists('..\packages\sfml-system.2.3.2.0\build\native\sfml-system.targets')" />
@@ -270,6 +295,8 @@
     <Error Condition="!Exists('..\packages\nupengl.core.redist.0.1.0.1\build\native\nupengl.core.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\nupengl.core.redist.0.1.0.1\build\native\nupengl.core.redist.targets'))" />
     <Error Condition="!Exists('..\packages\nupengl.core.0.1.0.1\build\native\nupengl.core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\nupengl.core.0.1.0.1\build\native\nupengl.core.targets'))" />
     <Error Condition="!Exists('..\packages\glm.0.9.7.1\build\native\glm.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\glm.0.9.7.1\build\native\glm.targets'))" />
+    <Error Condition="!Exists('..\packages\freetype.redist.2.6.2.1\build\native\freetype.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\freetype.redist.2.6.2.1\build\native\freetype.redist.targets'))" />
+    <Error Condition="!Exists('..\packages\freetype.2.6.2.1\build\native\freetype.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\freetype.2.6.2.1\build\native\freetype.targets'))" />
     <Error Condition="!Exists('..\packages\sfml-audio.redist.2.3.2.0\build\native\sfml-audio.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\sfml-audio.redist.2.3.2.0\build\native\sfml-audio.redist.targets'))" />
     <Error Condition="!Exists('..\packages\sfml-system.redist.2.3.2.0\build\native\sfml-system.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\sfml-system.redist.2.3.2.0\build\native\sfml-system.redist.targets'))" />
     <Error Condition="!Exists('..\packages\sfml-system.2.3.2.0\build\native\sfml-system.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\sfml-system.2.3.2.0\build\native\sfml-system.targets'))" />

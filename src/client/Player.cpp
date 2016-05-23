@@ -101,7 +101,7 @@ void Player::ProcessKeyboard(DIRECTION direction, GLfloat deltaTime)
     if (direction == D_DOWN)
         this->toWorld[3] -= deltaTime * toWorld[1];
 }
-
+int tick = 0;
 // Processes input received from a mouse input system. Expects the offset value in both the x and y direction.
 void Player::ProcessMouseMovement(GLfloat xoffset, GLfloat yoffset, GLboolean constrainPitch)
 {
@@ -115,6 +115,11 @@ void Player::ProcessMouseMovement(GLfloat xoffset, GLfloat yoffset, GLboolean co
     camAngle += glm::radians(yoffset);
     const static float pi2 = glm::pi<float>()/2;
     camAngle = (camAngle > pi2) ? pi2 : ((camAngle < -pi2) ? -pi2 : camAngle);
+    if (++tick % 10 == 0)
+    {
+        ClientGame::instance()->sendRotationPacket();
+        tick = 0;
+    }
 }
 
 // Processes input received from a mouse input system. Expects the offset value in both the x and y direction.
@@ -130,6 +135,11 @@ void Player::ProcessViewMovement(GLfloat xoffset, GLfloat yoffset, GLboolean con
     camAngle += glm::radians(yoffset);
     const static float pi2 = glm::pi<float>()/2;
     camAngle = (camAngle > pi2) ? pi2 : ((camAngle < -pi2) ? -pi2 : camAngle);
+    if (++tick % 10 == 0)
+    {
+        ClientGame::instance()->sendRotationPacket();
+        tick = 0;
+    }
 }
 
 // Processes input received from a mouse scroll-wheel event. Only requires input on the vertical wheel-axis

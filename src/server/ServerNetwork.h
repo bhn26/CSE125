@@ -4,6 +4,7 @@
 #include "../network/NetworkServices.h"
 #include <ws2tcpip.h>
 #include <map>
+#include <string>
 #include "../network/NetworkData.h"
 using namespace std; 
 #pragma comment (lib, "Ws2_32.lib")
@@ -42,5 +43,8 @@ public:
 
     // table to keep track of each client's socket
     std::map<unsigned int, SOCKET> sessions; 
+
+private:
+	std::string port;
 };
 

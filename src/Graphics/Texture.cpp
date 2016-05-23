@@ -17,29 +17,30 @@ Texture::~Texture()
 
 Texture::Texture(Texture&& rhs) : m_textureID(rhs.m_textureID), m_fileName(std::move(rhs.m_fileName))
 {
-    rhs.m_textureID = 0;
+	rhs.m_textureID = 0;
 }
 
 Texture& Texture::operator=(Texture&& rhs)
 {
-    m_textureID = rhs.m_textureID;
-    rhs.m_textureID = 0;
-    m_fileName = std::move(rhs.m_fileName);
-    return *this;
+	m_textureID = rhs.m_textureID;
+	rhs.m_textureID = 0;
+	m_fileName = std::move(rhs.m_fileName);
+	return *this;
 }
 
-bool Texture::Load() const
+bool Texture::Load()
 {
     int width, height;
-    unsigned char* image = SOIL_load_image(m_fileName.c_str(), &width, &height, 0, SOIL_LOAD_RGB);
-    if (!image)
-    {
-        fprintf(stderr, "Cannot load image: %s\n", m_fileName.c_str());
-        return false;
-    }
+    unsigned char* image = SOIL_load_image(m_fileName.c_str(), &width, &height, 0, SOIL_LOAD_RGBA);
+	if (!image)
+	{
+		fprintf(stderr, "Cannot load image: %s\n", m_fileName.c_str());
+		return false;
+	}
     // Assign texture to ID
     glBindTexture(m_textureTarget, m_textureID);
-    glTexImage2D(m_textureTarget, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+    glTexImage2D(m_textureTarget, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+
     glGenerateMipmap(GL_TEXTURE_2D);
 
     // Parameters
@@ -51,6 +52,10 @@ bool Texture::Load() const
     // Reset
     glBindTexture(GL_TEXTURE_2D, 0);
     SOIL_free_image_data(image);
+
+	this->width = width;
+	this->height = height;
+
     return true;
 }
 

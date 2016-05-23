@@ -6,6 +6,7 @@
 // used for multi-threading
 #include <process.h>
 #include "ServerGame.h"
+#include "ConfigManager.h"
 #include <iostream>
 
 void serverLoop(void * arg)
@@ -18,6 +19,7 @@ void serverLoop(void * arg)
 
 int main()
 {
+	ConfigManager::instantiate();
     ServerGame::instantiate();
 
     serverLoop((void*)12);

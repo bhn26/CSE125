@@ -81,6 +81,9 @@ public:
     void SetState(STATE state) { m_state = state; }     // Simply Sets the state without changing the model
 
 private:
+	int id;
+	int team_id;
+
     // Player is made up of a model with a camera following it
     std::unique_ptr<Camera> camera;
     std::unique_ptr<Model> model;
@@ -92,7 +95,6 @@ private:
     float camAngle;
     float m_HViewSensitivity = 7.5f;
     float m_VViewSensitivity = 5.0f;
-    int id;
     int tick = 0;
 
     // Path name for chicken model texture
@@ -106,3 +108,4 @@ private:
     virtual void OnFinish() override;
 
 };
+

@@ -55,7 +55,6 @@ Debug/
 
 *.txt
 
-
 # Ignore NuGet packages
 #*.nupkg
 # Ignore the packages folder
