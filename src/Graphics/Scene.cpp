@@ -17,7 +17,7 @@
 #include <map>
 
 Scene::Scene() : camera(std::unique_ptr<Camera>(nullptr)), pLight(std::unique_ptr<PointLight>(nullptr)),
-    player(nullptr), players(std::vector<std::shared_ptr<Player>>())
+    player(nullptr)
 {
 }
 const int Scene::WIDTH = 100;
@@ -108,22 +108,6 @@ void Scene::Setup()
 
 }
 
-void Scene::AddPlayer(int client_id)
-{
-    //TODO - add client_id field to player
-    std::shared_ptr<Player> new_player = std::shared_ptr<Player>(new Player(client_id));
-
-    std::shared_ptr<Shader> modelShader = std::make_shared<Shader>("src/Graphics/Shaders/model_loading.vert", "src/Graphics/Shaders/model_loading.frag");
-    new_player->GetShader() = modelShader;
-
-	// maybe we should add players to entities as well
-	players.push_back(new_player);
-
-	if (client_id == ClientGame::GetClientId()) {
-		printf("set main player to %d\n", client_id);
-//		player = new_player; // set your player
-	}
-}
 
 void Scene::Update()
 {

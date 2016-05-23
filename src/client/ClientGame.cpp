@@ -287,22 +287,7 @@ void ClientGame::sendJumpPacket()
 
     NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
 }
-/*std::shared_ptr<Player> ClientGame::FindTarget(int tid) {
-	if (tid == client_id) {
-		return Scene::Instance()->GetPlayer();
-	}
-	else {
-		std::vector<std::shared_ptr<Player>> players = Scene::Instance()->GetPlayers();
 
-		for (int i = 0; i < players.size(); i++) {
-			int pid = players.at(i)->GetID();
-			if (tid == pid) {
-				return players.at(i);	
-			}
-		}
-	}
-	printf("ERROR - couldn't find target in players");
-}*/
 
 void ClientGame::update()
 {

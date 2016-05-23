@@ -90,28 +90,13 @@ void CPlayState::Update(DWORD dwCurrentTime)
 	{
 		// update scene
 		Scene::Instance()->Update();
-
-		// update scores
-		std::vector<std::shared_ptr<Player>> players = Scene::Instance()->GetPlayers();
-	
-		scores[0] = 0; // clear score
-		std::vector<int> team0 = ClientGame::Team0();
-		for (int i = 0; i < team0.size(); i++) {
-			scores[0] += players.at(team0.at(i))->GetScore();
-		}
-
-		scores[1] = 0; //clear score
-		std::vector<int> team1 = ClientGame::Team1();
-		for (int i = 0; i < team1.size(); i++) {
-			scores[1] += players.at(team1.at(i))->GetScore();
-		}
 	}
 }
 
 void CPlayState::Draw()  
 { 
-	TextRenderer::RenderText("Team 0: ", 50, 50, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
-	TextRenderer::RenderText("Team 0: ", Window::width - 50, 50, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+	TextRenderer::RenderText("Team 0: ", 25, 25, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+	TextRenderer::RenderText("Team 1: ", Window::width - 175, 25, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 
 	/*stringstream ssScore;
 	ssScore << m_ulCurrentScore;
