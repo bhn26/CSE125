@@ -11,6 +11,8 @@
 #include "../Graphics/Scene.h"
 #include "../network/NetworkData.h"
 #include "TextRenderer.h"
+
+#include "../client/PlayState.h"
 //#define _WIN32
 
 ClientGame* ClientGame::cg = nullptr;
@@ -128,13 +130,7 @@ void ClientGame::receiveStartPacket(int offset) {
 	struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
 	printf("received start packet for %d players\n", pi->id);
 
-	/*Scene::Instance()->ClearPlayers();
-
-	// add players, may have to send a different packet
-	for (int i = 0; i < pi->id; i++) {
-		printf("add player %d\n", i);
-		Scene::Instance()->AddPlayer(i);
-	}*/
+	Window::m_pStateManager->ChangeState(CPlayState::GetInstance(Window::m_pStateManager)); // start game
 
 	game_started = true;
 	sendReadyPacket();
@@ -359,7 +355,7 @@ void ClientGame::update()
 				break;
 
             default:
-                printf("error in packet types\n");
+                printf("error in packet types %d\n", packet.hdr.packet_type);
                 break;
         }
         i += sizeof(Packet);

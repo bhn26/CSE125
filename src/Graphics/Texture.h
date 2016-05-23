@@ -6,6 +6,8 @@
 #include <glm/glm.hpp>
 #include "../client/Window.h"
 
+#include <SOIL/SOIL.h>
+
 struct Material
 {
     glm::vec3 _diffuse;
@@ -18,7 +20,7 @@ struct Material
 class Texture
 {
 public:
-    Texture(GLenum textureTarget = GL_TEXTURE_2D, const std::string& filename = "");
+	Texture(GLenum textureTarget = GL_TEXTURE_2D, const std::string& filename = "");
 	~Texture();
     //Texture(GLenum textureTarget = GL_TEXTURE0, const std::string& filename = "");
 
@@ -27,8 +29,9 @@ public:
 	Texture(Texture&& rhs);
 	Texture& operator=(Texture&& rhs);
 
-    bool Load();
-    void Bind(GLenum textureUnit) const;    // Texture unit like GL_TEXTURE0
+	bool Load();
+	// Texture unit like GL_TEXTURE0
+	void Bind(GLenum textureUnit) const;
 
 	int Width() { return width; };
 	int Height() { return height; };

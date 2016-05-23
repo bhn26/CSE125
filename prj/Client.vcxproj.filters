@@ -126,7 +126,7 @@
     </ClCompile>
     <ClCompile Include="..\src\client\SpriteRenderer.cpp">
       <Filter>Source Files</Filter>
-	  </ClCompile>
+    </ClCompile>
     <ClCompile Include="..\src\Graphics\Animation\skinning_technique.cpp">
       <Filter>Source Files\Graphics\Animation</Filter>
     </ClCompile>
@@ -160,12 +160,13 @@
     <ClCompile Include="..\src\Graphics\Texture.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\client\LobbyState.cpp">
-	</ClCompile>
     <ClCompile Include="..\src\Basic\Utils.cpp">
       <Filter>Source Files\Basic</Filter>
     </ClCompile>
     <ClCompile Include="..\src\ConfigManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\client\LobbyState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -253,7 +254,7 @@
     </ClInclude>
     <ClInclude Include="..\src\client\SpriteRenderer.h">
       <Filter>Source Files</Filter>
-	  </ClInclude>
+    </ClInclude>
     <ClInclude Include="..\src\Graphics\Animation\skinning_technique.h">
       <Filter>Source Files\Graphics\Animation</Filter>
     </ClInclude>
@@ -281,12 +282,13 @@
     <ClInclude Include="..\src\Graphics\Texture.h">
       <Filter>Source Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\client\LobbyState.h">
-	</ClInclude>
     <ClInclude Include="..\src\Basic\Utils.h">
       <Filter>Source Files\Basic</Filter>
     </ClInclude>
     <ClInclude Include="..\src\ConfigManager.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\client\LobbyState.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

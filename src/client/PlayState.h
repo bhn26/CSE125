@@ -9,6 +9,7 @@ public:
 	~CPlayState();
 
 	// Implementation of specific events
+	void OnMouseMove(float xoffset, float yoffset);
 	void OnKeyDown(WPARAM wKey);
 	void Update(DWORD dwCurrentTime);
 	void Draw();

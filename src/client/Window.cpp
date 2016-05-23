@@ -201,12 +201,25 @@ void Window::Mouse_callback(GLFWwindow* window, double xpos, double ypos)
         GLfloat yoffset = (GLfloat)(lastY - ypos);
         lastX = (GLint)xpos;
         lastY = (GLint)ypos;
-        //Scene::Instance()->GetPlayer()->ProcessMouseMovement(xoffset, yoffset);
+        
+		//Scene::Instance()->GetPlayer()->ProcessMouseMovement(xoffset, yoffset);
+		m_pStateManager->GetActiveState()->OnMouseMove(xoffset, yoffset);
     }
 }
 
 void Window::Mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 {
+	if (button == GLFW_MOUSE_BUTTON_LEFT && !mouseCaptured)
+	{
+		mouseCaptured = true;
+		firstMouse = true;
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	}
+	else if (button == GLFW_MOUSE_BUTTON_RIGHT && mouseCaptured)
+	{
+		mouseCaptured = false;
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+	}
 
 	double x, y;
 	glfwGetCursorPos(window, &x, &y);

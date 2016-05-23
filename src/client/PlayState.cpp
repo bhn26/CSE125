@@ -4,6 +4,8 @@
 #include <sstream>
 
 #include "../Graphics/Scene.h"
+#include "Player.h"
+#include "client\ClientGame.h"
 
 using namespace std;
 
@@ -11,6 +13,7 @@ CPlayState::CPlayState(CStateManager* pManager)
  : CGameState(pManager), 
   m_ulCurrentScore(0), m_bGameOver(false)
 {
+	//glfwSetInputMode(ClientGame::instance()->window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }
 
 CPlayState::~CPlayState()
@@ -28,6 +31,10 @@ void CPlayState::Reset()
 {
 	m_ulCurrentScore = 0;
 	m_bGameOver = false;
+}
+
+void CPlayState::OnMouseMove(float xoffset, float yoffset) {
+	Scene::Instance()->GetPlayer()->ProcessMouseMovement(xoffset, yoffset);
 }
 
 void CPlayState::OnKeyDown(WPARAM wKey)
