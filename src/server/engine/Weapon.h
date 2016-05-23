@@ -11,6 +11,8 @@
 #include <BulletPhysics\btBulletCollisionCommon.h>
 #endif
 
+class Entity;
+
 class Weapon
 {
 
@@ -27,7 +29,7 @@ public:
 	Weapon(int firerate, int wdamage, btDiscreteDynamicsWorld* curworld);
 	~Weapon();
 
-	void virtual UseWeapon(const btVector3* position, btMatrix3x3* rotation, int playerid, int teamid);
+	void virtual UseWeapon(const btVector3* position, btMatrix3x3* rotation, int playerid, int teamid, Entity* owner);
 
 	void virtual ReloadWeapon();
 };

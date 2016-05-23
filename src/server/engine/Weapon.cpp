@@ -12,7 +12,7 @@ Weapon::Weapon(int firerate, int wdamage, btDiscreteDynamicsWorld* curWorld)
 Weapon::~Weapon(){}
 
 // to be overwritten
-void Weapon::UseWeapon(const btVector3* position, btMatrix3x3* rotation, int playerid, int teamid){}
+void Weapon::UseWeapon(const btVector3* position, btMatrix3x3* rotation, int playerid, int teamid, Entity* owner){}
 
 // to be overwritten
 void Weapon::ReloadWeapon(){}

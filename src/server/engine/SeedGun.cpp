@@ -9,7 +9,7 @@ SeedGun::SeedGun(btDiscreteDynamicsWorld* curworld): Weapon(gunfireRate, gunDama
 
 SeedGun::~SeedGun(){}
 
-void SeedGun::UseWeapon(const btVector3* position, btMatrix3x3* rotation, int playerid, int teamid)
+void SeedGun::UseWeapon(const btVector3* position, btMatrix3x3* rotation, int playerid, int teamid, Entity* owner)
 {
 	if (this->fireFlag)
 	{

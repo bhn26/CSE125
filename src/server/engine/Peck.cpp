@@ -15,7 +15,7 @@ Peck::Peck(btDiscreteDynamicsWorld* curworld): Weapon(meleefireRate, meleeDamage
 
 Peck::~Peck(){}
 
-void Peck::UseWeapon(const btVector3* position, btMatrix3x3* rotation, int playerid, int teamid)
+void Peck::UseWeapon(const btVector3* position, btMatrix3x3* rotation, int playerid, int teamid, Entity* user)
 {
 	if (this->fireFlag)
 	{
@@ -24,11 +24,11 @@ void Peck::UseWeapon(const btVector3* position, btMatrix3x3* rotation, int playe
 		vec = ((vec) * (*rotation));
 		vec = ((vec) + (*position));
 		btVector3 * fieldPos = new btVector3(vec.getX(), vec.getY(), vec.getZ());
-		//btCollisionShape* peckSphere = new btSphereShape(btVector3());
+		btCollisionShape* peckSphere = new btSphereShape(btScalar(.1));
+		DamageField* peckField = new DamageField(1, meleeDamage, fieldPos, peckSphere, user, curWorld);
 
-		//TODO!!!!!!!!__________________________________
+		//TODO: Add to damage field checker. Add this new field to the checker
 
-		//DamageField* peckField = new DamageField(1, meleeDamage, fieldPos, );
 		this->fireFlag = 0;
 		this->nextFireTick = currentWorldTick + meleefireRate;
 

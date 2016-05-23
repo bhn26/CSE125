@@ -11,5 +11,5 @@ public:
 	Peck(btDiscreteDynamicsWorld* curWorld);
 	~Peck();
 
-	void virtual UseWeapon(const btVector3* position, btMatrix3x3* rotation, int playerid, int teamid);
+	void virtual UseWeapon(const btVector3* position, btMatrix3x3* rotation, int playerid, int teamid, Entity* user);
 };
