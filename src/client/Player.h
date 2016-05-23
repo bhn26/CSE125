@@ -62,6 +62,7 @@ public:
 
     // Processes input received from a mouse input system. Expects the offset value in both the x and y direction.
     void ProcessMouseMovement(GLfloat xoffset, GLfloat yoffset, GLboolean constrainPitch = true);
+    void ProcessViewMovement(GLfloat xoffset, GLfloat yoffset, GLboolean constrainPitch = true);
 
     // Processes input received from a mouse scroll-wheel event. Only requires input on the vertical wheel-axis
     void ProcessMouseScroll(GLfloat yoffset);
@@ -89,6 +90,8 @@ private:
 
     // How up/down camera is
     float camAngle;
+    float m_HViewSensitivity = 7.5f;
+    float m_VViewSensitivity = 5.0f;
     int id;
     int tick = 0;
 

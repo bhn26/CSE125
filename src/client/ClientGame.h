@@ -16,6 +16,35 @@
 
 class Window;
 
+namespace Controller
+{
+    enum Buttons
+    {
+        A = 0,
+        B = 1,
+        X = 2,
+        Y = 3,
+        L_BUMPER = 4,
+        R_BUMPER = 5,
+        BACK = 6,
+        START = 7,
+        L_JOYSTICK = 8,
+        R_JOYSTICK = 9,
+        D_PAD_UP = 10,
+        D_PAD_RIGHT = 11,
+        D_PAD_DOWN = 12,
+        D_PAD_LEFT = 13,
+    };
+
+    enum Axes
+    {
+        L_HORIZONTAL = 0,
+        L_VERTICAL = 1,
+        R_HORIZONTAL = 4,
+        R_VERTICAL = 3,
+    };
+}
+
 class ClientGame
 {
 public:

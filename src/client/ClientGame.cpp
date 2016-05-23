@@ -8,8 +8,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "Window.h"
-#include "../Graphics/Scene.h"
-#include "../network/NetworkData.h"
+#include "Graphics/Scene.h"
+#include "network/GameData.h"
+#include "network/NetworkData.h"
 //#define _WIN32
 
 ClientGame* ClientGame::cg = nullptr;
@@ -369,7 +370,7 @@ void ClientGame::GameLoop()
 #endif
 
         // Measure speed
-        //PrintFrameRate();
+        PrintFrameRate();
 
         CheckController();
 
@@ -468,8 +469,8 @@ void ClientGame::PrintFrameRate()
 // axis[0] = (left) right
 // axis[1] = (left) down
 // axis[2] = 
-// axis[3] = (right) right
-// axis[4] = (right) down
+// axis[3] = (right) down
+// axis[4] = (right) right
 // button[0-3] = a, b, x, y
 // button[4-5] = LB, RB
 // button[6-7] = Back, Start
@@ -477,30 +478,82 @@ void ClientGame::PrintFrameRate()
 // button[10-13] = d-pad up, right, down, left
 void ClientGame::CheckController()
 {
+    using namespace Controller;
+    static const bool printing = false;     // Remove eventually... For seeing what controls do what
     static double last_time = glfwGetTime();
-    if (glfwGetTime() - last_time < 4.0f)
+    if (printing)
+    {
+        if (glfwGetTime() - last_time < 4.0f)
+            return;
+    }
+    if (!ClientGame::instance()->hasStarted())
+    {
+        int buttonCount;
+        const unsigned char *buttons = glfwGetJoystickButtons(GLFW_JOYSTICK_1, &buttonCount);
+        if (buttons[Buttons::START])     // Start
+        {
+            printf("client will send start game\n");
+            printf("sending start packet\n");
+            ClientGame::instance()->sendStartPacket();
+        }
         return;
+    }
 
     if (glfwJoystickPresent(GLFW_JOYSTICK_1))
     {
         int axesCount;
         const float *axes = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &axesCount);
-        //std::cout << count << std::endl;
 
-        for (int axis = 0; axis < axesCount; axis++)
+        for (int axis = 0; printing && axis < axesCount; axis++)
+        {
             std::cout << "axes[" << axis << "]: " << axes[axis] << std::endl;
+        }
 
         int buttonCount;
         const unsigned char *buttons = glfwGetJoystickButtons(GLFW_JOYSTICK_1, &buttonCount);
-        for (int button = 0; button < buttonCount; button++)
+        for (int button = 0; printing && button < buttonCount; button++)
         {
             if (buttons[button] == GLFW_PRESS)
                 std::cout << "buttons[" << button << "]: " << buttons[button] << std::endl;
         }
 
-        const char *name = glfwGetJoystickName(GLFW_JOYSTICK_1);
-        std::cout << name << std::endl;
+        //const char *name = glfwGetJoystickName(GLFW_JOYSTICK_1);
+        //std::cout << name << std::endl;
+
+        if (!printing)
+        {
+            const float threshold = 0.7f;
+            const float rotThreshold = 0.2f;
+            int greatestAxis = abs(axes[Axes::L_HORIZONTAL]) > abs(axes[Axes::L_VERTICAL]) ? Axes::L_HORIZONTAL : Axes::L_VERTICAL;
+            if (abs(axes[greatestAxis]) > threshold)
+            {
+                switch (greatestAxis)
+                {
+                    case Axes::L_HORIZONTAL:     // Right
+                        if (axes[greatestAxis] > 0)
+                            ClientGame::instance()->sendMovePacket(MOVE_RIGHT);
+                        else
+                            ClientGame::instance()->sendMovePacket(MOVE_LEFT);
+                        break;
+                    case Axes::L_VERTICAL:     // DOWN
+                        if (axes[greatestAxis] > 0)
+                            ClientGame::instance()->sendMovePacket(MOVE_BACKWARD);
+                        else
+                            ClientGame::instance()->sendMovePacket(MOVE_FORWARD);
+                        break;
+                }
+            }
+            if (abs(axes[Axes::R_HORIZONTAL]) > rotThreshold || abs(axes[Axes::R_VERTICAL]) > rotThreshold)
+            {
+                Scene::Instance()->GetPlayer()->ProcessViewMovement(abs(axes[Axes::R_HORIZONTAL]) > rotThreshold ? axes[Axes::R_HORIZONTAL] : 0.0f,
+                    abs(axes[Axes::R_VERTICAL]) > rotThreshold ? -axes[Axes::R_VERTICAL] : 0.0f);
+            }
+        }
     }
-    std::cout << std::endl;
-    last_time = glfwGetTime();
+
+    if (printing)
+    {
+        std::cout << std::endl;
+        last_time = glfwGetTime();
+    }
 }

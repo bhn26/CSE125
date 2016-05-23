@@ -185,7 +185,7 @@ void Window::Mouse_callback(GLFWwindow* window, double xpos, double ypos)
 
 void Window::Mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 {
-    if (button == GLFW_MOUSE_BUTTON_LEFT && !mouseCaptured)
+    if (ClientGame::instance()->hasStarted() && button == GLFW_MOUSE_BUTTON_LEFT && !mouseCaptured)
     {
         mouseCaptured = true;
         firstMouse = true;
