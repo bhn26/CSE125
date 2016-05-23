@@ -27,6 +27,8 @@ public:
     void Use() const { glUseProgram(this->program); }
     void Unuse() const { glUseProgram(0); }   // Not working, not sure why. Don't use
     GLint GetUniform(const char* var) const { return glGetUniformLocation(this->program, var); }
+
+	GLuint GetProgram() { return program; };
 };
 
 #endif

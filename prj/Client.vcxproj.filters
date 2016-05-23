@@ -109,6 +109,24 @@
     <ClCompile Include="..\src\client\Window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\client\StateManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\client\GameState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\client\MenuState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\client\PlayState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\client\TextRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\client\SpriteRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\Graphics\Animation\skinning_technique.cpp">
       <Filter>Source Files\Graphics\Animation</Filter>
     </ClCompile>
@@ -146,6 +164,9 @@
       <Filter>Source Files\Basic</Filter>
     </ClCompile>
     <ClCompile Include="..\src\ConfigManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\client\LobbyState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -216,6 +237,24 @@
     <ClInclude Include="..\src\client\Window.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\client\StateManager.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\client\GameState.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\client\MenuState.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\client\PlayState.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\client\TextRenderer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\client\SpriteRenderer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
     <ClInclude Include="..\src\Graphics\Animation\skinning_technique.h">
       <Filter>Source Files\Graphics\Animation</Filter>
     </ClInclude>
@@ -249,6 +288,9 @@
     <ClInclude Include="..\src\ConfigManager.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\client\LobbyState.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\src\Graphics\Shaders\basic_shader.frag">
@@ -279,6 +321,24 @@
       <Filter>Source Files\Graphics\Shaders</Filter>
     </None>
     <None Include="..\src\Graphics\Shaders\diffuse.vert">
+      <Filter>Source Files\Graphics\Shaders</Filter>
+    </None>
+    <None Include="..\src\Graphics\Shaders\text.frag">
+      <Filter>Source Files\Graphics\Shaders</Filter>
+    </None>
+    <None Include="..\src\Graphics\Shaders\text.vert">
+      <Filter>Source Files\Graphics\Shaders</Filter>
+    </None>
+    <None Include="..\src\Graphics\Shaders\sprite.frag">
+      <Filter>Source Files\Graphics\Shaders</Filter>
+    </None>
+    <None Include="..\src\Graphics\Shaders\sprite.vert">
+      <Filter>Source Files\Graphics\Shaders</Filter>
+    </None>
+    <None Include="..\src\Graphics\Shaders\selection.vert">
+      <Filter>Source Files\Graphics\Shaders</Filter>
+    </None>
+    <None Include="..\src\Graphics\Shaders\selection.frag">
       <Filter>Source Files\Graphics\Shaders</Filter>
     </None>
   </ItemGroup>

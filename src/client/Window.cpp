@@ -9,6 +9,7 @@
 #include "../Graphics/Camera.h"
 #include "../Graphics/Scene.h"
 #include "Player.h"
+#include "MenuState.h"
 
 const char* window_title = "Egg Scramble!";
 
@@ -23,6 +24,8 @@ bool Window::firstMouse = true;
 bool Window::mouseCaptured = false;
 GLint Window::lastX = width / 2;
 GLint Window::lastY = height / 2;
+
+CStateManager* Window::m_pStateManager = new CStateManager();
 
 void Window::Initialize_objects()
 {
@@ -55,7 +58,16 @@ GLFWwindow* Window::Create_window(int width, int height)
     glfwWindowHint(GLFW_SAMPLES, 4);
 
     // Create the GLFW window
-    GLFWwindow* window = glfwCreateWindow(width, height, window_title, NULL, NULL);
+
+	/*GLFWmonitor * monitor = glfwGetPrimaryMonitor();
+	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+	glfwWindowHint(GLFW_RED_BITS, mode->redBits);
+	glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
+	glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
+	glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
+	GLFWwindow* window = glfwCreateWindow(mode->width, mode->height, window_title, monitor, NULL);*/ // for full screen mode
+
+	GLFWwindow* window = glfwCreateWindow(width, height, window_title, NULL, NULL);
 
     // Check if the window could not be created
     if (!window)
@@ -68,12 +80,17 @@ GLFWwindow* Window::Create_window(int width, int height)
     // Make the context of the window
     glfwMakeContextCurrent(window);
 
+	//HWND hwnd = GetForegroundWindow(); old font stuff
+	//HDC device_context = GetDC(hwnd);
+
     // Set swap interval to 1
     glfwSwapInterval(1);
 
     // Call the resize callback to make sure things get drawn immediately
     glfwGetFramebufferSize(window, &width, &height);
     Window::Resize_callback(window, width, height);
+
+	m_pStateManager->ChangeState(CMenuState::GetInstance(m_pStateManager));
 
     return window;
 }
@@ -92,7 +109,10 @@ void Window::Idle_callback()
     // In this instance, drawPtr is pointing to a Cube object and is therefore
     // causing the cube to rotate via its spin function.
     //chicken->Update();
-    Scene::Instance()->Update();
+    //Scene::Instance()->Update();
+
+	DWORD dwCurrentTime = GetTickCount();
+	m_pStateManager->Update(dwCurrentTime);
 }
 
 void Window::Display_callback(GLFWwindow* window)
@@ -105,7 +125,9 @@ void Window::Display_callback(GLFWwindow* window)
 
     // Render the object drawPtr is pointing to
     //chicken->Draw(camera);
-    Scene::Instance()->Draw();
+    //Scene::Instance()->Draw();
+	m_pStateManager->Draw();
+
 
     // Gets events, including input such as keyboard and mouse or window resizing
     glfwPollEvents();
@@ -179,31 +201,28 @@ void Window::Mouse_callback(GLFWwindow* window, double xpos, double ypos)
         GLfloat yoffset = (GLfloat)(lastY - ypos);
         lastX = (GLint)xpos;
         lastY = (GLint)ypos;
-        Scene::Instance()->GetPlayer()->ProcessMouseMovement(xoffset, yoffset);
+        
+		//Scene::Instance()->GetPlayer()->ProcessMouseMovement(xoffset, yoffset);
+		m_pStateManager->GetActiveState()->OnMouseMove(xoffset, yoffset);
     }
 }
 
 void Window::Mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 {
-    if (button == GLFW_MOUSE_BUTTON_LEFT && !mouseCaptured)
-    {
-        mouseCaptured = true;
-        firstMouse = true;
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-        glfwSetCursorPos(window, Window::width/2, Window::height/2);
-    }
-    else if (button == GLFW_MOUSE_BUTTON_RIGHT && mouseCaptured)
-    {
-        mouseCaptured = false;
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-    }
-	else if (button == GLFW_MOUSE_BUTTON_RIGHT && !mouseCaptured)
-	{ // hacky way to start the game
-		printf("client will send start game\n");
-		if (!ClientGame::instance()->hasStarted())
-		{
-			printf("sending start packet\n");
-			ClientGame::instance()->sendStartPacket();
-		}
+	if (button == GLFW_MOUSE_BUTTON_LEFT && !mouseCaptured)
+	{
+		mouseCaptured = true;
+		firstMouse = true;
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	}
+	else if (button == GLFW_MOUSE_BUTTON_RIGHT && mouseCaptured)
+	{
+		mouseCaptured = false;
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+	}
+
+	double x, y;
+	glfwGetCursorPos(window, &x, &y);
+
+	m_pStateManager->GetActiveState()->OnClick(button, x, y);
 }
