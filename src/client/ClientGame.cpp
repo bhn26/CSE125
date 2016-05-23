@@ -1,9 +1,10 @@
 
 #include "ClientGame.h"
 
+#include <cstdio>
+
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include <cstdio>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -12,10 +13,20 @@
 #include "network/GameData.h"
 #include "network/NetworkData.h"
 #include "TextRenderer.h"
-#include "../client/PlayState.h"
+#include "client/PlayState.h"
+#include "ConfigManager.h"
 //#define _WIN32
 
 ClientGame* ClientGame::cg = nullptr;
+
+const std::string ClientGame::EVENT_QUIT = "Quit";
+const std::string ClientGame::EVENT_JUMP = "Jump";
+const std::string ClientGame::EVENT_ATTACK = "Attack";
+const std::string ClientGame::EVENT_START = "Start";
+const std::string ClientGame::EVENT_MOVE_FORWARD = "Move_Forward";
+const std::string ClientGame::EVENT_MOVE_BACKWARD = "Move_Backward";
+const std::string ClientGame::EVENT_MOVE_LEFT = "Move_Left";
+const std::string ClientGame::EVENT_MOVE_RIGHT = "Move_Right";
 
 ClientGame::ClientGame(void)
 {
@@ -362,7 +373,7 @@ void ClientGame::update()
         i += sizeof(Packet);
     }
 }
-#endif
+#endif  // ifdef _WIN32
 
 void ClientGame::Initialize()
 {
@@ -488,6 +499,7 @@ void ClientGame::Print_versions()
 #endif
 }
 
+// Prints once per 5 seconds
 void ClientGame::PrintFrameRate()
 {
     double currentTime = glfwGetTime();
@@ -592,6 +604,65 @@ void ClientGame::HandleButtonPress(const unsigned char* buttons)
 {
     using namespace Controller;
     if (buttons[Buttons::A])
+        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_A"));
+    if (buttons[Buttons::B])
+        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_B"));
+    if (buttons[Buttons::X])
+        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_X"));
+    if (buttons[Buttons::Y])
+        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_Y"));
+    if (buttons[Buttons::BACK])
+        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_Back"));
+    if (buttons[Buttons::START])
+        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_Start"));
+    if (buttons[Buttons::L_ANALOG])
+        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_L_Analog"));
+    if (buttons[Buttons::R_ANALOG])
+        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_R_Analog"));
+    if (buttons[Buttons::L_BUMPER])
+        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_L_Bumper"));
+    if (buttons[Buttons::R_BUMPER])
+        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_R_Bumper"));
+    if (buttons[Buttons::D_PAD_UP])
+        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_D_Pad_Up"));
+    if (buttons[Buttons::D_PAD_RIGHT])
+        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_D_Pad_Right"));
+    if (buttons[Buttons::D_PAD_DOWN])
+        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_D_Pad_Down"));
+    if (buttons[Buttons::D_PAD_LEFT])
+        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_D_Pad_Left"));
+}
+
+void ClientGame::HandleButtonEvent(const std::string& event)
+{
+    if (!event.size())
+        return;
+
+    if (event == EVENT_QUIT)
     {
+        glfwSetWindowShouldClose(this->window, GL_TRUE);
+    }
+    else if (event == EVENT_ATTACK)
+    {
+    }
+    else if (event == EVENT_JUMP)
+    {
+        sendJumpPacket();
+    }
+    else if (event == EVENT_MOVE_FORWARD)
+    {
+        sendMovePacket(MOVE_FORWARD);
+    }
+    else if (event == EVENT_MOVE_BACKWARD)
+    {
+        sendMovePacket(MOVE_BACKWARD);
+    }
+    else if (event == EVENT_MOVE_LEFT)
+    {
+        sendMovePacket(MOVE_LEFT);
+    }
+    else if (event == EVENT_MOVE_RIGHT)
+    {
+        sendMovePacket(MOVE_RIGHT);
     }
 }

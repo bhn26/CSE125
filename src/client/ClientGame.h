@@ -29,8 +29,8 @@ namespace Controller
         R_BUMPER = 5,
         BACK = 6,
         START = 7,
-        L_JOYSTICK = 8,
-        R_JOYSTICK = 9,
+        L_ANALOG = 8,
+        R_ANALOG = 9,
         D_PAD_UP = 10,
         D_PAD_RIGHT = 11,
         D_PAD_DOWN = 12,
@@ -48,6 +48,7 @@ namespace Controller
 
 class ClientGame
 {
+    friend class Window;
 public:
 #ifdef _WIN32
     ClientNetwork* network;
@@ -105,6 +106,15 @@ public:
 	static std::vector<int> Team1() { return cg->team1; }
 
 private:
+    const static std::string EVENT_QUIT;
+    const static std::string EVENT_JUMP;
+    const static std::string EVENT_ATTACK;
+    const static std::string EVENT_START;
+    const static std::string EVENT_MOVE_FORWARD;
+    const static std::string EVENT_MOVE_BACKWARD;
+    const static std::string EVENT_MOVE_LEFT;
+    const static std::string EVENT_MOVE_RIGHT;
+
     ClientGame(void);
     ~ClientGame(void);
 
@@ -135,5 +145,6 @@ private:
     void HandleLeftAnalog(const float* axes);
     void HandleRightAnalog(const float* axes);
     void HandleButtonPress(const unsigned char* buttons);
+    void HandleButtonEvent(const std::string& event);
 };
 

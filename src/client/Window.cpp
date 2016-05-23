@@ -10,6 +10,7 @@
 #include "../Graphics/Scene.h"
 #include "Player.h"
 #include "MenuState.h"
+#include "ConfigManager.h"
 
 const char* window_title = "Egg Scramble!";
 
@@ -145,33 +146,29 @@ void Window::Key_callback(GLFWwindow* window, int key, int scancode, int action,
             // Check if escape was pressed
             case GLFW_KEY_ESCAPE:
                 // Close the window. This causes the program to also terminate.
-                glfwSetWindowShouldClose(window, GL_TRUE);
+                ClientGame::instance()->HandleButtonEvent(ConfigManager::instance()->GetConfigValue("PC_Esc"));
                 break;
 
             case GLFW_KEY_W:
-                //Scene::player->ProcessKeyboard(DIRECTION::D_FORWARD, 1);
 #ifdef _WIN32
-                ClientGame::instance()->sendMovePacket(MOVE_FORWARD);
+                ClientGame::instance()->HandleButtonEvent(ConfigManager::instance()->GetConfigValue("PC_W"));
 #endif
                 break;
             case GLFW_KEY_A:
-                //Scene::player->ProcessKeyboard(DIRECTION::D_LEFT, 1);
 #ifdef _WIN32
-                ClientGame::instance()->sendMovePacket(MOVE_LEFT);
+                ClientGame::instance()->HandleButtonEvent(ConfigManager::instance()->GetConfigValue("PC_A"));
 #endif
                 break;
             case GLFW_KEY_S:
-                //Scene::player->ProcessKeyboard(DIRECTION::D_BACKWARD, 1);
 #ifdef _WIN32
-                ClientGame::instance()->sendMovePacket(MOVE_BACKWARD);
+                ClientGame::instance()->HandleButtonEvent(ConfigManager::instance()->GetConfigValue("PC_S"));
 #endif
                 break;
             case GLFW_KEY_D:
-                //Scene::player->ProcessKeyboard(DIRECTION::D_RIGHT, 1);
-                ClientGame::instance()->sendMovePacket(MOVE_RIGHT);
+                ClientGame::instance()->HandleButtonEvent(ConfigManager::instance()->GetConfigValue("PC_D"));
                 break;
             case GLFW_KEY_SPACE: // jump?
-				ClientGame::instance()->sendJumpPacket();
+                ClientGame::instance()->HandleButtonEvent(ConfigManager::instance()->GetConfigValue("PC_Space"));
                 break;
             case GLFW_KEY_Z:
                 Scene::Instance()->GetPlayer()->ProcessKeyboard(DIRECTION::D_DOWN, 1);

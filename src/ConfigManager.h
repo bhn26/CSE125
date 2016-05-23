@@ -29,21 +29,20 @@ public:
         
         while (getline(infile, line))
         {
-            remove_if(line.begin(), line.end(), isspace);
-            if (line.substr(0, 2) == "//") { continue; }
             std::istringstream iss(line);
             std::string field, equal, value;
             if (!(iss >> field >> equal >> value)) { continue; } // error, skip this line
-			cfg_map.insert(std::pair<std::string, std::string>(field, value));
+            if (field.substr(0, 2) == "//") { continue; }
+            cfg_map.insert(std::pair<std::string, std::string>(field, value));
         }
 		infile.close();
     }
 
 	// use this to get the value read from the config file
-	std::string GetConfigValue(std::string key)
+	std::string GetConfigValue(std::string key) const
 	{
 		if (cfg_map.find(key) != cfg_map.end())
-			return cfg_map.find(key)->second;
+			return cfg_map.at(key);
 		else
 			return "";
 	}
