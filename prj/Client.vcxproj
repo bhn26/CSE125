@@ -75,7 +75,7 @@
     <IntDir>$(ProjectName)\$(Configuration)\</IntDir>
     <LibraryPath>$(SolutionDir)lib;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86</LibraryPath>
     <IncludePath>$(SolutionDir)include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
-    <ReferencePath>$(ProjectDir);$(ReferencePath)</ReferencePath>
+    <ReferencePath>$(ProjectDir);$(VC_ReferencesPath_x86);</ReferencePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -86,6 +86,7 @@
     <IntDir>$(ProjectName)\$(Configuration)\</IntDir>
     <LibraryPath>$(SolutionDir)lib;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86</LibraryPath>
     <IncludePath>$(SolutionDir)include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <ReferencePath>$(ProjectDir);$(VC_ReferencesPath_x86);</ReferencePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -99,12 +100,19 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <ShowIncludes>false</ShowIncludes>
+      <AdditionalIncludeDirectories>$(SolutionDir)src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SOIL.lib;opengl32.lib;DevIL.lib;ILU.lib;ILUT.lib;glu32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>assimp-vc130-mt.lib;SOIL.lib;opengl32.lib;DevIL.lib;ILU.lib;ILUT.lib;glu32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>XCOPY "$(SolutionDir)"\lib\*.DLL "$(TargetDir)" /D /K /Y</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Move DLLs</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -131,14 +139,21 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <ShowIncludes>false</ShowIncludes>
+      <AdditionalIncludeDirectories>$(SolutionDir)src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SOIL.lib;opengl32.lib;glu32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>assimp-vc130-mt.lib;SOIL.lib;opengl32.lib;glu32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>XCOPY "$(SolutionDir)"\lib\*.DLL "$(TargetDir)" /D /K /Y</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Move DLLs</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -159,9 +174,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="..\eggs.cfg" />
+    <None Include="..\src\Graphics\Shaders\skinning.frag" />
+    <None Include="..\src\Graphics\Shaders\skinning.vert" />
     <None Include="..\src\Graphics\Shaders\cubemap.frag" />
     <None Include="..\src\Graphics\Shaders\cubemap.vert" />
     <None Include="..\src\Graphics\Shaders\diffuse.frag" />
+    <None Include="..\src\Graphics\Shaders\instancing.frag" />
+    <None Include="..\src\Graphics\Shaders\instancing.vert" />
+    <None Include="..\src\Graphics\Shaders\diffuse.vert" />
     <None Include="..\src\Graphics\Shaders\model_loading.frag" />
     <None Include="..\src\Graphics\Shaders\model_loading.vert" />
     <None Include="..\prj\packages.config" />
@@ -182,17 +203,30 @@
     <ClCompile Include="..\src\client\SpriteRenderer.cpp" />
     <ClCompile Include="..\src\client\StateManager.cpp" />
     <ClCompile Include="..\src\client\TextRenderer.cpp" />
+    <ClCompile Include="..\src\Basic\Utils.cpp" />
+    <ClCompile Include="..\src\ConfigManager.cpp" />
+    <ClCompile Include="..\src\Graphics\Texture.cpp" />
+    <ClCompile Include="..\src\Graphics\Animation\AnimatedModel.cpp" />
+    <ClCompile Include="..\src\Graphics\Animation\AnimationMesh.cpp" />
+    <ClCompile Include="..\src\Graphics\Animation\AnimationPlayer.cpp" />
+    <ClCompile Include="..\src\Graphics\Animation\skinning_technique.cpp" />
+    <ClCompile Include="..\src\Graphics\Animation\technique.cpp" />
+    <ClCompile Include="..\src\Graphics\Objects\ChickenAnim.cpp" />
+    <ClCompile Include="..\src\Graphics\Objects\Entity.cpp" />
     <ClCompile Include="..\src\Graphics\Objects\CubeMap.cpp" />
     <ClCompile Include="..\src\client\ClientGame.cpp" />
     <ClCompile Include="..\src\client\ClientNetwork.cpp" />
     <ClCompile Include="..\src\client\main.cpp" />
     <ClCompile Include="..\src\client\Player.cpp" />
     <ClCompile Include="..\src\client\Window.cpp" />
+    <ClCompile Include="..\src\Graphics\Objects\Grass.cpp" />
+    <ClCompile Include="..\src\Graphics\Objects\Egg.cpp" />
     <ClCompile Include="..\src\Graphics\Objects\Ground.cpp" />
     <ClCompile Include="..\src\Graphics\Mesh.cpp" />
     <ClCompile Include="..\src\Graphics\Model.cpp" />
     <ClCompile Include="..\src\Graphics\Objects\Chicken.cpp" />
     <ClCompile Include="..\src\Graphics\Texture.cpp" />
+    <ClCompile Include="..\src\Graphics\Objects\StaticObject.cpp" />
     <ClCompile Include="..\src\network\NetworkServices.cpp" />
     <ClCompile Include="..\src\Graphics\Camera.cpp" />
     <ClCompile Include="..\src\Graphics\Scene.cpp" />
@@ -208,7 +242,17 @@
     <ClInclude Include="..\src\client\SpriteRenderer.h" />
     <ClInclude Include="..\src\client\StateManager.h" />
     <ClInclude Include="..\src\client\TextRenderer.h" />
+    <ClInclude Include="..\src\Basic\Utils.h" />
+    <ClInclude Include="..\src\ConfigManager.h" />
+    <ClInclude Include="..\src\Graphics\Texture.h" />
+    <ClInclude Include="..\src\Graphics\Animation\AnimatedModel.h" />
+    <ClInclude Include="..\src\Graphics\Animation\AnimationMesh.h" />
+    <ClInclude Include="..\src\Graphics\Animation\AnimationPlayer.h" />
+    <ClInclude Include="..\src\Graphics\Animation\skinning_technique.h" />
+    <ClInclude Include="..\src\Graphics\Animation\technique.h" />
+    <ClInclude Include="..\src\Graphics\Objects\ChickenAnim.h" />
     <ClInclude Include="..\src\Graphics\Objects\CubeMap.h" />
+    <ClInclude Include="..\src\Graphics\Objects\Egg.h" />
     <ClInclude Include="..\src\Graphics\Objects\Entity.h" />
     <ClInclude Include="..\src\client\ClientGame.h" />
     <ClInclude Include="..\src\client\ClientNetwork.h" />
@@ -218,6 +262,7 @@
     <ClInclude Include="..\src\Graphics\Mesh.h" />
     <ClInclude Include="..\src\Graphics\Model.h" />
     <ClInclude Include="..\src\Graphics\Objects\Chicken.h" />
+    <ClInclude Include="..\src\Graphics\Objects\StaticObject.h" />
     <ClInclude Include="..\src\Graphics\PointLight.h" />
     <ClInclude Include="..\src\Graphics\Texture.h" />
     <ClInclude Include="..\src\network\GameData.h" />
@@ -230,15 +275,20 @@
     <ClInclude Include="..\src\Graphics\Nodes.h" />
     <ClInclude Include="..\src\Graphics\Shader.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\src\Graphics\Objects\Grass.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="..\packages\nupengl.core.redist.0.1.0.1\build\native\nupengl.core.redist.targets" Condition="Exists('..\packages\nupengl.core.redist.0.1.0.1\build\native\nupengl.core.redist.targets')" />
     <Import Project="..\packages\nupengl.core.0.1.0.1\build\native\nupengl.core.targets" Condition="Exists('..\packages\nupengl.core.0.1.0.1\build\native\nupengl.core.targets')" />
     <Import Project="..\packages\glm.0.9.7.1\build\native\glm.targets" Condition="Exists('..\packages\glm.0.9.7.1\build\native\glm.targets')" />
-    <Import Project="..\packages\Assimp.redist.3.0.0\build\native\Assimp.redist.targets" Condition="Exists('..\packages\Assimp.redist.3.0.0\build\native\Assimp.redist.targets')" />
-    <Import Project="..\packages\Assimp.3.0.0\build\native\Assimp.targets" Condition="Exists('..\packages\Assimp.3.0.0\build\native\Assimp.targets')" />
     <Import Project="..\packages\freetype.redist.2.6.2.1\build\native\freetype.redist.targets" Condition="Exists('..\packages\freetype.redist.2.6.2.1\build\native\freetype.redist.targets')" />
     <Import Project="..\packages\freetype.2.6.2.1\build\native\freetype.targets" Condition="Exists('..\packages\freetype.2.6.2.1\build\native\freetype.targets')" />
+    <Import Project="..\packages\sfml-audio.redist.2.3.2.0\build\native\sfml-audio.redist.targets" Condition="Exists('..\packages\sfml-audio.redist.2.3.2.0\build\native\sfml-audio.redist.targets')" />
+    <Import Project="..\packages\sfml-system.redist.2.3.2.0\build\native\sfml-system.redist.targets" Condition="Exists('..\packages\sfml-system.redist.2.3.2.0\build\native\sfml-system.redist.targets')" />
+    <Import Project="..\packages\sfml-system.2.3.2.0\build\native\sfml-system.targets" Condition="Exists('..\packages\sfml-system.2.3.2.0\build\native\sfml-system.targets')" />
+    <Import Project="..\packages\sfml-audio.2.3.2.0\build\native\sfml-audio.targets" Condition="Exists('..\packages\sfml-audio.2.3.2.0\build\native\sfml-audio.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -247,9 +297,11 @@
     <Error Condition="!Exists('..\packages\nupengl.core.redist.0.1.0.1\build\native\nupengl.core.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\nupengl.core.redist.0.1.0.1\build\native\nupengl.core.redist.targets'))" />
     <Error Condition="!Exists('..\packages\nupengl.core.0.1.0.1\build\native\nupengl.core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\nupengl.core.0.1.0.1\build\native\nupengl.core.targets'))" />
     <Error Condition="!Exists('..\packages\glm.0.9.7.1\build\native\glm.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\glm.0.9.7.1\build\native\glm.targets'))" />
-    <Error Condition="!Exists('..\packages\Assimp.redist.3.0.0\build\native\Assimp.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Assimp.redist.3.0.0\build\native\Assimp.redist.targets'))" />
-    <Error Condition="!Exists('..\packages\Assimp.3.0.0\build\native\Assimp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Assimp.3.0.0\build\native\Assimp.targets'))" />
     <Error Condition="!Exists('..\packages\freetype.redist.2.6.2.1\build\native\freetype.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\freetype.redist.2.6.2.1\build\native\freetype.redist.targets'))" />
     <Error Condition="!Exists('..\packages\freetype.2.6.2.1\build\native\freetype.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\freetype.2.6.2.1\build\native\freetype.targets'))" />
+    <Error Condition="!Exists('..\packages\sfml-audio.redist.2.3.2.0\build\native\sfml-audio.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\sfml-audio.redist.2.3.2.0\build\native\sfml-audio.redist.targets'))" />
+    <Error Condition="!Exists('..\packages\sfml-system.redist.2.3.2.0\build\native\sfml-system.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\sfml-system.redist.2.3.2.0\build\native\sfml-system.redist.targets'))" />
+    <Error Condition="!Exists('..\packages\sfml-system.2.3.2.0\build\native\sfml-system.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\sfml-system.2.3.2.0\build\native\sfml-system.targets'))" />
+    <Error Condition="!Exists('..\packages\sfml-audio.2.3.2.0\build\native\sfml-audio.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\sfml-audio.2.3.2.0\build\native\sfml-audio.targets'))" />
   </Target>
 </Project>

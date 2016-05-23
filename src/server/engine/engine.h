@@ -1,11 +1,12 @@
 
-#include "../../network/GameData.h"
 #include "World.h"
 
-using namespace std;
+#ifndef GAME_DATA
+#define GAME_DATA
+#include "../../network/GameData.h"
+#endif
 
-extern const int WORLD_WIDTH;
-extern const int WORLD_HEIGHT;
+using namespace std;
 
 typedef vector<PosInfo> pos_list;
 
@@ -17,10 +18,20 @@ public:
 	World * GetWorld() { return world; };
 	// generate map
 	void InitWorld(int num_players);
+
+	// Spawns at random positions
+	void SpawnRandomPlayer();
+	void SpawnRandomFlag();
+
+	// spawn once all players are "ready"
+	void InitialSpawn(int num_players);
+	bool hasInitialSpawned() { return initialSpawned; };
+
 	// move player
 	// attack player
 
 private:
+	bool initialSpawned = false;
 	World * world; // used to communicate with clients
 
 	/* maybe put the world representation in this class so we can 

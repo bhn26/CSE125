@@ -27,6 +27,7 @@ class Chicken : public Entity
 {
 public:
     Chicken();
+    Chicken(float x, float y, float z);
     ~Chicken();
     
     Model* model;

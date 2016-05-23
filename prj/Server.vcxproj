@@ -75,6 +75,7 @@
     <IntDir>$(ProjectName)\$(Configuration)\</IntDir>
     <IncludePath>$(SolutionDir)include/BulletPhysics;$(SolutionDir)include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)lib;$(LibraryPath)</LibraryPath>
+    <ReferencePath>$(ProjectDir);$(VC_ReferencesPath_x86);</ReferencePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -95,6 +96,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(SolutionDir)src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -126,6 +128,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(SolutionDir)src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -153,21 +156,36 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\src\ConfigManager.h" />
     <ClInclude Include="..\src\network\GameData.h" />
     <ClInclude Include="..\src\network\NetworkData.h" />
     <ClInclude Include="..\src\network\NetworkServices.h" />
+    <ClInclude Include="..\src\server\engine\Bullet.h" />
     <ClInclude Include="..\src\server\engine\engine.h" />
+    <ClInclude Include="..\src\server\engine\FireRateReset.h" />
+    <ClInclude Include="..\src\server\engine\Flag.h" />
+    <ClInclude Include="..\src\server\engine\ObjectId.h" />
     <ClInclude Include="..\src\server\engine\Player.h" />
+    <ClInclude Include="..\src\server\engine\SeedGun.h" />
+    <ClInclude Include="..\src\server\engine\Weapon.h" />
     <ClInclude Include="..\src\server\engine\World.h" />
+    <ClInclude Include="..\src\server\engine\WorldObstacle.h" />
     <ClInclude Include="..\src\server\ServerGame.h" />
     <ClInclude Include="..\src\server\ServerNetwork.h" />
     <ClInclude Include="..\src\server\ServerPlayer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\ConfigManager.cpp" />
     <ClCompile Include="..\src\network\NetworkServices.cpp" />
+    <ClCompile Include="..\src\server\engine\Bullet.cpp" />
     <ClCompile Include="..\src\server\engine\engine.cpp" />
+    <ClCompile Include="..\src\server\engine\FireRateReset.cpp" />
+    <ClCompile Include="..\src\server\engine\Flag.cpp" />
     <ClCompile Include="..\src\server\engine\Player.cpp" />
+    <ClCompile Include="..\src\server\engine\SeedGun.cpp" />
+    <ClCompile Include="..\src\server\engine\Weapon.cpp" />
     <ClCompile Include="..\src\server\engine\World.cpp" />
+    <ClCompile Include="..\src\server\engine\WorldObstacle.cpp" />
     <ClCompile Include="..\src\server\main.cpp" />
     <ClCompile Include="..\src\server\ServerGame.cpp" />
     <ClCompile Include="..\src\server\ServerNetwork.cpp" />

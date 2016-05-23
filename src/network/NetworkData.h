@@ -3,24 +3,27 @@
 #include "GameData.h"
 
 #define MAX_PACKET_SIZE 1000000
-#define DATA_SIZE 40 // Change this to the largest data size that is needed
+#define DATA_SIZE 100 // Change this to the largest data size that is needed
 
-enum PacketTypes 
+enum PacketTypes
 {
-
-    INIT_CONNECTION, 
+    INIT_CONNECTION,  // Initial connection setup
 
 	JOIN_TEAM,
 
-	START_GAME, 
+	START_GAME, // A client would send this to start the game
 
-    ACTION_EVENT, 
+	READY_GAME, // The clients send this to say they're ready
 
-    SPAWN_EVENT, 
+    SPAWN_EVENT,  // Creating a new object, sent to the client
+
+	REMOVE_EVENT, // Removing an object, sent to the client
 
     MOVE_EVENT,
 
-    V_ROTATION_EVENT 
+    V_ROTATION_EVENT,
+
+	JUMP_EVENT
 
 };
 
@@ -36,7 +39,7 @@ struct PacketHeader
 
 struct PacketData
 {
-    ObjId obj_id;
+	GameDataId game_data_id;
     char buf[DATA_SIZE];
 };
 
@@ -44,8 +47,6 @@ struct Packet
 {
 
     struct PacketHeader hdr;
-
-    //struct PosInfo pi;
 
     struct PacketData dat;
 

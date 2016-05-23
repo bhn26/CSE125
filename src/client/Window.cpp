@@ -171,10 +171,13 @@ void Window::Key_callback(GLFWwindow* window, int key, int scancode, int action,
                 ClientGame::instance()->sendMovePacket(MOVE_RIGHT);
                 break;
             case GLFW_KEY_SPACE: // jump?
-                Scene::Instance()->GetPlayer()->ProcessKeyboard(DIRECTION::D_UP, 1);
+				ClientGame::instance()->sendJumpPacket();
                 break;
             case GLFW_KEY_Z:
                 Scene::Instance()->GetPlayer()->ProcessKeyboard(DIRECTION::D_DOWN, 1);
+                break;
+            case GLFW_KEY_C:
+                Scene::Instance()->GetPlayer()->SetModelFile("assets/chickens/objects/pinocchio_chicken.obj");
                 break;
             default:
                 break;
@@ -204,22 +207,9 @@ void Window::Mouse_callback(GLFWwindow* window, double xpos, double ypos)
 
 void Window::Mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 {
-    /*if (button == GLFW_MOUSE_BUTTON_LEFT && !mouseCaptured)
-    {
-        mouseCaptured = true;
-        firstMouse = true;
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-        glfwSetCursorPos(window, Window::width/2, Window::height/2);
-    }
-    else if (button == GLFW_MOUSE_BUTTON_RIGHT && mouseCaptured)
-    {
-        mouseCaptured = false;
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-    }*/
 
 	double x, y;
 	glfwGetCursorPos(window, &x, &y);
 
 	m_pStateManager->GetActiveState()->OnClick(button, x, y);
-	
 }

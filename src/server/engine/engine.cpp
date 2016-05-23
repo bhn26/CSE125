@@ -2,9 +2,6 @@
 #include <vector>
 #include <time.h>
 
-const int WORLD_WIDTH = 100;
-const int WORLD_HEIGHT = 100;
-
 Engine::Engine() {
 	world = new World();
 }
@@ -16,26 +13,61 @@ Engine::~Engine() {
 void Engine::InitWorld(int num_players) {
 	printf("INITIALIZING WORLD ON SERVER\n");
 
-    pos_list player_poss = GenerateCoords(num_players);
-    pos_list egg_poss = GenerateCoords(num_players * 2);
+	// we only need to seed once
+	srand(time(NULL));
+    //pos_list player_poss = GenerateCoords(num_players);
+    //pos_list flag_poss = GenerateCoords(num_players * 2);
 
-	world->Init(player_poss);
+	world->Init();
+}
+
+void Engine::SpawnRandomPlayer()
+{
+	PosInfo p;
+	p.x = rand() % WORLD_WIDTH + 1;
+	p.z = rand() % WORLD_WIDTH + 1;
+	p.y = 3;
+	world->SpawnPlayer(p);
+}
+
+void Engine::SpawnRandomFlag()
+{
+	PosInfo p;
+	p.x = rand() % WORLD_WIDTH + 1;
+	p.z = rand() % WORLD_WIDTH + 1;
+	p.y = 3;
+	world->SpawnFlag(p);
+}
+
+void Engine::InitialSpawn(int n)
+{
+	// Always spawn the players before other dynamic objects
+	for ( int i = 0; i < n; i++)
+	{
+		SpawnRandomPlayer();
+	}
+	for (int i = 0; i < 2 * n; i++)
+	{
+		SpawnRandomFlag();
+	}
+	initialSpawned = true;
 }
 
 pos_list Engine::GenerateCoords(int n) {
-    srand (time(NULL));
     pos_list poss;
 
     for(int i = 0; i < n; i++) {
          PosInfo pos;
 
         pos.x = rand() % WORLD_WIDTH + 1; // generate random int from 1 to width
-        pos.y = rand() % WORLD_HEIGHT + 1;
-        pos.z = 0;
+        pos.z = rand() % WORLD_WIDTH + 1;
+
+		// y is the vertical axis and should be 0, not randomized
+        pos.y = 3;
 
         /* face random direction */
-		pos.v_rotation = 0;
-		pos.h_rotation = 0;
+		//pos.v_rotation = 0;
+		//pos.h_rotation = 0;
         
         poss.push_back(pos);
     }

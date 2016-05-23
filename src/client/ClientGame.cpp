@@ -36,19 +36,6 @@ ClientGame::~ClientGame(void)
 }
 
 #ifdef _WIN32
-void ClientGame::sendActionPackets()
-{
-    // send action packet
-    const unsigned int packet_size = sizeof(Packet);
-    char packet_data[packet_size];
-
-    Packet packet;
-    packet.hdr.packet_type = ACTION_EVENT;
-
-    packet.serialize(packet_data);
-
-    NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
-}
 
 // Do we want to create a new world every time we get a new init packet
 void ClientGame::receiveInitPacket(int offset)
@@ -104,6 +91,7 @@ void ClientGame::sendJoinPacket(int team) {
 	char packet_data[packet_size];
 
 	Packet packet;
+
 	packet.hdr.sender_id = client_id;
 	packet.hdr.receiver_id = SERVER_ID;
 	packet.hdr.packet_type = JOIN_TEAM;
@@ -117,6 +105,22 @@ void ClientGame::sendJoinPacket(int team) {
 	NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
 };
 
+
+void ClientGame::sendReadyPacket()
+{
+	const unsigned int packet_size = sizeof(Packet);
+	char packet_data[packet_size];
+
+	Packet packet;
+
+	packet.hdr.packet_type = READY_GAME;
+	packet.hdr.sender_id = client_id;
+
+	packet.serialize(packet_data);
+
+	NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
+}
+
 void ClientGame::receiveStartPacket(int offset) {
 	struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset]);
     struct PacketData* dat = (struct PacketData *) &(network_data[offset + sizeof(PacketHeader)]);
@@ -124,12 +128,16 @@ void ClientGame::receiveStartPacket(int offset) {
 	struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
 	printf("received start packet for %d players\n", pi->id);
 
-	Scene::Instance()->ClearPlayers();
+	/*Scene::Instance()->ClearPlayers();
 
+	// add players, may have to send a different packet
 	for (int i = 0; i < pi->id; i++) {
 		printf("add player %d\n", i);
 		Scene::Instance()->AddPlayer(i);
-	}
+	}*/
+
+	game_started = true;
+	sendReadyPacket();
 }
 
 void ClientGame::sendStartPacket() {
@@ -140,6 +148,7 @@ void ClientGame::sendStartPacket() {
 	packet.hdr.sender_id = client_id;
 	packet.hdr.receiver_id = SERVER_ID;
 	packet.hdr.packet_type = START_GAME;
+	packet.hdr.sender_id = client_id;
 
 	packet.serialize(packet_data);
 
@@ -152,22 +161,23 @@ void ClientGame::receiveSpawnPacket(int offset)
     struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
     struct PosInfo* p = (struct PosInfo *) (dat->buf);
 
+	// spawn the thing
+	Scene::Instance()->AddEntity(p->cid, p->oid, p->x, p->y, p->z, p->rotw, p->rotx, p->roty, p->rotz);
 
+	if (!iSpawned && p->oid == client_id)
+	{
+		iSpawned = true;
+	}
 }
 
-void ClientGame::sendSpawnPacket()
+void ClientGame::receiveRemovePacket(int offset)
 {
-    const unsigned int packet_size = sizeof(Packet);
-    char packet_data[packet_size];
+	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
+	struct RemInfo* r = (struct RemInfo *) &(dat->buf);
 
-    Packet packet;
-    packet.hdr.packet_type = SPAWN_EVENT;
-    packet.hdr.sender_id = client_id;
-    packet.hdr.receiver_id = SERVER_ID;
+	printf("received a remove packet for type %d object %d\n", r->rem_cid, r->rem_oid);
 
-    packet.serialize(packet_data);
-
-    NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
+	Scene::Instance()->RemoveEntity(r->rem_cid, r->rem_oid);
 }
 
 void ClientGame::receiveMovePacket(int offset)
@@ -176,10 +186,11 @@ void ClientGame::receiveMovePacket(int offset)
     struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
     struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
 
-	std::shared_ptr<Player> target = FindTarget(pi->id);
-	
-	/* probably gonna switch this to coordinates later on */
-	target->ProcessKeyboard((DIRECTION)pi->direction, 1); // move (rename method 
+	//if(pi->oid == 1)
+		//printf("received move packet for obj id %d. Its coordinates are: %f, %f, %f\n", pi->oid, pi->x, pi->y, pi->z);
+
+	Scene::Instance()->GetEntity(pi->cid, pi->oid)->MoveTo(pi->x, pi->y, pi->z);
+
 }
 
 // Need to know what direction to move in
@@ -195,29 +206,50 @@ void ClientGame::sendMovePacket(int direction)
 
     PosInfo pi;
     pi.direction = direction;
+	glm::quat rot = Scene::Instance()->GetPlayer()->GetOrientation();
+	pi.rotw = rot.w;
+	pi.rotx = rot.x;
+	pi.roty = rot.y;
+	pi.rotz = rot.z;
     pi.serialize(packet.dat.buf);
 
     packet.serialize(packet_data);
     NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
 }
 
-void ClientGame::receiveVRotationPacket(int offset) {
+void ClientGame::receiveRotationPacket(int offset) {
     struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
     struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
 
-	std::shared_ptr<Player> target = FindTarget(pi->id);
+	//printf("received a rotation packet with: %f, %f, %f, %f\n", pi->rotw, pi->rotx, pi->roty, pi->rotz);
+
+	//std::shared_ptr<Player> target = FindTarget(pi->id);
+	//server don't tell us how we rotate
+	if (pi->oid != client_id) {
+		Scene::Instance()->GetEntity(pi->cid, pi->oid)->RotateTo(pi->rotw, pi->rotx, pi->roty, pi->rotz);
+		glm::quat quat = Scene::Instance()->GetEntity(pi->cid, pi->oid)->Orientation();
+		printf("rotation of player %d on client is %f, %f, %f, %f\n", pi->oid, quat.w, quat.x, quat.y, quat.z);
+	}
+	
+	// Rotate it if it's not a player
+	if (pi->cid != ClassId::PLAYER)
+	{
+		Scene::Instance()->GetEntity(pi->cid, pi->oid)->RotateTo(pi->rotw, pi->rotx, pi->roty, pi->rotz);
+	}
+
 
 	// left/right rotation
-	glm::mat4 newToWorld = target->GetToWorld() * glm::rotate(glm::mat4(1.0f), pi->v_rotation, glm::vec3(0.0f, 1.0f, 0.0f));
+	/*glm::mat4 newToWorld = target->GetToWorld() * glm::rotate(glm::mat4(1.0f), pi->v_rotation, glm::vec3(0.0f, 1.0f, 0.0f));
 	target->SetToWorld(newToWorld);
 
 	// up/down rotation
 	float newAngle = target->GetCamAngle() + pi->h_rotation;
 	const static float pi2 = glm::pi<float>() / 2;
-	target->SetCamAngle((newAngle > pi2) ? pi2 : ((newAngle < -pi2) ? -pi2 : newAngle));
+	target->SetCamAngle((newAngle > pi2) ? pi2 : ((newAngle < -pi2) ? -pi2 : newAngle));*/
+
 }
 
-void ClientGame::sendVRotationPacket(float v_rot, float h_rot) {
+void ClientGame::sendRotationPacket() {
     const unsigned int packet_size = sizeof(Packet);
     char packet_data[packet_size];
 
@@ -226,9 +258,17 @@ void ClientGame::sendVRotationPacket(float v_rot, float h_rot) {
     packet.hdr.sender_id = client_id;
     packet.hdr.receiver_id = SERVER_ID;
 
+	// send the rotation of the main player
     PosInfo pi;
-    pi.v_rotation = v_rot;
-	pi.h_rotation = h_rot;
+	glm::quat rot = Scene::Instance()->GetPlayer()->GetOrientation();
+	pi.rotw = rot.w;
+	pi.rotx = rot.x;
+	pi.roty = rot.y;
+	pi.rotz = rot.z;
+
+	//printf("sending a rotation packet with: %f, %f, %f, %f\n", pi.rotw, pi.rotx, pi.roty, pi.rotz);
+   // pi.v_rotation = v_rot;
+	//pi.h_rotation = h_rot;
     pi.serialize(packet.dat.buf);
 
     packet.serialize(packet_data);
@@ -236,7 +276,21 @@ void ClientGame::sendVRotationPacket(float v_rot, float h_rot) {
     NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
 }
 
-std::shared_ptr<Player> ClientGame::FindTarget(int tid) {
+void ClientGame::sendJumpPacket()
+{
+    const unsigned int packet_size = sizeof(Packet);
+    char packet_data[packet_size];
+
+    Packet packet;
+    packet.hdr.packet_type = JUMP_EVENT;
+    packet.hdr.sender_id = client_id;
+    packet.hdr.receiver_id = SERVER_ID;
+
+    packet.serialize(packet_data);
+
+    NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
+}
+/*std::shared_ptr<Player> ClientGame::FindTarget(int tid) {
 	if (tid == client_id) {
 		return Scene::Instance()->GetPlayer();
 	}
@@ -251,7 +305,7 @@ std::shared_ptr<Player> ClientGame::FindTarget(int tid) {
 		}
 	}
 	printf("ERROR - couldn't find target in players");
-}
+}*/
 
 void ClientGame::update()
 {
@@ -284,14 +338,6 @@ void ClientGame::update()
 				receiveStartPacket(i);
 				break;
 
-            case ACTION_EVENT:
-
-                printf("client received action event packet from server\n");
-
-                //sendActionPackets();
-
-                break;
-
             case SPAWN_EVENT:
 
                 // You want to offset the packet header
@@ -299,13 +345,17 @@ void ClientGame::update()
 
                 break;
 
-            case MOVE_EVENT:
+			case REMOVE_EVENT:
+				receiveRemovePacket(i + sizeof(PacketHeader));
+				break;
 
-                receiveMovePacket(i + sizeof(PacketHeader));
+            case MOVE_EVENT:
+				if(game_started) // the game needs to start for the client before this can happen
+					receiveMovePacket(i + sizeof(PacketHeader));
                 break;
 
 			case V_ROTATION_EVENT:
-				receiveVRotationPacket(i + sizeof(PacketHeader));
+				receiveRotationPacket(i + sizeof(PacketHeader));
 				break;
 
             default:
@@ -369,6 +419,12 @@ void ClientGame::GameLoop()
         Window::Display_callback(window);
         // Idle callback. Updating objects, etc. can be done here.
         Window::Idle_callback();
+
+		if (++tick % 15 == 0 && iSpawned)
+		{
+			ClientGame::instance()->sendRotationPacket();
+			tick = 0;
+		}
     }
 }
 

@@ -48,6 +48,7 @@ void LobbyState::OnClick(int button, double x, double y) {
 	case 0: printf("None clicked\n"); break;
 	case 1: printf("Logo clicked\n"); break;
 	case 2: printf("Start Button clicked\n"); 
+		ClientGame::instance()->sendStartPacket();
 		m_pStateManager->ChangeState(CPlayState::GetInstance(m_pStateManager)); // start game
 		break;
 	case 3: printf("Join T0 clicked\n"); 

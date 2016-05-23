@@ -21,7 +21,6 @@ enum Camera_Movement
     DOWN
 };
 
-
 // An abstract camera class that processes input and calculates the corresponding Eular Angles, Vectors and Matrices for use in OpenGL
 class Camera
 {
@@ -61,14 +60,13 @@ public:
     // Processes input received from a mouse scroll-wheel event. Only requires input on the vertical wheel-axis
     void ProcessMouseScroll(GLfloat yoffset);
 
-    const glm::vec3& Position() { return this->position; }
-    GLfloat Zoom() { return this->zoom; }
-    
-    const glm::vec3& Front() { return front; }
-    const glm::vec3& Up() { return up; }
-    const glm::vec3& Right() { return right; }
-    const glm::vec3& WorldUp() { return worldUp; }
-    GLfloat Speed() { return movementSpeed; }
+    const glm::vec3& Position() const { return this->position; }
+    const glm::vec3& Up() const { return this->up; }
+    const glm::vec3& Front() const { return front; }
+    const glm::vec3& Right() const { return right; }
+    const glm::vec3& WorldUp() const { return worldUp; }
+    GLfloat Zoom() const { return this->zoom; }
+    GLfloat Speed() const { return movementSpeed; }
 
 private:
     // Calculates the front vector from the Camera's (updated) Eular Angles
@@ -80,6 +78,6 @@ private:
     static const GLfloat SPEED;
     static const GLfloat SENSITIVTY;
     static const GLfloat ZOOM;
-    static const float ZNEAR;
-    static const float ZFAR;
+    static const GLfloat ZNEAR;
+    static const GLfloat ZFAR;
 };

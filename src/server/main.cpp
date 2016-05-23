@@ -6,21 +6,21 @@
 // used for multi-threading
 #include <process.h>
 #include "ServerGame.h"
+#include "ConfigManager.h"
 #include <iostream>
-
-ServerGame * server;
 
 void serverLoop(void * arg)
 {
     while (true)
     {
-        server->update();
+        ServerGame::instance()->update();
     }
 }
 
 int main()
 {
-    server = new ServerGame();
+	ConfigManager::instantiate();
+    ServerGame::instantiate();
 
     serverLoop((void*)12);
 }

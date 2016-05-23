@@ -1,5 +1,6 @@
 
 #include "ServerNetwork.h"
+#include "ConfigManager.h"
 
 
 ServerNetwork::ServerNetwork(void)
@@ -31,8 +32,19 @@ ServerNetwork::ServerNetwork(void)
     hints.ai_protocol = IPPROTO_TCP;    // TCP connection!!!
     hints.ai_flags = AI_PASSIVE;
 
-	    // Resolve the server address and port
-    iResult = getaddrinfo(NULL, DEFAULT_PORT, &hints, &result);
+
+	ConfigManager::instance()->LoadConfigs("../eggs.cfg");
+	port = ConfigManager::instance()->GetConfigValue("port");
+
+	//resolve server address and port 
+	if (port.size() == 0)
+	{
+		iResult = getaddrinfo(NULL, DEFAULT_PORT, &hints, &result);
+	}
+	else
+	{
+		iResult = getaddrinfo(NULL, port.c_str(), &hints, &result);
+	}
 
     if ( iResult != 0 ) {
         printf("getaddrinfo failed with error: %d\n", iResult);

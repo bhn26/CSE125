@@ -17,11 +17,13 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-Chicken::Chicken()
+Chicken::Chicken() : Chicken (0.0f, 0.0f, 0.0f)
 {
-    this->toWorld = glm::mat4(1.0f);
-  
-    model = new Model("assets/chickens/objects/chicken.obj");
+}
+
+Chicken::Chicken(float x, float y, float z) : Entity(glm::vec3(x, y, z))
+{
+	model = new Model("assets/chickens/objects/chicken.obj");
 }
 
 Chicken::~Chicken()
@@ -47,14 +49,6 @@ void Chicken::Draw() const
 
 void Chicken::Update()
 {
-    //Spin(0.3f);
-}
-
-void Chicken::Spin(float deg)
-{
-    // This creates the matrix to rotate the cube
-    this->toWorld = toWorld * glm::rotate(glm::mat4(1.0f), glm::radians(deg), glm::vec3(0.0f, 1.0f, 0.0f));
-    this->normalMatrix = glm::mat3(glm::transpose(glm::inverse(toWorld)));
 }
 
 void Chicken::Spawn(float x, float y, float z)

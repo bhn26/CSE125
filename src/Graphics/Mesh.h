@@ -40,13 +40,16 @@ public:
     // Constructor
     Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices, std::vector<Texture> textures);
 
+	GLuint VAO() const { return this->vao; }
+	GLuint VBO() const { return this->vbo; }
+	GLuint EBO() const { return this->ebo; }
 
     // Render the mesh
     void Draw(const Shader* shader);
 
 private:
     /*  Render data  */
-    GLuint VAO, VBO, EBO;
+    GLuint vao, vbo, ebo;
 
     /*  Functions    */
     // Initializes all the buffer objects/arrays

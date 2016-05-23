@@ -1,18 +1,18 @@
 #include "Texture.h"
 
 #include <iostream>
-#include <SOIL.h>
+#include <SOIL/SOIL.h>
 
 Texture::Texture(GLenum textureTarget, const std::string& filename) : m_textureTarget(textureTarget), m_fileName(filename)
 {
-	glGenTextures(1, &m_textureID);
-	Load();
+    glGenTextures(1, &m_textureID);
+    Load();
 }
 
 Texture::~Texture()
 {
-	if (m_textureID)
-		glDeleteTextures(1, &m_textureID);
+    if (m_textureID)
+        glDeleteTextures(1, &m_textureID);
 }
 
 Texture::Texture(Texture&& rhs) : m_textureID(rhs.m_textureID), m_fileName(std::move(rhs.m_fileName))
@@ -40,6 +40,7 @@ bool Texture::Load()
     // Assign texture to ID
     glBindTexture(m_textureTarget, m_textureID);
     glTexImage2D(m_textureTarget, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+
     glGenerateMipmap(GL_TEXTURE_2D);
 
     // Parameters

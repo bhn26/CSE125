@@ -23,7 +23,6 @@ public:
     Shader(Shader&& rhs) : program(rhs.program) { rhs.program = 0; }
     Shader& operator=(Shader&& rhs) { program = rhs.program; rhs.program = 0; return *this; }
 
-
     bool SetShaders(const char* vertex_file_path, const char* fragment_file_path);
     void Use() const { glUseProgram(this->program); }
     void Unuse() const { glUseProgram(0); }   // Not working, not sure why. Don't use
