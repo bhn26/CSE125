@@ -1,3 +1,6 @@
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+
 #include "PlayState.h"
 #include "StateManager.h"
 #include "MenuState.h"
@@ -35,6 +38,20 @@ void CPlayState::Reset()
 
 void CPlayState::OnMouseMove(float xoffset, float yoffset) {
 	Scene::Instance()->GetPlayer()->ProcessMouseMovement(xoffset, yoffset);
+}
+
+void CPlayState::OnClick(int button, double x, double y) {
+	if (button == GLFW_MOUSE_BUTTON_LEFT && !Window::mouseCaptured)
+	{
+		Window::mouseCaptured = true;
+		Window::firstMouse = true;
+		glfwSetInputMode(ClientGame::instance()->window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	}
+	else if (button == GLFW_MOUSE_BUTTON_RIGHT && Window::mouseCaptured)
+	{
+		Window::mouseCaptured = false;
+		glfwSetInputMode(ClientGame::instance()->window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+	}
 }
 
 void CPlayState::OnKeyDown(WPARAM wKey)

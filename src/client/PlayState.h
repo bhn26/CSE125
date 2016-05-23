@@ -10,6 +10,7 @@ public:
 
 	// Implementation of specific events
 	void OnMouseMove(float xoffset, float yoffset);
+	void OnClick(int button, double x, double y);
 	void OnKeyDown(WPARAM wKey);
 	void Update(DWORD dwCurrentTime);
 	void Draw();
