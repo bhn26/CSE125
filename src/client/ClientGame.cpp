@@ -224,7 +224,6 @@ void ClientGame::receiveRotationPacket(int offset) {
 	if (pi->oid != client_id) {
 		Scene::Instance()->GetEntity(pi->cid, pi->oid)->RotateTo(pi->rotw, pi->rotx, pi->roty, pi->rotz);
 		glm::quat quat = Scene::Instance()->GetEntity(pi->cid, pi->oid)->Orientation();
-		printf("rotation of player %d on client is %f, %f, %f, %f\n", pi->oid, quat.w, quat.x, quat.y, quat.z);
 	}
 	
 	// Rotate it if it's not a player
@@ -262,7 +261,6 @@ void ClientGame::sendRotationPacket() {
 	pi.roty = rot.y;
 	pi.rotz = rot.z;
 
-	printf("sending a rotation packet with: %f, %f, %f, %f\n", pi.rotw, pi.rotx, pi.roty, pi.rotz);
    // pi.v_rotation = v_rot;
 	//pi.h_rotation = h_rot;
     pi.serialize(packet.dat.buf);

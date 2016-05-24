@@ -299,7 +299,6 @@ void ServerGame::receiveMovePacket(int offset)
 {
 
 	struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset]);
-	printf("recieved move packet from %d\n", hdr->sender_id);
     struct PacketData* dat = (struct PacketData *) &(network_data[offset + sizeof(PacketHeader)]);
     struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
 	Entity* ent = (Entity*)(EntitySpawner::instance()->GetEntity(ClassId::PLAYER, hdr->sender_id));
@@ -361,7 +360,7 @@ void ServerGame::sendMovePacket(ClassId class_id, int obj_id)
         network->sendToAll(packet_data, packet_size);
         //printf("Sent move packet to clients\n");
 }
-bool first = true;
+
 void ServerGame::receiveRotationPacket(int offset) {
 
     struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
@@ -373,12 +372,6 @@ void ServerGame::receiveRotationPacket(int offset) {
 	Entity* ent = (Entity*)(EntitySpawner::instance()->GetEntity(ClassId::PLAYER, hdr->sender_id));
 
 	ent->SetEntityRotation(pi->rotx, pi->roty, pi->rotz, pi->rotw);
-	if (first)
-	{
-		printf("received a rotation packet with: %f, %f, %f, %f\n", pi->rotx, pi->roty, pi->rotz, pi->rotw);
-		first = false;
-	}
-
 	sendRotationPacket(ClassId::PLAYER, hdr->sender_id);
 }
 
@@ -407,8 +400,6 @@ void ServerGame::sendRotationPacket(int class_id, int obj_id) {
 	p.rotx = q.getX();
 	p.roty = q.getY();
 	p.rotz = q.getZ();
-
-	printf("sending a rotation packet with: %f, %f, %f, %f\n", p.rotw, p.rotx, p.roty, p.rotz);
 
     p.serialize(packet.dat.buf);
     

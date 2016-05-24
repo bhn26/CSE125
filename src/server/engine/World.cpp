@@ -231,14 +231,11 @@ void World::UpdateWorld()
 						const btVector3& ptB = pt.getPositionWorldOnB();
 						const btVector3& normalOnB = pt.m_normalWorldOnB;
 
-						printf("hi num contacts are %d\n", numContacts);
-
 						// Reset Jump Semaphore, detects collision off of non-player, error of .1
 						// TODO: FIX MAGIC NUMBER OF PLAYER HALFEXTENT = 1
 						if ((collidePlayer->GetEntityPosition()).getY() - 1 > (ptB.getY() - .1) &&
 							(collidePlayer->GetEntityPosition()).getY() - 1 < (ptB.getY() + .1))
 						{
-							printf("resetting jump\n");
 							collidePlayer->ResetJump();
 						}
 						
@@ -259,7 +256,6 @@ void World::UpdateWorld()
 		{
 			// Grab Player Object
 			Player * collidePlayer = (Player *)obB->getUserPointer();
-			printf("hi im a player B");
 			// If Obj A is collectable, HandleCollectable();
 			if (obA->getUserIndex() == COLLECTABLE)
 			{
@@ -297,8 +293,6 @@ void World::UpdateWorld()
 						if ((collidePlayer->GetEntityPosition()).getY() - 1 > (ptA.getY()- .1) &&
 							(collidePlayer->GetEntityPosition()).getY() - 1 < (ptA.getY() + .1))
 						{
-							printf("resetting jump\n");
-
 							collidePlayer->ResetJump();
 						}
 
