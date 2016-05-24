@@ -28,6 +28,7 @@ public:
 	// spawn once all players are "ready"
 	void SendPreSpawn(int n);
 	bool hasInitialSpawned() { return initialSpawned; };
+	void setInitialSpawned(bool b) { initialSpawned = b; }
 
 	// move player
 	// attack player

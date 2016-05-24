@@ -1,4 +1,5 @@
 #include "engine.h"
+#include "EntitySpawner.h"
 #include <vector>
 #include <time.h>
 
@@ -29,7 +30,7 @@ void Engine::SpawnRandomPlayer(int team, int skin)
 	p.x = rand() % WORLD_WIDTH + 1;
 	p.z = rand() % WORLD_WIDTH + 1;
 	p.y = 3;
-	world->SpawnPlayer(p);
+	EntitySpawner::instance()->spawnPlayer(team, p, world->GetPhysicsWorld());
 }
 
 void Engine::SpawnRandomFlag()
@@ -38,7 +39,7 @@ void Engine::SpawnRandomFlag()
 	p.x = rand() % WORLD_WIDTH + 1;
 	p.z = rand() % WORLD_WIDTH + 1;
 	p.y = 3;
-	world->SpawnFlag(p);
+	EntitySpawner::instance()->spawnFlag(p, world->GetPhysicsWorld());
 }
 
 int Engine::RandomNum(int mod)

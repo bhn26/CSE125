@@ -1,16 +1,12 @@
 #pragma once
 
-#include "Weapon.h"
-#include "Player.h"
-#include "Flag.h"
-#include "Bullet.h"
-#include "WorldObstacle.h"
-#include "FireRateReset.h"
+#include "EntitySpawner.h"
 #include <vector>
 #include <memory>
+#include <map>
 
 #include "../../network/GameData.h"
-// Game Obstacle is already existing
+class WorldObstacle;
 
 using namespace std;
 
@@ -21,14 +17,11 @@ class World {
 private:
 
 	// list of game world objects
-	std::vector<std::shared_ptr<Player>> players;
+	std::vector<std::shared_ptr<Player>> players;   
 	std::vector<std::shared_ptr<Flag>> flags;
-	std::vector<std::shared_ptr<Weapon>> usedWeapons;
+	//std::vector<std::shared_ptr<Weapon>> usedWeapons;
 	std::vector<std::shared_ptr<Bullet>> bullets;  // this may not be necessary...
 	//TODO list of weapons to check reload
-
-	// Fire Rate Reseter
-	FireRateReset * fireRateReseter;
 
 	// Physics World attributes
 	btDiscreteDynamicsWorld* curWorld;
@@ -60,15 +53,12 @@ public:
 
 	void Init();
 
-	// Spawns based on PosInfo in, will return PosInfo for the object spawned
-	PosInfo SpawnPlayer(PosInfo in);
-	PosInfo SpawnFlag(PosInfo in);
+	//TODO: Replace references with EntitySpawner  GetEntity() method
 	std::shared_ptr<Player> GetPlayer(int id) { return players.at(id); };
-
 	void PreSpawn();
+	btDiscreteDynamicsWorld* GetPhysicsWorld();
 
 	// Updates Physics world by one tick
-	// Handles egg collisions with players
 	void UpdateWorld();
 
 	// Finds and Removes flag from world list of flags

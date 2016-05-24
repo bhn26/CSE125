@@ -1,5 +1,6 @@
 
 #include "ServerGame.h"
+#include "engine/Player.h"
 #include <algorithm>
 
 unsigned int ServerGame::client_id; 
@@ -51,7 +52,10 @@ void ServerGame::update()
 		}
 		if(!engine->hasInitialSpawned())
 			engine->SendPreSpawn(ready_clients);
-		engine->GetWorld()->UpdateWorld();
+
+		// once eggs has spawned, everything has spawned and we can begin the world cycle
+		if(eggs_spawned)
+			engine->GetWorld()->UpdateWorld();
 	}
 
 }
@@ -337,43 +341,41 @@ void ServerGame::receiveMovePacket(int offset)
 {
 
 	struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset]);
-	printf("recieved move packet from %d\n", hdr->sender_id);
     struct PacketData* dat = (struct PacketData *) &(network_data[offset + sizeof(PacketHeader)]);
     struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
-	shared_ptr<Player> player = engine->GetWorld()->GetPlayer(hdr->sender_id);
+	Entity* ent = (Entity*)(EntitySpawner::instance()->GetEntity(ClassId::PLAYER, hdr->sender_id));
 
     //printf("dummy's current pos is (%d,%d)\n", dpi.x, dpi.y);
 	btVector3* vec;
 	switch (pi->direction) {
 	case MOVE_FORWARD:
 		vec = new btVector3(0, 0, 2);
-		player->Move(vec);
+		ent->Move(vec);
 		delete vec;
 		break;
 	case MOVE_BACKWARD:	
 		vec = new btVector3(0, 0, -2);
-		player->Move(vec);
+		ent->Move(vec);
 		delete vec;
 		break;
 	case MOVE_LEFT:
 		vec = new btVector3(2, 0, 0);
-		player->Move(vec);
+		ent->Move(vec);
 		delete vec;
 		break;
 	case MOVE_RIGHT:
 		vec = new btVector3(-2, 0, 0);
-		player->Move(vec);
+		ent->Move(vec);
 		delete vec;
 		break;
 	}
 
-//	player->Move(pi->direction);
-//	sendMovePacket(hdr->sender_id);
 }
 
 void ServerGame::sendMovePacket(ClassId class_id, int obj_id)
 {
-		shared_ptr<Player> player = engine->GetWorld()->GetPlayer(obj_id); // change this to getting the object
+		Entity* ent = (Entity*)(EntitySpawner::instance()->GetEntity(class_id, obj_id));
+
         Packet packet;
 		packet.hdr.sender_id = SERVER_ID;
         packet.hdr.packet_type = MOVE_EVENT;
@@ -382,9 +384,8 @@ void ServerGame::sendMovePacket(ClassId class_id, int obj_id)
         packet.dat.game_data_id = POS_OBJ;
 	
 		// Extract the vector and send it with the posinfo object
-		btVector3 vec = player->GetPlayerPosition();
+		btVector3 vec = ent->GetEntityPosition();
 
-		p = player->GetPosition();
 		p.cid = class_id;
 		p.oid = obj_id;
 		p.x = vec.getX();
@@ -392,11 +393,6 @@ void ServerGame::sendMovePacket(ClassId class_id, int obj_id)
 		p.z = vec.getZ();
 
         p.serialize(packet.dat.buf);
-
-		/*if (p.oid == 1)
-		{
-			printf("position of 1 when server sends is %f, %f, %f\n", p.x, p.y, p.z);
-		}*/
 
         const unsigned int packet_size = sizeof(Packet);
         char packet_data[packet_size];
@@ -406,7 +402,7 @@ void ServerGame::sendMovePacket(ClassId class_id, int obj_id)
         network->sendToAll(packet_data, packet_size);
         //printf("Sent move packet to clients\n");
 }
-bool first = true;
+
 void ServerGame::receiveRotationPacket(int offset) {
 
     struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
@@ -414,21 +410,18 @@ void ServerGame::receiveRotationPacket(int offset) {
 
 	struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset - sizeof(PacketHeader)]);
 
-	shared_ptr<Player> player = engine->GetWorld()->GetPlayer(hdr->sender_id);
+	// All rotation packets will be player type, since it's from client
+	Entity* ent = (Entity*)(EntitySpawner::instance()->GetEntity(ClassId::PLAYER, hdr->sender_id));
 
-	// We need to multiply by -1 and swap w and y, for some reason
-	//player->SetPlayerRotation(-1 * pi->roty, pi->rotx, -1 * pi->rotw, pi->rotz);
-	player->SetPlayerRotation(pi->rotx, pi->roty, pi->rotz, pi->rotw);
-	//printf("received a rotation packet with: %f, %f, %f, %f\n", pi->rotx, pi->roty, pi->rotz, pi->rotw);
-
-	sendRotationPacket(hdr->sender_id, pi->rotw, pi->rotx, pi->roty, pi->rotz);
+	ent->SetEntityRotation(pi->rotx, pi->roty, pi->rotz, pi->rotw);
+	sendRotationPacket(ClassId::PLAYER, hdr->sender_id);
 }
 
-void ServerGame::sendRotationPacket(int client, float w, float x, float y, float z) {
+void ServerGame::sendRotationPacket(int class_id, int obj_id) {
     const unsigned int packet_size = sizeof(Packet);
     char packet_data[packet_size];
 
-	shared_ptr<Player> player = engine->GetWorld()->GetPlayer(client);
+	Entity* ent = (Entity*)(EntitySpawner::instance()->GetEntity(class_id, obj_id));
     Packet packet;
 	packet.hdr.sender_id = SERVER_ID;
     packet.hdr.packet_type = V_ROTATION_EVENT;
@@ -436,12 +429,12 @@ void ServerGame::sendRotationPacket(int client, float w, float x, float y, float
     packet.dat.game_data_id = POS_OBJ;
 
 	PosInfo p;
-	p.cid = ClassId::PLAYER;
-	p.oid = client;
+	p.cid = (ClassId) class_id;
+	p.oid = obj_id;
 
 	// why do we switch w and y and multiply by negative, we don't know but it fixes it
-	btQuaternion q = player->GetPlayerRotation();
-	btVector3 v = player->GetPlayerPosition();
+	btQuaternion q = ent->GetEntityRotation();
+	btVector3 v = ent->GetEntityPosition();
 	p.x = v.getX();
 	p.y = v.getY();
 	p.z = v.getZ();
@@ -449,8 +442,6 @@ void ServerGame::sendRotationPacket(int client, float w, float x, float y, float
 	p.rotx = q.getX();
 	p.roty = q.getY();
 	p.rotz = q.getZ();
-
-	printf("sending a rotation packet with: %f, %f, %f, %f\n", p.rotw, p.rotx, p.roty, p.rotz);
 
     p.serialize(packet.dat.buf);
     
@@ -463,7 +454,9 @@ void ServerGame::receiveJumpPacket(int offset)
 {
     struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset]);
 
-	engine->GetWorld()->GetPlayer(hdr->sender_id)->JumpPlayer();
+	Player* player = (Player*)(EntitySpawner::instance()->GetEntity(ClassId::PLAYER, hdr->sender_id));
+
+	player->JumpPlayer();
 }
 
 void ServerGame::receiveShootPacket(int offset) {

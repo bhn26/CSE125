@@ -79,6 +79,9 @@ public:
     void ChangeState(STATE state);                  // Will change model state and player state
     void SetState(STATE state) { m_state = state; }     // Simply Sets the state without changing the model
 
+	void SetTeam(int team) { team_id = team; }
+	int GetTeam() { return team_id; }
+
 private:
 	int id;
 	int team_id;
