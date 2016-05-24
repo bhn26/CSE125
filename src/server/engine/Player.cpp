@@ -3,6 +3,9 @@
 #include "Player.h"
 #include "Flag.h"
 #include "Peck.h"
+#include "SeedGun.h"
+#include <time.h>
+#include "../ServerGame.h"
 
 Player::Player(int objectid, int teamid, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld) : Entity(ClassId::PLAYER, objectid, physicsWorld) 
 {
@@ -25,10 +28,12 @@ Player::Player(int objectid, int teamid, PosInfo pos, btDiscreteDynamicsWorld* p
 	this->teamId = teamid;
 	this->jumpSem = 1;
 	this->hitPoints = 100;
-	this->flags = new std::vector<std::shared_ptr<Flag>>;
+	this->flags = new std::vector<Flag*>;
 	this->position = pos;
 	this->playerWeapon = nullptr;
 	this->peckWeapon = new Peck(curWorld);
+	this->playerWeapon = new SeedGun(curWorld);
+
 
 	// Set RigidBody to point to Player
 	pRigidBody->setUserPointer(this);
@@ -71,7 +76,7 @@ void Player::ResetJump()
 	(this->jumpSem) = 1;
 }
 
-void Player::AcquireFlag(std::shared_ptr<Flag> flag)
+void Player::AcquireFlag(Flag* flag)
 {
 	// player collects flag, remove from entity list
 	flags->push_back(flag);
@@ -91,16 +96,24 @@ int Player::GetTeamId()
 
  void Player::UseWeapon()
 {
+	printf("Player %u : attempting to use weapon\n", objectId);
 	// If player weapon doesn't exist, exit
 	if(!playerWeapon)
 	{
 		return;
 	}
+
 	// passes player position when using weapon
+	btVector3 temp = this->GetEntityPosition();
+	printf("TEMP Position:  x: %f, y: %f, z: %f  \n", temp.getX(), temp.getY(), temp.getZ());
+
+	btVector3* position = new btVector3(temp.getX(), temp.getY(), temp.getZ());
 	btTransform currentTrans;
 	entityRigidBody->getMotionState()->getWorldTransform(currentTrans);
 	btMatrix3x3 currentOrientation = currentTrans.getBasis();
-	playerWeapon->UseWeapon(&(entityRigidBody->getCenterOfMassPosition()), &currentOrientation, this->objectId, this->teamId, this);
+	//btQuaternion* playerRotation = new btQuaternion(currentOrientation.getX(), currentOrientation.getY(), currentOrientation.getX(), currentOrientation.getW());
+
+	playerWeapon->UseWeapon(position, &currentOrientation, this->objectId, this->teamId, this);
 	printf("player with objId: %d used weapon\n", objectId);
 }
 
@@ -118,8 +131,11 @@ bool Player::HasWeapon()
 int Player::takeDamage(int damage)
 {
 	this->hitPoints = this->hitPoints - damage;
+
+	printf("Player %u has taken damage!  Hitpoints:%d, damage: %d\n", objectId, this->hitPoints, damage);
 	if (this->hitPoints <= 0)
 	{
+		this->HandleDeath();
 		return 1;
 	}
 	else
@@ -134,6 +150,65 @@ void Player::UsePeck()
 	btTransform currentTrans;
 	entityRigidBody->getMotionState()->getWorldTransform(currentTrans);
 	btMatrix3x3 currentOrientation = currentTrans.getBasis();
-	peckWeapon->UseWeapon(&(entityRigidBody->getCenterOfMassPosition()), &currentOrientation, this->objectId, this->teamId, this);
+//	peckWeapon->UseWeapon(&(entityRigidBody->getCenterOfMassPosition()), &currentOrientation, this->objectId, this->teamId, this);
 	printf("player with objId: %d used peck! \n", objectId);
+}
+
+void Player::HandleDeath()
+{
+	printf("Player %u has died!", objectId);
+	// reset hitpoints
+	this->hitPoints = 100;
+
+	btVector3 deathPos = entityRigidBody->getCenterOfMassPosition();
+	deathPos.setY((deathPos.getY() + 2));
+	srand(time(NULL));
+	btTransform currentTrans;
+	btVector3 ranVelocity;
+
+	//std::vector<Flag*>::iterator it = flags->begin();
+
+	//while (it != flags->end())
+	for (auto it = flags->begin(); it != flags->end(); it++)
+	{
+		Flag* curFlag = (*it);
+		curFlag->GetRigidBody()->getMotionState()->getWorldTransform(currentTrans);
+		currentTrans.setOrigin(deathPos);
+		curFlag->GetRigidBody()->getMotionState()->setWorldTransform(currentTrans);
+		curFlag->GetRigidBody()->setCenterOfMassTransform(currentTrans);
+		deathPos.setY((deathPos.getY() + 1));
+		ranVelocity = btVector3((rand() % 21), (rand() % 21), (rand() % 21));
+		printf("random velocity:  x: %f, y: %f, z: %f  \n", ranVelocity.getX(), ranVelocity.getY(), ranVelocity.getZ());
+
+		// add Flag to world
+		curWorld->addRigidBody(curFlag->GetRigidBody());
+		curFlag->GetRigidBody()->setLinearVelocity(ranVelocity);
+		// add Flag to client
+		btQuaternion quat = curFlag->GetEntityRotation();
+		PosInfo out;
+		out.cid = ClassId::FLAG;
+		out.oid = curFlag->GetObjectId();
+		out.x = deathPos.getX();
+		out.y = deathPos.getY();
+		out.z = deathPos.getZ();
+		out.rotw = quat.getW();
+		out.rotx = quat.getX();
+		out.roty = quat.getY();
+		out.rotz = quat.getZ();
+		ServerGame::instance()->sendSpawnPacket(out);
+		// add Flag to Entity Map
+		EntitySpawner::instance()->AddEntity(curFlag->GetClassId(), curFlag->GetObjectId(), curFlag);
+		
+		// erase flag from player
+		//flags->erase(it);
+	}
+	flags->clear(); //Actually calls delete on flags... didn't seem to correctly work for bullet deletion anways... maybe cause of void pointer
+
+
+	// Teleport Player to a random spot in the world
+	btVector3 ranPos = btVector3((rand() % WORLD_WIDTH), 15, (rand() % WORLD_WIDTH));
+	this->GetRigidBody()->getMotionState()->getWorldTransform(currentTrans);
+	currentTrans.setOrigin(ranPos);
+	this->GetRigidBody()->getMotionState()->setWorldTransform(currentTrans);
+	this->GetRigidBody()->setCenterOfMassTransform(currentTrans);
 }

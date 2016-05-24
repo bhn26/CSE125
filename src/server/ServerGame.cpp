@@ -463,6 +463,9 @@ void ServerGame::receiveShootPacket(int offset) {
 	//struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset]);
 
 	//shared_ptr<Player> player = engine->GetWorld()->GetPlayer(hdr->sender_id);
+	struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset]);
+	Player* player = (Player*)(EntitySpawner::instance()->GetEntity(ClassId::PLAYER, hdr->sender_id));
+	player->UseWeapon();
 
 	printf("HELLS YEAH\n");
 }

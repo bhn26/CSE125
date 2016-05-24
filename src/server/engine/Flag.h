@@ -16,8 +16,6 @@ public:
 
 	~Flag();
 
-	btRigidBody* getRigidBody();
-
 	void HandleCollectable(Player* collidedPlayer);
 
 };

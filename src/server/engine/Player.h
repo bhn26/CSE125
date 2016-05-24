@@ -15,7 +15,7 @@ private:
 
 	int teamId;
 	PosInfo position;
-	std::vector<std::shared_ptr<Flag>> *flags;
+	std::vector<Flag*> *flags;
 	int jumpSem;
 	int hitPoints;
 	Weapon* playerWeapon;
@@ -44,7 +44,7 @@ public:
 	void ResetJump();
 
 	//Flag handling
-	void AcquireFlag(std::shared_ptr<Flag> flag);
+	void AcquireFlag(Flag* flag);
 
 	void LoseFlags();
 
@@ -61,5 +61,7 @@ public:
 	int takeDamage(int damage);
 
 	void UsePeck();
+
+	void HandleDeath();
 };
 

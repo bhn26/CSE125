@@ -9,14 +9,16 @@ SeedGun::SeedGun(btDiscreteDynamicsWorld* curworld): Weapon(gunfireRate, gunDama
 
 SeedGun::~SeedGun(){}
 
-void SeedGun::UseWeapon(const btVector3* position, btMatrix3x3* rotation, int playerid, int teamid, Entity* owner)
+void SeedGun::UseWeapon(btVector3* position, btMatrix3x3* rotation, int playerid, int teamid, Entity* owner)
 {
+	printf("SeedGun has been fired!");
 	if (this->fireFlag)
 	{
-		// Spawns bullet with this gun's damage and ids into world
-		btVector3* newVelocity = &((*rotation) * (*this->gunSpeed));
-		Bullet* fireProjectile = EntitySpawner::instance()->spawnBullet(playerid, teamid, damage, position, newVelocity, curWorld);
-		this->fireFlag = 0;
+		printf("Position:  x: %f, y: %f, z: %f  \n", position->getX(), position->getY(), position->getZ());
+
+		// Spawns bullet with this gun's damage, speed, and necessary ids into world
+		Bullet* fireProjectile = EntitySpawner::instance()->spawnBullet(playerid, teamid, this->gunDamage, position, this->gunSpeed, rotation, curWorld);
+		//this->fireFlag = 0;
 		this->nextFireTick = currentWorldTick + gunfireRate;
 
 		// add used weapon to "used" list in FireRateReset static object
