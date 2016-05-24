@@ -14,8 +14,10 @@ class Player : public Entity
 private:
 
 	int teamId;
+
 	PosInfo position;
 	std::vector<std::shared_ptr<Flag>> *flags;
+
 	int jumpSem;
 	int hitPoints;
 	Weapon* playerWeapon;
@@ -57,6 +59,8 @@ public:
 	bool HasWeapon();
 
 	int GetTeamId();
+
+	int GetScore() { return flags->size(); };
 
 	int takeDamage(int damage);
 

@@ -18,8 +18,9 @@
 #include <vector>
 #include <map>
 
+SpriteRenderer * Scene::sprite_renderer = new SpriteRenderer();
 Scene::Scene() : camera(std::unique_ptr<Camera>(nullptr)), pLight(std::unique_ptr<PointLight>(nullptr)),
-    player(nullptr), players(std::vector<std::shared_ptr<Player>>())
+    player(nullptr)
 {
 }
 const int Scene::WIDTH = 100;
@@ -110,22 +111,6 @@ void Scene::Setup()
 
 }
 
-void Scene::AddPlayer(int client_id)
-{
-    //TODO - add client_id field to player
-    std::shared_ptr<Player> new_player = std::shared_ptr<Player>(new Player(client_id));
-
-    std::shared_ptr<Shader> modelShader = std::make_shared<Shader>("src/Graphics/Shaders/model_loading.vert", "src/Graphics/Shaders/model_loading.frag");
-    new_player->GetShader() = modelShader;
-
-	// maybe we should add players to entities as well
-	players.push_back(new_player);
-
-	if (client_id == ClientGame::GetClientId()) {
-		printf("set main player to %d\n", client_id);
-//		player = new_player; // set your player
-	}
-}
 
 void Scene::Update()
 {
@@ -246,3 +231,17 @@ std::unique_ptr<Entity>& Scene::GetEntity(int cid, int oid)
 	std::pair<int, int> p = std::pair<int, int>(cid, oid);
 	return entities.find(p)->second;
 }
+
+glm::vec2 Scene::Get2D(glm::vec3 coords, glm::mat4 view, glm::mat4 projection/*perspective matrix */, int width, int height) {
+    glm::mat4 viewProjectionMatrix = projection * view;
+
+    //transform world to clipping coordinates
+    glm::vec3 clipping = glm::normalize(glm::vec3(viewProjectionMatrix * glm::vec4(coords, 1.0f)));
+    int winX = (int)std::round(((clipping.x + 1) / 2.0) * width);
+
+    //we calculate -point3D.getY() because the screen Y axis is
+    //oriented top->down 
+    int winY = (int)std::round(((1 - clipping.y) / 2.0) * height);
+    return glm::vec2(winX, winY);
+}
+

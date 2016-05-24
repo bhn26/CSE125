@@ -30,8 +30,9 @@ enum MoveType {
 
 enum GameDataId 
 {
-    POS_OBJ = 0,
-	REM_OBJ = 1
+    POS_OBJ,
+	REM_OBJ,
+	SCORE_OBJ
 };
 
 struct GameInfo
@@ -66,18 +67,15 @@ struct PosInfo : GameInfo
 	float y;
 	float z;
 
-    int direction; // remove later?
+    int direction; // client -> server move data
 
 	//rotation coords
 	float rotw;
 	float rotx;
 	float roty;
 	float rotz;
-	
 
-    // rotation
-    //float v_rotation;
-    //float h_rotation;
+	int num_eggs; // num eggs this player has 
 
     void serialize(char * data) {
         memcpy(data, this, sizeof(PosInfo));
@@ -102,3 +100,19 @@ struct RemInfo : GameInfo
 		memcpy(this, data, sizeof(RemInfo));
 	}
 };
+
+// team scores
+struct ScoreInfo : GameInfo {
+	int t0_score;
+	int t1_score;
+
+	void serialize(char * data) {
+		memcpy(data, this, sizeof(ScoreInfo));
+	}
+
+	void deserialize(char * data) {
+		memcpy(this, data, sizeof(ScoreInfo));
+	}
+};
+
+

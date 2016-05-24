@@ -30,7 +30,7 @@ private:
 	//CTextControl* m_pScoreControl;
 
 	// The current score
-	ULONG m_ulCurrentScore;
+	int scores[2];
 
 	bool m_bGameOver;
 };

@@ -205,6 +205,7 @@ void ClientGame::receiveMovePacket(int offset)
 		//printf("received move packet for obj id %d. Its coordinates are: %f, %f, %f\n", pi->oid, pi->x, pi->y, pi->z);
 
 	Scene::Instance()->GetEntity(pi->cid, pi->oid)->MoveTo(pi->x, pi->y, pi->z);
+	Scene::Instance()->GetEntity(pi->cid, pi->oid)->SetScore(pi->num_eggs);
 
 }
 
@@ -303,6 +304,31 @@ void ClientGame::sendJumpPacket()
     NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
 }
 
+void ClientGame::receiveScorePacket(int offset) {
+	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
+	struct ScoreInfo* s = (struct ScoreInfo *) &(dat->buf);
+
+	printf("received a score packet t0: %d   t1: %d\n", s->t0_score, s->t1_score);
+
+	scores[0] = s->t0_score;
+	scores[1] = s->t1_score;
+}
+
+void ClientGame::receiveGameOverPacket(int offset) {
+	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
+	struct ScoreInfo* s = (struct ScoreInfo *) &(dat->buf);
+
+	if (s->t0_score != 0) { // t0 win
+		winner = 0;
+	}
+	else { // t1 win
+		winner = 1;
+	}
+
+	printf("Team %d won!\n", winner);
+	// change state to game over screen
+}
+
 void ClientGame::sendShootPacket() {
 	const unsigned int packet_size = sizeof(Packet);
 	char packet_data[packet_size];
@@ -316,23 +342,7 @@ void ClientGame::sendShootPacket() {
 
 	NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
 }
-
-/*std::shared_ptr<Player> ClientGame::FindTarget(int tid) {
-	if (tid == client_id) {
-		return Scene::Instance()->GetPlayer();
-	}
-	else {
-		std::vector<std::shared_ptr<Player>> players = Scene::Instance()->GetPlayers();
-
-		for (int i = 0; i < players.size(); i++) {
-			int pid = players.at(i)->GetID();
-			if (tid == pid) {
-				return players.at(i);	
-			}
-		}
-	}
-	printf("ERROR - couldn't find target in players");
-}*/
+	
 
 void ClientGame::update()
 {
@@ -385,6 +395,14 @@ void ClientGame::update()
 
 			case V_ROTATION_EVENT:
 				receiveRotationPacket(i + sizeof(PacketHeader));
+				break;
+
+			case UPDATE_SCORE:
+				receiveScorePacket(i + sizeof(PacketHeader));
+				break;
+
+			case GAME_OVER:
+				receiveGameOverPacket(i + sizeof(PacketHeader));
 				break;
 
             default:

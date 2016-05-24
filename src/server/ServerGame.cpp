@@ -202,8 +202,10 @@ void ServerGame::receiveJoinPacket(int offset) {
 			sendJoinPacket(it->first);
 		}
 	}
-		
+	
+	printf("(before) team_map size = %d", team_map.size());
 	team_map[client] = pi->team_id;
+	printf("team_map size = %d", team_map.size());
 	sendJoinPacket(client);
 };
 
@@ -392,6 +394,10 @@ void ServerGame::sendMovePacket(ClassId class_id, int obj_id)
 		p.y = vec.getY();
 		p.z = vec.getZ();
 
+		if (class_id == PLAYER) {
+			p.num_eggs = ((Player*)ent)->GetScore();
+		}
+
         p.serialize(packet.dat.buf);
 
         const unsigned int packet_size = sizeof(Packet);
@@ -457,6 +463,50 @@ void ServerGame::receiveJumpPacket(int offset)
 	Player* player = (Player*)(EntitySpawner::instance()->GetEntity(ClassId::PLAYER, hdr->sender_id));
 
 	player->JumpPlayer();
+}
+
+void ServerGame::sendScorePacket() {
+	Packet packet;
+	packet.hdr.packet_type = UPDATE_SCORE;
+
+	const unsigned int packet_size = sizeof(Packet);
+
+	char packet_data[packet_size];
+
+	packet.dat.game_data_id = SCORE_OBJ;
+
+	ScoreInfo s;
+	s.t0_score = scores[0];
+	s.t1_score = scores[1];
+
+	printf("sending score packet: %d, %d\n", s.t0_score, s.t1_score);
+	s.serialize(packet.dat.buf);
+
+	packet.serialize(packet_data);
+
+	network->sendToAll(packet_data, packet_size);
+}
+
+void ServerGame::sendGameOverPacket(int winner) {
+	Packet packet;
+	packet.hdr.packet_type = GAME_OVER;
+
+	const unsigned int packet_size = sizeof(Packet);
+
+	char packet_data[packet_size];
+
+	packet.dat.game_data_id = SCORE_OBJ;
+
+	ScoreInfo s;
+	s.t0_score = scores[0];
+	s.t1_score = scores[1];
+
+	printf("sending game over\n");
+	s.serialize(packet.dat.buf);
+
+	packet.serialize(packet_data);
+
+	network->sendToAll(packet_data, packet_size);
 }
 
 void ServerGame::receiveShootPacket(int offset) {
