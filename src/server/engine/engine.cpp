@@ -50,10 +50,7 @@ void Engine::SendPreSpawn(int n)
 {
 	// Always spawn the players before other dynamic objects
 	world->PreSpawn();
-	for (int i = 0; i < 2 * n; i++)
-	{
-		SpawnRandomFlag();
-	}
+
 	initialSpawned = true;
 }
 

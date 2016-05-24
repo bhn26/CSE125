@@ -42,6 +42,13 @@ void ServerGame::update()
 	// Check that all clients are ready
 	if (game_started && ready_clients == client_id)
 	{
+		if (spawned_clients == ready_clients && !eggs_spawned) {
+			for (int i = 0; i < 2*ready_clients; i++)
+			{
+				engine->SpawnRandomFlag();
+			}
+			eggs_spawned = true;
+		}
 		if(!engine->hasInitialSpawned())
 			engine->SendPreSpawn(ready_clients);
 		engine->GetWorld()->UpdateWorld();
@@ -95,6 +102,7 @@ void ServerGame::receiveFromClients()
 					break;
 
 				case IND_SPAWN_EVENT:
+					spawned_clients++;
 					receiveIndSpawnPacket(i + sizeof(PacketHeader));
 					break;
 
@@ -279,10 +287,9 @@ void ServerGame::sendReadyToSpawnPacket()
 
 void ServerGame::receiveIndSpawnPacket(int offset)
 {
-	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
+	struct PacketData* dat = (struct PacketData *) &(network_data[offset]);
 	struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
 
-	struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset - sizeof(PacketHeader)]);
 	engine->SpawnRandomPlayer(pi->team_id, pi->skin);
 }
 
