@@ -29,7 +29,6 @@ ClientNetwork::ClientNetwork(void)
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_protocol = IPPROTO_TCP;  //TCP connection!!!
 	
-	ConfigManager::instance()->LoadConfigs("eggs.cfg");
 	ip = ConfigManager::instance()->GetConfigValue("ip");
 	port = ConfigManager::instance()->GetConfigValue("port");
 

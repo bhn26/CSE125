@@ -27,11 +27,11 @@ void Scene::Setup()
 {
     entities.clear();
 
-	instanceShader = std::make_shared<Shader>("src/Graphics/Shaders/instancing.vert", "src/Graphics/Shaders/instancing.frag");
-    basicShader = std::make_shared<Shader>("src/Graphics/Shaders/basic_shader.vert", "src/Graphics/Shaders/basic_shader.frag");
-    diffuseShader = std::make_shared<Shader>("src/Graphics/Shaders/basic_shader.vert", "src/Graphics/Shaders/diffuse.frag");
-    modelShader = std::make_shared<Shader>("src/Graphics/Shaders/model_loading.vert", "src/Graphics/Shaders/model_loading.frag");
-    cubeMapShader = std::make_shared<Shader>("src/Graphics/Shaders/cubemap.vert", "src/Graphics/Shaders/cubemap.frag");
+    //instanceShader = std::make_shared<Shader>("src/Graphics/Shaders/instancing.vert", "src/Graphics/Shaders/instancing.frag");
+    //basicShader = std::make_shared<Shader>("src/Graphics/Shaders/basic_shader.vert", "src/Graphics/Shaders/basic_shader.frag");
+    //diffuseShader = std::make_shared<Shader>("src/Graphics/Shaders/basic_shader.vert", "src/Graphics/Shaders/diffuse.frag");
+    //modelShader = std::make_shared<Shader>("src/Graphics/Shaders/model_loading.vert", "src/Graphics/Shaders/model_loading.frag");
+    //cubeMapShader = std::make_shared<Shader>("src/Graphics/Shaders/cubemap.vert", "src/Graphics/Shaders/cubemap.frag");
 
     camera = std::unique_ptr<Camera>(new Camera(glm::vec3(0.0f, 9.0f, -15.0f), glm::vec3(0.0f, 1.0f, 0.0f), 90.0f, -25.0f));
     pLight = std::unique_ptr<PointLight>(new PointLight(glm::vec3(0.0f, 20.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)));
@@ -84,8 +84,8 @@ void Scene::Setup()
     cubeMap = std::unique_ptr<CubeMap>(new CubeMap);
     cubeMap->LoadCubeMap();
 
-	grass->GetShader() = instanceShader;
-    cubeMap->GetShader() = cubeMapShader;
+    grass->GetShader() = ShaderManager::Instance()->GetShader("Instance");
+    cubeMap->GetShader() = ShaderManager::Instance()->GetShader("CubeMap");
 
 	//static_objects.push_back(std::move(grass));
 	static_objects.push_back(std::move(barn));
@@ -102,7 +102,7 @@ void Scene::AddPlayer(int client_id)
     std::shared_ptr<Player> new_player = std::shared_ptr<Player>(new Player(client_id));
 
     std::shared_ptr<Shader> modelShader = std::make_shared<Shader>("src/Graphics/Shaders/model_loading.vert", "src/Graphics/Shaders/model_loading.frag");
-    new_player->GetShader() = modelShader;
+    new_player->GetShader() = ShaderManager::Instance()->GetShader("Model");
 
 	// maybe we should add players to entities as well
 	players.push_back(new_player);
@@ -182,7 +182,7 @@ void Scene::AddEntity(int cid, int oid, float x, float y, float z, float rotw, f
 		player = std::unique_ptr<Player>(new Player(x,y,z,rotw,rotx,roty,rotz));
 		player->SetModelFile("assets/chickens/objects/pinocchio_chicken.obj");
         player->Spawn(x, y, z);
-		player->GetShader() = modelShader;
+		player->GetShader() = ShaderManager::Instance()->GetShader("Model");
 		player->SetObjId(oid);
 		player->SetClassId(cid);
 		//player->RotateTo(rotw, rotx, roty, rotz);
@@ -196,7 +196,7 @@ void Scene::AddEntity(int cid, int oid, float x, float y, float z, float rotw, f
 	case ClassId::FLAG:
 		egg = std::unique_ptr<Egg>(new Egg(x,y,z));
 		egg->SetColor(glm::vec3(0.27f, 0.16f, 0.0f));
-        egg->GetShader() = modelShader;
+        egg->GetShader() = ShaderManager::Instance()->GetShader("Model");
 		egg->SetClassId(cid);
 		egg->SetObjId(oid);
 		AddEntity(cid, oid, std::move(egg));

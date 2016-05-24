@@ -14,6 +14,7 @@
 //#include "../Model.h"
 //#include "../Camera.h"
 #include "Entity.h"
+#include "../ShaderManager.h"
 
 class Model;
 
@@ -28,6 +29,7 @@ public:
 	void Rotate(float deg, glm::vec3 axis);
 
 	Model* model;
+
 	float angle; // For spinning if we want
 
 	void Draw() const override;

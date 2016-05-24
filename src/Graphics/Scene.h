@@ -11,6 +11,7 @@
 #include "Objects/Ground.h"
 #include "Objects/StaticObject.h"
 #include "Objects/Grass.h"
+#include "ShaderManager.h"
 
 class Camera;
 class Player;
@@ -22,7 +23,6 @@ class Scene
 {
     std::unique_ptr<Camera> camera;
     std::unique_ptr<PointLight> pLight;
-//<<<<<<< HEAD
 	std::unique_ptr<CubeMap> cubeMap;
 	std::unique_ptr<Ground> ground;
 	std::unique_ptr<Grass> grass;
@@ -34,9 +34,6 @@ class Scene
 	std::shared_ptr<Shader> instanceShader;
 
     Player* player;
-/*=======
-	std::shared_ptr<Player> player;
->>>>>>> master*/
 
     static const int WIDTH;
     static const int HEIGHT;

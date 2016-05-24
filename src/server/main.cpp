@@ -20,6 +20,7 @@ void serverLoop(void * arg)
 int main()
 {
 	ConfigManager::instantiate();
+    ConfigManager::instance()->LoadConfigs("eggs.cfg");
     ServerGame::instantiate();
 
     serverLoop((void*)12);

@@ -3,18 +3,16 @@
 #include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale, glm::perspective
 #include <glm/gtc/type_ptr.hpp>
 
-#include "../../client/Window.h"
-#include "../Scene.h"
-#include "../PointLight.h"
-#include "../Camera.h"
-#include "../../client/Player.h"
+#include "client/Window.h"
+#include "Graphics/Scene.h"
+#include "Graphics/PointLight.h"
+#include "Graphics/Camera.h"
+#include "client/Player.h"
 
-static const float SIZE = 300.0f;
+const float Ground::SIZE = 300.0f;
 
 Ground::Ground() : Entity(), color(glm::vec3(0.545f, 0.271f, 0.075f))
 {
-
-
     this->normalMatrix = glm::mat3(glm::transpose(glm::inverse(toWorld)));
 
     GLfloat vertices[] =
