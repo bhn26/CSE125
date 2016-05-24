@@ -16,9 +16,6 @@
 #include <glm/glm.hpp>
 #include <memory>
 
-//#include "../../Window.h"
-//#include "../Model.h"
-//#include "../Camera.h"
 #include "Entity.h"
 
 class Model;
@@ -33,8 +30,7 @@ public:
     Model* model;
 
     void Draw() const override;
-    void Update() override;
-    void Spin(float deg);
+    void Update(float deltaTime) override;
 
     // Inherited via Entity
     virtual void Spawn(float x, float y, float z) override;

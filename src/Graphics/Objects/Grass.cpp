@@ -97,7 +97,7 @@ void Grass::Draw() const
 	//model->Draw(shader.get());
 }
 
-void Grass::Update()
+void Grass::Update(float deltaTime)
 {
 	//Spin(0.3f);
 }

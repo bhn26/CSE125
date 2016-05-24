@@ -11,11 +11,3 @@ void ModelEntity::Draw() const
 {
     m_model->Draw(this->shader.get());
 }
-
-void ModelEntity::Update()
-{
-}
-
-void ModelEntity::Spawn(float x, float y, float z)
-{
-}

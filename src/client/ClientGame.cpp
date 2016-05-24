@@ -222,7 +222,7 @@ void ClientGame::sendMovePacket(int direction)
 
     PosInfo pi;
     pi.direction = direction;
-	glm::quat rot = Scene::Instance()->GetPlayer()->GetOrientation();
+	glm::quat rot = Scene::Instance()->GetPlayer()->Orientation();
 	pi.rotw = rot.w;
 	pi.rotx = rot.x;
 	pi.roty = rot.y;
@@ -275,7 +275,7 @@ void ClientGame::sendRotationPacket() {
 
 	// send the rotation of the main player
     PosInfo pi;
-	glm::quat rot = Scene::Instance()->GetPlayer()->GetOrientation();
+	glm::quat rot = Scene::Instance()->GetPlayer()->Orientation();
 	pi.rotw = rot.w;
 	pi.rotx = rot.x;
 	pi.roty = rot.y;

@@ -47,7 +47,7 @@ void Chicken::Draw() const
     model->Draw(shader.get());
 }
 
-void Chicken::Update()
+void Chicken::Update(float deltaTime)
 {
 }
 

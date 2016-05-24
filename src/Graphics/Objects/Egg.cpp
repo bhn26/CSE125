@@ -33,35 +33,12 @@ void Egg::SetColor(glm::vec3 color)
 
 Egg::~Egg()
 {
+    delete model;
 }
 
 void Egg::Draw() const
 {
 	shader->Use();
-
-	/*GLint viewLoc = shader->GetUniform("view");
-	GLint modelLocation = shader->GetUniform("model");
-	GLint normalMatrixLoc = shader->GetUniform("normalMatrix");
-	GLint projectionLocation = shader->GetUniform("projection");
-	GLint objectColorLoc = shader->GetUniform("objectColor");
-	GLint lightColorLoc = shader->GetUniform("lightColor");
-	GLint lightPosLoc = shader->GetUniform("lightPos");
-	GLint viewPosLoc = shader->GetUniform("viewPos");
-
-	glUniformMatrix4fv(viewLoc, 1, false, glm::value_ptr(Scene::Instance()->GetViewMatrix()));
-	glUniformMatrix4fv(modelLocation, 1, false, glm::value_ptr(this->toWorld));
-	glUniformMatrix3fv(normalMatrixLoc, 1, false, glm::value_ptr(this->normalMatrix));
-	glUniformMatrix4fv(projectionLocation, 1, false, glm::value_ptr(Scene::Instance()->GetPerspectiveMatrix()));
-
-	glUniform3fv(objectColorLoc, 1, glm::value_ptr(this->color));
-	glUniform3fv(lightColorLoc, 1, glm::value_ptr(Scene::Instance()->GetPointLight()->color));
-	glUniform3fv(lightPosLoc, 1, glm::value_ptr(Scene::Instance()->GetPointLight()->position));
-	glUniform3fv(viewPosLoc, 1, glm::value_ptr(Scene::Instance()->GetCameraPosition()));
-
-
-	glBindVertexArray(VAO);
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-	glBindVertexArray(0);*/
 
 	// Draw the loaded model
 	GLint viewLoc = shader->GetUniform("view");
@@ -92,11 +69,6 @@ void Egg::Draw() const
 	//glUniform4f(ambient, 1, false, glm::value_ptr(ambient));
 
 	model->Draw(shader.get());
-}
-
-void Egg::Update()
-{
-	//Spin(0.3f);
 }
 
 void Egg::Spin(float deg)

@@ -10,9 +10,6 @@
 #include <glm/glm.hpp>
 #include <memory>
 
-//#include "../../Window.h"
-//#include "../Model.h"
-//#include "../Camera.h"
 #include "Entity.h"
 
 class Model;
@@ -31,7 +28,7 @@ public:
 	float angle; // For spinning if we want
 
 	void Draw() const override;
-	void Update() override;
+	void Update(float deltaTime) override;
 	void Spin(float deg);
 
 	// Inherited via Entity

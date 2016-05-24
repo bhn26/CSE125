@@ -23,10 +23,10 @@ public:
     glm::mat4 m_toWorld;
 
     ChickenAnim();
-    ~ChickenAnim();
+    ~ChickenAnim() {}
 
-    void Draw();
-    void Update();
+    void Draw() const override;
+    void Update(float deltaTime) override;
     void Scale(float s);
 
     void Walk();

@@ -13,8 +13,6 @@ const float Ground::SIZE = 200.0f;
 
 Ground::Ground() : Entity(), color(glm::vec3(0.545f, 0.271f, 0.075f))
 {
-
-
     this->normalMatrix = glm::mat3(glm::transpose(glm::inverse(toWorld)));
 
     GLfloat vertices[] =
@@ -63,7 +61,7 @@ Ground::~Ground()
     glDeleteBuffers(1, &EBO);
 }
 
-void Ground::Update()
+void Ground::Update(float deltaTime)
 {
 }
 

@@ -18,7 +18,7 @@ public:
     glm::vec3 color;
 
     void Draw() const override;
-    void Update() override;
+    void Update(float deltaTime) override;
     void Spin(float);
 
     // Inherited via Entity

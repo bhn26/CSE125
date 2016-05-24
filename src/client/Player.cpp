@@ -192,7 +192,7 @@ void Player::OnFinish()
     SetState(STATE::IDLE);
 }
 
-void Player::Update()
+void Player::Update(float deltaTime)
 {
     //if (m_state == STATE::WALK)
     //{

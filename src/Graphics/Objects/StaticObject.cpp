@@ -54,7 +54,7 @@ void StaticObject::Draw() const
 	model->Draw(shader.get());
 }
 
-void StaticObject::Update()
+void StaticObject::Update(float deltaTime)
 {
 	//Spin(0.3f);
 }

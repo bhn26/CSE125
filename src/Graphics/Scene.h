@@ -22,6 +22,7 @@ class ChickenAnim;
 
 class Scene
 {
+    float lastTime;
     std::unique_ptr<Camera> camera;
     std::unique_ptr<PointLight> pLight;
 

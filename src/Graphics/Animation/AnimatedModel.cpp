@@ -57,12 +57,12 @@ namespace Animation
     }
 
     ///////////////////////////////////////////////////////////////////////
-    void AnimatedModel::Update()
+    void AnimatedModel::Update(float deltaTime)
     {
-        double nextTime = Utils::CurrentTime();
-        float delta = (float)(nextTime - lastTime);
-        lastTime = nextTime;
-        m_animPlayer.Update(delta);
+        //double nextTime = Utils::CurrentTime();
+        //float delta = (float)(nextTime - lastTime);
+        //lastTime = nextTime;
+        m_animPlayer.Update(deltaTime);
     }
 
     ///////////////////////////////////////////////////////////////////////

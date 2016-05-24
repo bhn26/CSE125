@@ -29,7 +29,7 @@ namespace Animation
         std::string AddAnimation(std::string animationFile, bool loops = false);   // Only loads Animation
         bool PlayAnimation(std::string name);
 
-        void Update();
+        void Update(float deltaTime);
         void Draw() const;
         void InitBones0() { m_animPlayer.InitBones0(); }
         void Reset() { m_animPlayer.Reset(); }

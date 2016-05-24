@@ -113,7 +113,7 @@ void Cube::Draw() const
     glBindVertexArray(0);
 }
 
-void Cube::Update()
+void Cube::Update(float deltaTime)
 {
     Spin(0.3f);
 }

@@ -26,7 +26,7 @@ public:
     
     GLuint LoadCubeMap();
     virtual void Draw() const override;
-    virtual void Update() override {}
+    virtual void Update(float deltaTime) override {}
 
     // Inherited via Entity
     virtual void Spawn(float x, float y, float z) override;

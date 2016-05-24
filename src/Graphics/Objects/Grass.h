@@ -16,10 +16,6 @@
 #include <glm/glm.hpp>
 #include <memory>
 
-//#include "../../Window.h"
-//#include "../Model.h"
-//#include "../Camera.h"
-#include "../Shader.h"
 #include "Entity.h"
 
 class Model;
@@ -38,7 +34,7 @@ public:
 	static GLfloat deltaTime;
 	static GLfloat lastFrame;
 	void Draw() const override;
-	void Update() override;
+	void Update(float deltaTime) override;
 	void SetColor(glm::vec3 color);
 
 	// Inherited via Entity

@@ -32,9 +32,8 @@ enum DIRECTION
 
 class Player : public Entity, public Animation::AnimationPlayer::Listener
 {
-
 public:
-    enum STATE
+    enum State
     {
         IDLE,
         JUMP,
@@ -44,12 +43,12 @@ public:
     };
 
     Player(float x = 0.0f, float y = 0.0f, float z = 0.0f,
-		float rotW = 0.0f, float rotX = 0.0f, float rotY = 0.0f, float rotZ = 0.0f);
+           float rotW = 0.0f, float rotX = 0.0f, float rotY = 0.0f, float rotZ = 0.0f);
     Player(int client_id);
     ~Player();
 
     // Inherited via Entity
-    virtual void Update() override;
+    virtual void Update(float deltaTime) override;
     virtual void Spawn(float x, float y, float z) override;
     virtual void Draw() const override;
 
@@ -71,26 +70,24 @@ public:
     glm::mat4 GetPerspectiveMatrix() const;
     glm::mat3 GetNormalMatrix() const;
 
-	int GetID() { return id; };
-	int GetClassId() { return class_id; }
+	int GetID() const { return id; };
+	int GetClassId() const { return class_id; }
 
-	glm::quat GetOrientation() { return Orientation();  }
+    void ChangeState(State state);                  // Will change model state and player state
+    void SetState(State state) { m_state = state; }     // Simply Sets the state without changing the model
 
-    void ChangeState(STATE state);                  // Will change model state and player state
-    void SetState(STATE state) { m_state = state; }     // Simply Sets the state without changing the model
-
-	int GetScore() { return num_eggs; };
+	int GetScore() const { return num_eggs; };
 	void SetScore(int n) { num_eggs = n; };
 
 	void SetTeam(int team) { team_id = team; }
-	int GetTeam() { return team_id; }
+	int GetTeam() const { return team_id; }
 
 private:
-	int id;
-	int team_id;
-	int num_eggs;
+    int id;
+    int team_id;
+    int num_eggs;
 
-	Texture *info_panel;
+    Texture* info_panel;
 
     // Player is made up of a model with a camera following it
     std::unique_ptr<Camera> camera;
@@ -106,12 +103,12 @@ private:
     // Path name for chicken model texture
     std::string modelFile;
 
-    STATE m_state;
+    // Animation
+    State m_state;
     float m_lastTime_t;     // Test
     glm::vec3 m_lastPos_t;
 
     // Inherited via Listener
     virtual void OnFinish() override;
-
 };
 

@@ -56,11 +56,7 @@ ChickenAnim::ChickenAnim() : m_toWorld(glm::scale(glm::mat4(1.0f), glm::vec3(0.0
     m_model.InitBones0();  // Initialize bones to 0 time spot
 }
 
-ChickenAnim::~ChickenAnim()
-{
-}
-
-void ChickenAnim::Draw()
+void ChickenAnim::Draw() const
 {
     SkinningTechnique* skinTechnique = m_model.GetMesh().GetSkinningTechnique();
     skinTechnique->Enable(); // use shader
@@ -72,9 +68,9 @@ void ChickenAnim::Draw()
     m_model.Draw();
 }
 
-void ChickenAnim::Update()
+void ChickenAnim::Update(float deltaTime)
 {
-    m_model.Update();
+    m_model.Update(deltaTime);
 }
 
 void ChickenAnim::Scale(float s)

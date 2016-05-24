@@ -114,10 +114,14 @@ void Scene::Setup()
 
 void Scene::Update()
 {
-	cubeMap->Update();
+    double nextTime = Utils::CurrentTime();
+    float deltaTime = (float)(nextTime - lastTime);
+    lastTime = nextTime;
+
+	cubeMap->Update(deltaTime);
 	//ground->Update();
 	for (auto& const entity : entities)
-		entity.second->Update();
+		entity.second->Update(deltaTime);
 }
 
 void Scene::Draw()
@@ -134,9 +138,6 @@ void Scene::Draw()
 		entity.second->Draw();
 		//printf("entity ids are %d, %d\n", entity.second->GetClassId(), entity.second->GetObjId());
 	}
-
-    // Redrawing players??
-
 }
 
 
@@ -161,7 +162,6 @@ glm::mat4 Scene::GetPerspectiveMatrix()
 void Scene::AddEntity(int cid, int oid, std::unique_ptr<Entity> ent)
 {
 	std::pair<int, int> p = std::pair<int, int>(cid, oid);
-	//entities.insert(std::make_pair(p, std::move(ent)));
 	entities[p] = std::move(ent);
 }
 
@@ -232,7 +232,8 @@ std::unique_ptr<Entity>& Scene::GetEntity(int cid, int oid)
 	return entities.find(p)->second;
 }
 
-glm::vec2 Scene::Get2D(glm::vec3 coords, glm::mat4 view, glm::mat4 projection/*perspective matrix */, int width, int height) {
+glm::vec2 Scene::Get2D(glm::vec3 coords, glm::mat4 view, glm::mat4 projection/*perspective matrix */, int width, int height)
+{
     glm::mat4 viewProjectionMatrix = projection * view;
 
     //transform world to clipping coordinates
