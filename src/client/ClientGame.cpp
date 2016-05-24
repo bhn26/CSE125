@@ -164,7 +164,7 @@ void ClientGame::receiveReadyToSpawnPacket(int offset)
 
 	PosInfo pi;
 	pi.team_id = client_team;
-	pi.skin = client_skin;
+	pi.skin = rand() % 3;
 
 	pi.serialize(packet.dat.buf);
 
@@ -174,7 +174,6 @@ void ClientGame::receiveReadyToSpawnPacket(int offset)
 
 void ClientGame::receiveSpawnPacket(int offset)
 {
-
     struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
     struct PosInfo* p = (struct PosInfo *) (dat->buf);
 
@@ -284,7 +283,7 @@ void ClientGame::sendRotationPacket() {
 	pi.rotz = rot.z;
 
 	//printf("sending a rotation packet with: %f, %f, %f, %f\n", pi.rotw, pi.rotx, pi.roty, pi.rotz);
-   // pi.v_rotation = v_rot;
+    // pi.v_rotation = v_rot;
 	//pi.h_rotation = h_rot;
     pi.serialize(packet.dat.buf);
 
@@ -421,6 +420,7 @@ void ClientGame::Initialize()
 
     double lastTime = glfwGetTime();
     int nbFrames = 0;
+	srand(time(NULL));
 }
 
 void ClientGame::Destroy()
