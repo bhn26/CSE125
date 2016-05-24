@@ -120,6 +120,7 @@ void Player::AcquireFlag(std::shared_ptr<Flag> flag)
 
 	// note - individual scores are updated with move packets
 	ServerGame::instance()->IncScore(teamId, 1);
+	ServerGame::instance()->sendScorePacket();
 }
 
 void Player::LoseFlags()
@@ -128,6 +129,7 @@ void Player::LoseFlags()
 
 	// Change this, we need the flags to come out of the player back into the world
 	flags->clear();
+	ServerGame::instance()->sendScorePacket();
 }
 
 int Player::GetObjectId()

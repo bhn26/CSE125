@@ -413,7 +413,7 @@ void ServerGame::sendRotationPacket(int client, float w, float x, float y, float
 	p.roty = q.getY();
 	p.rotz = q.getZ();
 
-	printf("sending a rotation packet with: %f, %f, %f, %f\n", p.rotw, p.rotx, p.roty, p.rotz);
+	//printf("sending a rotation packet with: %f, %f, %f, %f\n", p.rotw, p.rotx, p.roty, p.rotz);
 
     p.serialize(packet.dat.buf);
     
@@ -443,6 +443,7 @@ void ServerGame::sendScorePacket() {
 	s.t0_score = scores[0];
 	s.t1_score = scores[1];
 
+	printf("sending score packet: %d, %d", s.t0_score, s.t1_score);
 	s.serialize(packet.dat.buf);
 
 	packet.serialize(packet_data);

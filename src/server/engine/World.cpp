@@ -139,7 +139,7 @@ void World::Init() {
 PosInfo World::SpawnPlayer(PosInfo in)
 {
 
-	int teamid = 1;
+	int teamid = ServerGame::instance()->GetTeam(in.id);
 	std::shared_ptr<Player> player = std::shared_ptr<Player>(new Player(oid, teamid, in, curWorld));
 	btVector3 vec = player->GetPlayerPosition();
 	printf("Created player at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());

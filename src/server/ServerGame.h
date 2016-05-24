@@ -60,6 +60,8 @@ public:
 	void IncScore(int team, int n) { scores[team] += n; };
 	void DecScore(int team, int n) { scores[team] -= n; ; }
 
+	int GetTeam(int player) { return team_map[player]; };
+
 private:
 	ServerGame(void);
 	~ServerGame(void);
