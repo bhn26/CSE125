@@ -96,13 +96,17 @@ void CPlayState::Update(DWORD dwCurrentTime)
 
 void CPlayState::Draw()  
 { 
+	// TEAM SCORES
 	TextRenderer::RenderText("Team 0: ", 25, 25, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 	TextRenderer::RenderText("Team 1: ", Window::width - 175, 25, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 
-	/*stringstream ssScore;
-	ssScore << m_ulCurrentScore;
-	m_pScoreControl->SetText(ssScore.str());
-	m_pScoreControl->Draw();*/
+	// SELF NUMBER OF EGGS
+	if (Scene::Instance()->GetPlayer() != NULL) {
+		char score[20];
+		strcpy_s(score, "Eggs Collected: ");
+		strcat_s(score, std::to_string(Scene::Instance()->GetPlayer()->GetScore()).c_str());
+		TextRenderer::RenderText(score, 25, Window::height - 50, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+	}
 
 	if (!m_bGameOver)
 	{

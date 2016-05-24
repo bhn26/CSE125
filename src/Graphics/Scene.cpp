@@ -16,6 +16,7 @@
 #include <vector>
 #include <map>
 
+SpriteRenderer * Scene::sprite_renderer = new SpriteRenderer();
 Scene::Scene() : camera(std::unique_ptr<Camera>(nullptr)), pLight(std::unique_ptr<PointLight>(nullptr)),
     player(nullptr)
 {

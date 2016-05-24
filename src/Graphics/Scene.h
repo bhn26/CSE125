@@ -11,6 +11,7 @@
 #include "Objects/Ground.h"
 #include "Objects/StaticObject.h"
 #include "Objects/Grass.h"
+#include "client\SpriteRenderer.h"
 
 class Camera;
 class Player;
@@ -45,6 +46,8 @@ class Scene
     void Setup();
 
 public:
+	static SpriteRenderer * sprite_renderer;
+
     static Scene* Instance()
     {
         static Scene* instance = new Scene();

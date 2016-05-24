@@ -87,6 +87,8 @@ private:
 	int team_id;
 	int num_eggs;
 
+	Texture *info_panel;
+
     // Player is made up of a model with a camera following it
     std::unique_ptr<Camera> camera;
     std::unique_ptr<Model> model;
