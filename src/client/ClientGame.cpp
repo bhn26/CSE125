@@ -373,7 +373,7 @@ void ClientGame::update()
 				receiveReadyToSpawnPacket(i);
 				break;
 
-            case IND_SPAWN_EVENT:
+            case SPAWN_EVENT:
                 // You want to offset the packet header
                 receiveSpawnPacket(i + sizeof(PacketHeader));
                 break;
