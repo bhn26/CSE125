@@ -18,6 +18,16 @@
 #include "Basic/Utils.h"
 #include "../Shader.h"
 
+enum POSITION
+{
+	P_FORWARD,
+	P_BACKWARD,
+	P_LEFT,
+	P_RIGHT,
+	P_UP,
+	P_DOWN
+};
+
 class Entity
 {
     long long m_startTime;
@@ -89,6 +99,9 @@ public:
 	int GetObjId() { return obj_id; }
 	void SetClassId(int cid) { class_id = cid; }
 	void SetObjId(int oid) { obj_id = oid; }
+
+	// Process movement
+	void ProcessKeyboard(POSITION position, GLfloat deltaTime);
 
     std::shared_ptr<Shader>& GetShader() { return shader; }
 

@@ -99,7 +99,6 @@ void Grass::Draw() const
 
 void Grass::Update()
 {
-	//Spin(0.3f);
 }
 
 void Grass::Spawn(float x, float y, float z)

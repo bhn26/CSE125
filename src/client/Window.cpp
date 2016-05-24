@@ -9,6 +9,7 @@
 #include "../Graphics/Camera.h"
 #include "../Graphics/Scene.h"
 #include "Player.h"
+#include "../Graphics/Objects/Entity.h"
 #include "MenuState.h"
 #include "ConfigManager.h"
 
@@ -178,6 +179,25 @@ void Window::Key_callback(GLFWwindow* window, int key, int scancode, int action,
             case GLFW_KEY_C:
                 Scene::Instance()->GetPlayer()->SetModelFile("assets/chickens/objects/pinocchio_chicken.obj");
                 break;
+			// For adjusting placement in world
+			case GLFW_KEY_UP:
+				Scene::Instance()->GetStaticObject()->ProcessKeyboard(POSITION::P_UP, 1);
+				break;
+			case GLFW_KEY_DOWN:
+				Scene::Instance()->GetStaticObject()->ProcessKeyboard(POSITION::P_DOWN, 1);
+				break;
+			case GLFW_KEY_LEFT:
+				Scene::Instance()->GetStaticObject()->ProcessKeyboard(POSITION::P_LEFT, 1);
+				break;
+			case GLFW_KEY_RIGHT:
+				Scene::Instance()->GetStaticObject()->ProcessKeyboard(POSITION::P_RIGHT, 1);
+				break;
+			case GLFW_KEY_1:
+				Scene::Instance()->GetStaticObject()->ProcessKeyboard(POSITION::P_FORWARD, 1);
+				break;
+			case GLFW_KEY_2:
+				Scene::Instance()->GetStaticObject()->ProcessKeyboard(POSITION::P_BACKWARD, 1);
+				break;
             default:
                 break;
         }

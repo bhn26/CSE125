@@ -74,8 +74,8 @@ void Scene::Setup()
 
 	// Ground
 	std::unique_ptr<StaticObject> ground = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/ground.obj"));
-	ground->Scale(4.0f);
-	ground->Translate(glm::vec3(0.0f, 27.3f, 0.0f));
+	ground->Scale(15.0f);
+	ground->Translate(glm::vec3(0.0f, 100.4f, 0.0f));
 
 
 	//std::unique_ptr<Ground> ground = std::unique_ptr<Ground>(new Ground);
