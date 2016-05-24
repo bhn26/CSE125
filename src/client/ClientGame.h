@@ -99,11 +99,11 @@ public:
         if (cg == NULL)
             cg = new ClientGame();
     }
-    static ClientGame* instance() {return cg;}
-	static int GetClientId() { return cg->client_id; }
+    static ClientGame* instance() { return cg; }
+	static int GetClientId() { return instance()->client_id; }
 
-	static std::vector<int> Team0() { return cg->team0; }
-	static std::vector<int> Team1() { return cg->team1; }
+	static std::vector<int> Team0() { return instance()->team0; }
+	static std::vector<int> Team1() { return instance()->team1; }
 
 private:
     const static std::string EVENT_QUIT;
