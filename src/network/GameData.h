@@ -4,8 +4,8 @@
 #include <stdio.h>
 #include "../server/engine/ObjectId.h"
 
-const int WORLD_WIDTH = 50;
-const int WORLD_HEIGHT = 50;
+const int WORLD_WIDTH = 300;
+const int WORLD_HEIGHT = 300;
 
 /*
 static int oid0 = 0;

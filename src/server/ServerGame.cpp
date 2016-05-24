@@ -3,6 +3,10 @@
 #include "engine/Player.h"
 #include <algorithm>
 
+#include <chrono>
+#include <ratio>
+#include <thread>
+
 unsigned int ServerGame::client_id; 
 
 ServerGame* ServerGame::sg = nullptr;
@@ -41,6 +45,7 @@ void ServerGame::update()
 	receiveFromClients();
 
 	// Check that all clients are ready
+
 	if (game_started && ready_clients == client_id)
 	{
 		if (spawned_clients == ready_clients && !eggs_spawned) {
@@ -54,8 +59,32 @@ void ServerGame::update()
 			engine->SendPreSpawn(ready_clients);
 
 		// once eggs has spawned, everything has spawned and we can begin the world cycle
+		auto t1 = chrono::high_resolution_clock::now();
+		auto t1_bench = chrono::high_resolution_clock::now();
+
+
 		if(eggs_spawned)
 			engine->GetWorld()->UpdateWorld();
+
+		auto t2 = chrono::high_resolution_clock::now();
+
+		float thresh = 1.0;
+
+		chrono::duration<double, milli> fp_ms = t2 - t1;
+
+		if(thresh - fp_ms.count() < 0)
+			printf("TIMING ERROR: %f\n", thresh - fp_ms.count());
+		else
+		{
+			printf("TIME FOR UPDATE: %f\n", fp_ms.count());
+			printf("SLEEPING: %f\n", (float)(thresh - fp_ms.count()));
+
+			Sleep((float)((thresh - fp_ms.count())));
+			auto t3 = chrono::high_resolution_clock::now();
+			chrono::duration<double, milli> fp_ms_after = t3 - t1_bench;
+			printf("AFTER SLEEPING: %f\n", (float)(fp_ms_after.count()));
+
+		}
 	}
 
 }
