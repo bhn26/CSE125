@@ -1,3 +1,4 @@
+
 #include "World.h"
 #include "ObjectId.h"
 #include "../ServerGame.h"
@@ -111,6 +112,11 @@ void World::Init() {
 btDiscreteDynamicsWorld* World::GetPhysicsWorld()
 {
 	return curWorld;
+}
+
+void World::PreSpawn()
+{
+	ServerGame::instance()->sendReadyToSpawnPacket();
 }
 
 void World::UpdateWorld()

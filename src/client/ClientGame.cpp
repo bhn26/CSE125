@@ -1,4 +1,3 @@
-
 #include "ClientGame.h"
 
 #include <GL/glew.h>
@@ -70,6 +69,7 @@ void ClientGame::sendInitPacket() {
 void ClientGame::receiveJoinPacket(int offset) {
 	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
 	struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
+	client_team = pi->team_id;
 
 	printf("receiveJoinPacket for player %d on team %d\n", pi->id, pi->team_id);
 	int player = pi->id;
@@ -151,14 +151,33 @@ void ClientGame::sendStartPacket() {
 	NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
 }
 
+void ClientGame::receiveReadyToSpawnPacket(int offset)
+{
+	const unsigned int packet_size = sizeof(Packet);
+	char packet_data[packet_size];
+
+	Packet packet;
+	packet.hdr.packet_type = IND_SPAWN_EVENT;
+	packet.hdr.sender_id = client_id;
+	packet.hdr.receiver_id = SERVER_ID;
+
+	PosInfo pi;
+	pi.team_id = client_team;
+	pi.skin = rand() % 3;
+
+	pi.serialize(packet.dat.buf);
+
+	packet.serialize(packet_data);
+	NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
+}
+
 void ClientGame::receiveSpawnPacket(int offset)
 {
-
     struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
     struct PosInfo* p = (struct PosInfo *) (dat->buf);
 
 	// spawn the thing
-	Scene::Instance()->AddEntity(p->cid, p->oid, p->x, p->y, p->z, p->rotw, p->rotx, p->roty, p->rotz);
+	Scene::Instance()->AddEntity((*p));
 
 	if (!iSpawned && p->oid == client_id)
 	{
@@ -261,7 +280,6 @@ void ClientGame::sendRotationPacket() {
 	pi.roty = rot.y;
 	pi.rotz = rot.z;
 
-   // pi.v_rotation = v_rot;
 	//pi.h_rotation = h_rot;
     pi.serialize(packet.dat.buf);
 
@@ -284,6 +302,21 @@ void ClientGame::sendJumpPacket()
 
     NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
 }
+
+void ClientGame::sendShootPacket() {
+	const unsigned int packet_size = sizeof(Packet);
+	char packet_data[packet_size];
+
+	Packet packet;
+	packet.hdr.packet_type = SHOOT_EVENT;
+	packet.hdr.sender_id = client_id;
+	packet.hdr.receiver_id = SERVER_ID;
+
+	packet.serialize(packet_data);
+
+	NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
+}
+
 /*std::shared_ptr<Player> ClientGame::FindTarget(int tid) {
 	if (tid == client_id) {
 		return Scene::Instance()->GetPlayer();
@@ -332,11 +365,13 @@ void ClientGame::update()
 				receiveStartPacket(i);
 				break;
 
-            case SPAWN_EVENT:
+			case READY_TO_SPAWN_EVENT:
+				receiveReadyToSpawnPacket(i);
+				break;
 
+            case SPAWN_EVENT:
                 // You want to offset the packet header
                 receiveSpawnPacket(i + sizeof(PacketHeader));
-
                 break;
 
 			case REMOVE_EVENT:
@@ -379,6 +414,7 @@ void ClientGame::Initialize()
 
     double lastTime = glfwGetTime();
     int nbFrames = 0;
+	srand(time(NULL));
 }
 
 void ClientGame::Destroy()

@@ -39,6 +39,8 @@ public:
 	void receiveStartPacket(int offset);
 	void sendStartPacket();
 
+	void receiveReadyToSpawnPacket(int offset);
+
     // The data we want in network_data should have an offset if any
     void receiveSpawnPacket(int offset);
 
@@ -51,6 +53,8 @@ public:
     void sendRotationPacket(); 
 
 	void sendJumpPacket();
+
+	void sendShootPacket();
 
 	bool hasStarted() { return game_started; }
 
@@ -83,6 +87,8 @@ private:
     int nbFrames;
 
     int client_id; // should know what client number we are so we can fill out packet headers
+	int client_team;
+	int client_skin;
 
 	std::vector <int> team0;
 	std::vector <int> team1;

@@ -55,7 +55,7 @@ public:
 
 	//TODO: Replace references with EntitySpawner  GetEntity() method
 	std::shared_ptr<Player> GetPlayer(int id) { return players.at(id); };
-
+	void PreSpawn();
 	btDiscreteDynamicsWorld* GetPhysicsWorld();
 
 	// Updates Physics world by one tick

@@ -43,6 +43,8 @@ Player* EntitySpawner::spawnPlayer(int teamid, PosInfo pos, btDiscreteDynamicsWo
 	PosInfo out;
 	out.cid = ClassId::PLAYER;
 	out.oid = newPlayer->GetObjectId();
+	out.skin = pos.skin;
+	out.team_id = pos.team_id;
 	out.x = vec.getX();
 	out.y = vec.getY();
 	out.z = vec.getZ();

@@ -52,6 +52,10 @@ void CPlayState::OnClick(int button, double x, double y) {
 		Window::mouseCaptured = false;
 		glfwSetInputMode(ClientGame::instance()->window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 	}
+	else if (button == GLFW_MOUSE_BUTTON_LEFT && Window::mouseCaptured)
+	{
+		ClientGame::instance()->sendShootPacket();
+	}
 }
 
 void CPlayState::OnKeyDown(WPARAM wKey)

@@ -180,40 +180,54 @@ void Scene::AddEntity(int cid, int oid, std::unique_ptr<Entity> ent)
 	entities[p] = std::move(ent);
 }
 
-void Scene::AddEntity(int cid, int oid, float x, float y, float z, float rotw, float rotx, float roty, float rotz)
+void Scene::AddEntity(PosInfo p)
 {
 	std::unique_ptr<Player> player;
 	std::unique_ptr<Egg> egg;
+	std::string skin_type;
 
-	switch (cid) {
+	switch (p.cid) {
 	case ClassId::PLAYER:
-		player = std::unique_ptr<Player>(new Player(x,y,z,rotw,rotx,roty,rotz));
-		player->SetModelFile("assets/chickens/objects/pinocchio_chicken.obj");
-        player->Spawn(x, y, z);
+		player = std::unique_ptr<Player>(new Player(p.x, p.y, p.z, p.rotw, p.rotx, p.roty, p.rotz));
+		if (p.skin == 0)
+		{
+			skin_type = "assets/chickens/objects/chicken.obj";
+		}
+		else if (p.skin == 1)
+		{
+			skin_type = "assets/chickens/objects/robot_chicken.obj";
+		}
+		else if (p.skin == 2)
+		{
+			skin_type = "assets/chickens/objects/pinocchio_chicken.obj";
+		}
+		player->SetModelFile(skin_type);
+        player->Spawn(p.x, p.y, p.z);
 		player->GetShader() = modelShader;
-		player->SetObjId(oid);
-		player->SetClassId(cid);
+		player->SetObjId(p.oid);
+		player->SetClassId(p.cid);
+		player->SetTeam(p.team_id);
 		//player->RotateTo(rotw, rotx, roty, rotz);
 		// set main player if the oid matches
-		if (oid == ClientGame::instance()->GetClientId())
+		if (p.oid == ClientGame::instance()->GetClientId())
 			Scene::player = player.get();
 		//players.push_back(player);
 
-		AddEntity(cid, oid, std::move(player));
+		AddEntity(p.cid, p.oid, std::move(player));
 		break;
 	case ClassId::FLAG:
-		egg = std::unique_ptr<Egg>(new Egg(x,y,z));
+		egg = std::unique_ptr<Egg>(new Egg(p.x, p.y, p.z));
 		egg->SetColor(glm::vec3(0.27f, 0.16f, 0.0f));
 		egg->GetShader() = diffuseShader;
-		egg->SetClassId(cid);
-		egg->SetObjId(oid);
-		AddEntity(cid, oid, std::move(egg));
+		egg->SetClassId(p.cid);
+		egg->SetObjId(p.oid);
+		AddEntity(p.cid, p.oid, std::move(egg));
 		break;
     case ClassId::BULLET:
     {
         std::unique_ptr<ModelEntity> bullet = std::unique_ptr<ModelEntity>(new ModelEntity("assets/eggs/objects/egg.obj"));
         //bullet->GetShader() = modelShader;        // Set in ModelEntity
-        AddEntity(cid, oid, std::move(bullet));
+        AddEntity(p.cid, p.oid, std::move(bullet));
         break;
     }
 	default:

@@ -22,14 +22,15 @@ void Engine::InitWorld(int num_players) {
 	world->Init();
 }
 
-void Engine::SpawnRandomPlayer()
+void Engine::SpawnRandomPlayer(int team, int skin)
 {
 	PosInfo p;
+	p.team_id = team;
+	p.skin = skin;
 	p.x = rand() % WORLD_WIDTH + 1;
 	p.z = rand() % WORLD_WIDTH + 1;
 	p.y = 3;
-	int teamid = rand() % 2;
-	EntitySpawner::instance()->spawnPlayer(teamid, p, world->GetPhysicsWorld());
+	EntitySpawner::instance()->spawnPlayer(team, p, world->GetPhysicsWorld());
 }
 
 void Engine::SpawnRandomFlag()
@@ -38,21 +39,19 @@ void Engine::SpawnRandomFlag()
 	p.x = rand() % WORLD_WIDTH + 1;
 	p.z = rand() % WORLD_WIDTH + 1;
 	p.y = 3;
-	int teamid = rand() % 2;
 	EntitySpawner::instance()->spawnFlag(p, world->GetPhysicsWorld());
 }
 
-void Engine::InitialSpawn(int n)
+int Engine::RandomNum(int mod)
+{
+	return rand() % mod;
+}
+
+void Engine::SendPreSpawn(int n)
 {
 	// Always spawn the players before other dynamic objects
-	for ( int i = 0; i < n; i++)
-	{
-		SpawnRandomPlayer();
-	}
-	for (int i = 0; i < 2 * n; i++)
-	{
-		SpawnRandomFlag();
-	}
+	world->PreSpawn();
+
 	initialSpawned = true;
 }
 
