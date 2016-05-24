@@ -37,7 +37,10 @@ void CPlayState::Reset()
 }
 
 void CPlayState::OnMouseMove(float xoffset, float yoffset) {
-	Scene::Instance()->GetPlayer()->ProcessMouseMovement(xoffset, yoffset);
+	Player * player = Scene::Instance()->GetPlayer();
+	if (player != NULL) {
+		player->ProcessMouseMovement(xoffset, yoffset);
+	}
 }
 
 void CPlayState::OnClick(int button, double x, double y) {
