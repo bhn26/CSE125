@@ -7,11 +7,13 @@
 #include "Camera.h"
 #include "PointLight.h"
 
+#include "Objects/ModelEntity.h"
 #include "Objects/Entity.h"
 #include "../client/Player.h"
 #include "../client/ClientGame.h"
 
 #include "../server/engine/ObjectId.h"
+
 #include <algorithm>
 #include <vector>
 #include <map>
@@ -146,12 +148,6 @@ void Scene::Draw()
 	{
 		entity.second->Draw();
 		//printf("entity ids are %d, %d\n", entity.second->GetClassId(), entity.second->GetObjId());
-		if (entity.second->GetClassId() == 0 && entity.second->GetObjId() == 1)
-		{
-			//printf("Vector for player being drawn is: %f, %f, %f\n", entity.second->Position().x, entity.second->Position().y,
-				//entity.second->Position().z);
-
-		}
 	}
 
     // Redrawing players??
@@ -213,6 +209,13 @@ void Scene::AddEntity(int cid, int oid, float x, float y, float z, float rotw, f
 		egg->SetObjId(oid);
 		AddEntity(cid, oid, std::move(egg));
 		break;
+    case ClassId::BULLET:
+    {
+        std::unique_ptr<ModelEntity> bullet = std::unique_ptr<ModelEntity>(new ModelEntity("assets/eggs/objects/egg.obj"));
+        //bullet->GetShader() = modelShader;        // Set in ModelEntity
+        AddEntity(cid, oid, std::move(bullet));
+        break;
+    }
 	default:
 		break;
 	}

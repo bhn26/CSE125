@@ -1,7 +1,12 @@
 #include "World.h"
 #include "ObjectId.h"
-#include "Bullet.h"
 #include "../ServerGame.h"
+#include "FireRateReset.h"
+#include "Player.h"
+#include "Flag.h"
+#include "Bullet.h"
+#include "WorldObstacle.h"
+#include "BulletCollision\CollisionDispatch\btGhostObject.h"
 
 World::World() {
 	// initialize map objects 
@@ -14,12 +19,11 @@ World::~World() {
 
 void World::Init() {
 
-	// Init object id counter
-	oid = 0;
+	// Init world tick counter
 	currentWorldTick = 0;
 
 	// Init Fire Rate Reseter
-	this->fireRateReseter = new FireRateReset((&this->usedWeapons));
+	FireRateReset::instance();
 
 	int z = 1000; // this is a random number for the walls right now, we need to change this
 
@@ -99,104 +103,15 @@ void World::Init() {
 	disp = dispatcher;
 	colConfig = collisionConfig;
 
-	// Initialize player objects
-	/*for (int i = 0; i < player_poss.size(); i++) {
-		int teamid = 1;
-		std::shared_ptr<Player> player = std::shared_ptr<Player>(new Player(oid, teamid, player_poss.at(i), curWorld));
-		btVector3 vec = player->GetPlayerPosition();
-		printf("Created player at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
-		//printf("Posinfo player at (%d,%d,%d)\n", player->GetPosition().x, player->GetPosition().y, player->GetPosition().z);
-		players.push_back(player);
+	// set up physics world for field detection
+	dynamicsWorld->getBroadphase()->getOverlappingPairCache()->setInternalGhostPairCallback(new btGhostPairCallback());
 
-		// Send spawn info to the clients
-		PosInfo pi;
-		pi.cid = ClassId::PLAYER;
-		pi.oid = oid++;
-		pi.x = vec.getX();
-		pi.y = vec.getY();
-		pi.z = vec.getZ();
-		ServerGame::instance()->sendSpawnPacket(pi);
-	}
-
-	// Initialize egg objects
-	for (int i = 0; i < flag_poss.size(); i++) {
-		std::shared_ptr<Flag> flag = std::shared_ptr<Flag>(new Flag(oid, flag_poss.at(i), curWorld));
-		btVector3 vec = flag->GetFlagPosition();
-		printf("Created flag at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
-		printf("Posinfo flag at (%d,%d,%d)\n", flag->p.x, flag->p.y, flag->p.z);
-		flags.push_back(flag);
-
-		PosInfo pi;
-		pi.cid = ClassId::FLAG;
-		pi.oid = oid++;
-		pi.x = vec.getX();
-		pi.y = vec.getY();
-		pi.z = vec.getZ();
-		ServerGame::instance()->sendSpawnPacket(pi);
-	}*/
 }
 
-PosInfo World::SpawnPlayer(PosInfo in)
+btDiscreteDynamicsWorld* World::GetPhysicsWorld()
 {
-
-	int teamid = 1;
-	std::shared_ptr<Player> player = std::shared_ptr<Player>(new Player(oid, teamid, in, curWorld));
-	btVector3 vec = player->GetPlayerPosition();
-	printf("Created player at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
-	//printf("Posinfo player at (%d,%d,%d)\n", player->GetPosition().x, player->GetPosition().y, player->GetPosition().z);
-	players.push_back(player);
-
-	btQuaternion quat = player->GetPlayerRotation();
-
-	// Send spawn info to the clients
-	PosInfo out;
-	out.cid = ClassId::PLAYER;
-	out.oid = oid++;
-	out.x = vec.getX();
-	out.y = vec.getY();
-	out.z = vec.getZ();
-	out.rotw = quat.getW();
-	out.rotx = quat.getX();
-	out.roty = quat.getY();
-	out.rotz = quat.getZ();
-	ServerGame::instance()->sendSpawnPacket(out);
-	return out;
+	return curWorld;
 }
-
-PosInfo World::SpawnFlag(PosInfo in)
-{
-	std::shared_ptr<Flag> flag = std::shared_ptr<Flag>(new Flag(oid, in, curWorld));
-	btVector3 vec = flag->GetFlagPosition();
-	printf("Created flag at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
-	printf("Posinfo flag at (%d,%d,%d)\n", flag->p.x, flag->p.y, flag->p.z);
-	flags.push_back(flag);
-
-	PosInfo out;
-	out.cid = ClassId::FLAG;
-	out.oid = oid++;
-	out.x = vec.getX();
-	out.y = vec.getY();
-	out.z = vec.getZ();
-	ServerGame::instance()->sendSpawnPacket(out);
-	return out;
-}
-
-		/*case BULLET:
-		{
-			std::shared_ptr<Bullet> bullet = std::shared_ptr<Bullet>(new Bullet(oid2, playeridforBullet, teamid, damageforBullet, position, speed, curWorld));
-			btVector3 vec = bullet->GetBulletPosition();
-			printf("Created flag at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
-			bullets.push_back(bullet);
-
-			PosInfo pi;
-			pi.cid = ClassId::BULLET;
-			pi.oid = oid2++;
-			pi.x = vec.getX();
-			pi.y = vec.getY();
-			pi.z = vec.getZ();
-			ServerGame::instance()->sendSpawnPacket(pi);
-			break;
-		}*/
 
 void World::UpdateWorld()
 {
@@ -204,8 +119,8 @@ void World::UpdateWorld()
 	curWorld->stepSimulation(1 / 60.f, 10);
 	currentWorldTick++;
 
-	// Process Weapon Reloads
-	this->fireRateReseter->ResetWeapons();
+	// Process Weapon Fire Rate Reset
+	FireRateReset::instance()->ResetWeapons();
 
 	// Process all collisions
 	int numManifolds = curWorld->getDispatcher()->getNumManifolds();
@@ -281,26 +196,31 @@ void World::UpdateWorld()
 			// Grab Player Object
 			Player * collidePlayer = (Player *)obA->getUserPointer();
 
-			// if Obj B is Flag
-			if (obB->getUserIndex() == FLAG)
+			// TODO, if Obj B is collectable, HandleCollectable();
+			if (obB->getUserIndex() == COLLECTABLE)
 			{
+
+				// Handle Collectable Collection
+				Collectable* collectObj = (Collectable*)obB->getUserPointer();
+				collectObj->HandleCollect(collidePlayer);
+				ServerGame::instance()->sendRemovePacket(ClassId::COLLECTABLE, collectObj->GetObjectId());
+			}
+
+			// if Obj B is Flag
+			else if (obB->getUserIndex() == FLAG)
+			{
+
 				// Handle Flag Collection
 				Flag * collideFlag = (Flag *)obB->getUserPointer();
-
-				collidePlayer->AcquireFlag((std::shared_ptr<Flag>)collideFlag);
-				curWorld->removeRigidBody(collideFlag->getRigidBody());
+				collideFlag->HandleCollectable(collidePlayer);
 				ServerGame::instance()->sendRemovePacket(ClassId::FLAG, collideFlag->GetObjectId());
-				//TODO send a packet for the player to acquire the item
-
-				//TODO remove flag from Vector causes strange issues...
-				removeFlag(collideFlag);
+				//TODO send a packet for the player to acquire the item for GUI
 			}
-			//else if   TODO Handle Bullet Collision
-			//...
 
 			// Handles Jump Semaphore
 			else // if (++y % 50000 == 0) 
 			{
+
 				int numContacts = contactManifold->getNumContacts();
 				for (int j = 0; j < numContacts; j++)
 				{
@@ -313,8 +233,8 @@ void World::UpdateWorld()
 
 						// Reset Jump Semaphore, detects collision off of non-player, error of .1
 						// TODO: FIX MAGIC NUMBER OF PLAYER HALFEXTENT = 1
-						if ((collidePlayer->GetPlayerPosition()).getY() - 1 > (ptB.getY() - .1) &&
-							(collidePlayer->GetPlayerPosition()).getY() - 1 < (ptB.getY() + .1))
+						if ((collidePlayer->GetEntityPosition()).getY() - 1 > (ptB.getY() - .1) &&
+							(collidePlayer->GetEntityPosition()).getY() - 1 < (ptB.getY() + .1))
 						{
 							collidePlayer->ResetJump();
 						}
@@ -336,23 +256,24 @@ void World::UpdateWorld()
 		{
 			// Grab Player Object
 			Player * collidePlayer = (Player *)obB->getUserPointer();
+			// If Obj A is collectable, HandleCollectable();
+			if (obA->getUserIndex() == COLLECTABLE)
+			{
+				// Handle Collectable Collection
+				Collectable* collectObj = (Collectable*)obA->getUserPointer();
+				collectObj->HandleCollect(collidePlayer);
+				ServerGame::instance()->sendRemovePacket(ClassId::COLLECTABLE, collectObj->GetObjectId());
+			}
 
 			// if Obj A is Flag
-			if ((obA->getUserIndex()) == FLAG)
+			else if (obA->getUserIndex() == FLAG)
 			{
 				// Handle Flag Collection
 				Flag * collideFlag = (Flag *)obA->getUserPointer();
-
-				collidePlayer->AcquireFlag((std::shared_ptr<Flag>)collideFlag);
-				curWorld->removeRigidBody(collideFlag->getRigidBody());
+				collideFlag->HandleCollectable(collidePlayer);
 				ServerGame::instance()->sendRemovePacket(ClassId::FLAG, collideFlag->GetObjectId());
-				//TODO send a packet for the player to acquire the item
-
-				//TODO remove flag from Vector causes strange issues...
-				removeFlag(collideFlag);
+				//TODO send a packet for the player to acquire the item for GUI
 			}
-			//else if   TODO Handle Bullet Collision
-			//...
 
 			// Handles Jump Semaphore
 			else //if (++y % 50000 == 0) 
@@ -369,8 +290,8 @@ void World::UpdateWorld()
 
 						// Reset Jump Semaphore, detects collision off of non-player, error of .1
 						// TODO: FIX MAGIC NUMBER OF PLAYER HALFEXTENT = 1
-						if ((collidePlayer->GetPlayerPosition()).getY() - 1 > (ptA.getY()- .1) &&
-							(collidePlayer->GetPlayerPosition()).getY() - 1 < (ptA.getY() + .1))
+						if ((collidePlayer->GetEntityPosition()).getY() - 1 > (ptA.getY()- .1) &&
+							(collidePlayer->GetEntityPosition()).getY() - 1 < (ptA.getY() + .1))
 						{
 							collidePlayer->ResetJump();
 						}
@@ -402,27 +323,36 @@ void World::UpdateWorld()
 		printf(" back wall at (%f,%f,%f)\n", vecg.getX(), vecg.getY(), vecg.getZ());
 		*/
 
-		for (std::vector<std::shared_ptr<Player> >::iterator it = players.begin(); it != players.end(); ++it)
+		// TODO!!! HACK TO PRINT OUT UPDATE FOR ONE PLAYER.  Change to use Map in EntitySpawner
+
+		Player* myPlayer = (Player *)(EntitySpawner::instance()->GetEntity(ClassId::PLAYER, 0));
+
+		std::map<std::pair<int,unsigned int>, Entity* > * dynamicMap = EntitySpawner::instance()->GetMap();
+		for (std::map<std::pair<int, unsigned int>, Entity*>::iterator it = dynamicMap->begin(); it != dynamicMap->end(); it++)
 		{
-			btVector3 vec = (*it)->GetPlayerPosition();
-			printf(" player at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
+			btVector3 vec = it->second->GetEntityPosition();
+			//printf(" Dynamic object classid: %d, objid: %d, at (%f,%f,%f)\n", it->second->GetClassId(), it->second->GetObjectId(), vec.getX(), vec.getY(), vec.getZ());
 		}
 
 		/*
 		for (std::vector<std::shared_ptr<Flag> >::iterator it = flags.begin(); it != flags.end(); ++it)
 		{
-			btVector3 vec = (*it)->GetFlagPosition();
+			btVector3 vec = (*it)->GetEntityPosition();
 			printf(" flag at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
 		}
 		*/
 	}
 
-	// send updates every x or so ticks?
+	// Send position updates of all dynamic objects
 	if (x % 5 == 0)
 	{
-		for (std::shared_ptr<Player>& player : players)
+		// Iterates through all dynamic objects in the Map and sends position updates to client
+		std::map<std::pair<int, unsigned int>, Entity* > * dynamicMap = EntitySpawner::instance()->GetMap();
+		for (std::map<std::pair<int, unsigned int>, Entity*>::iterator it = dynamicMap->begin(); it != dynamicMap->end(); it++)
 		{
-			ServerGame::instance()->sendMovePacket(ClassId::PLAYER, player->GetId());
+			btVector3 vec = it->second->GetEntityPosition();
+			//printf(" Dynamic object classid: %d, objid: %d, at (%f,%f,%f)\n", it->second->GetClassId(), it->second->GetObjectId(), vec.getX(), vec.getY(), vec.getZ());
+			ServerGame::instance()->sendMovePacket((ClassId)it->second->GetClassId(), it->second->GetObjectId());
 		}
 	}
 	
@@ -440,5 +370,4 @@ void World::removeFlag(Flag* collectedFlag)
 			return;
 		}
 	}
-
 }

@@ -1,32 +1,23 @@
 #pragma once
-#ifndef BULLET_PHYSICS
-#define BULLET_PHYSICS
-#include <BulletPhysics\btBulletDynamicsCommon.h>
-#include <BulletPhysics\btBulletCollisionCommon.h>
-#endif
+
+#include "Collectable.h"
 
 #include "../../network/GameData.h"
 
 
-class Flag
+class Flag : public Entity
 {
-	int id;
-	btDiscreteDynamicsWorld* curWorld;
-	btRigidBody* flagRigidBody;
-	
 
 public:
 
-	Flag(int id, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld);
+	PosInfo p;
+
+	Flag(int objid, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld);
 
 	~Flag();
 
 	btRigidBody* getRigidBody();
 
-	btVector3 GetFlagPosition();
-
-	PosInfo p;
-
-	int GetObjectId();
+	void HandleCollectable(Player* collidedPlayer);
 
 };

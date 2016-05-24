@@ -120,11 +120,7 @@ void Window::Display_callback(GLFWwindow* window)
     // Clear the color and depth buffers
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    // Use the shader of programID
-    //glUseProgram(shaderProgram);
-
     // Render the object drawPtr is pointing to
-    //chicken->Draw(camera);
     //Scene::Instance()->Draw();
 	m_pStateManager->Draw();
 

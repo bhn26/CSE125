@@ -101,7 +101,7 @@ void Player::ProcessKeyboard(DIRECTION direction, GLfloat deltaTime)
     if (direction == D_DOWN)
         this->toWorld[3] -= deltaTime * toWorld[1];
 }
-int tick = 0;
+static int tick = 0;
 // Processes input received from a mouse input system. Expects the offset value in both the x and y direction.
 void Player::ProcessMouseMovement(GLfloat xoffset, GLfloat yoffset, GLboolean constrainPitch)
 {

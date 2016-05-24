@@ -43,7 +43,7 @@ public:
     void sendMovePacket(ClassId class_id, int obj_id);
 
     void receiveRotationPacket(int offset);
-    void sendRotationPacket(int obj_id, float w, float x, float y, float z);
+    void sendRotationPacket(int class_id, int obj_id);
 
 	void receiveJumpPacket(int offset);
 
