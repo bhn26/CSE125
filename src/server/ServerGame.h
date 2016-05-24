@@ -32,6 +32,9 @@ public:
 	void receiveStartPacket(int offset);
 	void sendStartPacket();
 
+	void receiveIndSpawnPacket(int offset);
+	void sendReadyToSpawnPacket();
+
     // The data we want in network_data should have an offset if any
     void sendSpawnPacket(PosInfo pi); // Spawn an object with position pi, pi holds obj type and obj id
 
@@ -44,12 +47,14 @@ public:
     void sendMovePacket(ClassId class_id, int obj_id);
 
     void receiveRotationPacket(int offset);
-    void sendRotationPacket(int obj_id, float w, float x, float y, float z);
+    void sendRotationPacket(int class_id, int obj_id);
 
 	void receiveJumpPacket(int offset);
 
 	void sendScorePacket();
 	void sendGameOverPacket(int winner);
+
+	void receiveShootPacket(int offset);
 
 	static void instantiate()
 	{
@@ -92,7 +97,9 @@ private:
 	// variables for starting the game
 
 	bool game_started = false;
+	bool eggs_spawned = false;
 	int ready_clients = 0; // # of clients ready for the game
+	int spawned_clients = 0;
 
 	Engine * engine;
 

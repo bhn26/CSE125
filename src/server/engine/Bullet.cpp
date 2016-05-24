@@ -1,14 +1,13 @@
 
-
 #include "Bullet.h"
-#include "../../network/GameData.h"
+#include "EntitySpawner.h"
 
-Bullet::Bullet(int objectid, int playerid, int teamid, int damage, PosInfo pos, btVector3* velocity, btDiscreteDynamicsWorld* physicsWorld)
+Bullet::Bullet(int objectid, int playerid, int teamid, int damage, const btVector3* pos, btVector3* velocity, btDiscreteDynamicsWorld* physicsWorld): Entity(ClassId::BULLET, objectid, physicsWorld)
 {
 	btCollisionShape* bulletShape = new btSphereShape(btScalar(.1));
 
 	// Create bullet physics object
-	btDefaultMotionState*bulletMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(pos.x, pos.y, pos.z)));
+	btDefaultMotionState*bulletMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(pos->getX(), pos->getY(), pos->getZ())));
 	btScalar mass = 1;
 	btVector3 bulletInertia(0, 0, 0);
 	bulletShape->calculateLocalInertia(mass, bulletInertia);
@@ -20,16 +19,15 @@ Bullet::Bullet(int objectid, int playerid, int teamid, int damage, PosInfo pos, 
 	bRigidBody->forceActivationState(DISABLE_DEACTIVATION);
 	physicsWorld->addRigidBody(bRigidBody);
 
-	// Set RigidBody to point to Bullet
-	bRigidBody->setUserPointer(this);
-	bRigidBody->setUserIndex(BULLET);
-
-	this->id = objectid;
+	// Set Bullet's protected fields
 	this->playerId = playerid;
 	this->teamId = teamid;
 	this->damage = damage;
-	this->curWorld = physicsWorld;
 	this->bulletRigidBody = bRigidBody;
+
+	// Set RigidBody to point to Bullet
+	bRigidBody->setUserPointer(this);
+	bRigidBody->setUserIndex(BULLET);
 }
 
 Bullet::~Bullet()
@@ -38,16 +36,12 @@ Bullet::~Bullet()
 	delete bulletRigidBody->getMotionState();
 	delete bulletRigidBody->getCollisionShape();
 	delete bulletRigidBody;
+	EntitySpawner::instance()->RemoveEntity(ClassId::BULLET,objectId);
 }
 
 btVector3 Bullet::GetBulletPosition()
 {
 	return (this->bulletRigidBody)->getCenterOfMassPosition();
-}
-
-int Bullet::GetObjectId()
-{
-	return this->id;
 }
 
 int Bullet::GetPlayerId()

@@ -82,6 +82,9 @@ public:
 	int GetScore() { return num_eggs; };
 	void SetScore(int n) { num_eggs = n; };
 
+	void SetTeam(int team) { team_id = team; }
+	int GetTeam() { return team_id; }
+
 private:
 	int id;
 	int team_id;

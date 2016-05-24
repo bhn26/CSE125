@@ -39,6 +39,7 @@ public:
     /*  Functions  */
     // Constructor
     Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices, std::vector<Texture> textures);
+	~Mesh();
 
 	GLuint VAO() const { return this->vao; }
 	GLuint VBO() const { return this->vbo; }

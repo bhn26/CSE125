@@ -18,6 +18,16 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices, std::vecto
     this->SetupMesh();
 }
 
+Mesh::~Mesh()
+{
+    if (vao)
+        glDeleteBuffers(1, &vao);
+    if (vbo)
+        glDeleteBuffers(1, &vbo);
+    if (ebo)
+        glDeleteBuffers(1, &ebo);
+}
+
 void Mesh::Draw(const Shader* shader)
 {
     shader->Use(); 

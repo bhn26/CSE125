@@ -39,6 +39,8 @@ public:
 	void receiveStartPacket(int offset);
 	void sendStartPacket();
 
+	void receiveReadyToSpawnPacket(int offset);
+
     // The data we want in network_data should have an offset if any
     void receiveSpawnPacket(int offset);
 
@@ -56,9 +58,10 @@ public:
 
 	void receiveGameOverPacket(int offset);
 
-	bool hasStarted() { return game_started; }
+	void sendShootPacket();
 
-	std::shared_ptr<Player> FindTarget(int tid);
+
+	bool hasStarted() { return game_started; };
 
     char network_data[MAX_PACKET_SIZE];
 
@@ -89,6 +92,8 @@ private:
     int nbFrames;
 
     int client_id; // should know what client number we are so we can fill out packet headers
+	int client_team;
+	int client_skin;
 
 	std::vector <int> team0;
 	std::vector <int> team1;

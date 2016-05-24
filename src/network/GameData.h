@@ -1,8 +1,5 @@
 #pragma once
 
-#ifndef GAME_DATA
-#define GAME_DATA
-
 #include <string.h>
 #include <stdio.h>
 #include "../server/engine/ObjectId.h"
@@ -10,9 +7,11 @@
 const int WORLD_WIDTH = 50;
 const int WORLD_HEIGHT = 50;
 
+/*
 static int oid0 = 0;
 static int oid1 = 0;
 static int oid2 = 0;
+*/
 
 static unsigned int currentWorldTick;
 
@@ -56,7 +55,9 @@ struct PosInfo : GameInfo
 {
 	// general info
 	int id; // client id
-	int team_id; 
+	int team_id;
+
+	int skin;
 
 	int oid; // object id
 	ClassId cid; // class id
@@ -114,4 +115,4 @@ struct ScoreInfo : GameInfo {
 	}
 };
 
-#endif
+

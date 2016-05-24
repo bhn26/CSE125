@@ -12,6 +12,7 @@
 #include "Objects/StaticObject.h"
 #include "Objects/Grass.h"
 #include "client\SpriteRenderer.h"
+#include "../network/GameData.h"
 
 class Camera;
 class Player;
@@ -57,7 +58,7 @@ public:
     static void Initialize() { Instance()->Setup(); }
 
 	void AddEntity(int cid, int oid, std::unique_ptr<Entity> ent);
-	void AddEntity(int cid, int oid, float x, float y, float z, float rotw, float rotx, float roty, float rotz);
+	void AddEntity(PosInfo p);
 	void RemoveEntity(int cid, int oid);
 	std::unique_ptr<Entity>& GetEntity(int cid, int oid);
 
