@@ -386,7 +386,7 @@ void ClientGame::Initialize()
     // Setup OpenGL settings, including lighting, materials, etc.
     Setup_opengl_settings();
     // Initialize the shaders
-    ShaderManager::Instance()->Initialize();
+    ShaderManager::Instance()->LoadShaders();
     // Initialize objects/pointers for rendering
     Window::Initialize_objects();
 

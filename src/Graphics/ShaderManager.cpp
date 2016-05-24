@@ -1,22 +1,49 @@
 #include "ShaderManager.h"
 #include "iostream"
 #include "Shader.h"
+#include "ConfigManager.h"
 
-void ShaderManager::Initialize()
+const std::string ShaderManager::shaderPath = "src/Graphics/Shaders/";
+
+void ShaderManager::LoadShaders()
 {
-    _shaderMap["Instance"] = std::make_shared<Shader>("src/Graphics/Shaders/instancing.vert", "src/Graphics/Shaders/instancing.frag");
-    _shaderMap["Basic"] = std::make_shared<Shader>("src/Graphics/Shaders/basic_shader.vert", "src/Graphics/Shaders/basic_shader.frag");
-    _shaderMap["Diffuse"] = std::make_shared<Shader>("src/Graphics/Shaders/basic_shader.vert", "src/Graphics/Shaders/diffuse.frag");
-    _shaderMap["Model"] = std::make_shared<Shader>("src/Graphics/Shaders/model_loading.vert", "src/Graphics/Shaders/model_loading.frag");
-    _shaderMap["CubeMap"] = std::make_shared<Shader>("src/Graphics/Shaders/cubemap.vert", "src/Graphics/Shaders/cubemap.frag");
+    for (std::string& shaderName : _shaderNames)
+    {
+        LoadShader(shaderName);
+    }
+    _shaderNames.clear();
 }
 
-std::shared_ptr<Shader> ShaderManager::GetShader(std::string shaderName)
+bool ShaderManager::LoadShader(const std::string& shaderName)
 {
-    std::string vert = ConfigManager::instance()->GetConfigValue("Shader_" + shaderName + "_Vert");
-    std::string frag = ConfigManager::instance()->GetConfigValue("Shader_" + shaderName + "_Frag");
+    // Don't duplicate load
+    if (_shaderMap.find(shaderName) != _shaderMap.end())
+    {
+        return false;
+    }
 
-    std::map<std::string, std::shared_ptr<Shader>>::iterator it = _shaderMap.find(shaderName);
+    const static std::string shaderPrefix = std::string("Shader_");
+    const static std::string vertSuffix = std::string("_Vert");
+    const static std::string fragSuffix = std::string("_Frag");
+    std::string vertShaderPath = ConfigManager::instance()->GetConfigValue(shaderPrefix + shaderName + vertSuffix);
+    std::string fragShaderPath = ConfigManager::instance()->GetConfigValue(shaderPrefix + shaderName + fragSuffix);
+    if (!vertShaderPath.length() || !fragShaderPath.length())   // Make sure we get the shader paths
+    {
+        return false;
+    }
+
+    _shaderMap[shaderName] = std::make_shared<Shader>(shaderPath + vertShaderPath, shaderPath + fragShaderPath);
+    return true;
+}
+
+void ShaderManager::AddShaderToLoad(std::string shaderName)
+{
+    _shaderNames.push_back(shaderName);
+}
+
+std::shared_ptr<Shader> ShaderManager::GetShader(std::string shaderName) const
+{
+    std::map<std::string, std::shared_ptr<Shader>>::const_iterator it = _shaderMap.find(shaderName);
     // If in map
     if (it != _shaderMap.end())    // Get shader mapped to this string
     {

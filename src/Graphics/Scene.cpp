@@ -84,7 +84,7 @@ void Scene::Setup()
     cubeMap = std::unique_ptr<CubeMap>(new CubeMap);
     cubeMap->LoadCubeMap();
 
-    grass->GetShader() = ShaderManager::Instance()->GetShader("Instance");
+    grass->GetShader() = ShaderManager::Instance()->GetShader("Instancing");
     cubeMap->GetShader() = ShaderManager::Instance()->GetShader("CubeMap");
 
 	//static_objects.push_back(std::move(grass));

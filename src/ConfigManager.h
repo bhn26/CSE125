@@ -16,36 +16,16 @@
 #include <map>
 #include <algorithm>
 
-class ConfigManager {
+class ConfigManager
+{
 public:
     std::map<std::string, std::string> cfg_map;
     
-	// use this to load the file into the manager
-    void LoadConfigs(std::string file_name)
-	{
-        std::string line;
-        
-        std::ifstream infile(file_name);
-        
-        while (getline(infile, line))
-        {
-            std::istringstream iss(line);
-            std::string field, equal, value;
-            if (!(iss >> field >> equal >> value)) { continue; } // error, skip this line
-            if (field.substr(0, 2) == "//") { continue; }
-            cfg_map.insert(std::pair<std::string, std::string>(field, value));
-        }
-		infile.close();
-    }
+    // use this to load the file into the manager
+    void LoadConfigs(const std::string& file_name);
 
-	// use this to get the value read from the config file
-	std::string GetConfigValue(std::string key) const
-	{
-		if (cfg_map.find(key) != cfg_map.end())
-			return cfg_map.at(key);
-		else
-			return "";
-	}
+    // use this to get the value read from the config file
+    std::string GetConfigValue(const std::string& key) const;
 
 	static void instantiate()
 	{
@@ -57,8 +37,8 @@ public:
 
 private:
 	static ConfigManager * cfg;
-	ConfigManager(void);
-	~ConfigManager(void);
+    ConfigManager(void) {}
+    ~ConfigManager(void) {}
 };
 
 #endif /* ConfigLoader_h */
