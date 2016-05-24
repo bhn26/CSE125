@@ -9,6 +9,6 @@
 
 namespace Utils
 {
-    bool ReadFile(const char* filename, std::string& outString);
+    bool ReadFile(const std::string& filename, std::string& outString);
     double CurrentTime();        // In seconds
 }

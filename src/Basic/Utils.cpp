@@ -4,7 +4,7 @@
 #include <fstream>
 #include <GLFW/glfw3.h>
 
-bool Utils::ReadFile(const char* filename, std::string& outString)
+bool Utils::ReadFile(const std::string& filename, std::string& outString)
 {
     std::ifstream f(filename);
     if (f.is_open())
