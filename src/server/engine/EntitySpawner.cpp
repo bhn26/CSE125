@@ -59,7 +59,7 @@ Flag*  EntitySpawner::spawnFlag(PosInfo pos, btDiscreteDynamicsWorld* physicsWor
 {
 	// Create flag and add to Entity Map
 	Flag* newFlag = new Flag(oid_flag, pos, physicsWorld);
-	AddEntity(1, oid_flag, newFlag);
+	AddEntity(ClassId::FLAG, oid_flag, newFlag);
 	oid_flag++;
 
 	// Send Flag Spawn packet
@@ -85,7 +85,7 @@ Bullet* EntitySpawner::spawnBullet(int playerid, int teamid, int damage, const b
 {
 	// Create Bullet and add to Entity Map
 	Bullet* fireProjectile = new Bullet(oid_bullet, playerid, teamid, damage, pos, velocity, physicsWorld);
-	AddEntity(2, oid_bullet, fireProjectile);
+	AddEntity(ClassId::BULLET, oid_bullet, fireProjectile);
 	oid_bullet++;
 
 	// Send Flag Spawn packet
@@ -111,7 +111,7 @@ Bullet* EntitySpawner::spawnBullet(int playerid, int teamid, int damage, const b
 Collectable* EntitySpawner::spawnCollectable(int objectid, PosInfo pos, btDiscreteDynamicsWorld* curworld)
 {
 	Collectable* ranCollectable = new Collectable(oid_collectable, pos, curworld);
-	AddEntity(3, oid_collectable, ranCollectable);
+	AddEntity(ClassId::COLLECTABLE, oid_collectable, ranCollectable);
 	oid_collectable++;
 
 	// Send Flag Spawn packet
