@@ -115,7 +115,7 @@ PosInfo World::SpawnPlayer(PosInfo in)
 	PosInfo out;
 	out.cid = ClassId::PLAYER;
 	out.oid = oid++;
-	out.team_id; in.team_id;
+	out.team_id = in.team_id;
 	out.skin = in.skin;
 	out.x = vec.getX();
 	out.y = vec.getY();

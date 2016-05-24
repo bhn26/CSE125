@@ -75,7 +75,9 @@ private:
 	// variables for starting the game
 
 	bool game_started = false;
+	bool eggs_spawned = false;
 	int ready_clients = 0; // # of clients ready for the game
+	int spawned_clients = 0;
 
 	Engine * engine;
 
