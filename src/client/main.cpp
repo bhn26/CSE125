@@ -13,9 +13,7 @@
 
 int main()
 {
-	ConfigManager::instantiate();
     ConfigManager::instance()->LoadConfigs("eggs.cfg");
-    ClientGame::instantiate();
     ClientGame::instance()->GameLoop();
 }
 #endif      // _WIN32

@@ -47,13 +47,11 @@ public:
 
 	void receiveJumpPacket(int offset);
 
-	static void instantiate()
-	{
-		if (sg == NULL)
-			sg = new ServerGame();
-	}
-
-	static ServerGame* instance() { return sg; }
+    static ServerGame* instance()
+    {
+        static ServerGame* instance = new ServerGame();
+        return instance;
+    }
 
 private:
 	ServerGame(void);
@@ -63,9 +61,6 @@ private:
     static unsigned int client_id;
 
 	std::map <int, int> team_map; // <player, team>
-
-	// Singleton servergame
-	static ServerGame* sg;
 
 	// variables for starting the game
 

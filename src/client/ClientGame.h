@@ -95,11 +95,11 @@ public:
     void Destroy();
     void GameLoop();
 
-    static void instantiate() { 
-        if (cg == NULL)
-            cg = new ClientGame();
+    static ClientGame* instance()
+    {
+        static ClientGame* instance = new ClientGame();
+        return instance;
     }
-    static ClientGame* instance() { return cg; }
 	static int GetClientId() { return instance()->client_id; }
 
 	static std::vector<int> Team0() { return instance()->team0; }
@@ -129,8 +129,6 @@ private:
 
 	bool game_started = false;
 	bool iSpawned = false;
-
-    static ClientGame* cg;
 
     static void Error_callback(int error, const char* description);
     void Setup_callbacks();

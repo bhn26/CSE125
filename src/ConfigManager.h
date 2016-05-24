@@ -9,12 +9,8 @@
 #ifndef ConfigLoader_h
 #define ConfigLoader_h
 
-#include <stdio.h>
 #include <string>
-#include <fstream>
-#include <sstream>
 #include <map>
-#include <algorithm>
 
 class ConfigManager
 {
@@ -27,16 +23,13 @@ public:
     // use this to get the value read from the config file
     std::string GetConfigValue(const std::string& key) const;
 
-	static void instantiate()
-	{
-		if (cfg == nullptr)
-			cfg = new ConfigManager();
-	}
-
-	static ConfigManager* instance() { return cfg; }
+    static ConfigManager* instance()
+    {
+        static ConfigManager* instance = new ConfigManager();
+        return instance;
+    }
 
 private:
-	static ConfigManager * cfg;
     ConfigManager(void) {}
     ~ConfigManager(void) {}
 };

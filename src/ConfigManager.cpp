@@ -1,14 +1,15 @@
 #include "ConfigManager.h"
 
+#include <stdio.h>
+#include <fstream>
+#include <sstream>
+#include <algorithm>
+
 #ifdef EGGS_CLIENT
 #include "Graphics/ShaderManager.h"
 #endif
 
-ConfigManager* ConfigManager::cfg = nullptr;
-
-
 // use this to load the file into the manager
-
 void ConfigManager::LoadConfigs(const std::string& file_name)
 {
     std::string line;

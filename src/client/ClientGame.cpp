@@ -17,8 +17,6 @@
 #include "ConfigManager.h"
 //#define _WIN32
 
-ClientGame* ClientGame::cg = nullptr;
-
 const std::string ClientGame::EVENT_QUIT = "Quit";
 const std::string ClientGame::EVENT_JUMP = "Jump";
 const std::string ClientGame::EVENT_ATTACK = "Attack";
