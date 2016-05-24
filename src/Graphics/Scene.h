@@ -58,7 +58,7 @@ public:
     static void Initialize() { Instance()->Setup(); }
 
 	void AddEntity(int cid, int oid, std::unique_ptr<Entity> ent);
-	void AddEntity(int cid, int oid, float x, float y, float z, float rotw, float rotx, float roty, float rotz);
+	void AddEntity(int cid, int oid, int skin, float x, float y, float z, float rotw, float rotx, float roty, float rotz);
 	void RemoveEntity(int cid, int oid);
 	std::unique_ptr<Entity>& GetEntity(int cid, int oid);
 

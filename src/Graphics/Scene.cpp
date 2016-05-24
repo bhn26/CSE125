@@ -184,15 +184,28 @@ void Scene::AddEntity(int cid, int oid, std::unique_ptr<Entity> ent)
 	entities[p] = std::move(ent);
 }
 
-void Scene::AddEntity(int cid, int oid, float x, float y, float z, float rotw, float rotx, float roty, float rotz)
+void Scene::AddEntity(int cid, int oid, int skin, float x, float y, float z, float rotw, float rotx, float roty, float rotz)
 {
 	std::unique_ptr<Player> player;
 	std::unique_ptr<Egg> egg;
+	std::string skin_type;
 
 	switch (cid) {
 	case ClassId::PLAYER:
 		player = std::unique_ptr<Player>(new Player(x,y,z,rotw,rotx,roty,rotz));
-		player->SetModelFile("assets/chickens/objects/pinocchio_chicken.obj");
+		if (skin == 0)
+		{
+			skin_type = "assets/chickens/objects/chicken.obj";
+		}
+		else if (skin == 1)
+		{
+			skin_type = "assets/chickens/objects/robot_chicken.obj";
+		}
+		else if (skin == 2)
+		{
+			skin_type = "assets/chickens/objects/pinocchio_chicken.obj";
+		}
+		player->SetModelFile(skin_type);
         player->Spawn(x, y, z);
 		player->GetShader() = modelShader;
 		player->SetObjId(oid);

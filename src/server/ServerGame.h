@@ -31,6 +31,9 @@ public:
 	void receiveStartPacket(int offset);
 	void sendStartPacket();
 
+	void receiveIndSpawnPacket(int offset);
+	void sendReadyToSpawnPacket();
+
     // The data we want in network_data should have an offset if any
     void sendSpawnPacket(PosInfo pi); // Spawn an object with position pi, pi holds obj type and obj id
 
@@ -46,6 +49,8 @@ public:
     void sendRotationPacket(int obj_id, float w, float x, float y, float z);
 
 	void receiveJumpPacket(int offset);
+
+	void receiveShootPacket(int offset);
 
 	static void instantiate()
 	{

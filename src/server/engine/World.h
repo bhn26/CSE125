@@ -65,6 +65,8 @@ public:
 	PosInfo SpawnFlag(PosInfo in);
 	std::shared_ptr<Player> GetPlayer(int id) { return players.at(id); };
 
+	void PreSpawn();
+
 	// Updates Physics world by one tick
 	// Handles egg collisions with players
 	void UpdateWorld();

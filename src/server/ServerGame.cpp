@@ -43,7 +43,7 @@ void ServerGame::update()
 	if (game_started && ready_clients == client_id)
 	{
 		if(!engine->hasInitialSpawned())
-			engine->InitialSpawn(ready_clients);
+			engine->SendPreSpawn(ready_clients);
 		engine->GetWorld()->UpdateWorld();
 	}
 
@@ -94,6 +94,10 @@ void ServerGame::receiveFromClients()
 					//printf("ready clients: %d\nclient_id: %d\n", ready_clients, client_id);
 					break;
 
+				case IND_SPAWN_EVENT:
+					receiveIndSpawnPacket(i + sizeof(PacketHeader));
+					break;
+
 				case START_GAME:
 					receiveStartPacket(i);
 					sendStartPacket();
@@ -113,6 +117,11 @@ void ServerGame::receiveFromClients()
                     receiveRotationPacket(i + sizeof(PacketHeader));
                 
                     break;
+
+				case SHOOT_EVENT:
+					receiveShootPacket(i);
+
+					break;
 
                 default:
 
@@ -252,6 +261,29 @@ void ServerGame::sendStartPacket() { // will add more later based on generated w
 	packet.serialize(packet_data);
 
 	network->sendToAll(packet_data, packet_size);
+}
+
+void ServerGame::sendReadyToSpawnPacket()
+{
+	Packet packet;
+	packet.hdr.packet_type = READY_TO_SPAWN_EVENT;
+
+	const unsigned int packet_size = sizeof(Packet);
+
+	char packet_data[packet_size];
+
+	packet.serialize(packet_data);
+
+	network->sendToAll(packet_data, packet_size);
+}
+
+void ServerGame::receiveIndSpawnPacket(int offset)
+{
+	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
+	struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
+
+	struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset - sizeof(PacketHeader)]);
+	engine->SpawnRandomPlayer(pi->team_id, pi->skin);
 }
 
 void ServerGame::sendSpawnPacket(PosInfo pi)
@@ -425,4 +457,12 @@ void ServerGame::receiveJumpPacket(int offset)
     struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset]);
 
 	engine->GetWorld()->GetPlayer(hdr->sender_id)->JumpPlayer();
+}
+
+void ServerGame::receiveShootPacket(int offset) {
+	//struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset]);
+
+	//shared_ptr<Player> player = engine->GetWorld()->GetPlayer(hdr->sender_id);
+
+	printf("HELLS YEAH\n");
 }

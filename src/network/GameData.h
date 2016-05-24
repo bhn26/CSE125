@@ -55,7 +55,9 @@ struct PosInfo : GameInfo
 {
 	// general info
 	int id; // client id
-	int team_id; 
+	int team_id;
+
+	int skin;
 
 	int oid; // object id
 	ClassId cid; // class id

@@ -118,7 +118,7 @@ int ClientNetwork::receivePackets(char * recvbuf)
 
     if ( iResult == 0 )
     {
-        printf("Connection closed\n");
+        printf("Connection closed.... %d\n", errno);
         closesocket(ConnectSocket);
         WSACleanup();
         exit(1);

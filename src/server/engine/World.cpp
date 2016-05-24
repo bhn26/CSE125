@@ -98,49 +98,12 @@ void World::Init() {
 	pairCache = overlappingPairCache;
 	disp = dispatcher;
 	colConfig = collisionConfig;
-
-	// Initialize player objects
-	/*for (int i = 0; i < player_poss.size(); i++) {
-		int teamid = 1;
-		std::shared_ptr<Player> player = std::shared_ptr<Player>(new Player(oid, teamid, player_poss.at(i), curWorld));
-		btVector3 vec = player->GetPlayerPosition();
-		printf("Created player at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
-		//printf("Posinfo player at (%d,%d,%d)\n", player->GetPosition().x, player->GetPosition().y, player->GetPosition().z);
-		players.push_back(player);
-
-		// Send spawn info to the clients
-		PosInfo pi;
-		pi.cid = ClassId::PLAYER;
-		pi.oid = oid++;
-		pi.x = vec.getX();
-		pi.y = vec.getY();
-		pi.z = vec.getZ();
-		ServerGame::instance()->sendSpawnPacket(pi);
-	}
-
-	// Initialize egg objects
-	for (int i = 0; i < flag_poss.size(); i++) {
-		std::shared_ptr<Flag> flag = std::shared_ptr<Flag>(new Flag(oid, flag_poss.at(i), curWorld));
-		btVector3 vec = flag->GetFlagPosition();
-		printf("Created flag at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
-		printf("Posinfo flag at (%d,%d,%d)\n", flag->p.x, flag->p.y, flag->p.z);
-		flags.push_back(flag);
-
-		PosInfo pi;
-		pi.cid = ClassId::FLAG;
-		pi.oid = oid++;
-		pi.x = vec.getX();
-		pi.y = vec.getY();
-		pi.z = vec.getZ();
-		ServerGame::instance()->sendSpawnPacket(pi);
-	}*/
 }
 
 PosInfo World::SpawnPlayer(PosInfo in)
 {
 
-	int teamid = 1;
-	std::shared_ptr<Player> player = std::shared_ptr<Player>(new Player(oid, teamid, in, curWorld));
+	std::shared_ptr<Player> player = std::shared_ptr<Player>(new Player(oid, in.team_id, in, curWorld));
 	btVector3 vec = player->GetPlayerPosition();
 	printf("Created player at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
 	//printf("Posinfo player at (%d,%d,%d)\n", player->GetPosition().x, player->GetPosition().y, player->GetPosition().z);
@@ -152,6 +115,8 @@ PosInfo World::SpawnPlayer(PosInfo in)
 	PosInfo out;
 	out.cid = ClassId::PLAYER;
 	out.oid = oid++;
+	out.team_id; in.team_id;
+	out.skin = in.skin;
 	out.x = vec.getX();
 	out.y = vec.getY();
 	out.z = vec.getZ();
@@ -161,6 +126,11 @@ PosInfo World::SpawnPlayer(PosInfo in)
 	out.rotz = quat.getZ();
 	ServerGame::instance()->sendSpawnPacket(out);
 	return out;
+}
+
+void World::PreSpawn()
+{
+	ServerGame::instance()->sendReadyToSpawnPacket();
 }
 
 PosInfo World::SpawnFlag(PosInfo in)
