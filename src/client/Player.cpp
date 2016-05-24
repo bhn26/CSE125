@@ -84,16 +84,14 @@ void Player::Draw() const
     //m_model->Draw();
 
 	////////////// DRAW SCORE /////////////////////////
-	if (id != ClientGame::instance()->GetClientId()) {
-		glm::vec2 screen_coords = Scene::Get2D(Position(), GetViewMatrix(), GetPerspectiveMatrix(), Window::width, Window::height);
-		//Scene::sprite_renderer->DrawSprite(*info_panel, glm::vec2(screen_coords.x - 100, screen_coords.y - 400), glm::vec2(info_panel->Width(), info_panel->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+	glm::vec2 screen_coords = Scene::Get2D(Position(), GetViewMatrix(), GetPerspectiveMatrix(), Window::width, Window::height);
+	//Scene::sprite_renderer->DrawSprite(*info_panel, glm::vec2(screen_coords.x - 100, screen_coords.y - 400), glm::vec2(info_panel->Width(), info_panel->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 
-		char score[5];
-		strcpy_s(score, "[");
-		strcat_s(score, std::to_string(num_eggs).c_str());
-		strcat_s(score, "]");
-		TextRenderer::RenderText(score, screen_coords.x, screen_coords.y - 400, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
-	}
+	char score[5];
+	strcpy_s(score, "[");
+	strcat_s(score, std::to_string(num_eggs).c_str());
+	strcat_s(score, "]");
+	TextRenderer::RenderText(score, screen_coords.x, screen_coords.y - 400, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 }
 
 void Player::MoveTo(float x, float y, float z)
