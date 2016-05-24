@@ -1,8 +1,8 @@
-#ifndef _WINDOW_H_
-#define _WINDOW_H_
+#pragma once
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include "StateManager.h"
 
 struct GLFWwindow;
 
@@ -17,6 +17,8 @@ public:
     static GLint lastX;
     static GLint lastY;
 
+	static CStateManager* m_pStateManager;
+
     static void Initialize_objects();
     static void Clean_up();
     static GLFWwindow* Create_window(int width, int height);
@@ -28,4 +30,3 @@ public:
     static void Mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 };
 
-#endif

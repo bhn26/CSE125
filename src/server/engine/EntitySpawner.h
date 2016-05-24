@@ -16,10 +16,10 @@ private:
 	std::map<std::pair<int, unsigned int>, Entity* > entities;
 	static EntitySpawner *spawnInstance;
 	EntitySpawner();
-	unsigned int oid0;  // player
-	unsigned int oid1;  // flag
-	unsigned int oid2;  // bullet
-	unsigned int oid3;  // collectable
+	unsigned int oid_player;  // player
+	unsigned int oid_flag;  // flag
+	unsigned int oid_bullet;  // bullet
+	unsigned int oid_collectable;  // collectable
 
 public:
 

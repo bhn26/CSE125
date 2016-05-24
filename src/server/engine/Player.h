@@ -15,7 +15,6 @@ private:
 
 	int teamId;
 	PosInfo position;
-	btRigidBody* playerRigidBody;
 	std::vector<std::shared_ptr<Flag>> *flags;
 	int jumpSem;
 	int hitPoints;
@@ -37,15 +36,6 @@ public:
 
 	//TODO *********************************
 	void PrintPlayerVelocity();
-
-	// Return current positioning of Player
-	btVector3 GetPlayerPosition();
-
-	// Return current rotation quaternion of Player
-	btQuaternion GetPlayerRotation();
-
-	// Sets player rotation using quarternion
-	void SetPlayerRotation(float x, float y, float z, float w);
 
 	// Makes the player jump
 	void JumpPlayer();

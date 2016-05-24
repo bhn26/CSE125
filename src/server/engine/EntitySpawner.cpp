@@ -19,10 +19,10 @@ EntitySpawner* EntitySpawner::instance()
 
 EntitySpawner::EntitySpawner()
 {
-	oid0 = 0;
-	oid1 = 0;
-	oid2 = 0;
-	oid3 = 0;
+	oid_player = 0;
+	oid_flag = 0;
+	oid_bullet = 0;
+	oid_collectable = 0;
 }
 
 EntitySpawner::~EntitySpawner(){}
@@ -30,9 +30,9 @@ EntitySpawner::~EntitySpawner(){}
 Player* EntitySpawner::spawnPlayer(int teamid, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld)
 {
 	// Create player and add to Entity Map
-	Player* newPlayer = new Player(oid0, teamid, pos, physicsWorld);
-	AddEntity(0, oid0, newPlayer);
-	oid0++;
+	Player* newPlayer = new Player(oid_player, teamid, pos, physicsWorld);
+	AddEntity(0, oid_player, newPlayer);
+	oid_player++;
 
 	// Send Player Spawn packet
 	btVector3 vec = newPlayer->GetEntityPosition();
@@ -51,9 +51,9 @@ Player* EntitySpawner::spawnPlayer(int teamid, PosInfo pos, btDiscreteDynamicsWo
 Flag*  EntitySpawner::spawnFlag(PosInfo pos, btDiscreteDynamicsWorld* physicsWorld)
 {
 	// Create flag and add to Entity Map
-	Flag* newFlag = new Flag(oid1, pos, physicsWorld);
-	AddEntity(1, oid1, newFlag);
-	oid1++;
+	Flag* newFlag = new Flag(oid_flag, pos, physicsWorld);
+	AddEntity(1, oid_flag, newFlag);
+	oid_flag++;
 
 	// Send Flag Spawn packet
 	btVector3 vec = newFlag->GetEntityPosition();
@@ -72,9 +72,9 @@ Flag*  EntitySpawner::spawnFlag(PosInfo pos, btDiscreteDynamicsWorld* physicsWor
 Bullet* EntitySpawner::spawnBullet(int playerid, int teamid, int damage, const btVector3* pos, btVector3* velocity, btDiscreteDynamicsWorld* physicsWorld)
 {
 	// Create Bullet and add to Entity Map
-	Bullet* fireProjectile = new Bullet(oid2, playerid, teamid, damage, pos, velocity, physicsWorld);
-	AddEntity(2, oid2, fireProjectile);
-	oid2++;
+	Bullet* fireProjectile = new Bullet(oid_bullet, playerid, teamid, damage, pos, velocity, physicsWorld);
+	AddEntity(2, oid_bullet, fireProjectile);
+	oid_bullet++;
 
 	// Send Flag Spawn packet
 	btVector3 vec = fireProjectile->GetEntityPosition();
@@ -93,9 +93,9 @@ Bullet* EntitySpawner::spawnBullet(int playerid, int teamid, int damage, const b
 
 Collectable* EntitySpawner::spawnCollectable(int objectid, PosInfo pos, btDiscreteDynamicsWorld* curworld)
 {
-	Collectable* ranCollectable = new Collectable(oid3, pos, curworld);
-	AddEntity(3, oid3, ranCollectable);
-	oid3++;
+	Collectable* ranCollectable = new Collectable(oid_collectable, pos, curworld);
+	AddEntity(3, oid_collectable, ranCollectable);
+	oid_collectable++;
 
 	// Send Flag Spawn packet
 	btVector3 vec = ranCollectable->GetEntityPosition();

@@ -8,7 +8,7 @@
 #include <GL/glew.h> // Contains all the necessery OpenGL includes
 #include <glm/gtc/matrix_transform.hpp>
 
-Mesh::Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices, std::vector<Texture> textures)
+Mesh::Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices, std::vector<Mesh::Texture> textures)
 {
     this->vertices = vertices;
     this->indices = indices;
@@ -20,12 +20,12 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices, std::vecto
 
 Mesh::~Mesh()
 {
-    if (VAO)
-        glDeleteBuffers(1, &VAO);
-    if (VBO)
-        glDeleteBuffers(1, &VBO);
-    if (EBO)
-        glDeleteBuffers(1, &EBO);
+    if (vao)
+        glDeleteBuffers(1, &vao);
+    if (vbo)
+        glDeleteBuffers(1, &vbo);
+    if (ebo)
+        glDeleteBuffers(1, &ebo);
 }
 
 void Mesh::Draw(const Shader* shader)
@@ -59,7 +59,7 @@ void Mesh::Draw(const Shader* shader)
     glUniform1f(shader->GetUniform("material.shininess"), 16.0f);
 
     // Draw mesh
-    glBindVertexArray(this->VAO);
+    glBindVertexArray(this->vao);
     glDrawElements(GL_TRIANGLES, this->indices.size(), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 
@@ -75,19 +75,19 @@ void Mesh::Draw(const Shader* shader)
 void Mesh::SetupMesh()
 {
     // Create buffers/arrays
-    glGenVertexArrays(1, &this->VAO);
-    glGenBuffers(1, &this->VBO);
-    glGenBuffers(1, &this->EBO);
+    glGenVertexArrays(1, &this->vao);
+    glGenBuffers(1, &this->vbo);
+    glGenBuffers(1, &this->ebo);
 
-    glBindVertexArray(this->VAO);
+    glBindVertexArray(this->vao);
     // Load data into vertex buffers
-    glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
     // A great thing about structs is that their memory layout is sequential for all its items.
     // The effect is that we can simply pass a pointer to the struct and it translates perfectly to a glm::vec3/2 array which
     // again translates to 3/2 floats which translates to a byte array.
     glBufferData(GL_ARRAY_BUFFER, this->vertices.size() * sizeof(Vertex), &this->vertices[0], GL_STATIC_DRAW);
 
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->EBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ebo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, this->indices.size() * sizeof(GLuint), &this->indices[0], GL_STATIC_DRAW);
 
     // Set the vertex attribute pointers

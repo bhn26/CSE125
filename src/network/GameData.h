@@ -52,14 +52,17 @@ struct GameInfo
 // Position info of object
 struct PosInfo : GameInfo
 {
+	// general info
+	int id; // client id
+	int team_id; 
 
-	int oid;
-	ClassId cid;
+	int oid; // object id
+	ClassId cid; // class id
 
 	// object coordinates
     float x;
-    float y;
-    float z;
+	float y;
+	float z;
 
     int direction; // remove later?
 

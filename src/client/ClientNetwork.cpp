@@ -1,6 +1,6 @@
 
 #include "ClientNetwork.h"
-
+#include "ConfigManager.h"
 
 ClientNetwork::ClientNetwork(void)
 {
@@ -23,18 +23,26 @@ ClientNetwork::ClientNetwork(void)
         exit(1);
     }
 
-
-
     // set address info
     ZeroMemory( &hints, sizeof(hints) );
     hints.ai_family = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_protocol = IPPROTO_TCP;  //TCP connection!!!
-
 	
-    //resolve server address and port 
-    //iResult = getaddrinfo("137.110.92.158", DEFAULT_PORT, &hints, &result);
-    iResult = getaddrinfo("127.0.0.1", DEFAULT_PORT, &hints, &result);
+	ConfigManager::instance()->LoadConfigs("eggs.cfg");
+	ip = ConfigManager::instance()->GetConfigValue("ip");
+	port = ConfigManager::instance()->GetConfigValue("port");
+
+	//resolve server address and port 
+	if (std::string(ip).size() == 0 || std::string(port).size() == 0)
+	{
+		printf("failed to read from config file, using defaults\n");
+		iResult = getaddrinfo(DEFAULT_IP, DEFAULT_PORT, &hints, &result);
+	}
+	else
+	{
+		iResult = getaddrinfo(ip.c_str(), port.c_str(), &hints, &result);
+	}
 
     if( iResult != 0 ) 
     {

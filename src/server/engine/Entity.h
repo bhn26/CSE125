@@ -25,8 +25,12 @@ public:
 
 	btVector3 GetEntityPosition();
 
+	void Move(btVector3* changeVelocity);
+
 	// Return current rotation quaternion of Player
 	btQuaternion GetEntityRotation();
+
+	void SetEntityRotation(float x, float y, float z, float w);
 
 	// Returns object id
 	int GetObjectId();

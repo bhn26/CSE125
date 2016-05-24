@@ -4,9 +4,8 @@
 #include "Flag.h"
 #include "Peck.h"
 
-
-Player::Player(int objectid, int teamid, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld) : Entity(ClassId::PLAYER, objectid, physicsWorld) {
-
+Player::Player(int objectid, int teamid, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld) : Entity(ClassId::PLAYER, objectid, physicsWorld) 
+{
 	btCollisionShape* playerShape = new btCylinderShape(btVector3(1, 1, 1));
 	// Create player physics object
 	btDefaultMotionState*playerMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(pos.x, pos.y, pos.z)));
@@ -18,6 +17,8 @@ Player::Player(int objectid, int teamid, PosInfo pos, btDiscreteDynamicsWorld* p
 	// only allow rotation around Y-axis
 	pRigidBody->setAngularFactor(btVector3(0,1,0));
 	pRigidBody->forceActivationState(DISABLE_DEACTIVATION);
+    pRigidBody->setDamping((btScalar)0.1, (btScalar)1);
+	pRigidBody->setFriction((btScalar) 10);
 	physicsWorld->addRigidBody(pRigidBody);
 
 	// Set Player protected fields
@@ -50,42 +51,7 @@ void Player::PrintPlayerVelocity()
 	btTransform currentTrans;
 	entityRigidBody->getMotionState()->getWorldTransform(currentTrans);
 	btMatrix3x3 currentOrientation = currentTrans.getBasis();
-	printf("current velocity %f, %f, %f\n", float(entityRigidBody->getLinearVelocity()[0]), float(playerRigidBody->getLinearVelocity()[1]), float(playerRigidBody->getLinearVelocity()[2]));
-}
-
-void Player::Move(btVector3* changeVelocity) {
-	//Calculate new velocity
-	btTransform currentTrans;
-	entityRigidBody->getMotionState()->getWorldTransform(currentTrans);
-	btMatrix3x3 currentOrientation = currentTrans.getBasis();
-	btVector3 newVelocity = currentOrientation * (*changeVelocity);
-
-	// set new velocity
-	entityRigidBody->setLinearVelocity(newVelocity);
-	//printf("%d: world pos object = %f,%f,%f\n", id, float(currentTrans.getOrigin().getX()), float(currentTrans.getOrigin().getY()), float(currentTrans.getOrigin().getZ()));
-	//printf("current velocity %f, %f, %f\n", float(entityRigidBody->getLinearVelocity()[0]), float( playerRigidBody->getLinearVelocity()[1]), float(playerRigidBody->getLinearVelocity()[2]));
-	//entityRigidBody->activate();
-}
-
-void Player::Rotate(float v_rotation, float h_rotation) {
-	//position.v_rotation = v_rotation;
-	//position.h_rotation = h_rotation;
-}
-
-
-btQuaternion Player::GetPlayerRotation()
-{
-	printf("ERROR!!  Should call GetEntityRotation()");
-	return GetEntityRotation();
-}
-
-void Player::SetPlayerRotation(float x, float y, float z, float w)
-{
-	btQuaternion* playerRotation = new btQuaternion(x, y, z, w);
-	btTransform currentTrans;
-	entityRigidBody->getMotionState()->getWorldTransform(currentTrans);
-	currentTrans.setRotation((*playerRotation));
-	entityRigidBody->setCenterOfMassTransform(currentTrans);
+	//printf("current velocity %f, %f, %f\n", float(entityRigidBody->getLinearVelocity()[0]), float(playerRigidBody->getLinearVelocity()[1]), float(playerRigidBody->getLinearVelocity()[2]));
 }
 
 void Player::JumpPlayer()
@@ -95,8 +61,8 @@ void Player::JumpPlayer()
 		// Change jump semaphore, change upward y-axis velocity
 		jumpSem = 0;
 		btVector3 curVelocity = entityRigidBody->getLinearVelocity();
-		// setting upward velocity to 5
-		curVelocity[1] = 5;
+		// setting upward velocity to 3
+		curVelocity[1] = 3;
 		entityRigidBody->setLinearVelocity(curVelocity);
 	}
 }
@@ -135,7 +101,7 @@ int Player::GetTeamId()
 	btTransform currentTrans;
 	entityRigidBody->getMotionState()->getWorldTransform(currentTrans);
 	btMatrix3x3 currentOrientation = currentTrans.getBasis();
-	playerWeapon->UseWeapon(&(entityRigidBody->getCenterOfMassPosition()), &currentOrientation, this->objectId, this->teamId);
+	playerWeapon->UseWeapon(&(entityRigidBody->getCenterOfMassPosition()), &currentOrientation, this->objectId, this->teamId, this);
 	printf("player with objId: %d used weapon\n", objectId);
 }
 
@@ -169,6 +135,6 @@ void Player::UsePeck()
 	btTransform currentTrans;
 	entityRigidBody->getMotionState()->getWorldTransform(currentTrans);
 	btMatrix3x3 currentOrientation = currentTrans.getBasis();
-	peckWeapon->UseWeapon(&(entityRigidBody->getCenterOfMassPosition()), &currentOrientation, this->objectId, this->teamId);
+	peckWeapon->UseWeapon(&(entityRigidBody->getCenterOfMassPosition()), &currentOrientation, this->objectId, this->teamId, this);
 	printf("player with objId: %d used peck! \n", objectId);
 }
