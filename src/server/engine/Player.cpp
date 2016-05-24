@@ -1,5 +1,6 @@
 #include "Player.h"
 #include "ObjectId.h"
+#include "server\ServerGame.h"
 
 Player::Player(int id, int teamid, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld) {
 
@@ -111,15 +112,20 @@ void Player::ResetJump()
 	(this->jumpSem) = 1;
 }
 
-void Player::AcquireFlag(std::shared_ptr<Flag> flag)
+void Player::AcquireFlag(std::shared_ptr<Flag> flag) 
 {
 	// need to remove the flag from the map
 	flags->push_back(flag);
 	printf("FLAG ACQUIRED\n");
+
+	// note - individual scores are updated with move packets
+	ServerGame::instance()->IncScore(teamId, 1);
 }
 
 void Player::LoseFlags()
 {
+	ServerGame::instance()->DecScore(teamId, flags->size());
+
 	// Change this, we need the flags to come out of the player back into the world
 	flags->clear();
 }

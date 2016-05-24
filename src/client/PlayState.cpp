@@ -104,8 +104,23 @@ void CPlayState::Draw()
 		Scene::Instance()->Draw();
 	}
 	// TEAM SCORES
-	TextRenderer::RenderText("Team 0: ", 25, 25, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
-	TextRenderer::RenderText("Team 1: ", Window::width - 175, 25, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+	char score0[10];
+	strcpy_s(score0, "Team 0: ");
+	strcat_s(score0, std::to_string(ClientGame::instance()->GetScores()[0]).c_str());
+	TextRenderer::RenderText(score0, 25, 25, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+
+	char score1[10];
+	strcpy_s(score1, "Team 1: ");
+	strcat_s(score1, std::to_string(ClientGame::instance()->GetScores()[1]).c_str());
+	TextRenderer::RenderText(score1, Window::width - 175, 25, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+
+	// NEUTRAL EGGS
+	int n = 2 * (ClientGame::Team0().size() + ClientGame::Team1().size());
+	n = n - ClientGame::instance()->GetScores()[0] - ClientGame::instance()->GetScores()[1];
+	char neutral[20];
+	strcpy_s(neutral, "Neutral: ");
+	strcat_s(neutral, std::to_string(n).c_str());
+	TextRenderer::RenderText(neutral, Window::width/2 - 175, 25, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 
 	// SELF NUMBER OF EGGS
 	if (Scene::Instance()->GetPlayer() != NULL) {

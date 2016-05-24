@@ -52,6 +52,8 @@ public:
 
 	void sendJumpPacket();
 
+	void receiveScorePacket(int offset);
+
 	bool hasStarted() { return game_started; }
 
 	std::shared_ptr<Player> FindTarget(int tid);
@@ -75,6 +77,8 @@ public:
 	static std::vector<int> Team0() { return cg->team0; }
 	static std::vector<int> Team1() { return cg->team1; }
 
+	int * GetScores() { return scores; };
+
 private:
     ClientGame(void);
     ~ClientGame(void);
@@ -86,6 +90,8 @@ private:
 
 	std::vector <int> team0;
 	std::vector <int> team1;
+
+	int scores[2];
 
 	int tick = 0;
 

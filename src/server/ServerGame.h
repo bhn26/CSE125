@@ -47,6 +47,8 @@ public:
 
 	void receiveJumpPacket(int offset);
 
+	void sendScorePacket();
+
 	static void instantiate()
 	{
 		if (sg == NULL)
@@ -54,6 +56,9 @@ public:
 	}
 
 	static ServerGame* instance() { return sg; }
+
+	void IncScore(int team, int n) { scores[team] += n; };
+	void DecScore(int team, int n) { scores[team] -= n; ; }
 
 private:
 	ServerGame(void);
@@ -80,4 +85,6 @@ private:
 	// data buffer
    char network_data[MAX_PACKET_SIZE];
 
+   // SCORES
+   int scores[2];
 };

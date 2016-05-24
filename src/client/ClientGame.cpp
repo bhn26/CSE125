@@ -288,6 +288,15 @@ void ClientGame::sendJumpPacket()
     NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
 }
 
+void ClientGame::receiveScorePacket(int offset) {
+	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
+	struct ScoreInfo* s = (struct ScoreInfo *) &(dat->buf);
+
+	printf("received a score packet t0: %d   t1: %d\n", s->t0_score, s->t1_score);
+
+	scores[0] = s->t0_score;
+	scores[1] = s->t1_score;
+}
 
 void ClientGame::update()
 {
@@ -338,6 +347,10 @@ void ClientGame::update()
 
 			case V_ROTATION_EVENT:
 				receiveRotationPacket(i + sizeof(PacketHeader));
+				break;
+
+			case UPDATE_SCORE:
+				receiveScorePacket(i + sizeof(PacketHeader));
 				break;
 
             default:

@@ -31,8 +31,9 @@ enum MoveType {
 
 enum GameDataId 
 {
-    POS_OBJ = 0,
-	REM_OBJ = 1
+    POS_OBJ,
+	REM_OBJ,
+	SCORE_OBJ
 };
 
 struct GameInfo
@@ -96,6 +97,20 @@ struct RemInfo : GameInfo
 
 	void deserialize(char * data) {
 		memcpy(this, data, sizeof(RemInfo));
+	}
+};
+
+// team scores
+struct ScoreInfo : GameInfo {
+	int t0_score;
+	int t1_score;
+
+	void serialize(char * data) {
+		memcpy(data, this, sizeof(ScoreInfo));
+	}
+
+	void deserialize(char * data) {
+		memcpy(this, data, sizeof(ScoreInfo));
 	}
 };
 

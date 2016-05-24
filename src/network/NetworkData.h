@@ -24,6 +24,8 @@ enum PacketTypes
     V_ROTATION_EVENT,
 
 	JUMP_EVENT,
+
+	UPDATE_SCORE
 };
 
 struct PacketHeader

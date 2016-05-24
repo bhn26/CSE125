@@ -428,3 +428,24 @@ void ServerGame::receiveJumpPacket(int offset)
 
 	engine->GetWorld()->GetPlayer(hdr->sender_id)->JumpPlayer();
 }
+
+void ServerGame::sendScorePacket() {
+	Packet packet;
+	packet.hdr.packet_type = UPDATE_SCORE;
+
+	const unsigned int packet_size = sizeof(Packet);
+
+	char packet_data[packet_size];
+
+	packet.dat.game_data_id = SCORE_OBJ;
+
+	ScoreInfo s;
+	s.t0_score = scores[0];
+	s.t1_score = scores[1];
+
+	s.serialize(packet.dat.buf);
+
+	packet.serialize(packet_data);
+
+	network->sendToAll(packet_data, packet_size);
+}
