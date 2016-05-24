@@ -298,6 +298,21 @@ void ClientGame::receiveScorePacket(int offset) {
 	scores[1] = s->t1_score;
 }
 
+void ClientGame::receiveGameOverPacket(int offset) {
+	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
+	struct ScoreInfo* s = (struct ScoreInfo *) &(dat->buf);
+
+	if (s->t0_score != 0) { // t0 win
+		winner = 0;
+	}
+	else { // t1 win
+		winner = 1;
+	}
+
+	printf("Team %d won!\n", winner);
+	// change state to game over screen
+}
+
 void ClientGame::update()
 {
     Packet packet;
@@ -351,6 +366,10 @@ void ClientGame::update()
 
 			case UPDATE_SCORE:
 				receiveScorePacket(i + sizeof(PacketHeader));
+				break;
+
+			case GAME_OVER:
+				receiveGameOverPacket(i + sizeof(PacketHeader));
 				break;
 
             default:

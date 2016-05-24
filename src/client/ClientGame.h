@@ -54,6 +54,8 @@ public:
 
 	void receiveScorePacket(int offset);
 
+	void receiveGameOverPacket(int offset);
+
 	bool hasStarted() { return game_started; }
 
 	std::shared_ptr<Player> FindTarget(int tid);
@@ -92,6 +94,7 @@ private:
 	std::vector <int> team1;
 
 	int scores[2];
+	int winner; // set on receipt of game over packet
 
 	int tick = 0;
 
