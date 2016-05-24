@@ -121,6 +121,12 @@ void Player::AcquireFlag(std::shared_ptr<Flag> flag)
 	// note - individual scores are updated with move packets
 	ServerGame::instance()->IncScore(teamId, 1);
 	ServerGame::instance()->sendScorePacket();
+
+	// check if your team won
+	int * scores = ServerGame::instance()->GetScores();
+	if(scores[teamId] == ServerGame::instance()->NumTotalEggs()) {
+		ServerGame::instance()->sendGameOverPacket(teamId);
+	}
 }
 
 void Player::LoseFlags()

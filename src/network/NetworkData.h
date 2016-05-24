@@ -25,7 +25,9 @@ enum PacketTypes
 
 	JUMP_EVENT,
 
-	UPDATE_SCORE
+	UPDATE_SCORE,
+
+	GAME_OVER
 };
 
 struct PacketHeader

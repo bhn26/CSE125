@@ -450,3 +450,25 @@ void ServerGame::sendScorePacket() {
 
 	network->sendToAll(packet_data, packet_size);
 }
+
+void ServerGame::sendGameOverPacket(int winner) {
+	Packet packet;
+	packet.hdr.packet_type = GAME_OVER;
+
+	const unsigned int packet_size = sizeof(Packet);
+
+	char packet_data[packet_size];
+
+	packet.dat.game_data_id = SCORE_OBJ;
+
+	ScoreInfo s;
+	s.t0_score = scores[0];
+	s.t1_score = scores[1];
+
+	printf("sending game over\n");
+	s.serialize(packet.dat.buf);
+
+	packet.serialize(packet_data);
+
+	network->sendToAll(packet_data, packet_size);
+}

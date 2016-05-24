@@ -48,6 +48,7 @@ public:
 	void receiveJumpPacket(int offset);
 
 	void sendScorePacket();
+	void sendGameOverPacket(int winner);
 
 	static void instantiate()
 	{
@@ -60,6 +61,9 @@ public:
 	void IncScore(int team, int n) { scores[team] += n; };
 	void DecScore(int team, int n) { scores[team] -= n; ; }
 
+	int * GetScores() { return scores; }
+
+	int NumTotalEggs() { return team_map.size() * 2; };
 	int GetTeam(int player) { return team_map[player]; };
 
 private:
