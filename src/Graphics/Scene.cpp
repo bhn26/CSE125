@@ -215,14 +215,14 @@ std::unique_ptr<Entity>& Scene::GetEntity(int cid, int oid)
 }
 
 glm::vec2 Scene::Get2D(glm::vec3 coords, glm::mat4 view, glm::mat4 projection/*perspective matrix */, int width, int height) {
-	glm::mat4 viewProjectionMatrix = projection * view;
+    glm::mat4 viewProjectionMatrix = projection * view;
 
-	//transform world to clipping coordinates
-	glm::vec4 clipping = viewProjectionMatrix * glm::vec4(coords, 1.0f);
-	int winX = (int)std::round(((clipping.x + 1) / 2.0) * width);
+    //transform world to clipping coordinates
+    glm::vec3 clipping = glm::normalize(glm::vec3(viewProjectionMatrix * glm::vec4(coords, 1.0f)));
+    int winX = (int)std::round(((clipping.x + 1) / 2.0) * width);
 
-	//we calculate -point3D.getY() because the screen Y axis is
-	//oriented top->down 
-	int winY = (int)std::round(((1 - clipping.y) / 2.0) * height);
-	return glm::vec2(winX, winY);
+    //we calculate -point3D.getY() because the screen Y axis is
+    //oriented top->down 
+    int winY = (int)std::round(((1 - clipping.y) / 2.0) * height);
+    return glm::vec2(winX, winY);
 }
