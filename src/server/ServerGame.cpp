@@ -181,8 +181,10 @@ void ServerGame::receiveJoinPacket(int offset) {
 			sendJoinPacket(it->first);
 		}
 	}
-		
+	
+	printf("(before) team_map size = %d", team_map.size());
 	team_map[client] = pi->team_id;
+	printf("team_map size = %d", team_map.size());
 	sendJoinPacket(client);
 };
 
@@ -443,7 +445,7 @@ void ServerGame::sendScorePacket() {
 	s.t0_score = scores[0];
 	s.t1_score = scores[1];
 
-	printf("sending score packet: %d, %d", s.t0_score, s.t1_score);
+	printf("sending score packet: %d, %d\n", s.t0_score, s.t1_score);
 	s.serialize(packet.dat.buf);
 
 	packet.serialize(packet_data);

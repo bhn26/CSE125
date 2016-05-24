@@ -124,7 +124,9 @@ void Player::AcquireFlag(std::shared_ptr<Flag> flag)
 
 	// check if your team won
 	int * scores = ServerGame::instance()->GetScores();
+	printf("Team %d has %d out of %d eggs\n", teamId, scores[teamId], ServerGame::instance()->NumTotalEggs());
 	if(scores[teamId] == ServerGame::instance()->NumTotalEggs()) {
+		printf("sending game over packet\n");
 		ServerGame::instance()->sendGameOverPacket(teamId);
 	}
 }

@@ -138,7 +138,7 @@ void World::Init() {
 
 PosInfo World::SpawnPlayer(PosInfo in)
 {
-
+	// TODO: PosInfo in does not set teamID nor playerID
 	int teamid = ServerGame::instance()->GetTeam(in.id);
 	std::shared_ptr<Player> player = std::shared_ptr<Player>(new Player(oid, teamid, in, curWorld));
 	btVector3 vec = player->GetPlayerPosition();

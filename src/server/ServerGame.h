@@ -6,6 +6,7 @@
 #include <btBulletDynamicsCommon.h>
 
 #include <map>
+#include <iostream>
 
 class ServerGame
 {
@@ -63,8 +64,18 @@ public:
 
 	int * GetScores() { return scores; }
 
-	int NumTotalEggs() { return team_map.size() * 2; };
-	int GetTeam(int player) { return team_map[player]; };
+	int NumTotalEggs() {
+		for (std::map<int, int>::iterator it = team_map.begin(); it != team_map.end(); it++) {
+			std::cout << it->first << " " << it->second << endl;
+		}
+		return team_map.size() * 2;
+	};
+	int GetTeam(int player) const
+	{
+		if (team_map.find(player) != team_map.end())
+			return team_map.at(player);
+		return -1;
+	};
 
 private:
 	ServerGame(void);
