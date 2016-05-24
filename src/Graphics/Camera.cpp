@@ -14,7 +14,7 @@ const GLfloat Camera::ZNEAR = 0.1f;
 const GLfloat Camera::ZFAR = 1000.0f;
 
 Camera::Camera(glm::vec3 position, glm::vec3 up, GLfloat yaw, GLfloat pitch)
-    : position(position), worldUp(up), front(glm::vec3(0.0f, 0.0f, -1.0f)), yaw(yaw), pitch(pitch), 
+    : position(position), worldUp(up), front(glm::vec3(0.0f, -1.0f, -1.0f)), yaw(yaw), pitch(pitch), 
         movementSpeed(SPEED), mouseSensitivity(SENSITIVTY), zoom(ZOOM), zNear(ZNEAR), zFar(ZFAR)
 
 {

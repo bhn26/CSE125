@@ -199,6 +199,7 @@ void World::UpdateWorld()
 			// TODO, if Obj B is collectable, HandleCollectable();
 			if (obB->getUserIndex() == COLLECTABLE)
 			{
+
 				// Handle Collectable Collection
 				Collectable* collectObj = (Collectable*)obB->getUserPointer();
 				collectObj->HandleCollect(collidePlayer);
@@ -208,6 +209,7 @@ void World::UpdateWorld()
 			// if Obj B is Flag
 			else if (obB->getUserIndex() == FLAG)
 			{
+
 				// Handle Flag Collection
 				Flag * collideFlag = (Flag *)obB->getUserPointer();
 				collideFlag->HandleCollectable(collidePlayer);
@@ -218,6 +220,7 @@ void World::UpdateWorld()
 			// Handles Jump Semaphore
 			else // if (++y % 50000 == 0) 
 			{
+
 				int numContacts = contactManifold->getNumContacts();
 				for (int j = 0; j < numContacts; j++)
 				{
@@ -228,11 +231,14 @@ void World::UpdateWorld()
 						const btVector3& ptB = pt.getPositionWorldOnB();
 						const btVector3& normalOnB = pt.m_normalWorldOnB;
 
+						printf("hi num contacts are %d\n", numContacts);
+
 						// Reset Jump Semaphore, detects collision off of non-player, error of .1
 						// TODO: FIX MAGIC NUMBER OF PLAYER HALFEXTENT = 1
 						if ((collidePlayer->GetEntityPosition()).getY() - 1 > (ptB.getY() - .1) &&
 							(collidePlayer->GetEntityPosition()).getY() - 1 < (ptB.getY() + .1))
 						{
+							printf("resetting jump\n");
 							collidePlayer->ResetJump();
 						}
 						
@@ -253,7 +259,7 @@ void World::UpdateWorld()
 		{
 			// Grab Player Object
 			Player * collidePlayer = (Player *)obB->getUserPointer();
-
+			printf("hi im a player B");
 			// If Obj A is collectable, HandleCollectable();
 			if (obA->getUserIndex() == COLLECTABLE)
 			{
@@ -291,6 +297,8 @@ void World::UpdateWorld()
 						if ((collidePlayer->GetEntityPosition()).getY() - 1 > (ptA.getY()- .1) &&
 							(collidePlayer->GetEntityPosition()).getY() - 1 < (ptA.getY() + .1))
 						{
+							printf("resetting jump\n");
+
 							collidePlayer->ResetJump();
 						}
 
@@ -329,7 +337,7 @@ void World::UpdateWorld()
 		for (std::map<std::pair<int, unsigned int>, Entity*>::iterator it = dynamicMap->begin(); it != dynamicMap->end(); it++)
 		{
 			btVector3 vec = it->second->GetEntityPosition();
-			printf(" Dynamic object classid: %d, objid: %d, at (%f,%f,%f)\n", it->second->GetClassId(), it->second->GetObjectId(), vec.getX(), vec.getY(), vec.getZ());
+			//printf(" Dynamic object classid: %d, objid: %d, at (%f,%f,%f)\n", it->second->GetClassId(), it->second->GetObjectId(), vec.getX(), vec.getY(), vec.getZ());
 		}
 
 		/*

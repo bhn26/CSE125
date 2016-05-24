@@ -101,7 +101,6 @@ void CPlayState::Draw()
 	ssScore << m_ulCurrentScore;
 	m_pScoreControl->SetText(ssScore.str());
 	m_pScoreControl->Draw();*/
-
 	if (!m_bGameOver)
 	{
 		Scene::Instance()->Draw();

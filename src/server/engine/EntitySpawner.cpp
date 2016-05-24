@@ -31,8 +31,10 @@ Player* EntitySpawner::spawnPlayer(int teamid, PosInfo pos, btDiscreteDynamicsWo
 {
 	// Create player and add to Entity Map
 	Player* newPlayer = new Player(oid_player, teamid, pos, physicsWorld);
-	AddEntity(0, oid_player, newPlayer);
+	AddEntity(ClassId::PLAYER, oid_player, newPlayer);
 	oid_player++;
+
+	btQuaternion quat = newPlayer->GetEntityRotation();
 
 	// Send Player Spawn packet
 	btVector3 vec = newPlayer->GetEntityPosition();
@@ -44,6 +46,11 @@ Player* EntitySpawner::spawnPlayer(int teamid, PosInfo pos, btDiscreteDynamicsWo
 	out.x = vec.getX();
 	out.y = vec.getY();
 	out.z = vec.getZ();
+	out.rotw = quat.getW();
+	out.rotx = quat.getX();
+	out.roty = quat.getY();
+	out.rotz = quat.getZ();
+	
 	ServerGame::instance()->sendSpawnPacket(out);
 	return newPlayer;
 }
@@ -57,6 +64,7 @@ Flag*  EntitySpawner::spawnFlag(PosInfo pos, btDiscreteDynamicsWorld* physicsWor
 
 	// Send Flag Spawn packet
 	btVector3 vec = newFlag->GetEntityPosition();
+	btQuaternion quat = newFlag->GetEntityRotation();
 	printf("Created flag at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
 
 	PosInfo out;
@@ -65,6 +73,10 @@ Flag*  EntitySpawner::spawnFlag(PosInfo pos, btDiscreteDynamicsWorld* physicsWor
 	out.x = vec.getX();
 	out.y = vec.getY();
 	out.z = vec.getZ();
+	out.rotw = quat.getW();
+	out.rotx = quat.getX();
+	out.roty = quat.getY();
+	out.rotz = quat.getZ();
 	ServerGame::instance()->sendSpawnPacket(out);
 	return newFlag;
 }
@@ -78,6 +90,7 @@ Bullet* EntitySpawner::spawnBullet(int playerid, int teamid, int damage, const b
 
 	// Send Flag Spawn packet
 	btVector3 vec = fireProjectile->GetEntityPosition();
+	btQuaternion quat = fireProjectile->GetEntityRotation();
 	printf("Created Bullet at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
 
 	PosInfo out;
@@ -86,6 +99,10 @@ Bullet* EntitySpawner::spawnBullet(int playerid, int teamid, int damage, const b
 	out.x = vec.getX();
 	out.y = vec.getY();
 	out.z = vec.getZ();
+	out.rotw = quat.getW();
+	out.rotx = quat.getX();
+	out.roty = quat.getY();
+	out.rotz = quat.getZ();
 	ServerGame::instance()->sendSpawnPacket(out);
 	return fireProjectile;
 }
@@ -99,6 +116,7 @@ Collectable* EntitySpawner::spawnCollectable(int objectid, PosInfo pos, btDiscre
 
 	// Send Flag Spawn packet
 	btVector3 vec = ranCollectable->GetEntityPosition();
+	btQuaternion quat = ranCollectable->GetEntityRotation();
 	printf("Created Collectable at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
 
 	PosInfo out;
@@ -107,6 +125,10 @@ Collectable* EntitySpawner::spawnCollectable(int objectid, PosInfo pos, btDiscre
 	out.x = vec.getX();
 	out.y = vec.getY();
 	out.z = vec.getZ();
+	out.rotw = quat.getW();
+	out.rotx = quat.getX();
+	out.roty = quat.getY();
+	out.rotz = quat.getZ();
 	ServerGame::instance()->sendSpawnPacket(out);
 	return ranCollectable;
 }
