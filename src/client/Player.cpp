@@ -223,7 +223,7 @@ void Player::CalculateCameraPosition()
 {
     camera->position = Position() + (glm::mat3(this->toWorld)
         * glm::mat3(glm::rotate(glm::mat4(1.0f), this->camAngle, relativeCamPerpendicular))
-        * relativeCamPosition);     // Divide by scale
+        * relativeCamPosition) / this->scale;     // Divide by scale
 }
 
 void Player::CalculateCameraFront()

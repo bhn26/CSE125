@@ -7,8 +7,8 @@
 
 #include <string>
 #include <unordered_map>
-#include "../Graphics/Objects/Entity.h"
-#include "../Graphics/Animation/AnimationPlayer.h"
+#include "Graphics/Objects/Entity.h"
+#include "Graphics/Animation/AnimationPlayer.h"
 
 class Camera;
 class Model;
@@ -77,8 +77,8 @@ public:
     void ChangeState(State state);                  // Will change model state and player state
     void SetState(State state) { m_state = state; }     // Simply Sets the state without changing the model
 
-    int GetScore() const { return num_eggs; };
-    void SetScore(int n) { num_eggs = n; };
+    int GetScore() const override { return num_eggs; };
+    void SetScore(int n) override { num_eggs = n; };
 
     void SetTeam(int team) { team_id = team; }
     int GetTeam() const { return team_id; }
