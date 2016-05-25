@@ -44,54 +44,58 @@ void World::Init() {
 	groundRigidBodyCI.m_friction = .4;
 	btRigidBody* groundRigidBody = new btRigidBody(groundRigidBodyCI);
 	dynamicsWorld->addRigidBody(groundRigidBody);
-	groundRigidBody->setGravity(btVector3(0, .1, 0));
+	groundRigidBody->setGravity(btVector3(0, 0.1, 0));
 	groundRigidBody->setUserIndex(14);
 	// Create Ground Obstacle
 	WorldObstacle* groundwall = new WorldObstacle(z++, groundRigidBody, curWorld);
 	
 	// Add Pos X Wall
-	btCollisionShape* xWallShape = new btStaticPlaneShape(btVector3(btScalar(-1.), btScalar(0.), btScalar(0.)), 0);
-	btDefaultMotionState* xWallMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(WORLD_WIDTH, 0, 0)));
+	//btCollisionShape* xWallShape = new btStaticPlaneShape(btVector3(btScalar(-1.), btScalar(0.), btScalar(0.)), 0);
+	btCollisionShape* xWallShape = new btBoxShape(btVector3(1, WORLD_HEIGHT, WORLD_WIDTH));
+	btDefaultMotionState* xWallMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(WORLD_WIDTH+1, 0, 0)));
 	btRigidBody::btRigidBodyConstructionInfo xWallRigidBodyCI(0, xWallMotionState, xWallShape, btVector3(0, 0, 0));
 	xWallRigidBodyCI.m_friction = .5;
 	btRigidBody* xWallRigidBody = new btRigidBody(xWallRigidBodyCI);
-	xWallRigidBody->setGravity(btVector3(0, 0, 0));
+	xWallRigidBody->setGravity(btVector3(0, 0.1, 0));
 	dynamicsWorld->addRigidBody(xWallRigidBody);
 	xWallRigidBody->setUserIndex(5);
 	// Create X Wall
 	WorldObstacle* xwall = new WorldObstacle(z++, xWallRigidBody, curWorld);
 
 	// Add Neg X Wall
-	btCollisionShape* nxWallShape = new btStaticPlaneShape(btVector3(btScalar(1.), btScalar(0.), btScalar(0.)), 0);
-	btDefaultMotionState* nxWallMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(-WORLD_WIDTH, 0, 0)));
+	//btCollisionShape* nxWallShape = new btStaticPlaneShape(btVector3(btScalar(1.), btScalar(0.), btScalar(0.)), 0);
+	btCollisionShape* nxWallShape = new btBoxShape(btVector3(1, WORLD_HEIGHT, WORLD_WIDTH));
+	btDefaultMotionState* nxWallMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(-(WORLD_WIDTH+1), 0, 0)));
 	btRigidBody::btRigidBodyConstructionInfo nxWallRigidBodyCI(0, nxWallMotionState, nxWallShape, btVector3(0, 0, 0));
 	nxWallRigidBodyCI.m_friction = .5;
 	btRigidBody* nxWallRigidBody = new btRigidBody(nxWallRigidBodyCI);
-	nxWallRigidBody->setGravity(btVector3(0, 0, 0));
+	nxWallRigidBody->setGravity(btVector3(0, 0.1, 0));
 	dynamicsWorld->addRigidBody(nxWallRigidBody);
 	nxWallRigidBody->setUserIndex(6);
 	// Create Neg X Wall
 	WorldObstacle* nxwall = new WorldObstacle(z++, groundRigidBody, curWorld);
 
 	// Add Pos Z Wall
-	btCollisionShape* zWallShape = new btStaticPlaneShape(btVector3(btScalar(0.), btScalar(0.), btScalar(-1.)), 0);
-	btDefaultMotionState* zWallMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 0, WORLD_WIDTH)));
+	//btCollisionShape* zWallShape = new btStaticPlaneShape(btVector3(btScalar(0.), btScalar(0.), btScalar(-1.)), 0);
+	btCollisionShape* zWallShape = new btBoxShape(btVector3(WORLD_WIDTH, WORLD_HEIGHT, 1));
+	btDefaultMotionState* zWallMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 0, WORLD_WIDTH+1)));
 	btRigidBody::btRigidBodyConstructionInfo zWallRigidBodyCI(0, zWallMotionState, zWallShape, btVector3(0, 0, 0));
 	zWallRigidBodyCI.m_friction = .5;
 	btRigidBody* zWallRigidBody = new btRigidBody(zWallRigidBodyCI);
-	zWallRigidBody->setGravity(btVector3(0, 0, 0));
+	zWallRigidBody->setGravity(btVector3(0, 0.1, 0));
 	dynamicsWorld->addRigidBody(zWallRigidBody);
 	zWallRigidBody->setUserIndex(7);
 	// Create Pos Z Wall
 	WorldObstacle* zwall = new WorldObstacle(z++, zWallRigidBody, curWorld);
 
 	// Add Neg Z Wall
-	btCollisionShape* nzWallShape = new btStaticPlaneShape(btVector3(btScalar(0.), btScalar(0.), btScalar(1.)), 0);
-	btDefaultMotionState* nzWallMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 0, -WORLD_WIDTH)));
-	btRigidBody::btRigidBodyConstructionInfo nzWallRigidBodyCI(0, nzWallMotionState, nzWallShape, btVector3(0, 0, 0));
+	//btCollisionShape* nzWallShape = new btStaticPlaneShape(btVector3(btScalar(0.), btScalar(0.), btScalar(1.)), 0);
+	btCollisionShape* nzWallShape = new btBoxShape(btVector3(WORLD_WIDTH, WORLD_HEIGHT, 1));
+	btDefaultMotionState* nzWallMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 0, -(WORLD_WIDTH+1))));
+	btRigidBody::btRigidBodyConstructionInfo nzWallRigidBodyCI(0, nzWallMotionState, zWallShape, btVector3(0, 0, 0));
 	nzWallRigidBodyCI.m_friction = .5;
 	btRigidBody* nzWallRigidBody = new btRigidBody(nzWallRigidBodyCI);
-	nzWallRigidBody->setGravity(btVector3(0, 0, 0));
+	nzWallRigidBody->setGravity(btVector3(0, 0.1, 0));
 	dynamicsWorld->addRigidBody(nzWallRigidBody);
 	nzWallRigidBody->setUserIndex(8);
 	// Create Neg Z Wall

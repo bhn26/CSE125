@@ -177,7 +177,7 @@ void Player::HandleDeath()
 		curFlag->GetRigidBody()->getMotionState()->setWorldTransform(currentTrans);
 		curFlag->GetRigidBody()->setCenterOfMassTransform(currentTrans);
 		deathPos.setY((deathPos.getY() + 4));
-		ranVelocity = btVector3((rand() % 20), (rand() % 20), (rand() % 20));
+		ranVelocity = btVector3((rand() % 14), (rand() % 14), (rand() % 14));
 		printf("random velocity:  x: %f, y: %f, z: %f  \n", ranVelocity.getX(), ranVelocity.getY(), ranVelocity.getZ());
 
 		// add Flag to world
