@@ -161,7 +161,7 @@ void Player::HandleDeath()
 	this->hitPoints = 100;
 
 	btVector3 deathPos = entityRigidBody->getCenterOfMassPosition();
-	deathPos.setY((deathPos.getY() + 2));
+	deathPos.setY((deathPos.getY() + 4));
 	srand(time(NULL));
 	btTransform currentTrans;
 	btVector3 ranVelocity;
@@ -176,8 +176,8 @@ void Player::HandleDeath()
 		currentTrans.setOrigin(deathPos);
 		curFlag->GetRigidBody()->getMotionState()->setWorldTransform(currentTrans);
 		curFlag->GetRigidBody()->setCenterOfMassTransform(currentTrans);
-		deathPos.setY((deathPos.getY() + 1));
-		ranVelocity = btVector3((rand() % 21), (rand() % 21), (rand() % 21));
+		deathPos.setY((deathPos.getY() + 4));
+		ranVelocity = btVector3((rand() % 20), (rand() % 20), (rand() % 20));
 		printf("random velocity:  x: %f, y: %f, z: %f  \n", ranVelocity.getX(), ranVelocity.getY(), ranVelocity.getZ());
 
 		// add Flag to world
@@ -206,7 +206,7 @@ void Player::HandleDeath()
 
 
 	// Teleport Player to a random spot in the world
-	btVector3 ranPos = btVector3((rand() % WORLD_WIDTH), 15, (rand() % WORLD_WIDTH));
+	btVector3 ranPos = btVector3((rand() % WORLD_WIDTH), 25, (rand() % WORLD_WIDTH));
 	this->GetRigidBody()->getMotionState()->getWorldTransform(currentTrans);
 	currentTrans.setOrigin(ranPos);
 	this->GetRigidBody()->getMotionState()->setWorldTransform(currentTrans);

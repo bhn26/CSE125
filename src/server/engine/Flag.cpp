@@ -29,7 +29,7 @@ Flag::Flag(int objid, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld): Entit
 
 Flag::~Flag()
 {
-	if (entityRigidBody)
+    if (entityRigidBody)
 	{
 		printf("----------------------deleting flag body\n");
 		this->curWorld->removeCollisionObject(entityRigidBody);
@@ -42,9 +42,8 @@ Flag::~Flag()
 
 void Flag::HandleCollectable(Player* collidedPlayer)
 {
-	// Give player flag, remove flag from physics, remove flag from entity map
-	//collidedPlayer->AcquireFlag(std::shared_ptr<Flag>(this));
+	// Give player flag AND remove flag from entity map
+	// NOTE: Remove flag from physics world after Tick has been processed
 	collidedPlayer->AcquireFlag(this);
-	this->curWorld->removeCollisionObject(entityRigidBody);
 	EntitySpawner::instance()->RemoveEntity(ClassId::FLAG, (objectId));
 }

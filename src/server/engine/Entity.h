@@ -40,10 +40,12 @@ public:
 
 	btRigidBody* GetRigidBody();
 
-	// Marks this entity to be deleted and ignored
-	void SetToDelete();
+	// Marks this entity to be ignored
+	void SetToMarked();
+
+	void ResetMark();
 
 	// Checks if this entity is set to be deleted, sets collision detection to ignore
-	int DeleteStatus();
+	int MarkStatus();
 
 };

@@ -4,7 +4,7 @@
 
 Bullet::Bullet(int objectid, int playerid, int teamid, int damage, btVector3* pos, btVector3* velocity, btMatrix3x3* rotation, btDiscreteDynamicsWorld* physicsWorld): Entity(ClassId::BULLET, objectid, physicsWorld)
 {
-	btCollisionShape* bulletShape = new btSphereShape(btScalar(.1));
+	btCollisionShape* bulletShape = new btSphereShape(btScalar(0.5));
 
 	//printf("Position:  x: %d, y: %d, z: %d  \n", pos->getX(), pos->getY(), pos->getZ());
 	//printf("Velocity:  x: %d, y: %d, z: %d  \n", velocity->getX(), velocity->getY(), velocity->getZ());
