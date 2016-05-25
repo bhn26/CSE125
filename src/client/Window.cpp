@@ -26,6 +26,7 @@ bool Window::firstMouse = true;
 bool Window::mouseCaptured = false;
 GLint Window::lastX = width / 2;
 GLint Window::lastY = height / 2;
+int i = 0;
 
 CStateManager* Window::m_pStateManager = new CStateManager();
 
@@ -181,22 +182,33 @@ void Window::Key_callback(GLFWwindow* window, int key, int scancode, int action,
                 break;
 			// For adjusting placement in world
 			case GLFW_KEY_UP:
-				Scene::Instance()->GetStaticObject()->ProcessKeyboard(POSITION::P_UP, 1);
+				Scene::Instance()->GetStaticObject(i)->ProcessKeyboard(POSITION::P_UP, 1);
 				break;
 			case GLFW_KEY_DOWN:
-				Scene::Instance()->GetStaticObject()->ProcessKeyboard(POSITION::P_DOWN, 1);
+				Scene::Instance()->GetStaticObject(i)->ProcessKeyboard(POSITION::P_DOWN, 1);
 				break;
 			case GLFW_KEY_LEFT:
-				Scene::Instance()->GetStaticObject()->ProcessKeyboard(POSITION::P_LEFT, 1);
+				Scene::Instance()->GetStaticObject(i)->ProcessKeyboard(POSITION::P_LEFT, 1);
 				break;
 			case GLFW_KEY_RIGHT:
-				Scene::Instance()->GetStaticObject()->ProcessKeyboard(POSITION::P_RIGHT, 1);
+				Scene::Instance()->GetStaticObject(i)->ProcessKeyboard(POSITION::P_RIGHT, 1);
+				break;
+			case GLFW_KEY_F:
+				Scene::Instance()->GetStaticObject(i)->ProcessKeyboard(POSITION::P_FORWARD, 1);
+				break;
+			case GLFW_KEY_B:
+				Scene::Instance()->GetStaticObject(i)->ProcessKeyboard(POSITION::P_BACKWARD, 1);
 				break;
 			case GLFW_KEY_1:
-				Scene::Instance()->GetStaticObject()->ProcessKeyboard(POSITION::P_FORWARD, 1);
+				i++;
+				if (i == Scene::Instance()->GetSize()) i = 0;
 				break;
-			case GLFW_KEY_2:
-				Scene::Instance()->GetStaticObject()->ProcessKeyboard(POSITION::P_BACKWARD, 1);
+			case GLFW_KEY_P:
+				for (int j = 0; j < Scene::Instance()->GetSize(); j++) {
+					std::cout << "Position of StaticObject at [" << j << "]" << std::endl;
+					std::cout << "x: " << Scene::Instance()->GetStaticObject(j)->Position().x << "y : " << Scene::Instance()->GetStaticObject(j)->Position().y << "z : " << Scene::Instance()->GetStaticObject(j)->Position().z << std::endl;
+					std::cout << "----------------------" << std::endl;
+				}
 				break;
             default:
                 break;

@@ -71,7 +71,8 @@ public:
 
     std::unique_ptr<PointLight>& GetPointLight() { return pLight; }
 	Player*& GetPlayer() { return player; }
-	StaticObject* GetStaticObject() { return static_objects[0].get(); }
+	StaticObject* GetStaticObject(int i) { return static_objects[i].get(); }
+	int GetSize() { return static_objects.size(); }
 	std::vector<std::shared_ptr<Player>>& GetPlayers() { return players; };
 	void ClearPlayers() { players.clear(); };
 };

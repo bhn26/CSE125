@@ -41,11 +41,21 @@ void Scene::Setup()
 	barn->Scale(17.0f);
 	barn->Translate(glm::vec3(0.0f, 0.0f, 20.0f));
 
-	// Tractor
-	std::unique_ptr<StaticObject> tractor = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/tractor.obj"));
-	tractor->Scale(12.0f);
-	tractor->Rotate(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-	tractor->Translate(glm::vec3(17.0f, 0.0f, -13.0f));
+	// Tractors
+	std::unique_ptr<StaticObject> red_tractor = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/tractors/red_tractor.obj"));
+	red_tractor->Scale(12.0f);
+	red_tractor->Rotate(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+	red_tractor->Translate(glm::vec3(17.0f, 0.0f, -13.0f));
+
+	std::unique_ptr<StaticObject> green_tractor = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/tractors/green_tractor.obj"));
+	green_tractor->Scale(12.0f);
+	green_tractor->Rotate(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+	green_tractor->Translate(glm::vec3(34.0f, 0.0f, 13.0f));
+
+	std::unique_ptr<StaticObject> orange_tractor = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/tractors/orange_tractor.obj"));
+	orange_tractor->Scale(12.0f);
+	orange_tractor->Rotate(90.0f, glm::vec3(0.0f, -1.0f, 0.0f));
+	orange_tractor->Translate(glm::vec3(-17.0f, 0.0f, -13.0f));
 
 	// Silo
 	std::unique_ptr<StaticObject> silo = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/silo.obj"));
@@ -53,7 +63,7 @@ void Scene::Setup()
 	silo->Translate(glm::vec3(-28.0f, 0.0f, -4.0f));
 
 	// Pumpkin
-	std::unique_ptr<StaticObject> pumpkin = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/pumpkin.obj"));
+	std::unique_ptr<StaticObject> pumpkin = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/pumpkin2.obj"));
 	pumpkin->Translate(glm::vec3(0.0f, 0.0f, -1.0f));
 
 	// Bench
@@ -63,23 +73,25 @@ void Scene::Setup()
 	bench->Rotate(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 
 	// Rocks
-	std::unique_ptr<StaticObject> rocks = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/rocks.obj"));
+	std::unique_ptr<StaticObject> rocks = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/nature/rocks.obj"));
 	rocks->Scale(4.0f);
 	rocks->Translate(glm::vec3(28.0f, 0.2f, -20.0f));
 
 	// Rocks
-	std::unique_ptr<StaticObject> stump = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/stump.obj"));
+	std::unique_ptr<StaticObject> stump = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/nature/stump.obj"));
 	stump->Scale(4.0f);
 	stump->Translate(glm::vec3(-28.0f, 0.2f, -20.0f));
 
 	// Ground
-	std::unique_ptr<StaticObject> ground = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/ground.obj"));
+	std::unique_ptr<StaticObject> ground = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/nature/ground.obj"));
 	ground->Scale(15.0f);
 	ground->Translate(glm::vec3(0.0f, 100.4f, 0.0f));
 
+	// Ground
+	std::unique_ptr<StaticObject> seed = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/pumpkinseed.obj"));
+	seed->Scale(0.5f);
+	seed->Translate(glm::vec3(0.0f, 1.0f, 0.0f));
 
-	//std::unique_ptr<Ground> ground = std::unique_ptr<Ground>(new Ground);
-	//std::unique_ptr<Cube> cube = std::unique_ptr<Cube>(new Cube);
 	grass = std::unique_ptr<Grass>(new Grass);
     cubeMap = std::unique_ptr<CubeMap>(new CubeMap);
     cubeMap->LoadCubeMap();
@@ -87,12 +99,15 @@ void Scene::Setup()
     grass->GetShader() = ShaderManager::Instance()->GetShader("Instancing");
     cubeMap->GetShader() = ShaderManager::Instance()->GetShader("CubeMap");
 
-	//static_objects.push_back(std::move(grass));
 	static_objects.push_back(std::move(barn));
-	static_objects.push_back(std::move(tractor));
+	static_objects.push_back(std::move(red_tractor));
+	static_objects.push_back(std::move(green_tractor));
+	static_objects.push_back(std::move(orange_tractor));
 	static_objects.push_back(std::move(silo));
 	static_objects.push_back(std::move(rocks));
 	static_objects.push_back(std::move(bench));
+	static_objects.push_back(std::move(seed));
+	static_objects.push_back(std::move(pumpkin));
 	static_objects.push_back(std::move(ground));
 }
 

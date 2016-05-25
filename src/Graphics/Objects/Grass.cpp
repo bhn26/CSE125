@@ -12,7 +12,7 @@
 
 Grass::Grass() : Entity()
 {
-	grass = new Model("assets/map/objects/plant.obj");
+	grass = new Model("assets/map/objects/nature/plant.obj");
 
 	// Generate large list of semi-random transformation matrices
 	amount = 10000;
