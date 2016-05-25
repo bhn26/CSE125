@@ -12,6 +12,9 @@ ServerGame::ServerGame(void)
     // id's to assign clients for our table
     client_id = 0;
 	game_started = false;
+	
+	scores[0] = 0;
+	scores[1] = 0;
 
     // set up the server network to listen 
     network = new ServerNetwork(); 
@@ -49,6 +52,7 @@ void ServerGame::update()
 				engine->SpawnRandomFlag();
 			}
 			eggs_spawned = true;
+			Sleep(2000); // should wait for clients to respond
 		}
 		if(!engine->hasInitialSpawned())
 			engine->SendPreSpawn(ready_clients);
@@ -106,8 +110,8 @@ void ServerGame::receiveFromClients()
 					break;
 
 				case IND_SPAWN_EVENT:
-					spawned_clients++;
 					receiveIndSpawnPacket(i + sizeof(PacketHeader));
+					spawned_clients++;
 					break;
 
 				case START_GAME:

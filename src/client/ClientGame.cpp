@@ -69,7 +69,10 @@ void ClientGame::sendInitPacket() {
 void ClientGame::receiveJoinPacket(int offset) {
 	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
 	struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
-	client_team = pi->team_id;
+
+	// set our team if it's for us
+	if(pi->id == client_id)
+		client_team = pi->team_id;
 
 	printf("receiveJoinPacket for player %d on team %d\n", pi->id, pi->team_id);
 	int player = pi->id;
@@ -144,13 +147,13 @@ void ClientGame::sendStartPacket() {
 	packet.hdr.sender_id = client_id;
 	packet.hdr.receiver_id = SERVER_ID;
 	packet.hdr.packet_type = START_GAME;
-	packet.hdr.sender_id = client_id;
 
 	packet.serialize(packet_data);
 
 	NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
 }
 
+// sendIndSpawnPacket
 void ClientGame::receiveReadyToSpawnPacket(int offset)
 {
 	const unsigned int packet_size = sizeof(Packet);
