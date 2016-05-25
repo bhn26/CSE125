@@ -40,8 +40,8 @@ void ServerGame::update()
 			// This will be an INIT_CONNECTION packet
 			receiveFromClients();
 		}
-	}
-	
+	}	
+
 	receiveFromClients();
 
 	// Check that all clients are ready
@@ -60,7 +60,6 @@ void ServerGame::update()
 
 		// once eggs has spawned, everything has spawned and we can begin the world cycle
 		auto t1 = chrono::high_resolution_clock::now();
-		auto t1_bench = chrono::high_resolution_clock::now();
 
 
 		if(eggs_spawned)
@@ -68,22 +67,18 @@ void ServerGame::update()
 
 		auto t2 = chrono::high_resolution_clock::now();
 
-		float thresh = 1.0;
+		int thresh = 33;
 
 		chrono::duration<double, milli> fp_ms = t2 - t1;
+		printf("DIFFERENCE: %d\n", t2.time_since_epoch() - t1.time_since_epoch());
 
 		if(thresh - fp_ms.count() < 0)
 			printf("TIMING ERROR: %f\n", thresh - fp_ms.count());
 		else
 		{
-			printf("TIME FOR UPDATE: %f\n", fp_ms.count());
-			printf("SLEEPING: %f\n", (float)(thresh - fp_ms.count()));
+			printf("SLEEPING: %f\n", (thresh - fp_ms.count()));
 
-			Sleep((float)((thresh - fp_ms.count())));
-			auto t3 = chrono::high_resolution_clock::now();
-			chrono::duration<double, milli> fp_ms_after = t3 - t1_bench;
-			printf("AFTER SLEEPING: %f\n", (float)(fp_ms_after.count()));
-
+			Sleep((thresh - fp_ms.count()));
 		}
 	}
 

@@ -476,7 +476,7 @@ void World::UpdateWorld()
 	}
 
 	// Send position updates of all dynamic objects
-	if (x % 5 == 0)
+	if (x % 1 == 0)
 	{
 		// Iterates through all dynamic objects in the Map and sends position updates to client
 		std::map<std::pair<int, unsigned int>, Entity* > * dynamicMap = EntitySpawner::instance()->GetMap();
