@@ -69,20 +69,20 @@ public:
         toWorld = std::move(temp);
         CalculateNormalMatrix();
     }
-    //virtual void RotateTo(const glm::mat3& newOrientation)
-    //{
-    //    glm::mat4 temp = glm::mat4(newOrientation);
-    //    temp[3] = toWorld[3];
-    //    toWorld = std::move(temp);
-    //    CalculateNormalMatrix();
-    //}
+    virtual void RotateTo(const glm::mat3& newOrientation)
+    {
+        glm::mat4 temp = glm::mat4(newOrientation);
+        temp[3] = toWorld[3];
+        toWorld = std::move(temp);
+        CalculateNormalMatrix();
+    }
 
     glm::quat Orientation() const { return static_cast<glm::quat>(toWorld); }
 
     const glm::mat4& ToWorld() const { return toWorld; }
     const glm::mat3& NormalMatrix() const { return normalMatrix; }
     //const std::shared_ptr<Shader>& Shader() const { return shader; }      // Creates error with typename Shader
-    const glm::vec3& Position() const { return glm::vec3(toWorld[3]); }
+    const glm::vec3 Position() const { return glm::vec3(toWorld[3]); }
 
     int GetClassId() { return class_id; }
     int GetObjId() { return obj_id; }

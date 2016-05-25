@@ -1,6 +1,7 @@
 #include "Player.h"
 
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 #include "Graphics/Camera.h"
 #include "Graphics/Objects/Chicken.h"
@@ -13,20 +14,23 @@
 #include "Basic/Utils.h"
 
 //// rendering text about the player
-#include "client\Window.h"
-#include "client\TextRenderer.h"
+#include "client/Window.h"
+#include "client/TextRenderer.h"
 
-Player::Player(float x, float y, float z, float rotW, float rotX, float rotY, float rotZ) : Entity(x,y,z), camAngle(0.0f), modelFile("assets/chickens/objects/chicken.obj")
+Player::Player(float x, float y, float z, float rotW, float rotX, float rotY, float rotZ) :
+    Entity(x,y,z), camAngle(0.0f), modelFile("assets/chickens/objects/chicken.obj"), defaultCamFront(glm::normalize(glm::vec3(0.0f, -0.20f, 0.97f)))
 {
-	info_panel = new Texture(GL_TEXTURE_2D, "assets/ui/player_info_panel.png");
+    info_panel = new Texture(GL_TEXTURE_2D, "assets/ui/player_info_panel.png");
+
+    SetRelativeCamPosition(glm::vec3(-1.5f, 4.5f, -7.0f));
+    model = std::unique_ptr<Model>(new Model(modelFile.c_str()));
+    //camera = std::unique_ptr<Camera>(new Camera(Position() + relativeCamPosition, glm::vec3(0.0f, 1.0f, 0.0f), 90.0f, -15.0f));
+    camera = std::unique_ptr<Camera>(new Camera(Position() + relativeCamPosition));
+    Entity::RotateTo(rotW, rotX, rotY, rotZ);
 
     //for (int col = 0; col < 3; col++)
     //    for (int row = 0; row < 3; row++)
     //        toWorld[col][row] *= 0.01;
-    model = std::unique_ptr<Model>(new Model(modelFile.c_str()));
-    camera = std::unique_ptr<Camera>(new Camera(glm::vec3(-1.5f, 4.5f, -7.0f), glm::vec3(0.0f, 1.0f, 0.0f), 90.0f, -15.0f));
-    //camera = std::unique_ptr<Camera>(new Camera(glm::vec3(1.5f, 4.5f, 7.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, -15.0f));
-    Entity::RotateTo(rotW, rotX, rotY, rotZ);
 
     //m_model = std::unique_ptr<Animation::AnimatedModel>(new Animation::AnimatedModel);
     //m_animNames["dance"] = m_model->FBXLoadClean("assets/chickens/chicken_dance.fbx", true);
@@ -44,6 +48,7 @@ Player::Player(int client_id) : Player()
 
 Player::~Player()
 {
+    delete info_panel;
 }
 
 void Player::SetModelFile(std::string fileName){
@@ -97,7 +102,17 @@ void Player::Draw() const
 void Player::MoveTo(float x, float y, float z)
 {
     Entity::MoveTo(x, y, z);
-    ChangeState(STATE::WALK);
+    CalculateCameraPosition();
+    CalculateCameraFront();
+    ChangeState(State::WALK);
+}
+
+void Player::RotateTo(const glm::quat& newOrientation)
+{
+    glm::mat3 rotation = static_cast<glm::mat3>(glm::quat(newOrientation));
+    Entity::RotateTo(rotation);
+    CalculateCameraPosition();
+    CalculateCameraFront();
 }
 
 // Process movement
@@ -121,16 +136,20 @@ static int tick = 0;
 // Processes input received from a mouse input system. Expects the offset value in both the x and y direction.
 void Player::ProcessMouseMovement(GLfloat xoffset, GLfloat yoffset, GLboolean constrainPitch)
 {
-    xoffset *= 0.25f;
-    yoffset *= 0.1f;
+    xoffset *= 0.10f;
+    yoffset *= 0.03f;
 
     // Update Front, Right and Up Vectors using the updated Eular angles
 
     this->toWorld = this->toWorld * glm::rotate(glm::mat4(1.0f), glm::radians(-xoffset), glm::vec3(0.0f, 1.0f, 0.0f));
-                                  //* glm::rotate(glm::mat4(1.0f), glm::radians(-yoffset), glm::vec3(1.0f, 0.0f, 0.0f));
+
     camAngle += glm::radians(yoffset);
     const static float pi2 = glm::pi<float>()/2;
     camAngle = (camAngle > pi2) ? pi2 : ((camAngle < -pi2) ? -pi2 : camAngle);
+
+    CalculateCameraPosition();
+    CalculateCameraFront();
+
 	if (++tick % 10 == 0)
 	{
 		ClientGame::instance()->sendRotationPacket();
@@ -146,12 +165,14 @@ void Player::ProcessMouseScroll(GLfloat yoffset)
 
 glm::vec3 Player::CameraPosition() const
 {
-    return glm::vec3(toWorld * glm::rotate(glm::mat4(1.0f), camAngle, glm::vec3(-1.0f, 0.0f, 0.0f)) * glm::vec4(camera->Position(), 1.0f));
+    //return glm::vec3(toWorld * glm::rotate(glm::mat4(1.0f), camAngle, glm::vec3(-1.0f, 0.0f, 0.0f)) * glm::vec4(camera->Position(), 1.0f));
+    return camera->Position();
 }
 
 glm::mat4 Player::GetViewMatrix() const
 {
-    return camera->GetViewMatrix() * glm::rotate(glm::mat4(1.0f), camAngle, glm::vec3(1.0f, 0.0f, 0.0f)) * glm::inverse(toWorld);
+    //return camera->GetViewMatrix() * glm::rotate(glm::mat4(1.0f), camAngle, glm::vec3(1.0f, 0.0f, 0.0f)) * glm::inverse(toWorld);
+    return camera->GetViewMatrix();
 }
 
 glm::mat4 Player::GetPerspectiveMatrix() const
@@ -161,26 +182,26 @@ glm::mat4 Player::GetPerspectiveMatrix() const
 
 glm::mat3 Player::GetNormalMatrix() const
 {
-    return glm::mat3(glm::transpose(glm::inverse(toWorld)));
+    return this->normalMatrix;
 }
 
-void Player::ChangeState(STATE state)
+void Player::ChangeState(State state)
 {
     SetState(state);
     //switch (state)
     //{
-    //    case STATE::IDLE:
+    //    case State::IDLE:
     //        m_model->Reset();
     //        break;
-    //    case STATE::WALK:
+    //    case State::WALK:
     //        m_model->PlayAnimation(m_animNames["walk"]);
     //        m_lastTime_t = Utils::CurrentTime();
     //        m_lastPos_t = Position();
     //        break;
-    //    case STATE::JUMP:
+    //    case State::JUMP:
     //        m_model->PlayAnimation(m_animNames["jump"]);
     //        break;
-    //    case STATE::PECK:
+    //    case State::PECK:
     //        m_model->PlayAnimation(m_animNames["peck"]);
     //        break;
     //}
@@ -189,17 +210,38 @@ void Player::ChangeState(STATE state)
 // AnimationPlayer::Listener
 void Player::OnFinish()
 {
-    SetState(STATE::IDLE);
+    SetState(State::IDLE);
+}
+
+void Player::SetRelativeCamPosition(glm::vec3 relativePos)
+{
+    relativeCamPosition = relativePos;
+    relativeCamPerpendicular = glm::cross(glm::vec3(0.0f, 1.0f, 0.0f), relativePos);    // Hardcoded world up
+}
+
+void Player::CalculateCameraPosition()
+{
+    camera->position = Position() + (glm::mat3(this->toWorld)
+        * glm::mat3(glm::rotate(glm::mat4(1.0f), this->camAngle, relativeCamPerpendicular))
+        * relativeCamPosition);     // Divide by scale
+}
+
+void Player::CalculateCameraFront()
+{
+    camera->front = glm::normalize(glm::mat3(this->toWorld)
+                                    * glm::mat3(glm::rotate(glm::mat4(1.0f), this->camAngle, relativeCamPerpendicular))
+                                    * defaultCamFront);
+    camera->front = glm::normalize(camera->front);
 }
 
 void Player::Update(float deltaTime)
 {
-    //if (m_state == STATE::WALK)
+    //if (m_state == State::WALK)
     //{
     //    if (Utils::CurrentTime() - m_lastTime_t > 1.0f)
     //    {
     //        if (m_lastPos_t == Position())
-    //            ChangeState(STATE::IDLE);
+    //            ChangeState(State::IDLE);
     //    }
     //}
     //m_model->Update();

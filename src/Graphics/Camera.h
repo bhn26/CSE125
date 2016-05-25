@@ -24,6 +24,7 @@ enum Camera_Movement
 // An abstract camera class that processes input and calculates the corresponding Eular Angles, Vectors and Matrices for use in OpenGL
 class Camera
 {
+    friend class Player;
 private:
     // Camera Attributes
     glm::vec3 position;
@@ -31,9 +32,6 @@ private:
     glm::vec3 up;
     glm::vec3 right;
     glm::vec3 worldUp;
-    // Eular Angles
-    GLfloat yaw;
-    GLfloat pitch;
     // Camera options
     GLfloat movementSpeed;
     GLfloat mouseSensitivity;
@@ -42,10 +40,8 @@ private:
     GLfloat zNear, zFar;
 
 public:
-    // Constructor with vectors
-    Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 2.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), GLfloat yaw = YAW, GLfloat pitch = PITCH);
-    // Constructor with scalar values
-    Camera(GLfloat posX, GLfloat posY, GLfloat posZ, GLfloat upX, GLfloat upY, GLfloat upZ, GLfloat yaw, GLfloat pitch);
+    // Constructor 
+    Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 2.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3 front = glm::vec3(0.0f, 0.0f, 1.0f));
 
     // Returns the view matrix calculated using Eular Angles and the LookAt Matrix
     glm::mat4 GetViewMatrix() { return glm::lookAt(this->position, this->position + this->front, this->up); }
@@ -73,8 +69,6 @@ private:
     void UpdateCameraVectors();
 
     // Default camera values
-    static const GLfloat YAW;
-    static const GLfloat PITCH;
     static const GLfloat SPEED;
     static const GLfloat SENSITIVTY;
     static const GLfloat ZOOM;

@@ -53,6 +53,7 @@ public:
     virtual void Draw() const override;
 
     virtual void MoveTo(float x, float y, float z) override;
+    virtual void RotateTo(const glm::quat& newOrientation) override;
 
     void SetModelFile(std::string fileName);
 
@@ -70,45 +71,52 @@ public:
     glm::mat4 GetPerspectiveMatrix() const;
     glm::mat3 GetNormalMatrix() const;
 
-	int GetID() const { return id; };
-	int GetClassId() const { return class_id; }
+    int GetID() const { return id; };
+    int GetClassId() const { return class_id; }
 
     void ChangeState(State state);                  // Will change model state and player state
     void SetState(State state) { m_state = state; }     // Simply Sets the state without changing the model
 
-	int GetScore() const { return num_eggs; };
-	void SetScore(int n) { num_eggs = n; };
+    int GetScore() const { return num_eggs; };
+    void SetScore(int n) { num_eggs = n; };
 
-	void SetTeam(int team) { team_id = team; }
-	int GetTeam() const { return team_id; }
+    void SetTeam(int team) { team_id = team; }
+    int GetTeam() const { return team_id; }
 
 private:
+    // AnimationPlayer::Listener
+    virtual void OnFinish() override;
+    void SetRelativeCamPosition(glm::vec3 relativePos);
+    void CalculateCameraPosition();
+    void CalculateCameraFront();
+
+private:
+    // Player is made up of a model with a camera following it
+    std::unique_ptr<Camera> camera;
+    std::unique_ptr<Model> model;
+    //std::unique_ptr<Animation::AnimatedModel> m_model;
+
+    // Game data
     int id;
     int team_id;
     int num_eggs;
 
     Texture* info_panel;
 
-    // Player is made up of a model with a camera following it
-    std::unique_ptr<Camera> camera;
-    std::unique_ptr<Model> model;
-    //std::unique_ptr<Animation::AnimatedModel> m_model;
-
-    std::unordered_map<std::string, std::string> m_animNames;
-
     // How up/down camera is
     float camAngle;
+    glm::vec3 relativeCamPosition;
+    glm::vec3 defaultCamFront;
+    glm::vec3 relativeCamPerpendicular;
     int tick = 0;
 
     // Path name for chicken model texture
     std::string modelFile;
 
     // Animation
+    std::unordered_map<std::string, std::string> m_animNames;
     State m_state;
     float m_lastTime_t;     // Test
     glm::vec3 m_lastPos_t;
-
-    // Inherited via Listener
-    virtual void OnFinish() override;
 };
 
