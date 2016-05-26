@@ -25,6 +25,9 @@
     <Filter Include="Source Files\Basic">
       <UniqueIdentifier>{25b1c28e-b776-46aa-a4f8-a47876f7b93b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Graphics\UI">
+      <UniqueIdentifier>{1adf384d-7920-4519-829d-d35a639b6aa1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\src\Graphics\Shaders\basic_shader.frag">
@@ -121,12 +124,6 @@
     <ClCompile Include="..\src\client\PlayState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\client\TextRenderer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\client\SpriteRenderer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\Graphics\Animation\skinning_technique.cpp">
       <Filter>Source Files\Graphics\Animation</Filter>
     </ClCompile>
@@ -171,6 +168,12 @@
     </ClCompile>
     <ClCompile Include="..\src\client\LobbyState.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\client\SpriteRenderer.cpp">
+      <Filter>Source Files\Graphics\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\client\TextRenderer.cpp">
+      <Filter>Source Files\Graphics\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -252,12 +255,6 @@
     <ClInclude Include="..\src\client\PlayState.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\client\TextRenderer.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\client\SpriteRenderer.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Graphics\Animation\skinning_technique.h">
       <Filter>Source Files\Graphics\Animation</Filter>
     </ClInclude>
@@ -296,6 +293,12 @@
     </ClInclude>
     <ClInclude Include="..\src\client\LobbyState.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\client\SpriteRenderer.h">
+      <Filter>Source Files\Graphics\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\client\TextRenderer.h">
+      <Filter>Source Files\Graphics\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

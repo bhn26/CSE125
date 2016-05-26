@@ -127,7 +127,7 @@ void Scene::Update()
 
 void Scene::Draw()
 {
-	cubeMap->Draw();
+	//cubeMap->Draw();
 	grass->Draw();
 
 	for (auto& const obj : static_objects)

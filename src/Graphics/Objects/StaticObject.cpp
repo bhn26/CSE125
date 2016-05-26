@@ -14,8 +14,8 @@ StaticObject::StaticObject(const GLchar* path)
 {
 	this->toWorld = glm::mat4(1.0f);
 	model = new Model(path);
-	std::shared_ptr<Shader> modelShader = std::make_shared<Shader>("src/Graphics/Shaders/model_loading.vert", "src/Graphics/Shaders/model_loading.frag");
-	shader = modelShader;
+	//std::shared_ptr<Shader> modelShader = std::make_shared<Shader>("src/Graphics/Shaders/model_loading.vert", "src/Graphics/Shaders/model_loading.frag");
+	shader = Scene::Instance()->modelShader;
 }
 
 StaticObject::~StaticObject()

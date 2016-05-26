@@ -20,6 +20,7 @@ Entity::Entity(int oid, int cid) : Entity()
 ////////////////////////////////////////////////////////////////////////////////
 Entity::Entity(glm::mat4 world, glm::vec3 scale) : toWorld(world), scale(scale), VBO(0), VAO(0), EBO(0), shader(nullptr)
 {
+    ApplyScale();
     CalculateNormalMatrix();
 }
 

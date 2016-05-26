@@ -93,8 +93,8 @@ private:
 private:
     // Player is made up of a model with a camera following it
     std::unique_ptr<Camera> camera;
-    std::unique_ptr<Model> model;
-    //std::unique_ptr<Animation::AnimatedModel> m_model;
+    //std::unique_ptr<Model> model;
+    std::unique_ptr<Animation::AnimatedModel> m_model;
 
     // Game data
     int id;

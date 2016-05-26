@@ -18,27 +18,40 @@
 #include "client/TextRenderer.h"
 
 Player::Player(float x, float y, float z, float rotW, float rotX, float rotY, float rotZ) :
-    Entity(x,y,z), camAngle(0.0f), modelFile("assets/chickens/objects/chicken.obj"), defaultCamFront(glm::normalize(glm::vec3(0.0f, -0.20f, 0.97f)))
+    Entity(glm::vec3(x,y,z), glm::vec3(0.01f)), camAngle(0.0f), modelFile("assets/chickens/objects/chicken.obj"), defaultCamFront(glm::normalize(glm::vec3(0.0f, -0.20f, 0.97f)))
 {
     info_panel = new Texture(GL_TEXTURE_2D, "assets/ui/player_info_panel.png");
 
     SetRelativeCamPosition(glm::vec3(-1.5f, 4.5f, -7.0f));
-    model = std::unique_ptr<Model>(new Model(modelFile.c_str()));
+    //model = std::unique_ptr<Model>(new Model(modelFile.c_str()));
     //camera = std::unique_ptr<Camera>(new Camera(Position() + relativeCamPosition, glm::vec3(0.0f, 1.0f, 0.0f), 90.0f, -15.0f));
     camera = std::unique_ptr<Camera>(new Camera(Position() + relativeCamPosition));
     Entity::RotateTo(rotW, rotX, rotY, rotZ);
 
-    //for (int col = 0; col < 3; col++)
-    //    for (int row = 0; row < 3; row++)
-    //        toWorld[col][row] *= 0.01;
+    m_model = std::unique_ptr<Animation::AnimatedModel>(new Animation::AnimatedModel);
+    m_animNames["dance"] = m_model->FBXLoadClean("assets/chickens/chicken_dance.fbx", true);
+    m_animNames["walk"] = m_model->AddAnimation("assets/chickens/chicken_walk.fbx", true);
+    m_animNames["peck"] = m_model->AddAnimation("assets/chickens/chicken_peck.fbx", false);
+    m_animNames["jump"] = m_model->AddAnimation("assets/chickens/chicken_jump.fbx", false);
 
-    //m_model = std::unique_ptr<Animation::AnimatedModel>(new Animation::AnimatedModel);
-    //m_animNames["dance"] = m_model->FBXLoadClean("assets/chickens/chicken_dance.fbx", true);
-    //m_animNames["walk"] = m_model->FBXLoadClean("assets/chickens/chicken_walk.fbx", true);
-    //m_animNames["peck"] = m_model->FBXLoadClean("assets/chickens/chicken_peck.fbx", false);
-    //m_animNames["jump"] = m_model->FBXLoadClean("assets/chickens/chicken_jump.fbx", false);
+    m_model->RegisterListener(this);
 
-    //m_model->RegisterListener(this);
+    DirectionalLight m_directionalLight;
+    m_directionalLight.color = glm::vec3(1.0f, 1.0f, 1.0f);
+    m_directionalLight.ambientIntensity = 0.55f;
+    m_directionalLight.diffuseIntensity = 0.9f;
+    m_directionalLight.direction = glm::vec3(1.0f, 0.0, 0.0);
+
+    SkinningTechnique* skinTechnique = m_model->GetMesh().GetSkinningTechnique();
+
+    skinTechnique->Enable();
+
+    skinTechnique->SetColorTextureUnit(0); // color texture unit index = 0
+    skinTechnique->SetDirectionalLight(m_directionalLight);
+    skinTechnique->SetMatSpecularIntensity(0.0f);
+    skinTechnique->SetMatSpecularPower(0);
+
+    m_model->InitBones0();  // Initialize bones to 0 time spot
 }
 
 Player::Player(int client_id) : Player()
@@ -53,50 +66,50 @@ Player::~Player()
 
 void Player::SetModelFile(std::string fileName){
     modelFile = fileName;
-    model = std::unique_ptr<Model>(new Model(modelFile.c_str()));
+    //model = std::unique_ptr<Model>(new Model(modelFile.c_str()));
     //m_model = std::unique_ptr<Animation::AnimatedModel>(new Animation::AnimatedModel(fileName));
 }
 
 void Player::Draw() const
 {
-    shader->Use();
+    //shader->Use();
 
-    GLint viewLoc = shader->GetUniform("view");
-    GLint modelLocation = shader->GetUniform("model");
-    GLint normalMatrixLoc = shader->GetUniform("normalMatrix");
-    GLint projectionLocation = shader->GetUniform("projection");
-    GLint lightColorLoc = shader->GetUniform("lightColor");
-    GLint lightPosLoc = shader->GetUniform("lightPos");
-    GLint viewPosLoc = shader->GetUniform("viewPos");
+    //GLint viewLoc = shader->GetUniform("view");
+    //GLint modelLocation = shader->GetUniform("model");
+    //GLint normalMatrixLoc = shader->GetUniform("normalMatrix");
+    //GLint projectionLocation = shader->GetUniform("projection");
+    //GLint lightColorLoc = shader->GetUniform("lightColor");
+    //GLint lightPosLoc = shader->GetUniform("lightPos");
+    //GLint viewPosLoc = shader->GetUniform("viewPos");
 
-    glUniformMatrix4fv(viewLoc, 1, false, glm::value_ptr(Scene::Instance()->GetViewMatrix()));
-    glUniformMatrix4fv(modelLocation, 1, false, glm::value_ptr(this->toWorld));
-    glUniformMatrix3fv(normalMatrixLoc, 1, false, glm::value_ptr(GetNormalMatrix()));
-    glUniformMatrix4fv(projectionLocation, 1, false, glm::value_ptr(Scene::Instance()->GetPerspectiveMatrix()));
+    //glUniformMatrix4fv(viewLoc, 1, false, glm::value_ptr(Scene::Instance()->GetViewMatrix()));
+    //glUniformMatrix4fv(modelLocation, 1, false, glm::value_ptr(this->toWorld));
+    //glUniformMatrix3fv(normalMatrixLoc, 1, false, glm::value_ptr(GetNormalMatrix()));
+    //glUniformMatrix4fv(projectionLocation, 1, false, glm::value_ptr(Scene::Instance()->GetPerspectiveMatrix()));
 
-    glUniform3fv(lightColorLoc, 1, glm::value_ptr(Scene::Instance()->GetPointLight()->color));
-    glUniform3fv(lightPosLoc, 1, glm::value_ptr(Scene::Instance()->GetPointLight()->position));
-    glUniform3fv(viewPosLoc, 1, glm::value_ptr(Scene::Instance()->GetCameraPosition()));
+    //glUniform3fv(lightColorLoc, 1, glm::value_ptr(Scene::Instance()->GetPointLight()->color));
+    //glUniform3fv(lightPosLoc, 1, glm::value_ptr(Scene::Instance()->GetPointLight()->position));
+    //glUniform3fv(viewPosLoc, 1, glm::value_ptr(Scene::Instance()->GetCameraPosition()));
 
-    model->Draw(shader.get());
-    //SkinningTechnique* skinTechnique = m_model->GetMesh().GetSkinningTechnique();
-    //skinTechnique->Enable(); // use shader
+    //model->Draw(shader.get());
+    SkinningTechnique* skinTechnique = m_model->GetMesh().GetSkinningTechnique();
+    skinTechnique->Enable(); // use shader
 
-    //skinTechnique->SetEyeWorldPos(Scene::Instance()->GetCameraPosition());
-    //skinTechnique->SetWVP(Scene::Instance()->GetPerspectiveMatrix() * Scene::Instance()->GetViewMatrix() * toWorld);
-    //skinTechnique->SetWorldMatrix(toWorld);
+    skinTechnique->SetEyeWorldPos(Scene::Instance()->GetCameraPosition());
+    skinTechnique->SetWVP(Scene::Instance()->GetPerspectiveMatrix() * Scene::Instance()->GetViewMatrix() * toWorld);
+    skinTechnique->SetWorldMatrix(toWorld);
 
-    //m_model->Draw();
+    m_model->Draw();
 
-	////////////// DRAW SCORE /////////////////////////
-	glm::vec2 screen_coords = Scene::Get2D(Position(), GetViewMatrix(), GetPerspectiveMatrix(), Window::width, Window::height);
-	//Scene::sprite_renderer->DrawSprite(*info_panel, glm::vec2(screen_coords.x - 100, screen_coords.y - 400), glm::vec2(info_panel->Width(), info_panel->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+    ////////////// DRAW SCORE /////////////////////////
+    glm::vec2 screen_coords = Scene::Get2D(Position(), GetViewMatrix(), GetPerspectiveMatrix(), Window::width, Window::height);
+    //Scene::sprite_renderer->DrawSprite(*info_panel, glm::vec2(screen_coords.x - 100, screen_coords.y - 400), glm::vec2(info_panel->Width(), info_panel->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 
-	char score[5];
-	strcpy_s(score, "[");
-	strcat_s(score, std::to_string(num_eggs).c_str());
-	strcat_s(score, "]");
-	TextRenderer::RenderText(score, screen_coords.x, screen_coords.y - 400, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+    char score[5];
+    strcpy_s(score, "[");
+    strcat_s(score, std::to_string(num_eggs).c_str());
+    strcat_s(score, "]");
+    TextRenderer::RenderText(score, screen_coords.x, screen_coords.y - 400, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 }
 
 void Player::MoveTo(float x, float y, float z)
@@ -150,11 +163,11 @@ void Player::ProcessMouseMovement(GLfloat xoffset, GLfloat yoffset, GLboolean co
     CalculateCameraPosition();
     CalculateCameraFront();
 
-	if (++tick % 10 == 0)
-	{
-		ClientGame::instance()->sendRotationPacket();
-		tick = 0;
-	}
+    if (++tick % 10 == 0)
+    {
+        ClientGame::instance()->sendRotationPacket();
+        tick = 0;
+    }
 }
 
 // Processes input received from a mouse scroll-wheel event. Only requires input on the vertical wheel-axis

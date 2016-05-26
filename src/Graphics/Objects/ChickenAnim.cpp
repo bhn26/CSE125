@@ -23,6 +23,7 @@
 #include "../Camera.h"
 #include "../Scene.h"
 #include "../PointLight.h"
+#include "Client/Player.h"
 
 ChickenAnim::ChickenAnim() : m_toWorld(glm::scale(glm::mat4(1.0f), glm::vec3(0.01f)))
 {
@@ -64,7 +65,6 @@ void ChickenAnim::Draw() const
     skinTechnique->SetEyeWorldPos(Scene::Instance()->GetCameraPosition());
     skinTechnique->SetWVP(Scene::Instance()->GetPerspectiveMatrix() * Scene::Instance()->GetViewMatrix() * m_toWorld);
     skinTechnique->SetWorldMatrix(m_toWorld);
-
     m_model.Draw();
 }
 
@@ -96,6 +96,10 @@ void ChickenAnim::Jump()
 void ChickenAnim::Dance()
 {
     m_model.PlayAnimation(m_dance);
+}
+
+void ChickenAnim::Spawn(float x, float y, float z)
+{
 }
 
 
