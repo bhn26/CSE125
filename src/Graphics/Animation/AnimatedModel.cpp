@@ -56,6 +56,11 @@ namespace Animation
         return m_animPlayer.PlayAnimation(name);
     }
 
+    bool AnimatedModel::SetAnimation(std::string name)
+    {
+        return m_animPlayer.SetAnimation(name);
+    }
+
     ///////////////////////////////////////////////////////////////////////
     void AnimatedModel::Update(float deltaTime)
     {

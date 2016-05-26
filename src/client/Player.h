@@ -54,6 +54,7 @@ public:
 
     virtual void MoveTo(float x, float y, float z) override;
     virtual void RotateTo(const glm::quat& newOrientation) override;
+    void Jump();
 
     void SetModelFile(std::string fileName);
 
@@ -89,6 +90,7 @@ private:
     void SetRelativeCamPosition(glm::vec3 relativePos);
     void CalculateCameraPosition();
     void CalculateCameraFront();
+    float DistanceFromLastPos(glm::vec3 newPosition) const;
 
 private:
     // Player is made up of a model with a camera following it
@@ -117,6 +119,7 @@ private:
     std::unordered_map<std::string, std::string> m_animNames;
     State m_state;
     float m_lastTime_t;     // Test
+    float m_distanceThreshhold_t;
     glm::vec3 m_lastPos_t;
 };
 

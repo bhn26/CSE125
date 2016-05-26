@@ -139,6 +139,15 @@ namespace Animation
     // Start playing the given animation from the beginning.
     bool AnimationPlayer::PlayAnimation(std::string name)
     {
+        SetAnimation(name);
+        m_animating = true;     // Set to update and evaluate
+        return true;
+    }
+
+    ///////////////////////////////////////////////////////////////////////
+    // Sets the current animation
+    bool AnimationPlayer::SetAnimation(std::string name)
+    {
         auto it = m_animMap.find(name);
         if (it == m_animMap.end())
         {
@@ -147,7 +156,6 @@ namespace Animation
         }
         m_currAnimationIndex = it->second;
         m_playTimer = 0.0f;
-        m_animating = true;     // Set to update and evaluate
         return true;
     }
 

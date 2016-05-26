@@ -28,6 +28,7 @@ namespace Animation
         std::string FBXLoadClean(std::string filename, bool animLoops = false);            // Loads both Mesh and Animation
         std::string AddAnimation(std::string animationFile, bool loops = false);   // Only loads Animation
         bool PlayAnimation(std::string name);
+        bool SetAnimation(std::string name);
 
         void Update(float deltaTime);
         void Draw() const;

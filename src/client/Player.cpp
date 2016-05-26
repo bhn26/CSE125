@@ -18,7 +18,8 @@
 #include "client/TextRenderer.h"
 
 Player::Player(float x, float y, float z, float rotW, float rotX, float rotY, float rotZ) :
-    Entity(glm::vec3(x,y,z), glm::vec3(0.01f)), camAngle(0.0f), modelFile("assets/chickens/objects/chicken.obj"), defaultCamFront(glm::normalize(glm::vec3(0.0f, -0.20f, 0.97f)))
+    Entity(glm::vec3(x,y,z), glm::vec3(0.01f)), camAngle(0.0f), modelFile("assets/chickens/objects/chicken.obj"), defaultCamFront(glm::normalize(glm::vec3(0.0f, -0.20f, 0.97f))),
+    m_distanceThreshhold_t(1.0f)
 {
     info_panel = new Texture(GL_TEXTURE_2D, "assets/ui/player_info_panel.png");
 
@@ -114,10 +115,17 @@ void Player::Draw() const
 
 void Player::MoveTo(float x, float y, float z)
 {
+    if (DistanceFromLastPos(glm::vec3(x,y,z)) < m_distanceThreshhold_t)
+    {
+        return;
+    }
     Entity::MoveTo(x, y, z);
     CalculateCameraPosition();
     CalculateCameraFront();
-    ChangeState(State::WALK);
+    if (m_state != State::JUMP)
+    {
+        ChangeState(State::WALK);
+    }
 }
 
 void Player::RotateTo(const glm::quat& newOrientation)
@@ -127,6 +135,12 @@ void Player::RotateTo(const glm::quat& newOrientation)
     CalculateCameraPosition();
     CalculateCameraFront();
 }
+
+void Player::Jump()
+{
+    ChangeState(State::JUMP);
+}
+
 
 // Process movement
 void Player::ProcessKeyboard(DIRECTION direction, GLfloat deltaTime)
@@ -200,24 +214,30 @@ glm::mat3 Player::GetNormalMatrix() const
 
 void Player::ChangeState(State state)
 {
+    if (state == m_state)
+        return;
+
     SetState(state);
-    //switch (state)
-    //{
-    //    case State::IDLE:
-    //        m_model->Reset();
-    //        break;
-    //    case State::WALK:
-    //        m_model->PlayAnimation(m_animNames["walk"]);
-    //        m_lastTime_t = Utils::CurrentTime();
-    //        m_lastPos_t = Position();
-    //        break;
-    //    case State::JUMP:
-    //        m_model->PlayAnimation(m_animNames["jump"]);
-    //        break;
-    //    case State::PECK:
-    //        m_model->PlayAnimation(m_animNames["peck"]);
-    //        break;
-    //}
+    switch (state)
+    {
+        case State::IDLE:
+            m_model->SetAnimation(m_animNames["dance"]);
+            m_model->Reset();
+            break;
+        case State::WALK:
+            m_model->PlayAnimation(m_animNames["walk"]);
+            m_lastTime_t = Utils::CurrentTime();
+            m_lastPos_t = Position();
+            break;
+        case State::JUMP:
+            m_model->PlayAnimation(m_animNames["jump"]);
+            m_lastTime_t = Utils::CurrentTime();
+            m_lastPos_t = Position();
+            break;
+        case State::PECK:
+            m_model->PlayAnimation(m_animNames["peck"]);
+            break;
+    }
 }
 
 // AnimationPlayer::Listener
@@ -247,17 +267,28 @@ void Player::CalculateCameraFront()
     camera->front = glm::normalize(camera->front);
 }
 
+float Player::DistanceFromLastPos(glm::vec3 newPosition) const
+{
+    return glm::distance(m_lastPos_t, newPosition);
+}
+
 void Player::Update(float deltaTime)
 {
-    //if (m_state == State::WALK)
-    //{
-    //    if (Utils::CurrentTime() - m_lastTime_t > 1.0f)
-    //    {
-    //        if (m_lastPos_t == Position())
-    //            ChangeState(State::IDLE);
-    //    }
-    //}
-    //m_model->Update();
+    if (m_state == State::WALK)
+    {
+        if (Utils::CurrentTime() - m_lastTime_t > 0.3f)
+        {
+            if (DistanceFromLastPos(Position()) < m_distanceThreshhold_t)
+                ChangeState(State::IDLE);
+            m_lastTime_t = Utils::CurrentTime();
+        }
+        glm::vec3 position = Position();
+        m_lastPos_t.x = position.x;
+        m_lastPos_t.y = position.y;
+        m_lastPos_t.z = position.z;
+        m_lastPos_t = Position();
+    }
+    m_model->Update(deltaTime);
 }
 
 void Player::Spawn(float x, float y, float z)

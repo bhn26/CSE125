@@ -86,6 +86,7 @@ namespace Animation
 
         std::string AddAnimFromScene(const aiScene* scene, bool loops = false);
         bool PlayAnimation(std::string name);
+        bool SetAnimation(std::string name);
 
         void Pause() { m_animating = false; }
         void Continue() { m_animating = true; }
