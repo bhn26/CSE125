@@ -83,14 +83,14 @@ Flag*  EntitySpawner::spawnFlag(PosInfo pos, btDiscreteDynamicsWorld* physicsWor
 	return newFlag;
 }
 
-Bullet* EntitySpawner::spawnBullet(int playerid, int teamid, int damage, const btVector3* pos, btVector3* velocity, btDiscreteDynamicsWorld* physicsWorld)
+Bullet* EntitySpawner::spawnBullet(int playerid, int teamid, int damage, btVector3* pos, btVector3* velocity, btMatrix3x3* rotation, btDiscreteDynamicsWorld* physicsWorld)
 {
 	// Create Bullet and add to Entity Map
-	Bullet* fireProjectile = new Bullet(oid_bullet, playerid, teamid, damage, pos, velocity, physicsWorld);
+	Bullet* fireProjectile = new Bullet(oid_bullet, playerid, teamid, damage, pos, velocity, rotation, physicsWorld);
 	AddEntity(ClassId::BULLET, oid_bullet, fireProjectile);
 	oid_bullet++;
 
-	// Send Flag Spawn packet
+	// Send Bullet Spawn packet
 	btVector3 vec = fireProjectile->GetEntityPosition();
 	btQuaternion quat = fireProjectile->GetEntityRotation();
 	printf("Created Bullet at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
@@ -155,6 +155,7 @@ void EntitySpawner::RemoveEntity(int cid, unsigned int oid)
 	std::pair<int, unsigned int> key = std::pair<int, unsigned int>(cid, oid);
 	it = this->entities.find(key);
 	entities.erase(it);
+	printf("? supposedly removed entity from map\n");
 }
 
 std::map<std::pair<int, unsigned int>, Entity* > *EntitySpawner::GetMap()

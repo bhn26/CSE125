@@ -10,14 +10,12 @@ private:
 	int playerId;
 	int teamId;
 	int damage;
-	btDiscreteDynamicsWorld* curWorld;
-	btRigidBody* bulletRigidBody;
 
 public:
 
-	Bullet(int objectid, int playerid, int teamid, int damage, const btVector3* pos, btVector3* velocity, btDiscreteDynamicsWorld* physicsWorld);
+	Bullet(int objectid, int playerid, int teamid, int damage, btVector3* pos, btVector3* velocity, btMatrix3x3* rotation, btDiscreteDynamicsWorld* physicsWorld);
 
-	~Bullet();
+	virtual ~Bullet();
 
 	btVector3 GetBulletPosition();
 
