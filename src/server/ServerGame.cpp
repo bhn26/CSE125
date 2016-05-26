@@ -67,18 +67,26 @@ void ServerGame::update()
 
 		auto t2 = chrono::high_resolution_clock::now();
 
-		int thresh = 33;
+		float thresh = 16.67;
 
 		chrono::duration<double, milli> fp_ms = t2 - t1;
-		printf("DIFFERENCE: %d\n", t2.time_since_epoch() - t1.time_since_epoch());
+		//("DIFFERENCE: %f\n", fp_ms.count());
 
 		if(thresh - fp_ms.count() < 0)
 			printf("TIMING ERROR: %f\n", thresh - fp_ms.count());
 		else
 		{
-			printf("SLEEPING: %f\n", (thresh - fp_ms.count()));
+			//printf("SLEEPING: %f\n", (thresh - fp_ms.count()));
 
 			Sleep((thresh - fp_ms.count()));
+
+			auto t3 = chrono::high_resolution_clock::now();
+
+			chrono::duration<double, milli> fp_after = t3 - t1;
+
+			//("TOTAL AFTER SLEEP: %f\n", fp_after.count());
+
+
 		}
 	}
 
@@ -373,22 +381,22 @@ void ServerGame::receiveMovePacket(int offset)
 	btVector3* vec;
 	switch (pi->direction) {
 	case MOVE_FORWARD:
-		vec = new btVector3(0, 0, 2);
+		vec = new btVector3(0, 0, 25);
 		ent->Move(vec);
 		delete vec;
 		break;
 	case MOVE_BACKWARD:	
-		vec = new btVector3(0, 0, -2);
+		vec = new btVector3(0, 0, -25);
 		ent->Move(vec);
 		delete vec;
 		break;
 	case MOVE_LEFT:
-		vec = new btVector3(2, 0, 0);
+		vec = new btVector3(25, 0, 0);
 		ent->Move(vec);
 		delete vec;
 		break;
 	case MOVE_RIGHT:
-		vec = new btVector3(-2, 0, 0);
+		vec = new btVector3(-25, 0, 0);
 		ent->Move(vec);
 		delete vec;
 		break;

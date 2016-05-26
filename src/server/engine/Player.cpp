@@ -66,7 +66,7 @@ void Player::JumpPlayer()
 		jumpSem = 0;
 		btVector3 curVelocity = entityRigidBody->getLinearVelocity();
 		// setting upward velocity to 3
-		curVelocity[1] = 3;
+		curVelocity[1] = 25;
 		entityRigidBody->setLinearVelocity(curVelocity);
 	}
 }
