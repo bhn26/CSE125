@@ -71,8 +71,10 @@ void ClientGame::receiveJoinPacket(int offset) {
 	struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
 
 	// set our team if it's for us
-	if(pi->id == client_id)
+	if (pi->id == client_id) {
 		client_team = pi->team_id;
+		printf("setting client team to %d for player %d\n", client_team, client_id);
+	}
 
 	printf("receiveJoinPacket for player %d on team %d\n", pi->id, pi->team_id);
 	int player = pi->id;
@@ -166,7 +168,9 @@ void ClientGame::receiveReadyToSpawnPacket(int offset)
 	packet.hdr.receiver_id = SERVER_ID;
 
 	PosInfo pi;
+	pi.id = client_id;
 	pi.team_id = client_team;
+	printf("send IndSpawn Packet for player %d on team %d", client_id, pi.team_id);
 	pi.skin = rand() % 3;
 
 	pi.serialize(packet.dat.buf);
