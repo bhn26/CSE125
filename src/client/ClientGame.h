@@ -83,6 +83,7 @@ public:
 	static std::vector<int> Team1() { return cg->team1; }
 
 	int * GetScores() { return scores; };
+	int GetClientTeam() { return client_team; };
 
 private:
     ClientGame(void);

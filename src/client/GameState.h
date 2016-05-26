@@ -21,8 +21,8 @@ public:
 	virtual void OnClick(int button, double x, double y) {}
 	virtual void OnMouseMove(float xoffset, float yoffset) {}
 
-	virtual void OnKeyDown(WPARAM ) { }
-	virtual void OnKeyUp(WPARAM )   { }
+	virtual void OnKeyDown(int action, int key ) { }
+	virtual void OnKeyUp(int action, int key )   { }
 	virtual void OnChar(WPARAM )   { }
 	virtual void Update(DWORD )  { }
 	virtual void Draw()  { }

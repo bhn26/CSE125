@@ -136,49 +136,11 @@ void Window::Key_callback(GLFWwindow* window, int key, int scancode, int action,
     // Check for a key press
     if (action == GLFW_PRESS || action == GLFW_REPEAT)
     {
-        switch (key)
-        {
-            // Check if escape was pressed
-            case GLFW_KEY_ESCAPE:
-                // Close the window. This causes the program to also terminate.
-                glfwSetWindowShouldClose(window, GL_TRUE);
-                break;
-
-            case GLFW_KEY_W:
-                //Scene::player->ProcessKeyboard(DIRECTION::D_FORWARD, 1);
-#ifdef _WIN32
-                ClientGame::instance()->sendMovePacket(MOVE_FORWARD);
-#endif
-                break;
-            case GLFW_KEY_A:
-                //Scene::player->ProcessKeyboard(DIRECTION::D_LEFT, 1);
-#ifdef _WIN32
-                ClientGame::instance()->sendMovePacket(MOVE_LEFT);
-#endif
-                break;
-            case GLFW_KEY_S:
-                //Scene::player->ProcessKeyboard(DIRECTION::D_BACKWARD, 1);
-#ifdef _WIN32
-                ClientGame::instance()->sendMovePacket(MOVE_BACKWARD);
-#endif
-                break;
-            case GLFW_KEY_D:
-                //Scene::player->ProcessKeyboard(DIRECTION::D_RIGHT, 1);
-                ClientGame::instance()->sendMovePacket(MOVE_RIGHT);
-                break;
-            case GLFW_KEY_SPACE: // jump?
-				ClientGame::instance()->sendJumpPacket();
-                break;
-            case GLFW_KEY_Z:
-                Scene::Instance()->GetPlayer()->ProcessKeyboard(DIRECTION::D_DOWN, 1);
-                break;
-            case GLFW_KEY_C:
-                Scene::Instance()->GetPlayer()->SetModelFile("assets/chickens/objects/pinocchio_chicken.obj");
-                break;
-            default:
-                break;
-        }
-    }
+		m_pStateManager->GetActiveState()->OnKeyDown(action, key);
+	}
+	else if (action == GLFW_RELEASE) {
+		m_pStateManager->GetActiveState()->OnKeyUp(action, key);
+	}
 }
 
 
