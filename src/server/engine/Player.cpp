@@ -1,11 +1,15 @@
 #include "EntitySpawner.h"
 #include "ObjectId.h"
+
+#include "server\ServerGame.h"
+
 #include "Player.h"
 #include "Flag.h"
 #include "Peck.h"
 #include "SeedGun.h"
 #include <time.h>
 #include "../ServerGame.h"
+
 
 Player::Player(int objectid, int teamid, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld) : Entity(ClassId::PLAYER, objectid, physicsWorld) 
 {
@@ -81,12 +85,27 @@ void Player::AcquireFlag(Flag* flag)
 	// player collects flag, remove from entity list
 	flags->push_back(flag);
 	printf("FLAG ACQUIRED\n");
+
+	// note - individual scores are updated with move packets
+	ServerGame::instance()->IncScore(teamId, 1);
+	ServerGame::instance()->sendScorePacket();
+
+	// check if your team won
+	int * scores = ServerGame::instance()->GetScores();
+	printf("Team %d has %d out of %d eggs\n", teamId, scores[teamId], ServerGame::instance()->NumTotalEggs());
+	if(scores[teamId] == ServerGame::instance()->NumTotalEggs()) {
+		printf("sending game over packet\n");
+		ServerGame::instance()->sendGameOverPacket(teamId);
+	}
 }
 
 void Player::LoseFlags()
 {
+	ServerGame::instance()->DecScore(teamId, flags->size());
+
 	// Change this, we need the flags to come out of the player back into the world
 	flags->clear();
+	ServerGame::instance()->sendScorePacket();
 }
 
 int Player::GetTeamId()

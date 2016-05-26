@@ -92,6 +92,9 @@ public:
 
     std::shared_ptr<Shader>& GetShader() { return shader; }
 
+	// for Players only
+	virtual void SetScore(int n) {};
+	virtual int GetScore() { return 0; };
 private:
 
 };
