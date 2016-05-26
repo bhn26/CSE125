@@ -65,6 +65,21 @@ void Entity::RotateTo(const glm::mat3 & newOrientation)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// Getters
+
+////////////////////////////////////////////////////////////////////////////////
+glm::quat Entity::Orientation() const
+{
+    //return static_cast<glm::quat>(toWorld);
+    // TODO: make more efficient
+    glm::mat3 temp = glm::mat3(toWorld);
+    for (int col = 0; col < 3; col++)
+        for (int row = 0; row < 3; row++)
+            temp[col][row] /= scale[col];
+    return static_cast<glm::quat>(temp);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void Entity::ApplyScale()
 {
     if (scale != glm::vec3(1.0f))

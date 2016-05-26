@@ -56,11 +56,11 @@ public:
 
     ////////////////////////////////////////////////////////////////////////////////
     // Getters
-    glm::quat Orientation() const { return static_cast<glm::quat>(toWorld); }
+    glm::quat Orientation() const;
 
     const glm::mat4& ToWorld() const { return toWorld; }
     const glm::mat3& NormalMatrix() const { return normalMatrix; }
-    const glm::vec3 Position() const { return glm::vec3(toWorld[3]); }
+    glm::vec3 Position() const { return glm::vec3(toWorld[3]); }
 
     int GetClassId() const { return class_id; }
     int GetObjId() const { return obj_id; }
