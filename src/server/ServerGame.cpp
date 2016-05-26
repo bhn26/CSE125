@@ -300,7 +300,7 @@ void ServerGame::receiveIndSpawnPacket(int offset)
 	struct PacketData* dat = (struct PacketData *) &(network_data[offset]);
 	struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
 
-	engine->SpawnRandomPlayer(pi->team_id, pi->skin);
+	engine->SpawnRandomPlayer(pi->id, pi->team_id, pi->skin);
 }
 
 void ServerGame::sendSpawnPacket(PosInfo pi)

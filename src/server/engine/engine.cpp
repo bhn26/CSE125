@@ -22,9 +22,10 @@ void Engine::InitWorld(int num_players) {
 	world->Init();
 }
 
-void Engine::SpawnRandomPlayer(int team, int skin)
+void Engine::SpawnRandomPlayer(int player, int team, int skin)
 {
 	PosInfo p;
+	p.id = player;
 	p.team_id = team;
 	p.skin = skin;
 	p.x = rand() % WORLD_WIDTH + 1;

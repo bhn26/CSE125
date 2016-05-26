@@ -30,15 +30,16 @@ EntitySpawner::~EntitySpawner(){}
 Player* EntitySpawner::spawnPlayer(int teamid, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld)
 {
 	// Create player and add to Entity Map
-	Player* newPlayer = new Player(oid_player, pos.team_id, pos, physicsWorld);
-	AddEntity(ClassId::PLAYER, oid_player, newPlayer);
+	// note - need to create players with explicit id or else teams will depend on order they connected to the lobby
+	Player* newPlayer = new Player(pos.id, pos.team_id, pos, physicsWorld);
+	AddEntity(ClassId::PLAYER, pos.id, newPlayer);
 	oid_player++;
 
 	btQuaternion quat = newPlayer->GetEntityRotation();
 
 	// Send Player Spawn packet
 	btVector3 vec = newPlayer->GetEntityPosition();
-	printf("Created player %d at (%f,%f,%f) on team %d\n", oid_player-1, vec.getX(), vec.getY(), vec.getZ(),pos.team_id );
+	printf("Created player %d at (%f,%f,%f) on team %d\n", pos.id, vec.getX(), vec.getY(), vec.getZ(),pos.team_id );
 	// Send spawn info to the clients
 	PosInfo out;
 	out.cid = ClassId::PLAYER;
