@@ -84,7 +84,7 @@ void Player::Draw() const
     //m_model->Draw();
 
 	////////////// DRAW SCORE /////////////////////////
-	glm::vec2 screen_coords = Scene::Get2D(Position(),
+	/*glm::vec2 screen_coords = Scene::Get2D(Position(),
 		Scene::Instance()->GetViewMatrix(),
 		Scene::Instance()->GetPerspectiveMatrix(),
 		Window::width, Window::height);
@@ -94,7 +94,7 @@ void Player::Draw() const
 	strcpy_s(score, "[");
 	strcat_s(score, std::to_string(num_eggs).c_str());
 	strcat_s(score, "]");
-	TextRenderer::RenderText(score, screen_coords.x, screen_coords.y - 400, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+	TextRenderer::RenderText(score, screen_coords.x, screen_coords.y - 400, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));*/
 
 }
 
