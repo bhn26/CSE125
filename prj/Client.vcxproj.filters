@@ -55,7 +55,7 @@
     <None Include="..\src\Graphics\Shaders\skinning.vert">
       <Filter>Source Files\Graphics\Shaders</Filter>
     </None>
-    <None Include="..\eggs.cfg" />
+    <None Include="eggs.cfg" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Graphics\Objects\Cube.cpp">

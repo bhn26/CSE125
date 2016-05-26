@@ -69,7 +69,12 @@ void ClientGame::sendInitPacket() {
 void ClientGame::receiveJoinPacket(int offset) {
 	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
 	struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
-	client_team = pi->team_id;
+
+	// set our team if it's for us
+	if (pi->id == client_id) {
+		client_team = pi->team_id;
+		printf("setting client team to %d for player %d\n", client_team, client_id);
+	}
 
 	printf("receiveJoinPacket for player %d on team %d\n", pi->id, pi->team_id);
 	int player = pi->id;
@@ -133,6 +138,7 @@ void ClientGame::receiveStartPacket(int offset) {
 	Window::m_pStateManager->ChangeState(CPlayState::GetInstance(Window::m_pStateManager)); // start game
 
 	game_started = true;
+	total_eggs = (team0.size() + team1.size()) * 2;
 	sendReadyPacket();
 }
 
@@ -144,13 +150,13 @@ void ClientGame::sendStartPacket() {
 	packet.hdr.sender_id = client_id;
 	packet.hdr.receiver_id = SERVER_ID;
 	packet.hdr.packet_type = START_GAME;
-	packet.hdr.sender_id = client_id;
 
 	packet.serialize(packet_data);
 
 	NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
 }
 
+// sendIndSpawnPacket
 void ClientGame::receiveReadyToSpawnPacket(int offset)
 {
 	const unsigned int packet_size = sizeof(Packet);
@@ -162,7 +168,9 @@ void ClientGame::receiveReadyToSpawnPacket(int offset)
 	packet.hdr.receiver_id = SERVER_ID;
 
 	PosInfo pi;
+	pi.id = client_id;
 	pi.team_id = client_team;
+	printf("send IndSpawn Packet for player %d on team %d", client_id, pi.team_id);
 	pi.skin = rand() % 3;
 
 	pi.serialize(packet.dat.buf);
@@ -417,7 +425,7 @@ void ClientGame::update()
 void ClientGame::Initialize()
 {
     // Create the GLFW window
-    window = Window::Create_window(1024, 768);
+    window = Window::Create_window(1366, 768);
     // Print OpenGL and GLSL versions
     Print_versions();
     // Setup callbacks

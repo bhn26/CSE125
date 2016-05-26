@@ -174,7 +174,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="..\eggs.cfg" />
     <None Include="..\src\Graphics\Shaders\skinning.frag" />
     <None Include="..\src\Graphics\Shaders\skinning.vert" />
     <None Include="..\src\Graphics\Shaders\cubemap.frag" />
@@ -194,6 +193,7 @@
     <None Include="..\src\Graphics\Shaders\sprite.vert" />
     <None Include="..\src\Graphics\Shaders\text.frag" />
     <None Include="..\src\Graphics\Shaders\text.vert" />
+    <None Include="eggs.cfg" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Graphics\Objects\ModelEntity.cpp" />

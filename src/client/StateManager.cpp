@@ -9,16 +9,16 @@ CStateManager::~CStateManager()
 {
 }
 
-void CStateManager::OnKeyDown(WPARAM wKey)
+void CStateManager::OnKeyDown(int action, int key)
 {
 	if (m_pActiveState)
-		m_pActiveState->OnKeyDown(wKey);
+		m_pActiveState->OnKeyDown(action, key);
 }
 
-void CStateManager::OnKeyUp(WPARAM wKey)
+void CStateManager::OnKeyUp(int action, int key)
 {
 	if (m_pActiveState)
-		m_pActiveState->OnKeyUp(wKey);
+		m_pActiveState->OnKeyUp(action, key);
 }
 
 void CStateManager::OnChar(WPARAM wChar)

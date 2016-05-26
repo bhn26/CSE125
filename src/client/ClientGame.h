@@ -82,7 +82,9 @@ public:
 	static std::vector<int> Team0() { return cg->team0; }
 	static std::vector<int> Team1() { return cg->team1; }
 
+	int TotalEggs() { return total_eggs; };
 	int * GetScores() { return scores; };
+	int GetClientTeam() { return client_team; };
 
 private:
     ClientGame(void);
@@ -98,6 +100,7 @@ private:
 	std::vector <int> team0;
 	std::vector <int> team1;
 
+	int total_eggs;
 	int scores[2];
 	int winner; // set on receipt of game over packet
 

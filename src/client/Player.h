@@ -71,7 +71,6 @@ public:
     glm::mat4 GetPerspectiveMatrix() const;
     glm::mat3 GetNormalMatrix() const;
 
-	int GetID() { return id; };
 	int GetClassId() { return class_id; }
 
 	glm::quat GetOrientation() { return Orientation();  }
@@ -86,7 +85,6 @@ public:
 	int GetTeam() { return team_id; }
 
 private:
-	int id;
 	int team_id;
 	int num_eggs;
 
