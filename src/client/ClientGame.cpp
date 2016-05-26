@@ -420,7 +420,7 @@ void ClientGame::update()
 void ClientGame::Initialize()
 {
     // Create the GLFW window
-    window = Window::Create_window(1024, 768);
+    window = Window::Create_window(1366, 768);
     // Print OpenGL and GLSL versions
     Print_versions();
     // Setup callbacks
