@@ -17,7 +17,7 @@
 // Other Libs
 #include <SOIL/SOIL.h>
 
-CubeMap::CubeMap() : Entity(glm::scale(glm::mat4(1.0f), glm::vec3(200.0f)))
+CubeMap::CubeMap() : Entity(glm::scale(glm::mat4(1.0f), glm::vec3(10.0f)))
 {
     GLfloat skyboxVertices[] = {
         // Positions
@@ -127,8 +127,8 @@ void CubeMap::Draw() const
     GLint projectionLocation = shader->GetUniform("projection");
     
     
-    //glUniformMatrix4fv(viewLoc, 1, false, glm::value_ptr(glm::mat4(glm::mat3(Scene::GetViewMatrix()))));
-    glUniformMatrix4fv(viewLoc, 1, false, glm::value_ptr(Scene::Instance()->GetViewMatrix()));
+    glUniformMatrix4fv(viewLoc, 1, false, glm::value_ptr(glm::mat4(glm::mat3(Scene::Instance()->GetViewMatrix()))));
+    //glUniformMatrix4fv(viewLoc, 1, false, glm::value_ptr(Scene::Instance()->GetViewMatrix()));
     glUniformMatrix4fv(modelLocation, 1, false, glm::value_ptr(this->toWorld));
     glUniformMatrix4fv(projectionLocation, 1, false, glm::value_ptr(Scene::Instance()->GetPerspectiveMatrix()));
     
