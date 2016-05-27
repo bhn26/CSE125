@@ -32,6 +32,7 @@ public:
 	~Egg();
 
 	Model* model;
+	float angle; // For spinning if we want
 
 	glm::vec3 color;
 
@@ -39,7 +40,7 @@ public:
 	void Update() override;
 	void Spin(float deg);
 	void SetColor(glm::vec3 color);
-		
+
 	// Inherited via Entity
 	virtual void Spawn(float x, float y, float z) override;
 };

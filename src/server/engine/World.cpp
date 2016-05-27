@@ -1,4 +1,3 @@
-
 #include "World.h"
 #include "ObjectId.h"
 #include "../ServerGame.h"
@@ -213,8 +212,6 @@ void World::UpdateWorld()
 	curWorld->stepSimulation(1 / 60.f, 4);
 	FireRateReset::instance()->currentWorldTick++;
 
-	printf("World.cpp, currentWorldTick is %u \n", FireRateReset::instance()->currentWorldTick);
-
 	// Process Weapon Fire Rate Reset
 	FireRateReset::instance()->ResetWeapons();
 
@@ -237,12 +234,10 @@ void World::UpdateWorld()
 			{
 				continue;
 			}
-
 			// If it hit a player
 			if (obB->getUserIndex() == PLAYER)
 			{
 				Player * collidePlayer = (Player *)obB->getUserPointer();
-
 				printf("Pushed to delete!, hit playerB");
 				deleteList.push_back(collideBullet);
 				collideBullet->SetToMarked();

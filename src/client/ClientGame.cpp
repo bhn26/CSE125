@@ -1,20 +1,29 @@
 #include "ClientGame.h"
 
+#include <cstdio>
+
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include <cstdio>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "Window.h"
-#include "../Graphics/Scene.h"
-#include "../network/NetworkData.h"
+#include "Graphics/Scene.h"
+#include "network/GameData.h"
+#include "network/NetworkData.h"
 #include "TextRenderer.h"
-
-#include "../client/PlayState.h"
+#include "client/PlayState.h"
+#include "ConfigManager.h"
 //#define _WIN32
 
-ClientGame* ClientGame::cg = nullptr;
+const std::string ClientGame::EVENT_QUIT = "Quit";
+const std::string ClientGame::EVENT_JUMP = "Jump";
+const std::string ClientGame::EVENT_ATTACK = "Attack";
+const std::string ClientGame::EVENT_START = "Start";
+const std::string ClientGame::EVENT_MOVE_FORWARD = "Move_Forward";
+const std::string ClientGame::EVENT_MOVE_BACKWARD = "Move_Backward";
+const std::string ClientGame::EVENT_MOVE_LEFT = "Move_Left";
+const std::string ClientGame::EVENT_MOVE_RIGHT = "Move_Right";
 
 ClientGame::ClientGame(void)
 {
@@ -261,6 +270,7 @@ void ClientGame::receiveRotationPacket(int offset) {
 	}
 
 
+
 	// left/right rotation
 	/*glm::mat4 newToWorld = target->GetToWorld() * glm::rotate(glm::mat4(1.0f), pi->v_rotation, glm::vec3(0.0f, 1.0f, 0.0f));
 	target->SetToWorld(newToWorld);
@@ -420,7 +430,7 @@ void ClientGame::update()
         i += sizeof(Packet);
     }
 }
-#endif
+#endif  // ifdef _WIN32
 
 void ClientGame::Initialize()
 {
@@ -432,6 +442,8 @@ void ClientGame::Initialize()
     Setup_callbacks();
     // Setup OpenGL settings, including lighting, materials, etc.
     Setup_opengl_settings();
+    // Initialize the shaders
+    ShaderManager::Instance()->LoadShaders();
     // Initialize objects/pointers for rendering
     Window::Initialize_objects();
 
@@ -462,14 +474,9 @@ void ClientGame::GameLoop()
 #endif
 
         // Measure speed
-        double currentTime = glfwGetTime();
-        nbFrames++;
-        if (currentTime - lastTime >= 5.0) // If last prinf() was more than 1 sec ago
-        {
-            printf("%f ms/frame\n", 5000.0/double(nbFrames));   // printf and reset timer
-            nbFrames = 0;
-            lastTime += 5.0;
-        }
+        PrintFrameRate();
+
+        CheckController();
 
         // Main render display callback. Rendering of objects is done here.
         Window::Display_callback(window);
@@ -550,4 +557,172 @@ void ClientGame::Print_versions()
 #ifdef GL_SHADING_LANGUAGE_VERSION
     std::printf("Supported GLSL version is %s.\n", (char *)glGetString(GL_SHADING_LANGUAGE_VERSION));
 #endif
+}
+
+// Prints once per 5 seconds
+void ClientGame::PrintFrameRate()
+{
+    double currentTime = glfwGetTime();
+    nbFrames++;
+    if (currentTime - lastTime >= 5.0) // If last prinf() was more than 1 sec ago
+    {
+        printf("%f ms/frame\n", 5000.0/double(nbFrames));   // printf and reset timer
+        nbFrames = 0;
+        lastTime += 5.0;
+    }
+}
+
+#include <iostream>
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Checks the controller input on Microsoft PC-joystick driver
+// axis[0] = (left) right
+// axis[1] = (left) down
+// axis[2] = 
+// axis[3] = (right) down
+// axis[4] = (right) right
+// button[0-3] = a, b, x, y
+// button[4-5] = LB, RB
+// button[6-7] = Back, Start
+// button[8-9] = left/right analog
+// button[10-13] = d-pad up, right, down, left
+void ClientGame::CheckController()
+{
+    using namespace Controller;
+    if (!glfwJoystickPresent(GLFW_JOYSTICK_1))
+        return;
+
+    // Get axes and buttons
+    int axesCount, buttonCount;
+    const float* axes = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &axesCount);
+    const unsigned char* buttons = glfwGetJoystickButtons(GLFW_JOYSTICK_1, &buttonCount);
+
+    // Check if we're starting the game
+    if (!ClientGame::instance()->hasStarted())
+    {
+        if (buttons[Buttons::START])     // Start
+        {
+            printf("client will send start game\n");
+            printf("sending start packet\n");
+            ClientGame::instance()->sendStartPacket();
+        }
+        return;
+    }
+    else
+    {
+        // Handle analog movement
+        HandleLeftAnalog(axes);
+        HandleRightAnalog(axes);
+        HandleButtonPress(buttons);
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Handles View changing
+void ClientGame::HandleRightAnalog(const float * axes)
+{
+    using namespace Controller;
+    const float rotThreshold = 0.2f;
+    if (abs(axes[Axes::R_HORIZONTAL]) > rotThreshold || abs(axes[Axes::R_VERTICAL]) > rotThreshold)
+    {
+        Scene::Instance()->GetPlayer()->ProcessViewMovement(abs(axes[Axes::R_HORIZONTAL]) > rotThreshold ? axes[Axes::R_HORIZONTAL] : 0.0f,
+            abs(axes[Axes::R_VERTICAL]) > rotThreshold ? -axes[Axes::R_VERTICAL] : 0.0f);
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Handles movement
+void ClientGame::HandleLeftAnalog(const float * axes)
+{
+    using namespace Controller;
+    const float threshold = 0.7f;
+    int greatestAxis = abs(axes[Axes::L_HORIZONTAL]) > abs(axes[Axes::L_VERTICAL]) ? Axes::L_HORIZONTAL : Axes::L_VERTICAL;
+    if (abs(axes[greatestAxis]) > threshold)
+    {
+        switch (greatestAxis)
+        {
+            case Axes::L_HORIZONTAL:     // Right
+                if (axes[greatestAxis] > 0)
+                    ClientGame::instance()->sendMovePacket(MOVE_RIGHT);
+                else
+                    ClientGame::instance()->sendMovePacket(MOVE_LEFT);
+                break;
+            case Axes::L_VERTICAL:     // DOWN
+                if (axes[greatestAxis] > 0)
+                    ClientGame::instance()->sendMovePacket(MOVE_BACKWARD);
+                else
+                    ClientGame::instance()->sendMovePacket(MOVE_FORWARD);
+                break;
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Handles all button press. Currently does nothing
+void ClientGame::HandleButtonPress(const unsigned char* buttons)
+{
+    using namespace Controller;
+    if (buttons[Buttons::A])
+        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_A"));
+    if (buttons[Buttons::B])
+        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_B"));
+    if (buttons[Buttons::X])
+        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_X"));
+    if (buttons[Buttons::Y])
+        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_Y"));
+    if (buttons[Buttons::BACK])
+        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_Back"));
+    if (buttons[Buttons::START])
+        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_Start"));
+    if (buttons[Buttons::L_ANALOG])
+        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_L_Analog"));
+    if (buttons[Buttons::R_ANALOG])
+        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_R_Analog"));
+    if (buttons[Buttons::L_BUMPER])
+        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_L_Bumper"));
+    if (buttons[Buttons::R_BUMPER])
+        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_R_Bumper"));
+    if (buttons[Buttons::D_PAD_UP])
+        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_D_Pad_Up"));
+    if (buttons[Buttons::D_PAD_RIGHT])
+        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_D_Pad_Right"));
+    if (buttons[Buttons::D_PAD_DOWN])
+        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_D_Pad_Down"));
+    if (buttons[Buttons::D_PAD_LEFT])
+        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_D_Pad_Left"));
+}
+
+void ClientGame::HandleButtonEvent(const std::string& event)
+{
+    if (!event.size())
+        return;
+
+    if (event == EVENT_QUIT)
+    {
+        glfwSetWindowShouldClose(this->window, GL_TRUE);
+    }
+    else if (event == EVENT_ATTACK)
+    {
+    }
+    else if (event == EVENT_JUMP)
+    {
+        sendJumpPacket();
+    }
+    else if (event == EVENT_MOVE_FORWARD)
+    {
+        sendMovePacket(MOVE_FORWARD);
+    }
+    else if (event == EVENT_MOVE_BACKWARD)
+    {
+        sendMovePacket(MOVE_BACKWARD);
+    }
+    else if (event == EVENT_MOVE_LEFT)
+    {
+        sendMovePacket(MOVE_LEFT);
+    }
+    else if (event == EVENT_MOVE_RIGHT)
+    {
+        sendMovePacket(MOVE_RIGHT);
+    }
 }

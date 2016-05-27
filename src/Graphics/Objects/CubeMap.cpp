@@ -17,7 +17,7 @@
 // Other Libs
 #include <SOIL/SOIL.h>
 
-CubeMap::CubeMap() : Entity(glm::scale(glm::mat4(1.0f), glm::vec3(200.0f)))
+CubeMap::CubeMap() : Entity(glm::scale(glm::mat4(1.0f), glm::vec3(350.0f)))
 {
     GLfloat skyboxVertices[] = {
         // Positions
@@ -75,12 +75,20 @@ CubeMap::CubeMap() : Entity(glm::scale(glm::mat4(1.0f), glm::vec3(200.0f)))
     glBindVertexArray(0);
     
     // Cubemap (Skybox)
+	faces.push_back("assets/cubemap/hills_rt.jpg");
+	faces.push_back("assets/cubemap/hills_lf.jpg");
+	faces.push_back("assets/cubemap/hills_up.jpg");
+	faces.push_back("assets/cubemap/hills_dn.jpg");
+	faces.push_back("assets/cubemap/hills_bk.jpg");
+	faces.push_back("assets/cubemap/hills_ft.jpg");
+	/*
     faces.push_back("assets/cubemap/right.jpg");
     faces.push_back("assets/cubemap/left.jpg");
     faces.push_back("assets/cubemap/top.jpg");
     faces.push_back("assets/cubemap/bottom.jpg");
     faces.push_back("assets/cubemap/back.jpg");
     faces.push_back("assets/cubemap/front.jpg");
+	*/
 }
 
 CubeMap::~CubeMap()
@@ -127,8 +135,8 @@ void CubeMap::Draw() const
     GLint projectionLocation = shader->GetUniform("projection");
     
     
-    //glUniformMatrix4fv(viewLoc, 1, false, glm::value_ptr(glm::mat4(glm::mat3(Scene::GetViewMatrix()))));
-    glUniformMatrix4fv(viewLoc, 1, false, glm::value_ptr(Scene::Instance()->GetViewMatrix()));
+    glUniformMatrix4fv(viewLoc, 1, false, glm::value_ptr(glm::mat4(glm::mat3(Scene::Instance()->GetViewMatrix()))));
+    //glUniformMatrix4fv(viewLoc, 1, false, glm::value_ptr(Scene::Instance()->GetViewMatrix()));
     glUniformMatrix4fv(modelLocation, 1, false, glm::value_ptr(this->toWorld));
     glUniformMatrix4fv(projectionLocation, 1, false, glm::value_ptr(Scene::Instance()->GetPerspectiveMatrix()));
     

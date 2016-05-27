@@ -163,4 +163,3 @@ std::map<std::pair<int, unsigned int>, Entity* > *EntitySpawner::GetMap()
 {
 	return (&entities);
 }
-

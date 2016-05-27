@@ -11,12 +11,9 @@
 #include "ClientGame.h"
 #include "ConfigManager.h"
 
-//ClientGame * client;
-
 int main()
 {
-	ConfigManager::instantiate();
-    ClientGame::instantiate();
+    ConfigManager::instance()->LoadConfigs("eggs.cfg");
     ClientGame::instance()->GameLoop();
 }
 #endif      // _WIN32

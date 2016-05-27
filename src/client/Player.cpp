@@ -121,7 +121,7 @@ void Player::ProcessKeyboard(DIRECTION direction, GLfloat deltaTime)
     if (direction == D_DOWN)
         this->toWorld[3] -= deltaTime * toWorld[1];
 }
-static int tick = 0;
+
 // Processes input received from a mouse input system. Expects the offset value in both the x and y direction.
 void Player::ProcessMouseMovement(GLfloat xoffset, GLfloat yoffset, GLboolean constrainPitch)
 {
@@ -135,11 +135,31 @@ void Player::ProcessMouseMovement(GLfloat xoffset, GLfloat yoffset, GLboolean co
     camAngle += glm::radians(yoffset);
     const static float pi2 = glm::pi<float>()/2;
     camAngle = (camAngle > pi2) ? pi2 : ((camAngle < -pi2) ? -pi2 : camAngle);
-	if (++tick % 10 == 0)
-	{
-		ClientGame::instance()->sendRotationPacket();
-		tick = 0;
-	}
+    if (++tick % 10 == 0)
+    {
+        ClientGame::instance()->sendRotationPacket();
+        tick = 0;
+    }
+}
+
+// Processes input received from a mouse input system. Expects the offset value in both the x and y direction.
+void Player::ProcessViewMovement(GLfloat xoffset, GLfloat yoffset, GLboolean constrainPitch)
+{
+    xoffset *= m_HViewSensitivity;
+    yoffset *= m_VViewSensitivity;
+
+    // Update Front, Right and Up Vectors using the updated Eular angles
+
+    this->toWorld = this->toWorld * glm::rotate(glm::mat4(1.0f), glm::radians(-xoffset), glm::vec3(0.0f, 1.0f, 0.0f));
+    //* glm::rotate(glm::mat4(1.0f), glm::radians(-yoffset), glm::vec3(1.0f, 0.0f, 0.0f));
+    camAngle += glm::radians(yoffset);
+    const static float pi2 = glm::pi<float>()/2;
+    camAngle = (camAngle > pi2) ? pi2 : ((camAngle < -pi2) ? -pi2 : camAngle);
+    if (++tick % 10 == 0)
+    {
+        ClientGame::instance()->sendRotationPacket();
+        tick = 0;
+    }
 }
 
 // Processes input received from a mouse scroll-wheel event. Only requires input on the vertical wheel-axis

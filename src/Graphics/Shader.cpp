@@ -11,13 +11,14 @@
 #include <GL/glew.h>
 
 #include "Shader.h"
+#include "Basic/Utils.h"
 
-Shader::Shader(const char* vertex_file_path, const char* fragment_file_path) : program((GLuint)0)
+Shader::Shader(const std::string& vertex_file_path, const std::string& fragment_file_path) : program((GLuint)0)
 {
     SetShaders(vertex_file_path, fragment_file_path);
 }
 
-bool Shader::SetShaders(const char* vertex_file_path, const char* fragment_file_path)
+bool Shader::SetShaders(const std::string& vertex_file_path, const std::string& fragment_file_path)
 {
     bool success = true;
     // Create the shaders
@@ -26,40 +27,27 @@ bool Shader::SetShaders(const char* vertex_file_path, const char* fragment_file_
 
     // Read the Vertex Shader code from the file
     std::string vertexShaderCode;
-    std::ifstream vertexShaderStream(vertex_file_path, std::ios::in);
-    if (vertexShaderStream.is_open())
+    std::ifstream vertexShaderStream(vertex_file_path.c_str(), std::ios::in);
+    if (!Utils::ReadFile(vertex_file_path, vertexShaderCode))
     {
-        std::string Line = "";
-        while (getline(vertexShaderStream, Line))
-            vertexShaderCode += "\n" + Line;
-        vertexShaderStream.close();
-    }
-    else
-    {
-        printf("Impossible to open %s. Are you in the right directory ? Don't forget to read the FAQ !\n", vertex_file_path);
-        getchar();
+        printf("Impossible to open %s. Are you in the right directory ? Don't forget to read the FAQ !\n", vertex_file_path.c_str());
         return false;
     }
 
     // Read the Fragment Shader code from the file
     std::string fragmentShaderCode;
     std::ifstream fragmentShaderStream(fragment_file_path, std::ios::in);
-    if (fragmentShaderStream.is_open())
+    if (!Utils::ReadFile(fragment_file_path, fragmentShaderCode))
     {
-        std::string Line = "";
-        while (getline(fragmentShaderStream, Line))
-        {
-            fragmentShaderCode += "\n" + Line;
-        }
-        fragmentShaderStream.close();
+        printf("Impossible to open %s. Are you in the right directory ? Don't forget to read the FAQ !\n", fragment_file_path.c_str());
+        return false;
     }
 
     GLint result = GL_FALSE;
     int infoLogLength;
 
-
     // Compile Vertex Shader
-    printf("Compiling shader : %s\n", vertex_file_path);
+    printf("Compiling shader : %s\n", vertex_file_path.c_str());
     char const * VertexSourcePointer = vertexShaderCode.c_str();
     glShaderSource(vertexShaderID, 1, &VertexSourcePointer, NULL);
     glCompileShader(vertexShaderID);
@@ -75,10 +63,8 @@ bool Shader::SetShaders(const char* vertex_file_path, const char* fragment_file_
         success &= false;
     }
 
-
-
     // Compile Fragment Shader
-    printf("Compiling shader : %s\n", fragment_file_path);
+    printf("Compiling shader : %s\n", fragment_file_path.c_str());
     char const * fragmentSourcePointer = fragmentShaderCode.c_str();
     glShaderSource(fragmentShaderID, 1, &fragmentSourcePointer, NULL);
     glCompileShader(fragmentShaderID);
@@ -93,8 +79,6 @@ bool Shader::SetShaders(const char* vertex_file_path, const char* fragment_file_
         printf("%s\n", &fragmentShaderErrorMessage[0]);
         success &= false;
     }
-
-
 
     // Link the program
     printf("Linking program\n");
@@ -113,7 +97,6 @@ bool Shader::SetShaders(const char* vertex_file_path, const char* fragment_file_
         printf("%s\n", &programErrorMessage[0]);
         success &= false;
     }
-
 
     glDetachShader(programID, vertexShaderID);
     glDetachShader(programID, fragmentShaderID);

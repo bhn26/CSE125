@@ -9,8 +9,6 @@
 
 unsigned int ServerGame::client_id; 
 
-ServerGame* ServerGame::sg = nullptr;
-
 ServerGame::ServerGame(void)
 {
     // id's to assign clients for our table

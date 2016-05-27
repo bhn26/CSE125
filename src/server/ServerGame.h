@@ -51,18 +51,17 @@ public:
 
 	void receiveJumpPacket(int offset);
 
+
 	void sendScorePacket();
 	void sendGameOverPacket(int winner);
 
 	void receiveShootPacket(int offset);
 
-	static void instantiate()
+	static ServerGame* instance()
 	{
-		if (sg == NULL)
-			sg = new ServerGame();
+		static ServerGame* instance = new ServerGame();
+		return instance;
 	}
-
-	static ServerGame* instance() { return sg; }
 
 	void IncScore(int team, int n) { scores[team] += n; };
 	void DecScore(int team, int n) { scores[team] -= n; ; }
@@ -90,9 +89,6 @@ private:
     static unsigned int client_id;
 
 	std::map <int, int> team_map; // <player, team>
-
-	// Singleton servergame
-	static ServerGame* sg;
 
 	// variables for starting the game
 

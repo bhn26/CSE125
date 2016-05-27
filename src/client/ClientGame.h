@@ -17,8 +17,38 @@
 
 class Window;
 
+namespace Controller
+{
+    enum Buttons
+    {
+        A = 0,
+        B = 1,
+        X = 2,
+        Y = 3,
+        L_BUMPER = 4,
+        R_BUMPER = 5,
+        BACK = 6,
+        START = 7,
+        L_ANALOG = 8,
+        R_ANALOG = 9,
+        D_PAD_UP = 10,
+        D_PAD_RIGHT = 11,
+        D_PAD_DOWN = 12,
+        D_PAD_LEFT = 13,
+    };
+
+    enum Axes
+    {
+        L_HORIZONTAL = 0,
+        L_VERTICAL = 1,
+        R_HORIZONTAL = 4,
+        R_VERTICAL = 3,
+    };
+}
+
 class ClientGame
 {
+    friend class Window;
 public:
 #ifdef _WIN32
     ClientNetwork* network;
@@ -72,21 +102,30 @@ public:
     void Destroy();
     void GameLoop();
 
-    static void instantiate() { 
-        if (cg == NULL)
-            cg = new ClientGame();
+    static ClientGame* instance()
+    {
+        static ClientGame* instance = new ClientGame();
+        return instance;
     }
-    static ClientGame* instance() {return cg;}
-	static int GetClientId() { return cg->client_id; }
+	static int GetClientId() { return instance()->client_id; }
 
-	static std::vector<int> Team0() { return cg->team0; }
-	static std::vector<int> Team1() { return cg->team1; }
+	static std::vector<int> Team0() { return instance()->team0; }
+	static std::vector<int> Team1() { return instance()->team1; }
 
 	int TotalEggs() { return total_eggs; };
 	int * GetScores() { return scores; };
 	int GetClientTeam() { return client_team; };
 
 private:
+    const static std::string EVENT_QUIT;
+    const static std::string EVENT_JUMP;
+    const static std::string EVENT_ATTACK;
+    const static std::string EVENT_START;
+    const static std::string EVENT_MOVE_FORWARD;
+    const static std::string EVENT_MOVE_BACKWARD;
+    const static std::string EVENT_MOVE_LEFT;
+    const static std::string EVENT_MOVE_RIGHT;
+
     ClientGame(void);
     ~ClientGame(void);
 
@@ -109,12 +148,19 @@ private:
 	bool game_started = false;
 	bool iSpawned = false;
 
-    static ClientGame* cg;
-
     static void Error_callback(int error, const char* description);
     void Setup_callbacks();
     void Setup_glew();
     void Setup_opengl_settings();
     void Print_versions();
+    void PrintFrameRate();
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // Controller handling
+    void CheckController();
+    void HandleLeftAnalog(const float* axes);
+    void HandleRightAnalog(const float* axes);
+    void HandleButtonPress(const unsigned char* buttons);
+    void HandleButtonEvent(const std::string& event);
 };
 
