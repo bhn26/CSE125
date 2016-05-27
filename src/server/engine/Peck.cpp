@@ -30,10 +30,9 @@ void Peck::UseWeapon(const btVector3* position, btMatrix3x3* rotation, int playe
 		//TODO: Add to damage field checker. Add this new field to the checker
 
 		this->fireFlag = 0;
-		this->nextFireTick = currentWorldTick + meleefireRate;
+		this->nextFireTick = FireRateReset::instance()->currentWorldTick + meleefireRate;
 
 		// add used weapon to "used" list in FireRateReset static object
-		std::shared_ptr<Weapon> weapon = std::shared_ptr<Weapon>(this);
-		FireRateReset::instance()->AddWeapon(weapon);
+		FireRateReset::instance()->AddWeapon(this);
 	}
 }

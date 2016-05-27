@@ -20,10 +20,7 @@ World::~World() {
 
 void World::Init() {
 
-	// Init world tick counter
-	currentWorldTick = 0;
-
-	// Init Fire Rate Reseter
+	// Init Fire Rate Reseter and World Tick Counter
 	FireRateReset::instance();
 
 	int z = 1000; // this is a random number for the walls right now, we need to change this
@@ -214,7 +211,9 @@ void World::UpdateWorld()
 {
 	// Step simulation
 	curWorld->stepSimulation(1 / 60.f, 4);
-	currentWorldTick++;
+	FireRateReset::instance()->currentWorldTick++;
+
+	printf("World.cpp, currentWorldTick is %u \n", FireRateReset::instance()->currentWorldTick);
 
 	// Process Weapon Fire Rate Reset
 	FireRateReset::instance()->ResetWeapons();
