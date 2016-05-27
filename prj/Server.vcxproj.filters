@@ -90,6 +90,9 @@
     <ClInclude Include="..\src\ConfigManager.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\server\engine\FieldHandler.h">
+      <Filter>Source Files\engine\FieldDetection</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\network\NetworkServices.cpp">
@@ -151,6 +154,9 @@
     </ClCompile>
     <ClCompile Include="..\src\ConfigManager.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\server\engine\FieldHandler.cpp">
+      <Filter>Source Files\engine\FieldDetection</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

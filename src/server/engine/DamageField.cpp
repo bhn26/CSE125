@@ -4,9 +4,8 @@
 #include "Entity.h"
 #include "ObjectId.h"
 
-DamageField::DamageField(int ttl, int damage, btVector3* origin, btCollisionShape* fieldshape, Entity* fieldowner, btDiscreteDynamicsWorld* curworld) : FieldObject(origin, fieldshape, fieldowner, curworld)
+DamageField::DamageField(int ttl, int damage, btVector3* origin, btCollisionShape* fieldshape, Entity* fieldowner, btDiscreteDynamicsWorld* curworld) : FieldObject(origin, fieldshape, fieldowner, curworld, ttl)
 {
-	this->fieldTtl = ttl;
 	this->fieldDamage = damage;
 }
 
@@ -20,7 +19,7 @@ DamageField::~DamageField()
 int DamageField::handleField()
 {
 	fieldTtl--;
-	if (fieldTtl < 1)
+	if (fieldTtl == 0)
 	{
 		int numOverlap = FieldGhostObject->getNumOverlappingObjects();
 		for (int i = 0; i < numOverlap; i++)

@@ -16,13 +16,16 @@ protected:
 	btPairCachingGhostObject* FieldGhostObject;
 	Entity * fieldOwner;
 	btDiscreteDynamicsWorld* curWorld;
+	int fieldTtl;
 
 public:
-	FieldObject(btVector3* origin, btCollisionShape* fieldshape, Entity* fieldowner, btDiscreteDynamicsWorld* curworld);
+	FieldObject(btVector3* origin, btCollisionShape* fieldshape, Entity* fieldowner, btDiscreteDynamicsWorld* curworld, int ttl);
 	virtual ~FieldObject();
 
 	// handles field detection. Returns 1 when field is done, 0 if not
 	virtual int handleField();
+
+	int isAlive();
 };
 
 

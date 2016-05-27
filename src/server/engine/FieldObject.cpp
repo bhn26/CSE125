@@ -2,7 +2,7 @@
 #include "Entity.h"
 
 
-FieldObject::FieldObject(btVector3* origin,  btCollisionShape* fieldshape, Entity* fieldowner, btDiscreteDynamicsWorld* curworld)
+FieldObject::FieldObject(btVector3* origin,  btCollisionShape* fieldshape, Entity* fieldowner, btDiscreteDynamicsWorld* curworld, int ttl)
 {
 	this->curWorld = curworld;
 	fieldOwner = fieldowner;
@@ -11,6 +11,7 @@ FieldObject::FieldObject(btVector3* origin,  btCollisionShape* fieldshape, Entit
 	FieldGhostObject->setCollisionFlags(btCollisionObject::CF_NO_CONTACT_RESPONSE);
 	curWorld->addCollisionObject(FieldGhostObject, btBroadphaseProxy::SensorTrigger, btBroadphaseProxy::AllFilter & ~btBroadphaseProxy::SensorTrigger);
 	FieldGhostObject->setWorldTransform(btTransform(btQuaternion::getIdentity(), (*origin)));
+	this->fieldTtl = ttl;
 }
 
 FieldObject::~FieldObject(){}
@@ -18,4 +19,10 @@ FieldObject::~FieldObject(){}
 int FieldObject::handleField()
 {
 	return 1;
+}
+
+// returns 1 if field is still "alive"
+int FieldObject::isAlive()
+{
+	return (fieldTtl != 0);
 }

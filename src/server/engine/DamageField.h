@@ -1,12 +1,10 @@
 #pragma once
 #include "FieldObject.h"
 
-class FieldObject;
 
 class DamageField : public FieldObject
 {
 protected:
-	int fieldTtl;
 	int fieldDamage;
 
 public:

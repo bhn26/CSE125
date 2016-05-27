@@ -4,6 +4,7 @@
 #include <vector>
 #include <memory>
 #include "FireRateReset.h"
+#include "FieldHandler.h"
 
 #ifndef BULLET_PHYSICS
 #define BULLET_PHYSICS
