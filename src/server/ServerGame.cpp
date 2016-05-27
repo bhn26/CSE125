@@ -368,6 +368,8 @@ void ServerGame::sendRemovePacket(ClassId cid, int oid)
 	r.rem_cid = cid;
 	r.rem_oid = oid;
 
+	printf("sending a remove packet for type %d object %d\n", r.rem_cid, r.rem_oid);
+
 	r.serialize(packet.dat.buf);
 
 	packet.serialize(packet_data);
@@ -553,5 +555,5 @@ void ServerGame::receiveShootPacket(int offset) {
 	Player* player = (Player*)(EntitySpawner::instance()->GetEntity(ClassId::PLAYER, hdr->sender_id));
 	player->UseWeapon();
 
-	printf("HELLS YEAH\n");
+	//printf("HELLS YEAH\n");
 }

@@ -4,13 +4,13 @@
 
 Bullet::Bullet(int objectid, int playerid, int teamid, int damage, btVector3* pos, btVector3* velocity, btMatrix3x3* rotation, btDiscreteDynamicsWorld* physicsWorld): Entity(ClassId::BULLET, objectid, physicsWorld)
 {
-	btCollisionShape* bulletShape = new btSphereShape(btScalar(.1));
+	btCollisionShape* bulletShape = new btSphereShape(btScalar(0.5));
 
 	//printf("Position:  x: %d, y: %d, z: %d  \n", pos->getX(), pos->getY(), pos->getZ());
 	//printf("Velocity:  x: %d, y: %d, z: %d  \n", velocity->getX(), velocity->getY(), velocity->getZ());
 
 	// Create bullet physics object
-	btVector3 globalPos = ((*rotation) * (btVector3(0, 0, 2))) + (*pos);
+	btVector3 globalPos = ((*rotation) * (btVector3(0, 0, 3))) + (*pos);
 
 	//printf("Current position:  x: %f, y: %f, z: %f  \n", pos->getX(), pos->getY(), pos->getZ());
 	//printf("New position:  x: %f, y: %f, z: %f  \n", globalPos.getX(), globalPos.getY(), globalPos.getZ());

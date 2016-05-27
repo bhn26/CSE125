@@ -18,7 +18,10 @@ private:
 
 	// list of game world objects
 	std::vector<std::shared_ptr<Flag>> flags;
+	// Delete list, mainly for bullets
 	std::vector<Entity*> deleteList;  
+	// Marked list to protect multi-handling, for flags
+	std::vector<Entity*> markedList;
 
 	// Physics World attributes
 	btDiscreteDynamicsWorld* curWorld;

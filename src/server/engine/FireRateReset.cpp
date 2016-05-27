@@ -16,36 +16,34 @@ FireRateReset* FireRateReset::instance()
 
 FireRateReset::FireRateReset()
 {
-	usedWeapons.clear();
+	usedWeapons = new std::vector<Weapon*>;
+	currentWorldTick = 0;
 }
 
 FireRateReset::~FireRateReset(){}
 
 void FireRateReset::ResetWeapons()
 {
-
-	std::vector<std::shared_ptr<Weapon> >::iterator it = usedWeapons.begin();
-	Weapon* nextWeapon;
-
+	auto it = usedWeapons->begin();
 	// Check through list of used weapons
-	while (it != usedWeapons.end())
+	while (it != usedWeapons->end())
 	{
-		nextWeapon = it->get();
+		printf("checking weapon.  Current World Tick:  %u, nextFireTick %u \n", currentWorldTick, (*it)->nextFireTick);
+
 		// reset fire flag if it can be fired again
-		if (nextWeapon->nextFireTick == currentWorldTick)
+		if ((*it)->nextFireTick == currentWorldTick)
 		{
-			nextWeapon->fireFlag = 1;
-			usedWeapons.erase(it);
+			(*it)->fireFlag = 1;
+			it = usedWeapons->erase(it);
 		}
 		else
 		{
-			// increment if weapon pointer wasn't removed
 			it++;
 		}
 	}
 }
 
-void FireRateReset::AddWeapon(std::shared_ptr<Weapon> weapon)
+void FireRateReset::AddWeapon(Weapon* weapon)
 {
-	this->usedWeapons.push_back(weapon);
+	this->usedWeapons->push_back(weapon);
 }

@@ -208,7 +208,9 @@ void Scene::AddEntity(PosInfo p)
 		break;
     case ClassId::BULLET:
     {
-        std::unique_ptr<ModelEntity> bullet = std::unique_ptr<ModelEntity>(new ModelEntity("assets/eggs/objects/egg.obj"));
+        std::unique_ptr<StaticObject> bullet = std::unique_ptr<StaticObject>(new StaticObject("assets/weapons/pumpkinseed.obj"));
+		bullet->Translate(glm::vec3(p.x, p.y, p.z));
+		printf("creating a bullet at %f, %f, %f\n", p.x, p.y, p.z);
         //bullet->GetShader() = modelShader;        // Set in ModelEntity
         AddEntity(p.cid, p.oid, std::move(bullet));
         break;

@@ -13,8 +13,6 @@ static int oid1 = 0;
 static int oid2 = 0;
 */
 
-static unsigned int currentWorldTick;
-
 enum MoveType {
 
     BAD_MOVE = -1,
