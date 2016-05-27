@@ -120,7 +120,6 @@ private:
     std::string modelFile;
 
     // Animation
-    std::unordered_map<std::string, std::string> m_animNames;
     State m_state;
     float m_lastTime_t;     // Test
     float m_distanceThreshhold_t;

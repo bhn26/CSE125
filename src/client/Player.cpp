@@ -30,11 +30,11 @@ Player::Player(float x, float y, float z, float rotW, float rotX, float rotY, fl
     Entity::RotateTo(rotW, rotX, rotY, rotZ);
 
     m_model = std::unique_ptr<Animation::AnimatedModel>(new Animation::AnimatedModel);
-    m_animNames["dance"] = m_model->FBXLoadClean("assets/chickens/chicken_dance.fbx", true);
-    m_animNames["walk"] = m_model->AddAnimation("assets/chickens/chicken_walk.fbx", true);
-    m_animNames["peck"] = m_model->AddAnimation("assets/chickens/chicken_peck.fbx", false);
-    m_animNames["jump"] = m_model->AddAnimation("assets/chickens/chicken_jump.fbx", false);
-    m_animNames["death"] = m_model->AddAnimation("assets/chickens/chicken_death.fbx", false);
+    m_model->FBXLoadClean("assets/chickens/chicken_dance.fbx", true, "dance");
+    m_model->AddAnimation("assets/chickens/chicken_walk.fbx", true, "walk");
+    m_model->AddAnimation("assets/chickens/chicken_peck.fbx", false, "peck");
+    m_model->AddAnimation("assets/chickens/chicken_jump.fbx", false, "jump");
+    m_model->AddAnimation("assets/chickens/chicken_death.fbx", false, "death");
 
     m_model->RegisterListener(this);
 
@@ -216,27 +216,27 @@ void Player::ChangeState(State state)
     switch (state)
     {
         case State::IDLE:
-            m_model->SetAnimation(m_animNames["dance"]);
+            m_model->SetAnimation("dance");
             m_model->Reset();
             break;
         case State::WALK:
-            m_model->PlayAnimation(m_animNames["walk"]);
+            m_model->PlayAnimation("walk");
             m_lastTime_t = Utils::CurrentTime();
             m_lastPos_t = Position();
             break;
         case State::JUMP:
-            m_model->PlayAnimation(m_animNames["jump"]);
+            m_model->PlayAnimation("jump");
             m_lastTime_t = Utils::CurrentTime();
             m_lastPos_t = Position();
             break;
         case State::PECK:
-            m_model->PlayAnimation(m_animNames["peck"]);
+            m_model->PlayAnimation("peck");
             break;
         case State::DANCE:
-            m_model->PlayAnimation(m_animNames["dance"]);
+            m_model->PlayAnimation("dance");
             break;
         case State::DEATH:
-            m_model->PlayAnimation(m_animNames["death"]);
+            m_model->PlayAnimation("death");
             break;
     }
 }

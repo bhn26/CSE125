@@ -84,7 +84,7 @@ namespace Animation
 
         void InitBones0();
 
-        std::string AddAnimFromScene(const aiScene* scene, bool loops = false);
+        std::string AddAnimFromScene(const aiScene* scene, bool loops = false, std::string animName = "");
         bool PlayAnimation(std::string name);
         bool SetAnimation(std::string name);
 
