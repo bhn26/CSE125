@@ -208,19 +208,12 @@ void Scene::AddEntity(PosInfo p)
 		break;
     case ClassId::BULLET:
     {
-       /* std::unique_ptr<ModelEntity> bullet = std::unique_ptr<ModelEntity>(new ModelEntity("assets/weapons/pumpkinseed.obj"));
-		bullet->MoveTo(p.x, p.y, p.z);
+        std::unique_ptr<StaticObject> bullet = std::unique_ptr<StaticObject>(new StaticObject("assets/weapons/pumpkinseed.obj"));
+		bullet->Translate(glm::vec3(p.x, p.y, p.z));
 		printf("creating a bullet at %f, %f, %f\n", p.x, p.y, p.z);
         //bullet->GetShader() = modelShader;        // Set in ModelEntity
         AddEntity(p.cid, p.oid, std::move(bullet));
-        break;*/
-		egg = std::unique_ptr<Egg>(new Egg(p.x, p.y, p.z));
-		egg->SetColor(glm::vec3(0.27f, 0.16f, 0.0f));
-		egg->GetShader() = diffuseShader;
-		egg->SetClassId(p.cid);
-		egg->SetObjId(p.oid);
-		AddEntity(p.cid, p.oid, std::move(egg));
-		break;
+        break;
     }
 	default:
 		break;
