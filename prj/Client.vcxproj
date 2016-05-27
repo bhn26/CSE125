@@ -97,7 +97,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>EGGS_CLIENT;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <ShowIncludes>false</ShowIncludes>
       <AdditionalIncludeDirectories>$(SolutionDir)src</AdditionalIncludeDirectories>
@@ -136,7 +136,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>EGGS_CLIENT;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <ShowIncludes>false</ShowIncludes>
       <AdditionalIncludeDirectories>$(SolutionDir)src</AdditionalIncludeDirectories>
@@ -196,6 +196,8 @@
     <None Include="..\src\Graphics\Shaders\text.vert" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\Graphics\Objects\InstanceObject.cpp" />
+    <ClCompile Include="..\src\Graphics\ShaderManager.cpp" />
     <ClCompile Include="..\src\Graphics\Objects\ModelEntity.cpp" />
     <ClCompile Include="..\src\client\GameState.cpp" />
     <ClCompile Include="..\src\client\LobbyState.cpp" />
@@ -235,6 +237,8 @@
     <ClCompile Include="..\src\Graphics\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\src\Graphics\Objects\InstanceObject.h" />
+    <ClInclude Include="..\src\Graphics\ShaderManager.h" />
     <ClInclude Include="..\src\Graphics\Objects\ModelEntity.h" />
     <ClInclude Include="..\src\client\GameState.h" />
     <ClInclude Include="..\src\client\LobbyState.h" />
@@ -259,6 +263,7 @@
     <ClInclude Include="..\src\client\Player.h" />
     <ClInclude Include="..\src\client\Window.h" />
     <ClInclude Include="..\src\Graphics\Objects\Ground.h" />
+    <ClInclude Include="..\src\Graphics\Objects\Grass.h" />
     <ClInclude Include="..\src\Graphics\Mesh.h" />
     <ClInclude Include="..\src\Graphics\Model.h" />
     <ClInclude Include="..\src\Graphics\Objects\Chicken.h" />
@@ -274,9 +279,6 @@
     <ClInclude Include="..\src\Graphics\Nodes.h" />
     <ClInclude Include="..\src\Graphics\Shader.h" />
     <ClInclude Include="..\src\Graphics\Texture.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="..\src\Graphics\Objects\Grass.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

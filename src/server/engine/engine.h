@@ -20,7 +20,7 @@ public:
 	void InitWorld(int num_players);
 
 	// Spawns at random positions
-	void SpawnRandomPlayer(int team, int skin);
+	void SpawnRandomPlayer(int player, int team, int skin);
 	void SpawnRandomFlag();
 
 	int RandomNum(int mod);

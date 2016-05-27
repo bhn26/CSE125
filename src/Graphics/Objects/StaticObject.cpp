@@ -12,10 +12,9 @@
 
 StaticObject::StaticObject(const GLchar* path)
 {
-	this->toWorld = glm::mat4(1.0f);
-	model = new Model(path);
-	//std::shared_ptr<Shader> modelShader = std::make_shared<Shader>("src/Graphics/Shaders/model_loading.vert", "src/Graphics/Shaders/model_loading.frag");
-	shader = Scene::Instance()->modelShader;
+    this->toWorld = glm::mat4(1.0f);
+    model = new Model(path);
+    shader = ShaderManager::Instance()->GetShader("Model");
 }
 
 StaticObject::~StaticObject()
@@ -64,8 +63,4 @@ void StaticObject::Spin(float deg)
 	// This creates the matrix to rotate the cube
 	this->toWorld = toWorld * glm::rotate(glm::mat4(1.0f), glm::radians(deg), glm::vec3(0.0f, 1.0f, 0.0f));
 	this->normalMatrix = glm::mat3(glm::transpose(glm::inverse(toWorld)));
-}
-
-void StaticObject::Spawn(float x, float y, float z)
-{
 }

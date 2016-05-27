@@ -39,7 +39,7 @@ public:
         JUMP,
         WALK,
         DANCE,
-        PECK,
+        ATTACK,
         DEATH,
     };
 
@@ -50,14 +50,13 @@ public:
 
     // Inherited via Entity
     virtual void Update(float deltaTime) override;
-    virtual void Spawn(float x, float y, float z) override;
     virtual void Draw() const override;
 
     virtual void MoveTo(float x, float y, float z) override;
     virtual void RotateTo(const glm::quat& newOrientation) override;
     void Jump() { ChangeState(State::JUMP); }
     void Dance() { ChangeState(State::DANCE); }
-    void Attack() { ChangeState(State::PECK); }
+    void Attack() { ChangeState(State::ATTACK); }
     void Die() { ChangeState(State::DEATH); }
 
     void SetModelFile(std::string fileName);
@@ -67,6 +66,7 @@ public:
 
     // Processes input received from a mouse input system. Expects the offset value in both the x and y direction.
     void ProcessMouseMovement(GLfloat xoffset, GLfloat yoffset, GLboolean constrainPitch = true);
+    void ProcessViewMovement(GLfloat xoffset, GLfloat yoffset, GLboolean constrainPitch = true);
 
     // Processes input received from a mouse scroll-wheel event. Only requires input on the vertical wheel-axis
     void ProcessMouseScroll(GLfloat yoffset);
@@ -114,6 +114,10 @@ private:
     glm::vec3 relativeCamPosition;
     glm::vec3 defaultCamFront;
     glm::vec3 relativeCamPerpendicular;
+
+    float m_HViewSensitivity = 7.5f;
+    float m_VViewSensitivity = 5.0f;
+
     int tick = 0;
 
     // Path name for chicken model texture

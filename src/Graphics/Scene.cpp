@@ -18,7 +18,6 @@
 #include <vector>
 #include <map>
 
-SpriteRenderer * Scene::sprite_renderer = new SpriteRenderer();
 Scene::Scene() : camera(std::unique_ptr<Camera>(nullptr)), pLight(std::unique_ptr<PointLight>(nullptr)),
     player(nullptr)
 {
@@ -30,88 +29,100 @@ void Scene::Setup()
 {
     entities.clear();
 
-	instanceShader = std::make_shared<Shader>("src/Graphics/Shaders/instancing.vert", "src/Graphics/Shaders/instancing.frag");
-    basicShader = std::make_shared<Shader>("src/Graphics/Shaders/basic_shader.vert", "src/Graphics/Shaders/basic_shader.frag");
-    diffuseShader = std::make_shared<Shader>("src/Graphics/Shaders/basic_shader.vert", "src/Graphics/Shaders/diffuse.frag");
-    modelShader = std::make_shared<Shader>("src/Graphics/Shaders/model_loading.vert", "src/Graphics/Shaders/model_loading.frag");
-    cubeMapShader = std::make_shared<Shader>("src/Graphics/Shaders/cubemap.vert", "src/Graphics/Shaders/cubemap.frag");
+    //instanceShader = std::make_shared<Shader>("src/Graphics/Shaders/instancing.vert", "src/Graphics/Shaders/instancing.frag");
+    //basicShader = std::make_shared<Shader>("src/Graphics/Shaders/basic_shader.vert", "src/Graphics/Shaders/basic_shader.frag");
+    //diffuseShader = std::make_shared<Shader>("src/Graphics/Shaders/basic_shader.vert", "src/Graphics/Shaders/diffuse.frag");
+    //modelShader = std::make_shared<Shader>("src/Graphics/Shaders/model_loading.vert", "src/Graphics/Shaders/model_loading.frag");
+    //cubeMapShader = std::make_shared<Shader>("src/Graphics/Shaders/cubemap.vert", "src/Graphics/Shaders/cubemap.frag");
 
     //camera = std::unique_ptr<Camera>(new Camera(glm::vec3(0.0f, 9.0f, -15.0f), glm::vec3(0.0f, 1.0f, 0.0f), 90.0f, -25.0f));
     camera = std::unique_ptr<Camera>(new Camera(glm::vec3(0.0f, 9.0f, -15.0f)));
     pLight = std::unique_ptr<PointLight>(new PointLight(glm::vec3(0.0f, 20.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)));
 
 	// Barn
-	std::unique_ptr<StaticObject> barn = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/barn.obj"));
-	barn->Scale(8.0f);
-	barn->Translate(glm::vec3(0.0f, 0.0f, 10.0f));
+	std::unique_ptr<StaticObject> barn = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/barn2.obj"));
+	barn->Scale(17.0f);
+	barn->Translate(glm::vec3(0.0f, 0.0f, 20.0f));
 
-	// Tractor
-	std::unique_ptr<StaticObject> tractor = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/tractor.obj"));
-	tractor->Scale(7.0f);
-	tractor->Rotate(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-	tractor->Translate(glm::vec3(17.0f, 0.0f, -13.0f));
+	// Tractors
+	std::unique_ptr<StaticObject> red_tractor = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/tractors/red_tractor.obj"));
+	red_tractor->Scale(12.0f);
+	red_tractor->Rotate(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+	red_tractor->Translate(glm::vec3(17.0f, 0.0f, -13.0f));
+
+	std::unique_ptr<StaticObject> green_tractor = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/tractors/green_tractor.obj"));
+	green_tractor->Scale(12.0f);
+	green_tractor->Rotate(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+	green_tractor->Translate(glm::vec3(34.0f, 0.0f, 13.0f));
+
+	std::unique_ptr<StaticObject> orange_tractor = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/tractors/orange_tractor.obj"));
+	orange_tractor->Scale(12.0f);
+	orange_tractor->Rotate(90.0f, glm::vec3(0.0f, -1.0f, 0.0f));
+	orange_tractor->Translate(glm::vec3(-17.0f, 0.0f, -13.0f));
 
 	// Silo
 	std::unique_ptr<StaticObject> silo = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/silo.obj"));
-	silo->Scale(3.0f);
-	silo->Translate(glm::vec3(-13.0f, 0.0f, -4.0f));
-
-	// Pumpkin
-	std::unique_ptr<StaticObject> pumpkin = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/pumpkin.obj"));
-	pumpkin->Translate(glm::vec3(0.0f, 0.0f, -1.0f));
+	silo->Scale(10.0f);
+	silo->Translate(glm::vec3(-28.0f, 0.0f, -4.0f));
 
 	// Bench
-	std::unique_ptr<StaticObject> bench = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/wood_bench.obj"));
-	bench->Scale(0.01f);
-	bench->Translate(glm::vec3(0.0f, 0.0f, -60.0f));
+	std::unique_ptr<StaticObject> bench = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/bench3.obj"));
+	bench->Scale(4.0f);
+	bench->Translate(glm::vec3(40.0f, 3.2f, 0.0f));
+	bench->Rotate(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+
+	// Pumpkin
+	std::unique_ptr<StaticObject> pumpkinObj = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/pumpkin.obj"));
+
+	// Rocks
+	std::unique_ptr<StaticObject> rocks = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/nature/rocks.obj"));
+	rocks->Scale(4.0f);
+	rocks->Translate(glm::vec3(28.0f, 0.2f, -20.0f));
+
+	// Rocks
+	std::unique_ptr<StaticObject> stump = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/nature/stump.obj"));
+	stump->Scale(4.0f);
+	stump->Translate(glm::vec3(-28.0f, 0.2f, -20.0f));
 
 	// Ground
-	std::unique_ptr<StaticObject> ground = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/ground.obj"));
-	ground->Translate(glm::vec3(0.0f, 6.8f, 0.0f));
-	//bench->Translate(glm::vec3(0.0f, 0.0f, -60.0f));
+	std::unique_ptr<StaticObject> ground = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/nature/ground.obj"));
+	ground->Scale(15.0f);
+	ground->Translate(glm::vec3(0.0f, 100.4f, 0.0f));
+
+	// Seed
+	std::unique_ptr<StaticObject> seed = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/pumpkinseed.obj"));
+	seed->Scale(0.5f);
+	seed->Translate(glm::vec3(0.0f, 1.0f, 0.0f));
+
+	// Boat
+	//std::unique_ptr<StaticObject> boat = std::unique_ptr<StaticObject>(new StaticObject("assets/map/new_models/boat.obj"));
+//	boat->Scale(15.0f);
+//	boat->Translate(glm::vec3(0.0f, 100.4f, 0.0f));
 
 	grass = std::unique_ptr<Grass>(new Grass);
-    //std::unique_ptr<Ground> ground = std::unique_ptr<Ground>(new Ground);
-    //std::unique_ptr<Cube> cube = std::unique_ptr<Cube>(new Cube);
+	// Pumpkins
+	//pumpkin = std::unique_ptr<InstanceObject>(new InstanceObject("assets/map/objects/pumpkin.obj", 10000));
+	//pumpkin->Translate(glm::vec3(0.0f, 0.0f, -1.0f));
+
     cubeMap = std::unique_ptr<CubeMap>(new CubeMap);
     cubeMap->LoadCubeMap();
 
-   // cube->GetShader() = basicShader;
-	grass->GetShader() = instanceShader;
-   // ground->GetShader() = diffuseShader;
-    cubeMap->GetShader() = cubeMapShader;
+    grass->GetShader() = ShaderManager::Instance()->GetShader("Instancing");
+    cubeMap->GetShader() = ShaderManager::Instance()->GetShader("CubeMap");
 
-	//static_objects.push_back(std::move(grass));
+	//static_objects.push_back(std::move(boat));
 	static_objects.push_back(std::move(barn));
-	static_objects.push_back(std::move(tractor));
+	static_objects.push_back(std::move(red_tractor));
+	static_objects.push_back(std::move(green_tractor));
+	static_objects.push_back(std::move(orange_tractor));
 	static_objects.push_back(std::move(silo));
-	static_objects.push_back(std::move(ground));
-  //  entities.push_back(std::move(ground));
+	static_objects.push_back(std::move(rocks));
 	static_objects.push_back(std::move(bench));
-   // entities.push_back(std::move(cube));
-	//static_objects.push_back(std::move(cubeMap));
-
-    /*std::unique_ptr<Player> player = std::unique_ptr<Player>(new Player);
-	player->SetModelFile("assets/chickens/objects/pinocchio_chicken.obj");
-    Scene::player = player.get();*/
-    //ground = std::unique_ptr<Ground>(new Ground);
-    //std::unique_ptr<Cube> cube = std::unique_ptr<Cube>(new Cube);
-	/*std::unique_ptr<Egg> egg = std::unique_ptr<Egg>(new Egg(glm::vec3(10.0f, 3.0f, 10.0f)));
-	egg->SetColor(glm::vec3(0.27f, 0.16f, 0.0f));*/
-
-    //cube->GetShader() = basicShader;
-	//egg->GetShader() = diffuseShader;
-    //ground->GetShader() = diffuseShader;
-    //player->GetShader() = modelShader;
-
-    /*entities.push_back(std::move(ground));
-    entities.push_back(std::move(player));
-	entities.push_back(std::move(egg));
-    //entities.push_back(std::move(cube)); // Don't add cube to scene
-    entities.push_back(std::move(cubeMap));*/
-
+	static_objects.push_back(std::move(pumpkinObj));
+	static_objects.push_back(std::move(seed));
+	static_objects.push_back(std::move(ground));
+	
 }
-
 
 void Scene::Update()
 {
@@ -188,8 +199,7 @@ void Scene::AddEntity(PosInfo p)
 			skin_type = "assets/chickens/objects/pinocchio_chicken.obj";
 		}
 		player->SetModelFile(skin_type);
-        player->Spawn(p.x, p.y, p.z);
-		player->GetShader() = modelShader;
+		player->GetShader() = ShaderManager::Instance()->GetShader("Model");
 		player->SetObjId(p.oid);
 		player->SetClassId(p.cid);
 		player->SetTeam(p.team_id);
@@ -204,14 +214,16 @@ void Scene::AddEntity(PosInfo p)
 	case ClassId::FLAG:
 		egg = std::unique_ptr<Egg>(new Egg(p.x, p.y, p.z));
 		egg->SetColor(glm::vec3(0.27f, 0.16f, 0.0f));
-		egg->GetShader() = diffuseShader;
+		egg->GetShader() = ShaderManager::Instance()->GetShader("Model");
 		egg->SetClassId(p.cid);
 		egg->SetObjId(p.oid);
 		AddEntity(p.cid, p.oid, std::move(egg));
 		break;
     case ClassId::BULLET:
     {
-        std::unique_ptr<ModelEntity> bullet = std::unique_ptr<ModelEntity>(new ModelEntity("assets/eggs/objects/egg.obj"));
+        std::unique_ptr<StaticObject> bullet = std::unique_ptr<StaticObject>(new StaticObject("assets/weapons/pumpkinseed.obj"));
+		bullet->Translate(glm::vec3(p.x, p.y, p.z));
+		printf("creating a bullet at %f, %f, %f\n", p.x, p.y, p.z);
         //bullet->GetShader() = modelShader;        // Set in ModelEntity
         AddEntity(p.cid, p.oid, std::move(bullet));
         break;
@@ -235,15 +247,15 @@ std::unique_ptr<Entity>& Scene::GetEntity(int cid, int oid)
 
 glm::vec2 Scene::Get2D(glm::vec3 coords, glm::mat4 view, glm::mat4 projection/*perspective matrix */, int width, int height)
 {
-    glm::mat4 viewProjectionMatrix = projection * view;
-
-    //transform world to clipping coordinates
-    glm::vec3 clipping = glm::normalize(glm::vec3(viewProjectionMatrix * glm::vec4(coords, 1.0f)));
-    int winX = (int)std::round(((clipping.x + 1) / 2.0) * width);
-
-    //we calculate -point3D.getY() because the screen Y axis is
-    //oriented top->down 
-    int winY = (int)std::round(((1 - clipping.y) / 2.0) * height);
-    return glm::vec2(winX, winY);
+	glm::mat4 viewProjectionMatrix = projection * view;
+	
+	//transform world to clipping coordinates
+	glm::vec3 clipping = glm::normalize(glm::vec3(viewProjectionMatrix * glm::vec4(coords, 1.0f)));
+	int winX = (int)std::round(((clipping.x + 1) / 2.0) * width);
+	
+	//we calculate -point3D.getY() because the screen Y axis is
+	//oriented top->down
+	int winY = (int)std::round(((1 - clipping.y) / 2.0) * height);
+	return glm::vec2(winX, winY);
 }
 

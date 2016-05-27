@@ -7,5 +7,7 @@ enum ClassId {
 
 	BULLET = 2,
 
-	COLLECTABLE = 3
+	COLLECTABLE = 3,
+
+	OBSTACLE = 4
 };

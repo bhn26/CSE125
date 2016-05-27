@@ -1,5 +1,5 @@
 #include "Collectable.h"
-#include "EntitySpawner.h"
+//#include "EntitySpawner.h"
 #include "Player.h"
 #include <time.h>
 

@@ -12,7 +12,7 @@
 
 Grass::Grass() : Entity()
 {
-	grass = new Model("assets/map/objects/plant.obj");
+	grass = new Model("assets/map/objects/nature/plant.obj");
 
 	// Generate large list of semi-random transformation matrices
 	amount = 10000;
@@ -98,10 +98,5 @@ void Grass::Draw() const
 }
 
 void Grass::Update(float deltaTime)
-{
-	//Spin(0.3f);
-}
-
-void Grass::Spawn(float x, float y, float z)
 {
 }

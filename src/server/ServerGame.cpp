@@ -3,15 +3,20 @@
 #include "engine/Player.h"
 #include <algorithm>
 
-unsigned int ServerGame::client_id; 
+#include <chrono>
+#include <ratio>
+#include <thread>
 
-ServerGame* ServerGame::sg = nullptr;
+unsigned int ServerGame::client_id; 
 
 ServerGame::ServerGame(void)
 {
     // id's to assign clients for our table
     client_id = 0;
 	game_started = false;
+	
+	scores[0] = 0;
+	scores[1] = 0;
 
     // set up the server network to listen 
     network = new ServerNetwork(); 
@@ -36,12 +41,13 @@ void ServerGame::update()
 			// This will be an INIT_CONNECTION packet
 			receiveFromClients();
 		}
-	}
-	
+	}	
+
 	receiveFromClients();
 
 	// Check that all clients are ready
-	if (game_started && ready_clients == client_id)
+
+	if (game_started && ready_clients >= client_id)
 	{
 		if (spawned_clients == ready_clients && !eggs_spawned) {
 			for (int i = 0; i < 2*ready_clients; i++)
@@ -49,13 +55,41 @@ void ServerGame::update()
 				engine->SpawnRandomFlag();
 			}
 			eggs_spawned = true;
+			Sleep(2000); // should wait for clients to respond
 		}
 		if(!engine->hasInitialSpawned())
 			engine->SendPreSpawn(ready_clients);
 
 		// once eggs has spawned, everything has spawned and we can begin the world cycle
+		auto t1 = chrono::high_resolution_clock::now();
+
+
 		if(eggs_spawned)
 			engine->GetWorld()->UpdateWorld();
+
+		auto t2 = chrono::high_resolution_clock::now();
+
+		//float thresh = 16.67;
+        float thresh = 33;
+		chrono::duration<double, milli> fp_ms = t2 - t1;
+		//("DIFFERENCE: %f\n", fp_ms.count());
+
+		if(thresh - fp_ms.count() < 0)
+			printf("TIMING ERROR: %f\n", thresh - fp_ms.count());
+		else
+		{
+			//printf("SLEEPING: %f\n", (thresh - fp_ms.count()));
+
+			Sleep((thresh - fp_ms.count()));
+
+			auto t3 = chrono::high_resolution_clock::now();
+
+			chrono::duration<double, milli> fp_after = t3 - t1;
+
+			//("TOTAL AFTER SLEEP: %f\n", fp_after.count());
+
+
+		}
 	}
 
 }
@@ -106,8 +140,8 @@ void ServerGame::receiveFromClients()
 					break;
 
 				case IND_SPAWN_EVENT:
-					spawned_clients++;
 					receiveIndSpawnPacket(i + sizeof(PacketHeader));
+					spawned_clients++;
 					break;
 
 				case START_GAME:
@@ -296,7 +330,7 @@ void ServerGame::receiveIndSpawnPacket(int offset)
 	struct PacketData* dat = (struct PacketData *) &(network_data[offset]);
 	struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
 
-	engine->SpawnRandomPlayer(pi->team_id, pi->skin);
+	engine->SpawnRandomPlayer(pi->id, pi->team_id, pi->skin);
 }
 
 void ServerGame::sendSpawnPacket(PosInfo pi)
@@ -332,6 +366,8 @@ void ServerGame::sendRemovePacket(ClassId cid, int oid)
 	r.rem_cid = cid;
 	r.rem_oid = oid;
 
+	printf("sending a remove packet for type %d object %d\n", r.rem_cid, r.rem_oid);
+
 	r.serialize(packet.dat.buf);
 
 	packet.serialize(packet_data);
@@ -347,26 +383,25 @@ void ServerGame::receiveMovePacket(int offset)
     struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
 	Entity* ent = (Entity*)(EntitySpawner::instance()->GetEntity(ClassId::PLAYER, hdr->sender_id));
 
-    //printf("dummy's current pos is (%d,%d)\n", dpi.x, dpi.y);
 	btVector3* vec;
 	switch (pi->direction) {
 	case MOVE_FORWARD:
-		vec = new btVector3(0, 0, 2);
+		vec = new btVector3(0, 0, 25);
 		ent->Move(vec);
 		delete vec;
 		break;
 	case MOVE_BACKWARD:	
-		vec = new btVector3(0, 0, -2);
+		vec = new btVector3(0, 0, -25);
 		ent->Move(vec);
 		delete vec;
 		break;
 	case MOVE_LEFT:
-		vec = new btVector3(2, 0, 0);
+		vec = new btVector3(25, 0, 0);
 		ent->Move(vec);
 		delete vec;
 		break;
 	case MOVE_RIGHT:
-		vec = new btVector3(-2, 0, 0);
+		vec = new btVector3(-25, 0, 0);
 		ent->Move(vec);
 		delete vec;
 		break;
@@ -406,7 +441,6 @@ void ServerGame::sendMovePacket(ClassId class_id, int obj_id)
         packet.serialize(packet_data);
 
         network->sendToAll(packet_data, packet_size);
-        //printf("Sent move packet to clients\n");
 }
 
 void ServerGame::receiveRotationPacket(int offset) {
@@ -513,6 +547,9 @@ void ServerGame::receiveShootPacket(int offset) {
 	//struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset]);
 
 	//shared_ptr<Player> player = engine->GetWorld()->GetPlayer(hdr->sender_id);
+	struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset]);
+	Player* player = (Player*)(EntitySpawner::instance()->GetEntity(ClassId::PLAYER, hdr->sender_id));
+	player->UseWeapon();
 
-	printf("HELLS YEAH\n");
+	//printf("HELLS YEAH\n");
 }

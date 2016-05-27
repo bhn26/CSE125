@@ -6,7 +6,6 @@
 #include <glm/glm.hpp> // glm::mat4
 #include <memory>
 
-//#include "../Shader.h"
 #include "Entity.h"
 
 class Cube : public Entity
@@ -20,9 +19,6 @@ public:
     void Draw() const override;
     void Update(float deltaTime) override;
     void Spin(float);
-
-    // Inherited via Entity
-    virtual void Spawn(float x, float y, float z) override;
 };
 
 #endif

@@ -97,9 +97,3 @@ void ChickenAnim::Dance()
 {
     m_model.PlayAnimation(m_dance);
 }
-
-void ChickenAnim::Spawn(float x, float y, float z)
-{
-}
-
-

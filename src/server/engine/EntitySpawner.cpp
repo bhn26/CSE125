@@ -30,15 +30,16 @@ EntitySpawner::~EntitySpawner(){}
 Player* EntitySpawner::spawnPlayer(int teamid, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld)
 {
 	// Create player and add to Entity Map
-	Player* newPlayer = new Player(oid_player, teamid, pos, physicsWorld);
-	AddEntity(ClassId::PLAYER, oid_player, newPlayer);
+	// note - need to create players with explicit id or else teams will depend on order they connected to the lobby
+	Player* newPlayer = new Player(pos.id, pos.team_id, pos, physicsWorld);
+	AddEntity(ClassId::PLAYER, pos.id, newPlayer);
 	oid_player++;
 
 	btQuaternion quat = newPlayer->GetEntityRotation();
 
 	// Send Player Spawn packet
 	btVector3 vec = newPlayer->GetEntityPosition();
-	printf("Created player at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
+	printf("Created player %d at (%f,%f,%f) on team %d\n", pos.id, vec.getX(), vec.getY(), vec.getZ(),pos.team_id );
 	// Send spawn info to the clients
 	PosInfo out;
 	out.cid = ClassId::PLAYER;
@@ -83,14 +84,14 @@ Flag*  EntitySpawner::spawnFlag(PosInfo pos, btDiscreteDynamicsWorld* physicsWor
 	return newFlag;
 }
 
-Bullet* EntitySpawner::spawnBullet(int playerid, int teamid, int damage, const btVector3* pos, btVector3* velocity, btDiscreteDynamicsWorld* physicsWorld)
+Bullet* EntitySpawner::spawnBullet(int playerid, int teamid, int damage, btVector3* pos, btVector3* velocity, btMatrix3x3* rotation, btDiscreteDynamicsWorld* physicsWorld)
 {
 	// Create Bullet and add to Entity Map
-	Bullet* fireProjectile = new Bullet(oid_bullet, playerid, teamid, damage, pos, velocity, physicsWorld);
+	Bullet* fireProjectile = new Bullet(oid_bullet, playerid, teamid, damage, pos, velocity, rotation, physicsWorld);
 	AddEntity(ClassId::BULLET, oid_bullet, fireProjectile);
 	oid_bullet++;
 
-	// Send Flag Spawn packet
+	// Send Bullet Spawn packet
 	btVector3 vec = fireProjectile->GetEntityPosition();
 	btQuaternion quat = fireProjectile->GetEntityRotation();
 	printf("Created Bullet at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
@@ -155,10 +156,10 @@ void EntitySpawner::RemoveEntity(int cid, unsigned int oid)
 	std::pair<int, unsigned int> key = std::pair<int, unsigned int>(cid, oid);
 	it = this->entities.find(key);
 	entities.erase(it);
+	printf("? supposedly removed entity from map\n");
 }
 
 std::map<std::pair<int, unsigned int>, Entity* > *EntitySpawner::GetMap()
 {
 	return (&entities);
 }
-

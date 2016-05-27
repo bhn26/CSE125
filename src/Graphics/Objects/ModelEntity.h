@@ -18,5 +18,4 @@ private:
     // Inherited via Entity
     virtual void Draw() const override;
     virtual void Update(float deltaTime) override {}
-    virtual void Spawn(float x, float y, float z) override {}
 };

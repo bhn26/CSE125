@@ -16,6 +16,7 @@ protected:
 	btRigidBody* entityRigidBody;
 	int objectId;
 	int classId;
+	int toDelete;
 
 public:
 
@@ -36,5 +37,15 @@ public:
 	int GetObjectId();
 
 	int GetClassId();
+
+	btRigidBody* GetRigidBody();
+
+	// Marks this entity to be ignored
+	void SetToMarked();
+
+	void ResetMark();
+
+	// Checks if this entity is set to be deleted, sets collision detection to ignore
+	int MarkStatus();
 
 };

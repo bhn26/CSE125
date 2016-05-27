@@ -16,6 +16,16 @@
 
 class Shader;
 
+enum POSITION
+{
+	P_FORWARD,
+	P_BACKWARD,
+	P_LEFT,
+	P_RIGHT,
+	P_UP,
+	P_DOWN
+};
+
 class Entity
 {
     sf::Music musicPlayer;      // Remove?
@@ -45,8 +55,6 @@ public:
     virtual void Draw() const = 0;
     virtual void Update(float deltaTime) = 0;
 
-    virtual void Spawn(/*Scene* scene, */float x, float y, float z) = 0;      // Maybe to spawn into the world, rather than using a constructor
-
     // Methods to modify model matrix (position/view)
     virtual void MoveTo(float x, float y, float z) { MoveTo(glm::vec3(x, y, z));}
     virtual void MoveTo(const glm::vec3& newPosition) { toWorld[3] = glm::vec4(newPosition, 1.0f); CalculateNormalMatrix(); }
@@ -67,11 +75,14 @@ public:
     void SetClassId(int cid) { class_id = cid; }
     void SetObjId(int oid) { obj_id = oid; }
 
+	// Process movement
+	void ProcessKeyboard(POSITION position, GLfloat deltaTime);
+
     std::shared_ptr<Shader>& GetShader() { return shader; }
 
     // for Players only
-    virtual void SetScore(int n) {};
-    virtual int GetScore() const { return 0; };
+    virtual void SetScore(int n) {}
+    virtual int GetScore() const { return 0; }
 
 private:
     void ApplyScale();

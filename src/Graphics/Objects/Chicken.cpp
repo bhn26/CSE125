@@ -50,7 +50,3 @@ void Chicken::Draw() const
 void Chicken::Update(float deltaTime)
 {
 }
-
-void Chicken::Spawn(float x, float y, float z)
-{
-}

@@ -4,6 +4,7 @@
 
 Entity::Entity(int classid, int objectid, btDiscreteDynamicsWorld* physicsworld)
 {
+	this->toDelete = 0;
 	this->classId = classid;
 	this->objectId = objectid;
 	this->curWorld = physicsworld;
@@ -11,32 +12,33 @@ Entity::Entity(int classid, int objectid, btDiscreteDynamicsWorld* physicsworld)
 
 Entity::~Entity(){};
 
-btVector3 Entity::GetEntityPosition() { 
+btVector3 Entity::GetEntityPosition() 
+{ 
 	return entityRigidBody->getCenterOfMassPosition(); 
 }
 
-void Entity::Move(btVector3* changeVelocity) {
+void Entity::Move(btVector3* changeVelocity) 
+{
 	//Calculate new velocity
 	btTransform currentTrans;
 	entityRigidBody->getMotionState()->getWorldTransform(currentTrans);
 	btMatrix3x3 currentOrientation = currentTrans.getBasis();
-	btQuaternion q = GetEntityRotation();
-	//btVector3 newVelocity = btVector3(q.getW() * 3, 0, q.getY() * 3);
 	btVector3 newVelocity = currentOrientation * (*changeVelocity);
-	//printf("Q OF PLAYER MOVING IS :  %f, %f, %f, %f\n", q.getW(), q.getX(), q.getY(), q.getZ());
+
 	// set new velocity
 	entityRigidBody->setLinearVelocity(newVelocity);
-	//printf("%d: world pos object = %f,%f,%f\n", id, float(currentTrans.getOrigin().getX()), float(currentTrans.getOrigin().getY()), float(currentTrans.getOrigin().getZ()));
 }
 
-btQuaternion Entity::GetEntityRotation() { 
+btQuaternion Entity::GetEntityRotation()
+{ 
 	btTransform currentTrans;
 	entityRigidBody->getMotionState()->getWorldTransform(currentTrans);
 	btQuaternion currentOrientation = currentTrans.getRotation();
 	return currentOrientation;
 }
 
-void Entity::SetEntityRotation(float x, float y, float z, float w) {
+void Entity::SetEntityRotation(float x, float y, float z, float w) 
+{
 	btQuaternion* playerRotation = new btQuaternion(x, y, z, w);
 	btTransform currentTrans;
 	entityRigidBody->getMotionState()->getWorldTransform(currentTrans);
@@ -54,4 +56,27 @@ int Entity::GetObjectId()
 int Entity::GetClassId()
 {
 	return classId;
+}
+
+// Marks this entity to be deleted and ignored
+void Entity::SetToMarked()
+{
+	this->toDelete = 1;
+}
+
+void Entity::ResetMark()
+{
+	this->toDelete = 0;
+}
+
+// Checks if this entity is set to be deleted, sets collision detection to ignore
+int Entity::MarkStatus()
+{
+	return (this->toDelete);
+}
+
+
+btRigidBody* Entity::GetRigidBody()
+{
+	return this->entityRigidBody;
 }

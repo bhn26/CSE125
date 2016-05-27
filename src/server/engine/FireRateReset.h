@@ -10,11 +10,13 @@ class FireRateReset
 {
 
 private:
-	std::vector<std::shared_ptr<Weapon>> usedWeapons;
+	std::vector<Weapon*>* usedWeapons;
 	static FireRateReset *frr;
 	FireRateReset();
 
 public:
+
+	unsigned int currentWorldTick;
 
 	~FireRateReset();
 
@@ -22,5 +24,5 @@ public:
 
 	void ResetWeapons();
 
-	void AddWeapon(std::shared_ptr<Weapon> weapon);
+	void AddWeapon(Weapon* weapon);
 };

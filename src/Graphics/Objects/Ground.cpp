@@ -3,13 +3,13 @@
 #include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale, glm::perspective
 #include <glm/gtc/type_ptr.hpp>
 
-#include "../../client/Window.h"
-#include "../Scene.h"
-#include "../PointLight.h"
-#include "../Camera.h"
-#include "../../client/Player.h"
+#include "client/Window.h"
+#include "Graphics/Scene.h"
+#include "Graphics/PointLight.h"
+#include "Graphics/Camera.h"
+#include "client/Player.h"
 
-const float Ground::SIZE = 200.0f;
+const float Ground::SIZE = 400.0f;
 
 Ground::Ground() : Entity(), color(glm::vec3(0.545f, 0.271f, 0.075f))
 {
@@ -62,10 +62,6 @@ Ground::~Ground()
 }
 
 void Ground::Update(float deltaTime)
-{
-}
-
-void Ground::Spawn(float x, float y, float z)
 {
 }
 

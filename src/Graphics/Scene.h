@@ -11,8 +11,11 @@
 #include "Objects/Ground.h"
 #include "Objects/StaticObject.h"
 #include "Objects/Grass.h"
+#include "Objects/InstanceObject.h"
+#include "ShaderManager.h"
 #include "client\SpriteRenderer.h"
 #include "../network/GameData.h"
+
 
 class Camera;
 class Player;
@@ -25,10 +28,10 @@ class Scene
     float lastTime;
     std::unique_ptr<Camera> camera;
     std::unique_ptr<PointLight> pLight;
-
 	std::unique_ptr<CubeMap> cubeMap;
 	std::unique_ptr<Ground> ground;
 	std::unique_ptr<Grass> grass;
+	std::unique_ptr<InstanceObject> pumpkin;
 
     Player* player;
 
@@ -74,6 +77,8 @@ public:
 
     std::unique_ptr<PointLight>& GetPointLight() { return pLight; }
 	Player*& GetPlayer() { return player; }
+	StaticObject* GetStaticObject(int i) { return static_objects[i].get(); }
+	int GetSize() { return static_objects.size(); }
 
 	// helpers 
 	static glm::vec2 Get2D(glm::vec3 coords, glm::mat4 view, glm::mat4 projection/*perspective matrix */, int width, int height);

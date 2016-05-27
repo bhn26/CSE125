@@ -1,7 +1,18 @@
-newmtl initialShadingGroup
+newmtl Pumpkin:Material
 illum 4
-Kd 0.50 0.50 0.50
+Kd 0.00 0.00 0.00
 Ka 0.00 0.00 0.00
 Tf 1.00 1.00 1.00
 map_Kd pumpkin.png
 Ni 1.00
+Ks 0.14 0.14 0.14
+Ns 194.12
+newmtl Pumpkin:Material_001
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd stem.png
+Ni 1.00
+Ks 0.19 0.19 0.19
+Ns 194.12

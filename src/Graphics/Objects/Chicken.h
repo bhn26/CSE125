@@ -6,8 +6,7 @@
 //  Copyright © 2016 sunny side up. All rights reserved.
 //
 
-#ifndef Chicken_h
-#define Chicken_h
+#pragma once
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -31,9 +30,4 @@ public:
 
     void Draw() const override;
     void Update(float deltaTime) override;
-
-    // Inherited via Entity
-    virtual void Spawn(float x, float y, float z) override;
 };
-
-#endif /* Chicken_h */

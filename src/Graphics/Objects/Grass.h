@@ -6,8 +6,7 @@
 //  Copyright © 2016 sunny side up. All rights reserved.
 //
 
-#ifndef Grass_h
-#define Grass_h
+#pragma once
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -36,9 +35,5 @@ public:
 	void Draw() const override;
 	void Update(float deltaTime) override;
 	void SetColor(glm::vec3 color);
-
-	// Inherited via Entity
-	virtual void Spawn(float x, float y, float z) override;
 };
 
-#endif /* Grass_h */

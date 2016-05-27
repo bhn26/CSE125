@@ -6,6 +6,7 @@
 #include <map>
 
 #include "../../network/GameData.h"
+
 class WorldObstacle;
 
 using namespace std;
@@ -17,11 +18,11 @@ class World {
 private:
 
 	// list of game world objects
-	std::vector<std::shared_ptr<Player>> players;   
 	std::vector<std::shared_ptr<Flag>> flags;
-	//std::vector<std::shared_ptr<Weapon>> usedWeapons;
-	std::vector<std::shared_ptr<Bullet>> bullets;  // this may not be necessary...
-	//TODO list of weapons to check reload
+	// Delete list, mainly for bullets
+	std::vector<Entity*> deleteList;  
+	// Marked list to protect multi-handling, for flags
+	std::vector<Entity*> markedList;
 
 	// Physics World attributes
 	btDiscreteDynamicsWorld* curWorld;
@@ -53,8 +54,6 @@ public:
 
 	void Init();
 
-	//TODO: Replace references with EntitySpawner  GetEntity() method
-	std::shared_ptr<Player> GetPlayer(int id) { return players.at(id); };
 	void PreSpawn();
 	btDiscreteDynamicsWorld* GetPhysicsWorld();
 

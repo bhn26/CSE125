@@ -1,4 +1,3 @@
-
 #include "World.h"
 #include "ObjectId.h"
 #include "../ServerGame.h"
@@ -20,10 +19,7 @@ World::~World() {
 
 void World::Init() {
 
-	// Init world tick counter
-	currentWorldTick = 0;
-
-	// Init Fire Rate Reseter
+	// Init Fire Rate Reseter and World Tick Counter
 	FireRateReset::instance();
 
 	int z = 1000; // this is a random number for the walls right now, we need to change this
@@ -34,62 +30,153 @@ void World::Init() {
 	btBroadphaseInterface* overlappingPairCache = new btDbvtBroadphase();
 	btSequentialImpulseConstraintSolver* solver = new btSequentialImpulseConstraintSolver;
 	btDiscreteDynamicsWorld* dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfig);
-	dynamicsWorld->setGravity(btVector3(0, -0.1, 0));
+	dynamicsWorld->setGravity(btVector3(0, -15, 0));
 
 	// Add Ground Object
-	btCollisionShape* groundShape = new btStaticPlaneShape(btVector3(btScalar(0.), btScalar(1.), btScalar(0.)), 0);
-	btDefaultMotionState* groundMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 0, 0)));
+	//btCollisionShape* groundShape = new btStaticPlaneShape(btVector3(btScalar(0.), btScalar(1.), btScalar(0.)), 0);
+	btCollisionShape* groundShape = new btBoxShape(btVector3(WORLD_WIDTH, 1, WORLD_WIDTH));
+	btDefaultMotionState* groundMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, -1, 0)));
 	btRigidBody::btRigidBodyConstructionInfo groundRigidBodyCI(0, groundMotionState, groundShape, btVector3(0, 0, 0));
 	groundRigidBodyCI.m_friction = .4;
 	btRigidBody* groundRigidBody = new btRigidBody(groundRigidBodyCI);
-	groundRigidBody->setGravity(btVector3(0, -0.5, 0));
+	groundRigidBody->setGravity(btVector3(0, -10, 0));
 	dynamicsWorld->addRigidBody(groundRigidBody);
+	groundRigidBody->setGravity(btVector3(0, 0.1, 0));
+	groundRigidBody->setUserIndex(14);
 	// Create Ground Obstacle
 	WorldObstacle* groundwall = new WorldObstacle(z++, groundRigidBody, curWorld);
 	
 	// Add Pos X Wall
-	btCollisionShape* xWallShape = new btStaticPlaneShape(btVector3(btScalar(-1.), btScalar(0.), btScalar(0.)), 0);
-	btDefaultMotionState* xWallMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(WORLD_WIDTH, 0, 0)));
+	//btCollisionShape* xWallShape = new btStaticPlaneShape(btVector3(btScalar(-1.), btScalar(0.), btScalar(0.)), 0);
+	btCollisionShape* xWallShape = new btBoxShape(btVector3(1, WORLD_HEIGHT, WORLD_WIDTH));
+	btDefaultMotionState* xWallMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(WORLD_WIDTH+1, 0, 0)));
 	btRigidBody::btRigidBodyConstructionInfo xWallRigidBodyCI(0, xWallMotionState, xWallShape, btVector3(0, 0, 0));
 	xWallRigidBodyCI.m_friction = .5;
 	btRigidBody* xWallRigidBody = new btRigidBody(xWallRigidBodyCI);
-	xWallRigidBody->setGravity(btVector3(0, 0, 0));
+	xWallRigidBody->setGravity(btVector3(0, 0.1, 0));
 	dynamicsWorld->addRigidBody(xWallRigidBody);
+	xWallRigidBody->setUserIndex(5);
 	// Create X Wall
 	WorldObstacle* xwall = new WorldObstacle(z++, xWallRigidBody, curWorld);
 
 	// Add Neg X Wall
-	btCollisionShape* nxWallShape = new btStaticPlaneShape(btVector3(btScalar(1.), btScalar(0.), btScalar(0.)), 0);
-	btDefaultMotionState* nxWallMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(-WORLD_WIDTH, 0, 0)));
+	//btCollisionShape* nxWallShape = new btStaticPlaneShape(btVector3(btScalar(1.), btScalar(0.), btScalar(0.)), 0);
+	btCollisionShape* nxWallShape = new btBoxShape(btVector3(1, WORLD_HEIGHT, WORLD_WIDTH));
+	btDefaultMotionState* nxWallMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(-(WORLD_WIDTH+1), 0, 0)));
 	btRigidBody::btRigidBodyConstructionInfo nxWallRigidBodyCI(0, nxWallMotionState, nxWallShape, btVector3(0, 0, 0));
 	nxWallRigidBodyCI.m_friction = .5;
 	btRigidBody* nxWallRigidBody = new btRigidBody(nxWallRigidBodyCI);
-	nxWallRigidBody->setGravity(btVector3(0, 0, 0));
+	nxWallRigidBody->setGravity(btVector3(0, 0.1, 0));
 	dynamicsWorld->addRigidBody(nxWallRigidBody);
+	nxWallRigidBody->setUserIndex(6);
 	// Create Neg X Wall
 	WorldObstacle* nxwall = new WorldObstacle(z++, groundRigidBody, curWorld);
 
 	// Add Pos Z Wall
-	btCollisionShape* zWallShape = new btStaticPlaneShape(btVector3(btScalar(0.), btScalar(0.), btScalar(-1.)), 0);
-	btDefaultMotionState* zWallMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 0, WORLD_WIDTH)));
+	//btCollisionShape* zWallShape = new btStaticPlaneShape(btVector3(btScalar(0.), btScalar(0.), btScalar(-1.)), 0);
+	btCollisionShape* zWallShape = new btBoxShape(btVector3(WORLD_WIDTH, WORLD_HEIGHT, 1));
+	btDefaultMotionState* zWallMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 0, WORLD_WIDTH+1)));
 	btRigidBody::btRigidBodyConstructionInfo zWallRigidBodyCI(0, zWallMotionState, zWallShape, btVector3(0, 0, 0));
 	zWallRigidBodyCI.m_friction = .5;
 	btRigidBody* zWallRigidBody = new btRigidBody(zWallRigidBodyCI);
-	zWallRigidBody->setGravity(btVector3(0, 0, 0));
+	zWallRigidBody->setGravity(btVector3(0, 0.1, 0));
 	dynamicsWorld->addRigidBody(zWallRigidBody);
+	zWallRigidBody->setUserIndex(7);
 	// Create Pos Z Wall
 	WorldObstacle* zwall = new WorldObstacle(z++, zWallRigidBody, curWorld);
 
 	// Add Neg Z Wall
-	btCollisionShape* nzWallShape = new btStaticPlaneShape(btVector3(btScalar(0.), btScalar(0.), btScalar(1.)), 0);
-	btDefaultMotionState* nzWallMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 0, -WORLD_WIDTH)));
-	btRigidBody::btRigidBodyConstructionInfo nzWallRigidBodyCI(0, nzWallMotionState, nzWallShape, btVector3(0, 0, 0));
+	//btCollisionShape* nzWallShape = new btStaticPlaneShape(btVector3(btScalar(0.), btScalar(0.), btScalar(1.)), 0);
+	btCollisionShape* nzWallShape = new btBoxShape(btVector3(WORLD_WIDTH, WORLD_HEIGHT, 1));
+	btDefaultMotionState* nzWallMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 0, -(WORLD_WIDTH+1))));
+	btRigidBody::btRigidBodyConstructionInfo nzWallRigidBodyCI(0, nzWallMotionState, zWallShape, btVector3(0, 0, 0));
 	nzWallRigidBodyCI.m_friction = .5;
 	btRigidBody* nzWallRigidBody = new btRigidBody(nzWallRigidBodyCI);
-	nzWallRigidBody->setGravity(btVector3(0, 0, 0));
+	nzWallRigidBody->setGravity(btVector3(0, 0.1, 0));
 	dynamicsWorld->addRigidBody(nzWallRigidBody);
+	nzWallRigidBody->setUserIndex(8);
 	// Create Neg Z Wall
 	WorldObstacle* nzwall = new WorldObstacle(z++, nzWallRigidBody, curWorld);
+
+
+
+	btCollisionShape* playerShape = new btBoxShape(btVector3(6, 2, 5));
+	// Create tractor physics object
+	btDefaultMotionState*playerMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(16.5, 1, -13)));
+	btScalar mass = 100;
+	btVector3 playerInertia(0, 0, 0);
+	playerShape->calculateLocalInertia(mass, playerInertia);
+	btRigidBody::btRigidBodyConstructionInfo playerRigidBodyCI(mass, playerMotionState, playerShape, playerInertia);
+	btRigidBody* pRigidBody = new btRigidBody(playerRigidBodyCI);
+	pRigidBody->setFriction((btScalar)0.5);
+	pRigidBody->setDamping((btScalar)100, (btScalar)100);
+	dynamicsWorld->addRigidBody(pRigidBody);
+	pRigidBody->setUserIndex(9);
+
+	playerShape = new btBoxShape(btVector3(3, 5, 3));
+	// Create tractor physics object
+	playerMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(-13, 1, -2.5)));
+	mass = 100;
+	playerInertia = btVector3(0, 0, 0);
+	playerShape->calculateLocalInertia(mass, playerInertia);
+	btRigidBody::btRigidBodyConstructionInfo p(mass, playerMotionState, playerShape, playerInertia);
+	pRigidBody = new btRigidBody(p);
+	pRigidBody->setFriction((btScalar)0.5);
+	pRigidBody->setDamping((btScalar)100, (btScalar)100);
+	dynamicsWorld->addRigidBody(pRigidBody);
+	pRigidBody->setUserIndex(10);
+
+	playerShape = new btBoxShape(btVector3(2, 8, 10));
+	// Create tractor physics object
+	playerMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(7.5, 1, 9)));
+	mass = 100;
+	playerInertia = btVector3(0, 0, 0);
+	playerShape->calculateLocalInertia(mass, playerInertia);
+	btRigidBody::btRigidBodyConstructionInfo p1(mass, playerMotionState, playerShape, playerInertia);
+	pRigidBody = new btRigidBody(p1);
+	pRigidBody->setFriction((btScalar)0.5);
+	pRigidBody->setDamping((btScalar)100, (btScalar)100);
+	dynamicsWorld->addRigidBody(pRigidBody);
+	pRigidBody->setUserIndex(11);
+
+	playerShape = new btBoxShape(btVector3(10, 8, 2));
+	// Create tractor physics object
+	playerMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(.1, 1, 17.5)));
+	mass = 100;
+	playerInertia = btVector3(0, 0, 0);
+	playerShape->calculateLocalInertia(mass, playerInertia);
+	btRigidBody::btRigidBodyConstructionInfo p2(mass, playerMotionState, playerShape, playerInertia);
+	pRigidBody = new btRigidBody(p2);
+	pRigidBody->setFriction((btScalar)0.5);
+	pRigidBody->setDamping((btScalar)100, (btScalar)100);
+	dynamicsWorld->addRigidBody(pRigidBody);
+	pRigidBody->setUserIndex(12);
+
+	playerShape = new btBoxShape(btVector3(2, 8, 10));
+	// Create tractor physics object
+	playerMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(-8, 1, 9.7)));
+	mass = 100;
+	playerInertia = btVector3(0, 0, 0);
+	playerShape->calculateLocalInertia(mass, playerInertia);
+	btRigidBody::btRigidBodyConstructionInfo p3(mass, playerMotionState, playerShape, playerInertia);
+	pRigidBody = new btRigidBody(p3);
+	pRigidBody->setFriction((btScalar)0.5);
+	pRigidBody->setDamping((btScalar)100, (btScalar)100);
+	dynamicsWorld->addRigidBody(pRigidBody);
+	pRigidBody->setUserIndex(13);
+
+	playerShape = new btBoxShape(btVector3(11, 2, 11));
+	// Create tractor physics object
+	playerMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(.5, 10, 8)));
+	mass = 100;
+	playerInertia = btVector3(0, 0, 0);
+	playerShape->calculateLocalInertia(mass, playerInertia);
+	btRigidBody::btRigidBodyConstructionInfo p4(mass, playerMotionState, playerShape, playerInertia);
+	pRigidBody = new btRigidBody(p4);
+	pRigidBody->setFriction((btScalar)0.5);
+	pRigidBody->setDamping((btScalar)100, (btScalar)100);
+	dynamicsWorld->addRigidBody(pRigidBody);
+	pRigidBody->setUserIndex(14);
 
 	// Set Local attributes
 	this->ground = groundwall;
@@ -122,8 +209,8 @@ void World::PreSpawn()
 void World::UpdateWorld()
 {
 	// Step simulation
-	curWorld->stepSimulation(1 / 60.f, 10);
-	currentWorldTick++;
+	curWorld->stepSimulation(1 / 30.f, 4);
+	FireRateReset::instance()->currentWorldTick++;
 
 	// Process Weapon Fire Rate Reset
 	FireRateReset::instance()->ResetWeapons();
@@ -132,6 +219,7 @@ void World::UpdateWorld()
 	int numManifolds = curWorld->getDispatcher()->getNumManifolds();
 	for (int i = 0; i < numManifolds; i++)
 	{
+		//printf("numMan  %d\n", numManifolds);
 		btPersistentManifold* contactManifold = curWorld->getDispatcher()->getManifoldByIndexInternal(i);
 		const btCollisionObject* obA = contactManifold->getBody0();
 		const btCollisionObject* obB = contactManifold->getBody1();
@@ -142,12 +230,17 @@ void World::UpdateWorld()
 		{
 			// Grab Bullet Object
 			Bullet * collideBullet = (Bullet *)obA->getUserPointer();
-
+			if (collideBullet->MarkStatus())
+			{
+				continue;
+			}
 			// If it hit a player
 			if (obB->getUserIndex() == PLAYER)
 			{
 				Player * collidePlayer = (Player *)obB->getUserPointer();
-
+				printf("Pushed to delete!, hit playerB");
+				deleteList.push_back(collideBullet);
+				collideBullet->SetToMarked();
 				//TODO send "you got hit"
 				if (collidePlayer->takeDamage(collideBullet->GetDamage()))
 				{
@@ -160,11 +253,23 @@ void World::UpdateWorld()
 			else if (obB->getUserIndex() == BULLET)
 			{
 				Bullet * collideBullet2 = (Bullet *)obB->getUserPointer();
-				delete collideBullet2;
+				printf("Pushed to delete!, hit bullet B");
+				deleteList.push_back(collideBullet);
+				collideBullet->SetToMarked();
+				//delete collideBullet2;
 			}
+			else if (obB->getUserIndex() < 15)
+			{
+				// deletes bulletA regardless
+				printf("Pushed to delete!, hit ground B,  %d", obB->getUserIndex());
+				btVector3 bulPos = collideBullet->GetEntityPosition();
+				printf("Current position:  x: %f, y: %f, z: %f  \n", bulPos.getX(), bulPos.getY(), bulPos.getZ());
+				bulPos = collideBullet->GetRigidBody()->getLinearVelocity();
+				printf("Current velocity:  x: %f, y: %f, z: %f  \n", bulPos.getX(), bulPos.getY(), bulPos.getZ());
 
-			// deletes bulletA regardless
-			delete collideBullet;
+				deleteList.push_back(collideBullet);
+				collideBullet->SetToMarked();
+			}
 		}
 
 		// If object B of collision is a Bullet
@@ -172,13 +277,22 @@ void World::UpdateWorld()
 		{
 			// Grab Bullet Object
 			Bullet * collideBullet = (Bullet *)obB->getUserPointer();
+			if (collideBullet->MarkStatus())
+			{
+				continue;
+			}
 
-			// If it hit a player
+			// Bullet hits player
 			if (obA->getUserIndex() == PLAYER)
 			{
 				Player * collidePlayer = (Player *)obA->getUserPointer();
+
+				printf("Pushed to delete! hit player A");
+				deleteList.push_back(collideBullet);
+				collideBullet->SetToMarked();
 				if (collidePlayer->takeDamage(collideBullet->GetDamage()))
 				{
+					printf("Player is dead!");
 					//TODO Handle Player death:  send player death to client
 				}
 			}
@@ -187,11 +301,22 @@ void World::UpdateWorld()
 			else if (obA->getUserIndex() == BULLET)
 			{
 				Bullet * collideBullet2 = (Bullet *)obA->getUserPointer();
-				delete collideBullet2;
+				printf("Pushed to delete! hit bullet A");
+				deleteList.push_back(collideBullet);
+				collideBullet->SetToMarked();
 			}
+			else if (obA->getUserIndex() < 15)
+			{
+				// deletes bulletB regardless
+				printf("Pushed to delete!, hit ground A,  %d", obA->getUserIndex());
+				btVector3 bulPos = collideBullet->GetEntityPosition();
+				printf("Current position:  x: %f, y: %f, z: %f  \n", bulPos.getX(), bulPos.getY(), bulPos.getZ());
+				bulPos = collideBullet->GetRigidBody()->getLinearVelocity();
+				printf("Current velocity:  x: %f, y: %f, z: %f  \n", bulPos.getX(), bulPos.getY(), bulPos.getZ());
 
-			// deletes bulletA regardless
-			delete collideBullet;
+				deleteList.push_back(collideBullet);
+				collideBullet->SetToMarked();
+			}
 		}
 
 
@@ -218,8 +343,14 @@ void World::UpdateWorld()
 
 				// Handle Flag Collection
 				Flag * collideFlag = (Flag *)obB->getUserPointer();
+				if (collideFlag->MarkStatus())
+				{
+					continue;
+				}
 				collideFlag->HandleCollectable(collidePlayer);
 				ServerGame::instance()->sendRemovePacket(ClassId::FLAG, collideFlag->GetObjectId());
+				markedList.push_back(collideFlag);
+				collideFlag->SetToMarked();
 				//TODO send a packet for the player to acquire the item for GUI
 			}
 
@@ -262,6 +393,7 @@ void World::UpdateWorld()
 		{
 			// Grab Player Object
 			Player * collidePlayer = (Player *)obB->getUserPointer();
+
 			// If Obj A is collectable, HandleCollectable();
 			if (obA->getUserIndex() == COLLECTABLE)
 			{
@@ -276,8 +408,14 @@ void World::UpdateWorld()
 			{
 				// Handle Flag Collection
 				Flag * collideFlag = (Flag *)obA->getUserPointer();
+				if (collideFlag->MarkStatus())
+				{
+					continue;
+				}
 				collideFlag->HandleCollectable(collidePlayer);
 				ServerGame::instance()->sendRemovePacket(ClassId::FLAG, collideFlag->GetObjectId());
+				markedList.push_back(collideFlag);
+				collideFlag->SetToMarked();
 				//TODO send a packet for the player to acquire the item for GUI
 			}
 
@@ -316,8 +454,26 @@ void World::UpdateWorld()
 
 
 	}
-	if (x++ % 10000 == 0) {
 
+	// Reset Marked Entities
+	for (auto it = markedList.begin(); it != markedList.end(); it++)
+	{
+		(*it)->ResetMark();
+		this->curWorld->removeCollisionObject((*it)->GetRigidBody());
+	}
+	markedList.clear();
+
+	// Delete Marked Entities
+	for (auto it = deleteList.begin(); it != deleteList.end(); it++)
+	{
+		ServerGame::instance()->sendRemovePacket((ClassId) (*it)->GetClassId(), (*it)->GetObjectId());
+		delete (*it);
+	}
+	deleteList.clear();
+
+
+	//if (x++ % 10000 == 0) {
+	if (x++ % 500 == 0) {
 		/*
 		btVector3 vecg = rightWall->getCenterOfMassPosition();
 		printf(" right wall at (%f,%f,%f)\n", vecg.getX(), vecg.getY(), vecg.getZ());
@@ -329,15 +485,11 @@ void World::UpdateWorld()
 		printf(" back wall at (%f,%f,%f)\n", vecg.getX(), vecg.getY(), vecg.getZ());
 		*/
 
-		// TODO!!! HACK TO PRINT OUT UPDATE FOR ONE PLAYER.  Change to use Map in EntitySpawner
-
-		Player* myPlayer = (Player *)(EntitySpawner::instance()->GetEntity(ClassId::PLAYER, 0));
-
 		std::map<std::pair<int,unsigned int>, Entity* > * dynamicMap = EntitySpawner::instance()->GetMap();
 		for (std::map<std::pair<int, unsigned int>, Entity*>::iterator it = dynamicMap->begin(); it != dynamicMap->end(); it++)
 		{
 			btVector3 vec = it->second->GetEntityPosition();
-			//printf(" Dynamic object classid: %d, objid: %d, at (%f,%f,%f)\n", it->second->GetClassId(), it->second->GetObjectId(), vec.getX(), vec.getY(), vec.getZ());
+			printf(" Dynamic object classid: %d, objid: %d, at (%f,%f,%f)\n", it->second->GetClassId(), it->second->GetObjectId(), vec.getX(), vec.getY(), vec.getZ());
 		}
 
 		/*
@@ -350,7 +502,7 @@ void World::UpdateWorld()
 	}
 
 	// Send position updates of all dynamic objects
-	if (x % 5 == 0)
+	if (x % 1 == 0)
 	{
 		// Iterates through all dynamic objects in the Map and sends position updates to client
 		std::map<std::pair<int, unsigned int>, Entity* > * dynamicMap = EntitySpawner::instance()->GetMap();

@@ -11,7 +11,7 @@
 class Ground : public Entity
 {
 public:
-	static const float SIZE;
+    static const float SIZE;
 
     glm::vec3 color;
 
@@ -22,5 +22,4 @@ public:
 
     // Inherited via Entity
     virtual void Update(float deltaTime) override;
-    virtual void Spawn(float x, float y, float z) override;
 };

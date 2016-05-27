@@ -32,7 +32,7 @@ Player::Player(float x, float y, float z, float rotW, float rotX, float rotY, fl
     m_model = std::unique_ptr<Animation::AnimatedModel>(new Animation::AnimatedModel);
     m_model->FBXLoadClean("assets/chickens/chicken_dance.fbx", true, "dance");
     m_model->AddAnimation("assets/chickens/chicken_walk.fbx", true, "walk");
-    m_model->AddAnimation("assets/chickens/chicken_peck.fbx", false, "peck");
+    m_model->AddAnimation("assets/chickens/chicken_attack.fbx", false, "peck");
     m_model->AddAnimation("assets/chickens/chicken_jump.fbx", false, "jump");
     m_model->AddAnimation("assets/chickens/chicken_death.fbx", false, "death");
 
@@ -58,7 +58,7 @@ Player::Player(float x, float y, float z, float rotW, float rotX, float rotY, fl
 
 Player::Player(int client_id) : Player()
 {
-    id = client_id;
+    obj_id = client_id;
 }
 
 Player::~Player()
@@ -74,26 +74,6 @@ void Player::SetModelFile(std::string fileName){
 
 void Player::Draw() const
 {
-    //shader->Use();
-
-    //GLint viewLoc = shader->GetUniform("view");
-    //GLint modelLocation = shader->GetUniform("model");
-    //GLint normalMatrixLoc = shader->GetUniform("normalMatrix");
-    //GLint projectionLocation = shader->GetUniform("projection");
-    //GLint lightColorLoc = shader->GetUniform("lightColor");
-    //GLint lightPosLoc = shader->GetUniform("lightPos");
-    //GLint viewPosLoc = shader->GetUniform("viewPos");
-
-    //glUniformMatrix4fv(viewLoc, 1, false, glm::value_ptr(Scene::Instance()->GetViewMatrix()));
-    //glUniformMatrix4fv(modelLocation, 1, false, glm::value_ptr(this->toWorld));
-    //glUniformMatrix3fv(normalMatrixLoc, 1, false, glm::value_ptr(GetNormalMatrix()));
-    //glUniformMatrix4fv(projectionLocation, 1, false, glm::value_ptr(Scene::Instance()->GetPerspectiveMatrix()));
-
-    //glUniform3fv(lightColorLoc, 1, glm::value_ptr(Scene::Instance()->GetPointLight()->color));
-    //glUniform3fv(lightPosLoc, 1, glm::value_ptr(Scene::Instance()->GetPointLight()->position));
-    //glUniform3fv(viewPosLoc, 1, glm::value_ptr(Scene::Instance()->GetCameraPosition()));
-
-    //model->Draw(shader.get());
     SkinningTechnique* skinTechnique = m_model->GetMesh().GetSkinningTechnique();
     skinTechnique->Enable(); // use shader
 
@@ -103,15 +83,18 @@ void Player::Draw() const
 
     m_model->Draw();
 
-    ////////////// DRAW SCORE /////////////////////////
-    glm::vec2 screen_coords = Scene::Get2D(Position(), GetViewMatrix(), GetPerspectiveMatrix(), Window::width, Window::height);
-    //Scene::sprite_renderer->DrawSprite(*info_panel, glm::vec2(screen_coords.x - 100, screen_coords.y - 400), glm::vec2(info_panel->Width(), info_panel->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+	////////////// DRAW SCORE /////////////////////////
+	/*glm::vec2 screen_coords = Scene::Get2D(Position(),
+		Scene::Instance()->GetViewMatrix(),
+		Scene::Instance()->GetPerspectiveMatrix(),
+		Window::width, Window::height);
+	//Scene::sprite_renderer->DrawSprite(*info_panel, glm::vec2(screen_coords.x - 100, screen_coords.y - 400), glm::vec2(info_panel->Width(), info_panel->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 
-    char score[5];
-    strcpy_s(score, "[");
-    strcat_s(score, std::to_string(num_eggs).c_str());
-    strcat_s(score, "]");
-    TextRenderer::RenderText(score, screen_coords.x, screen_coords.y - 400, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+	char score[5];
+	strcpy_s(score, "[");
+	strcat_s(score, std::to_string(num_eggs).c_str());
+	strcat_s(score, "]");
+	TextRenderer::RenderText(score, screen_coords.x, screen_coords.y - 400, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));*/
 }
 
 void Player::MoveTo(float x, float y, float z)
@@ -154,7 +137,7 @@ void Player::ProcessKeyboard(DIRECTION direction, GLfloat deltaTime)
     if (direction == D_DOWN)
         this->toWorld[3] -= deltaTime * toWorld[1];
 }
-static int tick = 0;
+
 // Processes input received from a mouse input system. Expects the offset value in both the x and y direction.
 void Player::ProcessMouseMovement(GLfloat xoffset, GLfloat yoffset, GLboolean constrainPitch)
 {
@@ -162,7 +145,29 @@ void Player::ProcessMouseMovement(GLfloat xoffset, GLfloat yoffset, GLboolean co
     yoffset *= 0.03f;
 
     // Update Front, Right and Up Vectors using the updated Eular angles
+    this->toWorld = this->toWorld * glm::rotate(glm::mat4(1.0f), glm::radians(-xoffset), glm::vec3(0.0f, 1.0f, 0.0f));
 
+    camAngle += glm::radians(yoffset);
+    const static float pi2 = glm::pi<float>()/2;
+    camAngle = (camAngle > pi2) ? pi2 : ((camAngle < -pi2) ? -pi2 : camAngle);
+
+    CalculateCameraPosition();
+    CalculateCameraFront();
+
+    if (++tick % 10 == 0)
+    {
+        ClientGame::instance()->sendRotationPacket();
+        tick = 0;
+    }
+}
+
+// Processes input received from a mouse input system. Expects the offset value in both the x and y direction.
+void Player::ProcessViewMovement(GLfloat xoffset, GLfloat yoffset, GLboolean constrainPitch)
+{
+    xoffset *= m_HViewSensitivity;
+    yoffset *= m_VViewSensitivity;
+
+    // Update Front, Right and Up Vectors using the updated Eular angles
     this->toWorld = this->toWorld * glm::rotate(glm::mat4(1.0f), glm::radians(-xoffset), glm::vec3(0.0f, 1.0f, 0.0f));
 
     camAngle += glm::radians(yoffset);
@@ -229,7 +234,7 @@ void Player::ChangeState(State state)
             m_lastTime_t = Utils::CurrentTime();
             m_lastPos_t = Position();
             break;
-        case State::PECK:
+        case State::ATTACK:
             m_model->PlayAnimation("peck");
             break;
         case State::DANCE:
@@ -290,8 +295,4 @@ void Player::Update(float deltaTime)
         m_lastPos_t = Position();
     }
     m_model->Update(deltaTime);
-}
-
-void Player::Spawn(float x, float y, float z)
-{
 }

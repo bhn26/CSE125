@@ -33,8 +33,5 @@ public:
     void Attack();
     void Jump();
     void Dance();
-
-    // Inherited via Entity
-    virtual void Spawn(float x, float y, float z) override;
 };
 

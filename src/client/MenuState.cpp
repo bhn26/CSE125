@@ -43,8 +43,7 @@ void CMenuState::OnClick(int button, double x, double y) {
 	switch(res[0]) {
 		case 0: printf("None clicked\n"); break;
 		case 1: printf("Textbox clicked\n"); break;
-		case 2: printf("Logo clicked\n"); break;
-		case 3: printf("Button clicked\n"); 
+		case 2: printf("Button clicked\n");
 			// change state
 			m_pStateManager->ChangeState(LobbyState::GetInstance(m_pStateManager));
 			break;
@@ -58,29 +57,15 @@ void CMenuState::RenderSelection() {
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	////////////////// BACKGROUND//////////////////////////
+	float x = Texture::GetWindowCenter(bg->Width());
+	float y = Window::height / 2 - bg->Height() / 2;
+
 	////////////// USERNAME TEXTBOX /////////////////////////////////
-	float x = Texture::GetWindowCenter(Window::width / 2);
-	float y = Window::height / 2;
-
-	float tb_width = Window::width / 2;
-	float tb_height = 80;
-
-	sprite_renderer->RenderSelection(1, *textbox, glm::vec2(x, y), glm::vec2(tb_width, tb_height), 0.0f);
-
-	///////////////////// LOGO ///////////////////////////////////////
-	x = Texture::GetWindowCenter(logo->Width());
-	y = y / 2 - logo->Height() / 2;
-
-	sprite_renderer->RenderSelection(2, *logo, glm::vec2(x, y), glm::vec2(logo->Width(), logo->Height()), 0.0f);
+	sprite_renderer->RenderSelection(1, *textbox, glm::vec2(x + 115, y + 555), glm::vec2(textbox->Width(), textbox->Height()), 0.0f);
 
 	////////////// JOIN BUTTON /////////////////////////////////////
-	float btn_width = 200;
-	float btn_height = 50;
-
-	x = Texture::GetWindowCenter(btn_width);
-	y = Window::height / 2 + tb_height / 2 + 100;
-
-	sprite_renderer->RenderSelection(3, *join, glm::vec2(x, y), glm::vec2(btn_width, btn_height), 0.0f);
+	sprite_renderer->RenderSelection(2, *join, glm::vec2(x + 660, y + 555), glm::vec2(join->Width(), join->Height()), 0.0f);
 
 	glClearColor(0.28f, 0.65f, 0.89f, 1.0f); // reset color
 }
@@ -90,31 +75,21 @@ void CMenuState::Draw()
 {
 	InitTextures();
 
+	////////////////// BACKGROUND//////////////////////////
+	float x = Texture::GetWindowCenter(bg->Width());
+	float y = Window::height / 2 - bg->Height() / 2;
+	sprite_renderer->DrawSprite(*bg, glm::vec2(x, y), glm::vec2(bg->Width(), bg->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+
 	////////////// USERNAME TEXTBOX /////////////////////////////////
-	float x = Texture::GetWindowCenter(Window::width / 2);
-	float y = Window::height / 2;
+	sprite_renderer->DrawSprite(*textbox, glm::vec2(x + 115, y + 555), glm::vec2(textbox->Width(), textbox->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 
-	float tb_width = Window::width / 2;
-	float tb_height = 80;
-
-	sprite_renderer->DrawSprite(*textbox, glm::vec2(x, y), glm::vec2(tb_width, tb_height), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
-
-	///////////////////// LOGO ///////////////////////////////////////
-	x = Texture::GetWindowCenter(logo->Width());
-	y = y/2 - logo->Height()/2;
-
-	sprite_renderer->DrawSprite(*logo, glm::vec2(x, y), glm::vec2(logo->Width(), logo->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+	char name[20];
+	strcpy_s(name, "Player ");
+	strcat_s(name, std::to_string(ClientGame::GetClientId()).c_str());
+	TextRenderer::RenderText(name, x + 145, y + 585, 1.0f, glm::vec3(0.5f, 0.5f, 0.5f));
 
 	////////////// JOIN BUTTON /////////////////////////////////////
-	float btn_width = 200;
-	float btn_height = 50;
-
-	x = Texture::GetWindowCenter(btn_width);
-	y = Window::height/2 + tb_height/2 + 100;
-
-	sprite_renderer->DrawSprite(*join, glm::vec2(x, y), glm::vec2(btn_width, btn_height), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
-
-	TextRenderer::RenderText("Join", x, y, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+	sprite_renderer->DrawSprite(*join,glm::vec2(x + 660, y + 555), glm::vec2(join->Width(), join->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 }
 
 void CMenuState::EnterState()
@@ -124,9 +99,9 @@ void CMenuState::EnterState()
 void::CMenuState::InitTextures() {
 	if (!initialized) {
 		// Create the different images
-		logo = new Texture(GL_TEXTURE_2D, "assets/ui/logo.png");
-		textbox = new Texture(GL_TEXTURE_2D, "assets/ui/textbox.png");
-		join = new Texture(GL_TEXTURE_2D, "assets/ui/button_green.png");
+		bg = new Texture(GL_TEXTURE_2D, "assets/ui/login/login_bg.png");
+		textbox = new Texture(GL_TEXTURE_2D, "assets/ui/login/login_textbox.png");
+		join = new Texture(GL_TEXTURE_2D, "assets/ui/login/login_button.png");
 
 		initialized = true;
 	}

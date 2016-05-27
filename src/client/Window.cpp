@@ -9,7 +9,9 @@
 #include "../Graphics/Camera.h"
 #include "../Graphics/Scene.h"
 #include "Player.h"
+#include "../Graphics/Objects/Entity.h"
 #include "MenuState.h"
+#include "ConfigManager.h"
 
 const char* window_title = "Egg Scramble!";
 
@@ -24,6 +26,7 @@ bool Window::firstMouse = true;
 bool Window::mouseCaptured = false;
 GLint Window::lastX = width / 2;
 GLint Window::lastY = height / 2;
+int i = 0;
 
 CStateManager* Window::m_pStateManager = new CStateManager();
 
@@ -34,8 +37,6 @@ void Window::Initialize_objects()
 
 void Window::Clean_up()
 {
-    //delete(chicken);
-    //glDeleteProgram(shaderProgram);
 }
 
 GLFWwindow* Window::Create_window(int width, int height)
@@ -47,6 +48,8 @@ GLFWwindow* Window::Create_window(int width, int height)
         glfwTerminate();
         return NULL;
     }
+
+	glEnable(GL_CULL_FACE);
 
     // enable highest version supported by the OS
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
@@ -136,56 +139,11 @@ void Window::Key_callback(GLFWwindow* window, int key, int scancode, int action,
     // Check for a key press
     if (action == GLFW_PRESS || action == GLFW_REPEAT)
     {
-        switch (key)
-        {
-            // Check if escape was pressed
-            case GLFW_KEY_ESCAPE:
-                // Close the window. This causes the program to also terminate.
-                glfwSetWindowShouldClose(window, GL_TRUE);
-                break;
-
-            case GLFW_KEY_W:
-                //Scene::player->ProcessKeyboard(DIRECTION::D_FORWARD, 1);
-#ifdef _WIN32
-                ClientGame::instance()->sendMovePacket(MOVE_FORWARD);
-#endif
-                break;
-            case GLFW_KEY_A:
-                //Scene::player->ProcessKeyboard(DIRECTION::D_LEFT, 1);
-#ifdef _WIN32
-                ClientGame::instance()->sendMovePacket(MOVE_LEFT);
-#endif
-                break;
-            case GLFW_KEY_S:
-                //Scene::player->ProcessKeyboard(DIRECTION::D_BACKWARD, 1);
-#ifdef _WIN32
-                ClientGame::instance()->sendMovePacket(MOVE_BACKWARD);
-#endif
-                break;
-            case GLFW_KEY_D:
-                //Scene::player->ProcessKeyboard(DIRECTION::D_RIGHT, 1);
-                ClientGame::instance()->sendMovePacket(MOVE_RIGHT);
-                break;
-            case GLFW_KEY_SPACE: // jump?
-				ClientGame::instance()->sendJumpPacket();
-                Scene::Instance()->GetPlayer()->Jump();
-                break;
-            case GLFW_KEY_Z:
-                Scene::Instance()->GetPlayer()->ProcessKeyboard(DIRECTION::D_DOWN, 1);
-                break;
-            case GLFW_KEY_C:
-                Scene::Instance()->GetPlayer()->SetModelFile("assets/chickens/objects/pinocchio_chicken.obj");
-                break;
-            case GLFW_KEY_1:
-                Scene::Instance()->GetPlayer()->Dance();
-                break;
-            case GLFW_KEY_2:
-                Scene::Instance()->GetPlayer()->Die();
-                break;
-            default:
-                break;
-        }
-    }
+		m_pStateManager->GetActiveState()->OnKeyDown(action, key);
+	}
+	else if (action == GLFW_RELEASE) {
+		m_pStateManager->GetActiveState()->OnKeyUp(action, key);
+	}
 }
 
 
@@ -212,22 +170,6 @@ void Window::Mouse_callback(GLFWwindow* window, double xpos, double ypos)
 
 void Window::Mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 {
-	/*if (button == GLFW_MOUSE_BUTTON_LEFT && !mouseCaptured)
-	{
-		mouseCaptured = true;
-		firstMouse = true;
-		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-	}
-	else if (button == GLFW_MOUSE_BUTTON_RIGHT && mouseCaptured)
-	{
-		mouseCaptured = false;
-		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-	}*/
-    if (button == GLFW_MOUSE_BUTTON_LEFT && mouseCaptured)
-    {
-        Scene::Instance()->GetPlayer()->Attack();
-    }
-
 	double x, y;
 	glfwGetCursorPos(window, &x, &y);
 
