@@ -208,7 +208,7 @@ void Scene::AddEntity(PosInfo p)
 		break;
     case ClassId::BULLET:
     {
-        std::unique_ptr<ModelEntity> bullet = std::unique_ptr<ModelEntity>(new ModelEntity("assets/eggs/objects/egg.obj"));
+        std::unique_ptr<ModelEntity> bullet = std::unique_ptr<ModelEntity>(new ModelEntity("assets/weapons/pumpkinseed.obj"));
         //bullet->GetShader() = modelShader;        // Set in ModelEntity
         AddEntity(p.cid, p.oid, std::move(bullet));
         break;

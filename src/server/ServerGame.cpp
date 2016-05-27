@@ -553,5 +553,5 @@ void ServerGame::receiveShootPacket(int offset) {
 	Player* player = (Player*)(EntitySpawner::instance()->GetEntity(ClassId::PLAYER, hdr->sender_id));
 	player->UseWeapon();
 
-	printf("HELLS YEAH\n");
+	//printf("HELLS YEAH\n");
 }
