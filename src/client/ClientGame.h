@@ -49,6 +49,7 @@ namespace Controller
 class ClientGame
 {
     friend class Window;
+	friend class CPlayState;
 public:
 #ifdef _WIN32
     ClientNetwork* network;

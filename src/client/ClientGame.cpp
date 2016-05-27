@@ -704,7 +704,8 @@ void ClientGame::HandleButtonEvent(const std::string& event)
     }
     else if (event == EVENT_ATTACK)
     {
-    }
+		sendShootPacket();
+	}
     else if (event == EVENT_JUMP)
     {
         sendJumpPacket();

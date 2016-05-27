@@ -58,7 +58,7 @@ void CPlayState::OnClick(int button, double x, double y) {
 	}
 	else if (button == GLFW_MOUSE_BUTTON_LEFT && Window::mouseCaptured)
 	{
-		ClientGame::instance()->sendShootPacket();
+		ClientGame::instance()->HandleButtonEvent(ConfigManager::instance()->GetConfigValue("PC_Left_Click"));
 	}
 }
 
