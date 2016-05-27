@@ -23,6 +23,7 @@
 #include "../Camera.h"
 #include "../Scene.h"
 #include "../PointLight.h"
+#include "Client/Player.h"
 
 ChickenAnim::ChickenAnim() : m_toWorld(glm::scale(glm::mat4(1.0f), glm::vec3(0.01f)))
 {
@@ -56,11 +57,7 @@ ChickenAnim::ChickenAnim() : m_toWorld(glm::scale(glm::mat4(1.0f), glm::vec3(0.0
     m_model.InitBones0();  // Initialize bones to 0 time spot
 }
 
-ChickenAnim::~ChickenAnim()
-{
-}
-
-void ChickenAnim::Draw()
+void ChickenAnim::Draw() const
 {
     SkinningTechnique* skinTechnique = m_model.GetMesh().GetSkinningTechnique();
     skinTechnique->Enable(); // use shader
@@ -68,13 +65,12 @@ void ChickenAnim::Draw()
     skinTechnique->SetEyeWorldPos(Scene::Instance()->GetCameraPosition());
     skinTechnique->SetWVP(Scene::Instance()->GetPerspectiveMatrix() * Scene::Instance()->GetViewMatrix() * m_toWorld);
     skinTechnique->SetWorldMatrix(m_toWorld);
-
     m_model.Draw();
 }
 
-void ChickenAnim::Update()
+void ChickenAnim::Update(float deltaTime)
 {
-    m_model.Update();
+    m_model.Update(deltaTime);
 }
 
 void ChickenAnim::Scale(float s)
@@ -101,5 +97,3 @@ void ChickenAnim::Dance()
 {
     m_model.PlayAnimation(m_dance);
 }
-
-

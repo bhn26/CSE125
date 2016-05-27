@@ -47,10 +47,6 @@ void Chicken::Draw() const
     model->Draw(shader.get());
 }
 
-void Chicken::Update()
-{
-}
-
-void Chicken::Spawn(float x, float y, float z)
+void Chicken::Update(float deltaTime)
 {
 }

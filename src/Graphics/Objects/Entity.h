@@ -7,16 +7,14 @@
 //
 #pragma once
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/quaternion.hpp>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
 #include <memory>
 #include <SFML/Audio.hpp>
 
-#include "Basic/Utils.h"
-#include "../Shader.h"
+class Shader;
 
 enum POSITION
 {
@@ -30,84 +28,63 @@ enum POSITION
 
 class Entity
 {
-    long long m_startTime;
-    sf::Music musicPlayer;
+    sf::Music musicPlayer;      // Remove?
 protected:
     glm::mat4 toWorld;
     glm::mat3 normalMatrix;
+    glm::vec3 scale;
     GLuint VBO, VAO, EBO;
+
     std::shared_ptr<Shader> shader;
-	int obj_id; // This refers to the specific object
-	int class_id; // This refers to the type of object
+
+    int obj_id; // This refers to the specific object
+    int class_id; // This refers to the type of object
 
 public:
+    ////////////////////////////////////////////////////////////////////////////////
     // NOTE: Constructors do not initialize vertex/element buffers, nor shader
-	Entity(int oid, int cid) : Entity()
-	{
-		obj_id = oid;
-		class_id = cid;
-	}
+    Entity(int oid, int cid);
+    Entity(glm::mat4 world = glm::mat4(1.0f), glm::vec3 scale = glm::vec3(1.0f));
+    Entity(glm::vec3 pos, glm::vec3 scale = glm::vec3(1.0f));
+    Entity(float x, float y, float z, float sx = 1.0f, float sy = 1.0f, float sz = 1.0f);
 
-    Entity(glm::mat4 world = glm::mat4(1.0f)) : toWorld(world), VBO(0), VAO(0), EBO(0), shader(nullptr)
-    {
-        normalMatrix = glm::mat3(glm::transpose(glm::inverse(world)));
-    }
-
-    Entity(glm::vec3 pos) : Entity(glm::translate(glm::mat4(1.0f), pos))
-    {
-    }
-
-    Entity(float x, float y, float z) : Entity(glm::vec3(x, y, z))
-    {
-    }
-
+    ////////////////////////////////////////////////////////////////////////////////
     bool PlaySound(std::string soundFile);
-    float GetRunningTime()
-    {
-        return (float)(Utils::CurrentTime() - m_startTime);
-    }
 
+    // Basic Rendering functions
     virtual void Draw() const = 0;
-    virtual void Update() = 0;
+    virtual void Update(float deltaTime) = 0;
 
-    virtual void Spawn(/*Scene* scene, */float x, float y, float z) = 0;      // Maybe to spawn into the world, rather than using a constructor
-
+    // Methods to modify model matrix (position/view)
     virtual void MoveTo(float x, float y, float z) { MoveTo(glm::vec3(x, y, z));}
-    virtual void MoveTo(const glm::vec3& newPosition) { toWorld[3] = glm::vec4(newPosition, 1.0f); }
+    virtual void MoveTo(const glm::vec3& newPosition) { toWorld[3] = glm::vec4(newPosition, 1.0f); CalculateNormalMatrix(); }
     virtual void RotateTo(float w, float x, float y, float z) { RotateTo(glm::quat(w, x, y, z)); }
-    virtual void RotateTo(const glm::quat& newOrientation)
-    {
-        glm::mat4 temp = static_cast<glm::mat4>(glm::quat(newOrientation));
-        temp[3] = toWorld[3];
-        toWorld = std::move(temp);
-    }
-    virtual void RotateTo(const glm::mat3& newOrientation)
-    {
-        glm::mat4 temp = glm::mat4(newOrientation);
-        temp[3] = toWorld[3];
-        toWorld = std::move(temp);
-    }
+    virtual void RotateTo(const glm::quat& newOrientation);
+    virtual void RotateTo(const glm::mat3& newOrientation);
 
-    glm::quat Orientation() const { return static_cast<glm::quat>(toWorld); }
+    ////////////////////////////////////////////////////////////////////////////////
+    // Getters
+    glm::quat Orientation() const;
 
     const glm::mat4& ToWorld() const { return toWorld; }
     const glm::mat3& NormalMatrix() const { return normalMatrix; }
-    //const std::shared_ptr<Shader>& Shader() const { return shader; }      // Creates error with typename Shader
-    const glm::vec3& Position() const { return glm::vec3(toWorld[3]); }
+    glm::vec3 Position() const { return glm::vec3(toWorld[3]); }
 
-	int GetClassId() { return class_id; }
-	int GetObjId() { return obj_id; }
-	void SetClassId(int cid) { class_id = cid; }
-	void SetObjId(int oid) { obj_id = oid; }
+    int GetClassId() const { return class_id; }
+    int GetObjId() const { return obj_id; }
+    void SetClassId(int cid) { class_id = cid; }
+    void SetObjId(int oid) { obj_id = oid; }
 
 	// Process movement
 	void ProcessKeyboard(POSITION position, GLfloat deltaTime);
 
     std::shared_ptr<Shader>& GetShader() { return shader; }
 
-	// for Players only
-	virtual void SetScore(int n) {};
-	virtual int GetScore() { return 0; };
-private:
+    // for Players only
+    virtual void SetScore(int n) {}
+    virtual int GetScore() const { return 0; }
 
+private:
+    void ApplyScale();
+    void CalculateNormalMatrix();
 };

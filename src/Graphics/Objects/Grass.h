@@ -6,8 +6,7 @@
 //  Copyright © 2016 sunny side up. All rights reserved.
 //
 
-#ifndef Grass_h
-#define Grass_h
+#pragma once
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -16,10 +15,6 @@
 #include <glm/glm.hpp>
 #include <memory>
 
-//#include "../../Window.h"
-//#include "../Model.h"
-//#include "../Camera.h"
-#include "../Shader.h"
 #include "Entity.h"
 
 class Model;
@@ -38,11 +33,7 @@ public:
 	static GLfloat deltaTime;
 	static GLfloat lastFrame;
 	void Draw() const override;
-	void Update() override;
+	void Update(float deltaTime) override;
 	void SetColor(glm::vec3 color);
-
-	// Inherited via Entity
-	virtual void Spawn(float x, float y, float z) override;
 };
 
-#endif /* Grass_h */

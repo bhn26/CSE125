@@ -61,11 +61,7 @@ Ground::~Ground()
     glDeleteBuffers(1, &EBO);
 }
 
-void Ground::Update()
-{
-}
-
-void Ground::Spawn(float x, float y, float z)
+void Ground::Update(float deltaTime)
 {
 }
 

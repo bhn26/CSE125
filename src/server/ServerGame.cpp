@@ -47,7 +47,7 @@ void ServerGame::update()
 
 	// Check that all clients are ready
 
-	if (game_started && ready_clients == client_id)
+	if (game_started && ready_clients >= client_id)
 	{
 		if (spawned_clients == ready_clients && !eggs_spawned) {
 			for (int i = 0; i < 2*ready_clients; i++)
@@ -69,8 +69,8 @@ void ServerGame::update()
 
 		auto t2 = chrono::high_resolution_clock::now();
 
-		float thresh = 16.67;
-
+		//float thresh = 16.67;
+        float thresh = 33;
 		chrono::duration<double, milli> fp_ms = t2 - t1;
 		//("DIFFERENCE: %f\n", fp_ms.count());
 
@@ -383,7 +383,6 @@ void ServerGame::receiveMovePacket(int offset)
     struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
 	Entity* ent = (Entity*)(EntitySpawner::instance()->GetEntity(ClassId::PLAYER, hdr->sender_id));
 
-    //printf("dummy's current pos is (%d,%d)\n", dpi.x, dpi.y);
 	btVector3* vec;
 	switch (pi->direction) {
 	case MOVE_FORWARD:
@@ -442,7 +441,6 @@ void ServerGame::sendMovePacket(ClassId class_id, int obj_id)
         packet.serialize(packet_data);
 
         network->sendToAll(packet_data, packet_size);
-        //printf("Sent move packet to clients\n");
 }
 
 void ServerGame::receiveRotationPacket(int offset) {

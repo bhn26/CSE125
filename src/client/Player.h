@@ -7,8 +7,8 @@
 
 #include <string>
 #include <unordered_map>
-#include "../Graphics/Objects/Entity.h"
-#include "../Graphics/Animation/AnimationPlayer.h"
+#include "Graphics/Objects/Entity.h"
+#include "Graphics/Animation/AnimationPlayer.h"
 
 class Camera;
 class Model;
@@ -32,28 +32,32 @@ enum DIRECTION
 
 class Player : public Entity, public Animation::AnimationPlayer::Listener
 {
-
 public:
-    enum STATE
+    enum State
     {
         IDLE,
         JUMP,
         WALK,
         DANCE,
-        PECK,
+        ATTACK,
+        DEATH,
     };
 
     Player(float x = 0.0f, float y = 0.0f, float z = 0.0f,
-		float rotW = 0.0f, float rotX = 0.0f, float rotY = 0.0f, float rotZ = 0.0f);
+           float rotW = 0.0f, float rotX = 0.0f, float rotY = 0.0f, float rotZ = 0.0f);
     Player(int client_id);
     ~Player();
 
     // Inherited via Entity
-    virtual void Update() override;
-    virtual void Spawn(float x, float y, float z) override;
+    virtual void Update(float deltaTime) override;
     virtual void Draw() const override;
 
     virtual void MoveTo(float x, float y, float z) override;
+    virtual void RotateTo(const glm::quat& newOrientation) override;
+    void Jump() { ChangeState(State::JUMP); }
+    void Dance() { ChangeState(State::DANCE); }
+    void Attack() { ChangeState(State::ATTACK); }
+    void Die() { ChangeState(State::DEATH); }
 
     void SetModelFile(std::string fileName);
 
@@ -72,47 +76,57 @@ public:
     glm::mat4 GetPerspectiveMatrix() const;
     glm::mat3 GetNormalMatrix() const;
 
-	int GetClassId() { return class_id; }
+    int GetID() const { return id; };
+    int GetClassId() const { return class_id; }
 
-	glm::quat GetOrientation() { return Orientation();  }
+    void ChangeState(State state);                  // Will change model state and player state
+    void SetState(State state) { m_state = state; }     // Simply Sets the state without changing the model
 
-    void ChangeState(STATE state);                  // Will change model state and player state
-    void SetState(STATE state) { m_state = state; }     // Simply Sets the state without changing the model
+    int GetScore() const override { return num_eggs; };
+    void SetScore(int n) override { num_eggs = n; };
 
-	int GetScore() { return num_eggs; };
-	void SetScore(int n) { num_eggs = n; };
-
-	void SetTeam(int team) { team_id = team; }
-	int GetTeam() { return team_id; }
+    void SetTeam(int team) { team_id = team; }
+    int GetTeam() const { return team_id; }
 
 private:
-	int team_id;
-	int num_eggs;
+    // AnimationPlayer::Listener
+    virtual void OnFinish() override;
+    void SetRelativeCamPosition(glm::vec3 relativePos);
+    void CalculateCameraPosition();
+    void CalculateCameraFront();
+    float DistanceFromLastPos(glm::vec3 newPosition) const;
 
-	Texture *info_panel;
-
+private:
     // Player is made up of a model with a camera following it
     std::unique_ptr<Camera> camera;
-    std::unique_ptr<Model> model;
-    //std::unique_ptr<Animation::AnimatedModel> m_model;
+    //std::unique_ptr<Model> model;
+    std::unique_ptr<Animation::AnimatedModel> m_model;
 
-    std::unordered_map<std::string, std::string> m_animNames;
+    // Game data
+    int id;
+    int team_id;
+    int num_eggs;
+
+    Texture* info_panel;
 
     // How up/down camera is
     float camAngle;
+    glm::vec3 relativeCamPosition;
+    glm::vec3 defaultCamFront;
+    glm::vec3 relativeCamPerpendicular;
+
     float m_HViewSensitivity = 7.5f;
     float m_VViewSensitivity = 5.0f;
+
     int tick = 0;
 
     // Path name for chicken model texture
     std::string modelFile;
 
-    STATE m_state;
+    // Animation
+    State m_state;
     float m_lastTime_t;     // Test
+    float m_distanceThreshhold_t;
     glm::vec3 m_lastPos_t;
-
-    // Inherited via Listener
-    virtual void OnFinish() override;
-
 };
 

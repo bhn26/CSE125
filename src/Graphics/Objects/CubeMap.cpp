@@ -17,7 +17,7 @@
 // Other Libs
 #include <SOIL/SOIL.h>
 
-CubeMap::CubeMap() : Entity(glm::scale(glm::mat4(1.0f), glm::vec3(350.0f)))
+CubeMap::CubeMap() : Entity(glm::scale(glm::mat4(1.0f), glm::vec3(10.0f)))
 {
     GLfloat skyboxVertices[] = {
         // Positions
@@ -148,8 +148,4 @@ void CubeMap::Draw() const
     glDrawArrays(GL_TRIANGLES, 0, 36);
     glBindVertexArray(0);
     glDepthFunc(GL_LESS); // Set depth function back to default
-}
-
-void CubeMap::Spawn(float x, float y, float z)
-{
 }

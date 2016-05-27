@@ -113,7 +113,7 @@ void Cube::Draw() const
     glBindVertexArray(0);
 }
 
-void Cube::Update()
+void Cube::Update(float deltaTime)
 {
     Spin(0.3f);
 }
@@ -124,9 +124,3 @@ void Cube::Spin(float deg)
     this->toWorld = toWorld * glm::rotate(glm::mat4(1.0f), glm::radians(deg), glm::vec3(0.0f, 1.0f, 0.0f));
     this->normalMatrix = glm::mat3(glm::transpose(glm::inverse(toWorld)));
 }
-
-void Cube::Spawn(float x, float y, float z)
-{
-}
-
-

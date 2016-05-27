@@ -97,10 +97,6 @@ void Grass::Draw() const
 	//model->Draw(shader.get());
 }
 
-void Grass::Update()
-{
-}
-
-void Grass::Spawn(float x, float y, float z)
+void Grass::Update(float deltaTime)
 {
 }

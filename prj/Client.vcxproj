@@ -263,6 +263,7 @@
     <ClInclude Include="..\src\client\Player.h" />
     <ClInclude Include="..\src\client\Window.h" />
     <ClInclude Include="..\src\Graphics\Objects\Ground.h" />
+    <ClInclude Include="..\src\Graphics\Objects\Grass.h" />
     <ClInclude Include="..\src\Graphics\Mesh.h" />
     <ClInclude Include="..\src\Graphics\Model.h" />
     <ClInclude Include="..\src\Graphics\Objects\Chicken.h" />
@@ -278,9 +279,6 @@
     <ClInclude Include="..\src\Graphics\Nodes.h" />
     <ClInclude Include="..\src\Graphics\Shader.h" />
     <ClInclude Include="..\src\Graphics\Texture.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="..\src\Graphics\Objects\Grass.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

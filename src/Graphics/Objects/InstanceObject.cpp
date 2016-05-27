@@ -91,10 +91,3 @@ void InstanceObject::Draw() const
 	//model->Draw(shader.get());
 }
 
-void InstanceObject::Update()
-{
-}
-
-void InstanceObject::Spawn(float x, float y, float z)
-{
-}

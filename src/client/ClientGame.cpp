@@ -14,7 +14,8 @@
 #include "TextRenderer.h"
 #include "client/PlayState.h"
 #include "ConfigManager.h"
-//#define _WIN32
+
+#include "Client/Window.h"
 
 const std::string ClientGame::EVENT_QUIT = "Quit";
 const std::string ClientGame::EVENT_JUMP = "Jump";
@@ -24,11 +25,15 @@ const std::string ClientGame::EVENT_MOVE_FORWARD = "Move_Forward";
 const std::string ClientGame::EVENT_MOVE_BACKWARD = "Move_Backward";
 const std::string ClientGame::EVENT_MOVE_LEFT = "Move_Left";
 const std::string ClientGame::EVENT_MOVE_RIGHT = "Move_Right";
+const std::string ClientGame::EVENT_SCOREBOARD = "Scoreboard";
+const std::string ClientGame::EVENT_TAUNT = "Taunt";
 
 ClientGame::ClientGame(void)
 {
 #ifdef _WIN32
     network = new ClientNetwork();
+
+    start_sent = false;
 
 	sendInitPacket();
 	//sendStartPacket(); // temp - will add start button
@@ -132,6 +137,8 @@ void ClientGame::sendReadyPacket()
 	packet.hdr.packet_type = READY_GAME;
 	packet.hdr.sender_id = client_id;
 
+    printf("sending a ready packet");
+
 	packet.serialize(packet_data);
 
 	NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
@@ -152,6 +159,9 @@ void ClientGame::receiveStartPacket(int offset) {
 }
 
 void ClientGame::sendStartPacket() {
+    if (start_sent)
+        return;
+
 	const unsigned int packet_size = sizeof(Packet);
 	char packet_data[packet_size];
 
@@ -162,6 +172,7 @@ void ClientGame::sendStartPacket() {
 
 	packet.serialize(packet_data);
 
+    start_sent = true;
 	NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
 }
 
@@ -239,7 +250,7 @@ void ClientGame::sendMovePacket(int direction)
 
     PosInfo pi;
     pi.direction = direction;
-	glm::quat rot = Scene::Instance()->GetPlayer()->GetOrientation();
+	glm::quat rot = Scene::Instance()->GetPlayer()->Orientation();
 	pi.rotw = rot.w;
 	pi.rotx = rot.x;
 	pi.roty = rot.y;
@@ -293,7 +304,7 @@ void ClientGame::sendRotationPacket() {
 
 	// send the rotation of the main player
     PosInfo pi;
-	glm::quat rot = Scene::Instance()->GetPlayer()->GetOrientation();
+	glm::quat rot = Scene::Instance()->GetPlayer()->Orientation();
 	pi.rotw = rot.w;
 	pi.rotx = rot.x;
 	pi.roty = rot.y;
@@ -693,7 +704,7 @@ void ClientGame::HandleButtonPress(const unsigned char* buttons)
         HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_D_Pad_Left"));
 }
 
-void ClientGame::HandleButtonEvent(const std::string& event)
+void ClientGame::HandleButtonEvent(const std::string& event, bool buttonDown)
 {
     if (!event.size())
         return;
@@ -704,10 +715,12 @@ void ClientGame::HandleButtonEvent(const std::string& event)
     }
     else if (event == EVENT_ATTACK)
     {
-		sendShootPacket();
+        Scene::Instance()->GetPlayer()->Attack();
+        sendShootPacket();
 	}
     else if (event == EVENT_JUMP)
     {
+        Scene::Instance()->GetPlayer()->Jump();
         sendJumpPacket();
     }
     else if (event == EVENT_MOVE_FORWARD)
@@ -725,5 +738,16 @@ void ClientGame::HandleButtonEvent(const std::string& event)
     else if (event == EVENT_MOVE_RIGHT)
     {
         sendMovePacket(MOVE_RIGHT);
+    }
+    else if (event == EVENT_SCOREBOARD)
+    {
+        if (Window::m_pStateManager->GetActiveState() == CPlayState::GetInstance(Window::m_pStateManager))
+        {
+            CPlayState::GetInstance(Window::m_pStateManager)->show_scoreboard = buttonDown;
+        }
+    }
+    else if (event == EVENT_TAUNT)
+    {
+        Scene::Instance()->GetPlayer()->Dance();
     }
 }

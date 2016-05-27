@@ -6,6 +6,7 @@
 #include <map>
 
 #include "../../network/GameData.h"
+
 class WorldObstacle;
 
 using namespace std;

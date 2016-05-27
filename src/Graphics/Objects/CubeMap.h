@@ -2,9 +2,7 @@
 //  CubeMap.h
 //  egg scramble
 //
-
-#ifndef __egg_scramble__CubeMap__
-#define __egg_scramble__CubeMap__
+#pragma once
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -26,11 +24,5 @@ public:
     
     GLuint LoadCubeMap();
     virtual void Draw() const override;
-    virtual void Update() override {}
-
-    // Inherited via Entity
-    virtual void Spawn(float x, float y, float z) override;
+    virtual void Update(float deltaTime) override {}
 };
-
-
-#endif /* defined(__egg_scramble__CubeMap__) */

@@ -8,6 +8,7 @@
 
 class CPlayState : public CGameState
 {
+    friend class ClientGame;
 public:
 	~CPlayState();
 

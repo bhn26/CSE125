@@ -126,6 +126,8 @@ private:
     const static std::string EVENT_MOVE_BACKWARD;
     const static std::string EVENT_MOVE_LEFT;
     const static std::string EVENT_MOVE_RIGHT;
+    const static std::string EVENT_SCOREBOARD;
+    const static std::string EVENT_TAUNT;
 
     ClientGame(void);
     ~ClientGame(void);
@@ -136,6 +138,8 @@ private:
     int client_id; // should know what client number we are so we can fill out packet headers
 	int client_team;
 	int client_skin;
+
+    bool start_sent;
 
 	std::vector <int> team0;
 	std::vector <int> team1;
@@ -162,6 +166,6 @@ private:
     void HandleLeftAnalog(const float* axes);
     void HandleRightAnalog(const float* axes);
     void HandleButtonPress(const unsigned char* buttons);
-    void HandleButtonEvent(const std::string& event);
+    void HandleButtonEvent(const std::string& event, bool buttonDown = true);
 };
 

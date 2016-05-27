@@ -22,7 +22,7 @@ namespace Animation
 
     ///////////////////////////////////////////////////////////////////////
     // Load an FBX completely new. Loads mesh and animation
-    std::string AnimatedModel::FBXLoadClean(std::string filename, bool animLoops)
+    std::string AnimatedModel::FBXLoadClean(std::string filename, bool animLoops, std::string animName)
     {
         Assimp::Importer importer;
         const aiScene* scene = importer.ReadFile(filename.c_str(), aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs);
@@ -33,11 +33,11 @@ namespace Animation
         // Should not fail
         m_mesh.InitFromScene(scene, filename);
 
-        return m_animPlayer.AddAnimFromScene(scene, animLoops);
+        return m_animPlayer.AddAnimFromScene(scene, animLoops, animName);
     }
 
     ///////////////////////////////////////////////////////////////////////
-    std::string AnimatedModel::AddAnimation(std::string animationFile, bool loops)
+    std::string AnimatedModel::AddAnimation(std::string animationFile, bool loops, std::string animName)
     {
         Assimp::Importer importer;
         const aiScene* scene = importer.ReadFile(animationFile.c_str(), aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs);
@@ -47,7 +47,7 @@ namespace Animation
             return false;
         }
         
-        return m_animPlayer.AddAnimFromScene(scene, loops);
+        return m_animPlayer.AddAnimFromScene(scene, loops, animName);
     }
 
     ///////////////////////////////////////////////////////////////////////
@@ -56,13 +56,18 @@ namespace Animation
         return m_animPlayer.PlayAnimation(name);
     }
 
-    ///////////////////////////////////////////////////////////////////////
-    void AnimatedModel::Update()
+    bool AnimatedModel::SetAnimation(std::string name)
     {
-        double nextTime = Utils::CurrentTime();
-        float delta = (float)(nextTime - lastTime);
-        lastTime = nextTime;
-        m_animPlayer.Update(delta);
+        return m_animPlayer.SetAnimation(name);
+    }
+
+    ///////////////////////////////////////////////////////////////////////
+    void AnimatedModel::Update(float deltaTime)
+    {
+        //double nextTime = Utils::CurrentTime();
+        //float delta = (float)(nextTime - lastTime);
+        //lastTime = nextTime;
+        m_animPlayer.Update(deltaTime);
     }
 
     ///////////////////////////////////////////////////////////////////////

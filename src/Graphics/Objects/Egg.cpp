@@ -33,7 +33,7 @@ void Egg::SetColor(glm::vec3 color)
 
 Egg::~Egg()
 {
-	delete(model);
+    delete model;
 }
 
 void Egg::Draw() const
@@ -52,7 +52,7 @@ void Egg::Draw() const
 	model->Draw(shader.get());
 }
 
-void Egg::Update()
+void Egg::Update(float deltaTime)
 {
 	Spin(0.7f);
 }
@@ -62,8 +62,4 @@ void Egg::Spin(float deg)
 	// This creates the matrix to rotate the cube
 	this->toWorld = toWorld * glm::rotate(glm::mat4(1.0f), glm::radians(deg), glm::vec3(0.0f, 1.0f, 0.0f));
 	this->normalMatrix = glm::mat3(glm::transpose(glm::inverse(toWorld)));
-}
-
-void Egg::Spawn(float x, float y, float z)
-{
 }

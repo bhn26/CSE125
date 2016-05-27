@@ -25,18 +25,13 @@ class ChickenAnim;
 
 class Scene
 {
+    float lastTime;
     std::unique_ptr<Camera> camera;
     std::unique_ptr<PointLight> pLight;
 	std::unique_ptr<CubeMap> cubeMap;
 	std::unique_ptr<Ground> ground;
 	std::unique_ptr<Grass> grass;
 	std::unique_ptr<InstanceObject> pumpkin;
-
-	std::shared_ptr<Shader> basicShader;
-	std::shared_ptr<Shader> diffuseShader;
-	std::shared_ptr<Shader> modelShader;
-	std::shared_ptr<Shader> cubeMapShader;
-	std::shared_ptr<Shader> instanceShader;
 
     Player* player;
 
@@ -50,6 +45,12 @@ class Scene
     void Setup();
 
 public:
+    std::shared_ptr<Shader> basicShader;
+    std::shared_ptr<Shader> diffuseShader;
+    std::shared_ptr<Shader> modelShader;
+    std::shared_ptr<Shader> cubeMapShader;
+    std::shared_ptr<Shader> instanceShader;
+
 	static SpriteRenderer * sprite_renderer;
 
     static Scene* Instance()

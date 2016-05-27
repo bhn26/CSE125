@@ -16,10 +16,6 @@
 #include <glm/glm.hpp>
 #include <memory>
 
-//#include "../../Window.h"
-//#include "../Model.h"
-//#include "../Camera.h"
-#include "../Shader.h"
 #include "Entity.h"
 
 class Model;
@@ -37,12 +33,9 @@ public:
 	glm::vec3 color;
 
 	void Draw() const override;
-	void Update() override;
+    void Update(float deltaTime) override;
 	void Spin(float deg);
 	void SetColor(glm::vec3 color);
-
-	// Inherited via Entity
-	virtual void Spawn(float x, float y, float z) override;
 };
 
 #endif /* Egg_h */

@@ -149,5 +149,7 @@ void main()
     if (useTexture)
         FragColor = texture(gColorMap, In.TexCoord.xy) * TotalLight;
     else
-        FragColor = material._diffuse * TotalLight;  // should be red + lighting... LOL
+        FragColor = vec4(material._diffuse, 1.0f) * TotalLight;
+
+    //FragColor = vec4(1.0f, 0.0f, 0.0f, 1.0f) * TotalLight;
 }

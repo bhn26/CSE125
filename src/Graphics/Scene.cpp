@@ -35,7 +35,8 @@ void Scene::Setup()
     //modelShader = std::make_shared<Shader>("src/Graphics/Shaders/model_loading.vert", "src/Graphics/Shaders/model_loading.frag");
     //cubeMapShader = std::make_shared<Shader>("src/Graphics/Shaders/cubemap.vert", "src/Graphics/Shaders/cubemap.frag");
 
-    camera = std::unique_ptr<Camera>(new Camera(glm::vec3(0.0f, 9.0f, -15.0f), glm::vec3(0.0f, 1.0f, 0.0f), 90.0f, -25.0f));
+    //camera = std::unique_ptr<Camera>(new Camera(glm::vec3(0.0f, 9.0f, -15.0f), glm::vec3(0.0f, 1.0f, 0.0f), 90.0f, -25.0f));
+    camera = std::unique_ptr<Camera>(new Camera(glm::vec3(0.0f, 9.0f, -15.0f)));
     pLight = std::unique_ptr<PointLight>(new PointLight(glm::vec3(0.0f, 20.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)));
 
 	// Barn
@@ -125,10 +126,14 @@ void Scene::Setup()
 
 void Scene::Update()
 {
-	cubeMap->Update();
+    double nextTime = Utils::CurrentTime();
+    float deltaTime = (float)(nextTime - lastTime);
+    lastTime = nextTime;
+
+	cubeMap->Update(deltaTime);
 	//ground->Update();
 	for (auto& const entity : entities)
-		entity.second->Update();
+		entity.second->Update(deltaTime);
 }
 
 void Scene::Draw()
@@ -145,9 +150,6 @@ void Scene::Draw()
 		entity.second->Draw();
 		//printf("entity ids are %d, %d\n", entity.second->GetClassId(), entity.second->GetObjId());
 	}
-
-    // Redrawing players??
-
 }
 
 
@@ -172,7 +174,6 @@ glm::mat4 Scene::GetPerspectiveMatrix()
 void Scene::AddEntity(int cid, int oid, std::unique_ptr<Entity> ent)
 {
 	std::pair<int, int> p = std::pair<int, int>(cid, oid);
-	//entities.insert(std::make_pair(p, std::move(ent)));
 	entities[p] = std::move(ent);
 }
 
@@ -198,7 +199,6 @@ void Scene::AddEntity(PosInfo p)
 			skin_type = "assets/chickens/objects/pinocchio_chicken.obj";
 		}
 		player->SetModelFile(skin_type);
-        player->Spawn(p.x, p.y, p.z);
 		player->GetShader() = ShaderManager::Instance()->GetShader("Model");
 		player->SetObjId(p.oid);
 		player->SetClassId(p.cid);
@@ -245,7 +245,8 @@ std::unique_ptr<Entity>& Scene::GetEntity(int cid, int oid)
 	return entities.find(p)->second;
 }
 
-glm::vec2 Scene::Get2D(glm::vec3 coords, glm::mat4 view, glm::mat4 projection/*perspective matrix */, int width, int height) {
+glm::vec2 Scene::Get2D(glm::vec3 coords, glm::mat4 view, glm::mat4 projection/*perspective matrix */, int width, int height)
+{
 	glm::mat4 viewProjectionMatrix = projection * view;
 	
 	//transform world to clipping coordinates

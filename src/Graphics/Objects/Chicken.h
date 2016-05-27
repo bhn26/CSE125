@@ -6,8 +6,7 @@
 //  Copyright © 2016 sunny side up. All rights reserved.
 //
 
-#ifndef Chicken_h
-#define Chicken_h
+#pragma once
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -16,9 +15,6 @@
 #include <glm/glm.hpp>
 #include <memory>
 
-//#include "../../Window.h"
-//#include "../Model.h"
-//#include "../Camera.h"
 #include "Entity.h"
 
 class Model;
@@ -33,11 +29,5 @@ public:
     Model* model;
 
     void Draw() const override;
-    void Update() override;
-    void Spin(float deg);
-
-    // Inherited via Entity
-    virtual void Spawn(float x, float y, float z) override;
+    void Update(float deltaTime) override;
 };
-
-#endif /* Chicken_h */

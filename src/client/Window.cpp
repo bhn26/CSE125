@@ -37,8 +37,6 @@ void Window::Initialize_objects()
 
 void Window::Clean_up()
 {
-    //delete(chicken);
-    //glDeleteProgram(shaderProgram);
 }
 
 GLFWwindow* Window::Create_window(int width, int height)
@@ -172,18 +170,6 @@ void Window::Mouse_callback(GLFWwindow* window, double xpos, double ypos)
 
 void Window::Mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 {
-	/*if (button == GLFW_MOUSE_BUTTON_LEFT && !mouseCaptured)
-	{
-		mouseCaptured = true;
-		firstMouse = true;
-		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-	}
-	else if (button == GLFW_MOUSE_BUTTON_RIGHT && mouseCaptured)
-	{
-		mouseCaptured = false;
-		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-	}*/
-
 	double x, y;
 	glfwGetCursorPos(window, &x, &y);
 
