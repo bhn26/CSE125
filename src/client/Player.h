@@ -72,7 +72,6 @@ public:
     glm::mat4 GetPerspectiveMatrix() const;
     glm::mat3 GetNormalMatrix() const;
 
-	int GetID() { return id; };
 	int GetClassId() { return class_id; }
 
 	glm::quat GetOrientation() { return Orientation();  }
@@ -80,9 +79,17 @@ public:
     void ChangeState(STATE state);                  // Will change model state and player state
     void SetState(STATE state) { m_state = state; }     // Simply Sets the state without changing the model
 
+	int GetScore() { return num_eggs; };
+	void SetScore(int n) { num_eggs = n; };
+
+	void SetTeam(int team) { team_id = team; }
+	int GetTeam() { return team_id; }
+
 private:
-	int id;
 	int team_id;
+	int num_eggs;
+
+	Texture *info_panel;
 
     // Player is made up of a model with a camera following it
     std::unique_ptr<Camera> camera;

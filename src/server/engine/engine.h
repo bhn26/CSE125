@@ -20,12 +20,15 @@ public:
 	void InitWorld(int num_players);
 
 	// Spawns at random positions
-	void SpawnRandomPlayer();
+	void SpawnRandomPlayer(int player, int team, int skin);
 	void SpawnRandomFlag();
 
+	int RandomNum(int mod);
+
 	// spawn once all players are "ready"
-	void InitialSpawn(int num_players);
+	void SendPreSpawn(int n);
 	bool hasInitialSpawned() { return initialSpawned; };
+	void setInitialSpawned(bool b) { initialSpawned = b; }
 
 	// move player
 	// attack player

@@ -1,8 +1,5 @@
 #pragma once
 
-#ifndef GAME_DATA
-#define GAME_DATA
-
 #include <string.h>
 #include <stdio.h>
 #include "../server/engine/ObjectId.h"
@@ -10,11 +7,11 @@
 const int WORLD_WIDTH = 300;
 const int WORLD_HEIGHT = 300;
 
+/*
 static int oid0 = 0;
 static int oid1 = 0;
 static int oid2 = 0;
-
-static unsigned int currentWorldTick;
+*/
 
 enum MoveType {
 
@@ -31,8 +28,9 @@ enum MoveType {
 
 enum GameDataId 
 {
-    POS_OBJ = 0,
-	REM_OBJ = 1
+    POS_OBJ,
+	REM_OBJ,
+	SCORE_OBJ
 };
 
 struct GameInfo
@@ -55,7 +53,9 @@ struct PosInfo : GameInfo
 {
 	// general info
 	int id; // client id
-	int team_id; 
+	int team_id;
+
+	int skin;
 
 	int oid; // object id
 	ClassId cid; // class id
@@ -65,18 +65,15 @@ struct PosInfo : GameInfo
 	float y;
 	float z;
 
-    int direction; // remove later?
+    int direction; // client -> server move data
 
 	//rotation coords
 	float rotw;
 	float rotx;
 	float roty;
 	float rotz;
-	
 
-    // rotation
-    //float v_rotation;
-    //float h_rotation;
+	int num_eggs; // num eggs this player has 
 
     void serialize(char * data) {
         memcpy(data, this, sizeof(PosInfo));
@@ -102,4 +99,18 @@ struct RemInfo : GameInfo
 	}
 };
 
-#endif
+// team scores
+struct ScoreInfo : GameInfo {
+	int t0_score;
+	int t1_score;
+
+	void serialize(char * data) {
+		memcpy(data, this, sizeof(ScoreInfo));
+	}
+
+	void deserialize(char * data) {
+		memcpy(this, data, sizeof(ScoreInfo));
+	}
+};
+
+

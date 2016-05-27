@@ -19,10 +19,10 @@ EntitySpawner* EntitySpawner::instance()
 
 EntitySpawner::EntitySpawner()
 {
-	oid0 = 0;
-	oid1 = 0;
-	oid2 = 0;
-	oid3 = 0;
+	oid_player = 0;
+	oid_flag = 0;
+	oid_bullet = 0;
+	oid_collectable = 0;
 }
 
 EntitySpawner::~EntitySpawner(){}
@@ -30,20 +30,30 @@ EntitySpawner::~EntitySpawner(){}
 Player* EntitySpawner::spawnPlayer(int teamid, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld)
 {
 	// Create player and add to Entity Map
-	Player* newPlayer = new Player(oid0, teamid, pos, physicsWorld);
-	AddEntity(0, oid0, newPlayer);
-	oid0++;
+	// note - need to create players with explicit id or else teams will depend on order they connected to the lobby
+	Player* newPlayer = new Player(pos.id, pos.team_id, pos, physicsWorld);
+	AddEntity(ClassId::PLAYER, pos.id, newPlayer);
+	oid_player++;
+
+	btQuaternion quat = newPlayer->GetEntityRotation();
 
 	// Send Player Spawn packet
 	btVector3 vec = newPlayer->GetEntityPosition();
-	printf("Created player at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
+	printf("Created player %d at (%f,%f,%f) on team %d\n", pos.id, vec.getX(), vec.getY(), vec.getZ(),pos.team_id );
 	// Send spawn info to the clients
 	PosInfo out;
 	out.cid = ClassId::PLAYER;
-	out.oid = newPlayer->GetId();
+	out.oid = newPlayer->GetObjectId();
+	out.skin = pos.skin;
+	out.team_id = pos.team_id;
 	out.x = vec.getX();
 	out.y = vec.getY();
 	out.z = vec.getZ();
+	out.rotw = quat.getW();
+	out.rotx = quat.getX();
+	out.roty = quat.getY();
+	out.rotz = quat.getZ();
+	
 	ServerGame::instance()->sendSpawnPacket(out);
 	return newPlayer;
 }
@@ -51,12 +61,13 @@ Player* EntitySpawner::spawnPlayer(int teamid, PosInfo pos, btDiscreteDynamicsWo
 Flag*  EntitySpawner::spawnFlag(PosInfo pos, btDiscreteDynamicsWorld* physicsWorld)
 {
 	// Create flag and add to Entity Map
-	Flag* newFlag = new Flag(oid1, pos, physicsWorld);
-	AddEntity(1, oid1, newFlag);
-	oid1++;
+	Flag* newFlag = new Flag(oid_flag, pos, physicsWorld);
+	AddEntity(ClassId::FLAG, oid_flag, newFlag);
+	oid_flag++;
 
 	// Send Flag Spawn packet
 	btVector3 vec = newFlag->GetEntityPosition();
+	btQuaternion quat = newFlag->GetEntityRotation();
 	printf("Created flag at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
 
 	PosInfo out;
@@ -65,19 +76,24 @@ Flag*  EntitySpawner::spawnFlag(PosInfo pos, btDiscreteDynamicsWorld* physicsWor
 	out.x = vec.getX();
 	out.y = vec.getY();
 	out.z = vec.getZ();
+	out.rotw = quat.getW();
+	out.rotx = quat.getX();
+	out.roty = quat.getY();
+	out.rotz = quat.getZ();
 	ServerGame::instance()->sendSpawnPacket(out);
 	return newFlag;
 }
 
-Bullet* EntitySpawner::spawnBullet(int playerid, int teamid, int damage, const btVector3* pos, btVector3* velocity, btDiscreteDynamicsWorld* physicsWorld)
+Bullet* EntitySpawner::spawnBullet(int playerid, int teamid, int damage, btVector3* pos, btVector3* velocity, btMatrix3x3* rotation, btDiscreteDynamicsWorld* physicsWorld)
 {
 	// Create Bullet and add to Entity Map
-	Bullet* fireProjectile = new Bullet(oid2, playerid, teamid, damage, pos, velocity, physicsWorld);
-	AddEntity(2, oid2, fireProjectile);
-	oid2++;
+	Bullet* fireProjectile = new Bullet(oid_bullet, playerid, teamid, damage, pos, velocity, rotation, physicsWorld);
+	AddEntity(ClassId::BULLET, oid_bullet, fireProjectile);
+	oid_bullet++;
 
-	// Send Flag Spawn packet
+	// Send Bullet Spawn packet
 	btVector3 vec = fireProjectile->GetEntityPosition();
+	btQuaternion quat = fireProjectile->GetEntityRotation();
 	printf("Created Bullet at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
 
 	PosInfo out;
@@ -86,6 +102,10 @@ Bullet* EntitySpawner::spawnBullet(int playerid, int teamid, int damage, const b
 	out.x = vec.getX();
 	out.y = vec.getY();
 	out.z = vec.getZ();
+	out.rotw = quat.getW();
+	out.rotx = quat.getX();
+	out.roty = quat.getY();
+	out.rotz = quat.getZ();
 	ServerGame::instance()->sendSpawnPacket(out);
 	return fireProjectile;
 }
@@ -93,12 +113,13 @@ Bullet* EntitySpawner::spawnBullet(int playerid, int teamid, int damage, const b
 
 Collectable* EntitySpawner::spawnCollectable(int objectid, PosInfo pos, btDiscreteDynamicsWorld* curworld)
 {
-	Collectable* ranCollectable = new Collectable(oid3, pos, curworld);
-	AddEntity(3, oid3, ranCollectable);
-	oid3++;
+	Collectable* ranCollectable = new Collectable(oid_collectable, pos, curworld);
+	AddEntity(ClassId::COLLECTABLE, oid_collectable, ranCollectable);
+	oid_collectable++;
 
 	// Send Flag Spawn packet
 	btVector3 vec = ranCollectable->GetEntityPosition();
+	btQuaternion quat = ranCollectable->GetEntityRotation();
 	printf("Created Collectable at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
 
 	PosInfo out;
@@ -107,6 +128,10 @@ Collectable* EntitySpawner::spawnCollectable(int objectid, PosInfo pos, btDiscre
 	out.x = vec.getX();
 	out.y = vec.getY();
 	out.z = vec.getZ();
+	out.rotw = quat.getW();
+	out.rotx = quat.getX();
+	out.roty = quat.getY();
+	out.rotz = quat.getZ();
 	ServerGame::instance()->sendSpawnPacket(out);
 	return ranCollectable;
 }
@@ -131,10 +156,10 @@ void EntitySpawner::RemoveEntity(int cid, unsigned int oid)
 	std::pair<int, unsigned int> key = std::pair<int, unsigned int>(cid, oid);
 	it = this->entities.find(key);
 	entities.erase(it);
+	printf("? supposedly removed entity from map\n");
 }
 
 std::map<std::pair<int, unsigned int>, Entity* > *EntitySpawner::GetMap()
 {
 	return (&entities);
 }
-

@@ -1,7 +1,9 @@
+#include "EntitySpawner.h"
 #include "Flag.h"
+#include "Player.h"
 #include "ObjectId.h"
 
-Flag::Flag(int id, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld)
+Flag::Flag(int objid, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld): Entity(ClassId::FLAG, objid, physicsWorld)
 {
 	p = pos;
 
@@ -14,12 +16,11 @@ Flag::Flag(int id, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld)
 	playerShape->calculateLocalInertia(mass, playerInertia);
 	btRigidBody::btRigidBodyConstructionInfo playerRigidBodyCI(mass, playerMotionState, playerShape, playerInertia);
 	btRigidBody* pRigidBody = new btRigidBody(playerRigidBodyCI);
+	pRigidBody->forceActivationState(DISABLE_DEACTIVATION);
 	physicsWorld->addRigidBody(pRigidBody);
 
 	// Set Flag's protected fields
-	this->id = id;
-	this->curWorld = physicsWorld;
-	this->flagRigidBody = pRigidBody;
+	this->entityRigidBody = pRigidBody;
 
 	// Set RigidBody to point to Flag
 	pRigidBody->setUserPointer(this);
@@ -28,19 +29,21 @@ Flag::Flag(int id, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld)
 
 Flag::~Flag()
 {
+    if (entityRigidBody)
+	{
+		printf("----------------------deleting flag body\n");
+		this->curWorld->removeCollisionObject(entityRigidBody);
+		delete entityRigidBody->getMotionState();
+		delete entityRigidBody->getCollisionShape();
+		delete entityRigidBody;
+	}
+	
 }
 
-btRigidBody* Flag::getRigidBody()
+void Flag::HandleCollectable(Player* collidedPlayer)
 {
-	return this->flagRigidBody;
-}
-
-btVector3 Flag::GetFlagPosition()
-{
-	return flagRigidBody->getCenterOfMassPosition();
-}
-
-int Flag::GetObjectId()
-{
-	return id;
+	// Give player flag AND remove flag from entity map
+	// NOTE: Remove flag from physics world after Tick has been processed
+	collidedPlayer->AcquireFlag(this);
+	EntitySpawner::instance()->RemoveEntity(ClassId::FLAG, (objectId));
 }

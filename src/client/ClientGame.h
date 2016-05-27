@@ -69,6 +69,8 @@ public:
 	void receiveStartPacket(int offset);
 	void sendStartPacket();
 
+	void receiveReadyToSpawnPacket(int offset);
+
     // The data we want in network_data should have an offset if any
     void receiveSpawnPacket(int offset);
 
@@ -82,9 +84,14 @@ public:
 
 	void sendJumpPacket();
 
-	bool hasStarted() { return game_started; }
+	void receiveScorePacket(int offset);
 
-	std::shared_ptr<Player> FindTarget(int tid);
+	void receiveGameOverPacket(int offset);
+
+	void sendShootPacket();
+
+
+	bool hasStarted() { return game_started; };
 
     char network_data[MAX_PACKET_SIZE];
 
@@ -105,6 +112,10 @@ public:
 	static std::vector<int> Team0() { return instance()->team0; }
 	static std::vector<int> Team1() { return instance()->team1; }
 
+	int TotalEggs() { return total_eggs; };
+	int * GetScores() { return scores; };
+	int GetClientTeam() { return client_team; };
+
 private:
     const static std::string EVENT_QUIT;
     const static std::string EVENT_JUMP;
@@ -122,10 +133,17 @@ private:
     int nbFrames;
 
     int client_id; // should know what client number we are so we can fill out packet headers
-	int tick = 0;
+	int client_team;
+	int client_skin;
 
 	std::vector <int> team0;
 	std::vector <int> team1;
+
+	int total_eggs;
+	int scores[2];
+	int winner; // set on receipt of game over packet
+
+	int tick = 0;
 
 	bool game_started = false;
 	bool iSpawned = false;

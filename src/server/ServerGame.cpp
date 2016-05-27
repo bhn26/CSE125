@@ -1,6 +1,11 @@
 
 #include "ServerGame.h"
+#include "engine/Player.h"
 #include <algorithm>
+
+#include <chrono>
+#include <ratio>
+#include <thread>
 
 unsigned int ServerGame::client_id; 
 
@@ -9,6 +14,9 @@ ServerGame::ServerGame(void)
     // id's to assign clients for our table
     client_id = 0;
 	game_started = false;
+	
+	scores[0] = 0;
+	scores[1] = 0;
 
     // set up the server network to listen 
     network = new ServerNetwork(); 
@@ -33,16 +41,55 @@ void ServerGame::update()
 			// This will be an INIT_CONNECTION packet
 			receiveFromClients();
 		}
-	}
-	
+	}	
+
 	receiveFromClients();
 
 	// Check that all clients are ready
+
 	if (game_started && ready_clients == client_id)
 	{
+		if (spawned_clients == ready_clients && !eggs_spawned) {
+			for (int i = 0; i < 2*ready_clients; i++)
+			{
+				engine->SpawnRandomFlag();
+			}
+			eggs_spawned = true;
+			Sleep(2000); // should wait for clients to respond
+		}
 		if(!engine->hasInitialSpawned())
-			engine->InitialSpawn(ready_clients);
-		engine->GetWorld()->UpdateWorld();
+			engine->SendPreSpawn(ready_clients);
+
+		// once eggs has spawned, everything has spawned and we can begin the world cycle
+		auto t1 = chrono::high_resolution_clock::now();
+
+
+		if(eggs_spawned)
+			engine->GetWorld()->UpdateWorld();
+
+		auto t2 = chrono::high_resolution_clock::now();
+
+		float thresh = 16.67;
+
+		chrono::duration<double, milli> fp_ms = t2 - t1;
+		//("DIFFERENCE: %f\n", fp_ms.count());
+
+		if(thresh - fp_ms.count() < 0)
+			printf("TIMING ERROR: %f\n", thresh - fp_ms.count());
+		else
+		{
+			//printf("SLEEPING: %f\n", (thresh - fp_ms.count()));
+
+			Sleep((thresh - fp_ms.count()));
+
+			auto t3 = chrono::high_resolution_clock::now();
+
+			chrono::duration<double, milli> fp_after = t3 - t1;
+
+			//("TOTAL AFTER SLEEP: %f\n", fp_after.count());
+
+
+		}
 	}
 
 }
@@ -92,6 +139,11 @@ void ServerGame::receiveFromClients()
 					//printf("ready clients: %d\nclient_id: %d\n", ready_clients, client_id);
 					break;
 
+				case IND_SPAWN_EVENT:
+					receiveIndSpawnPacket(i + sizeof(PacketHeader));
+					spawned_clients++;
+					break;
+
 				case START_GAME:
 					receiveStartPacket(i);
 					sendStartPacket();
@@ -111,6 +163,11 @@ void ServerGame::receiveFromClients()
                     receiveRotationPacket(i + sizeof(PacketHeader));
                 
                     break;
+
+				case SHOOT_EVENT:
+					receiveShootPacket(i);
+
+					break;
 
                 default:
 
@@ -179,8 +236,10 @@ void ServerGame::receiveJoinPacket(int offset) {
 			sendJoinPacket(it->first);
 		}
 	}
-		
+	
+	printf("(before) team_map size = %d", team_map.size());
 	team_map[client] = pi->team_id;
+	printf("team_map size = %d", team_map.size());
 	sendJoinPacket(client);
 };
 
@@ -252,6 +311,28 @@ void ServerGame::sendStartPacket() { // will add more later based on generated w
 	network->sendToAll(packet_data, packet_size);
 }
 
+void ServerGame::sendReadyToSpawnPacket()
+{
+	Packet packet;
+	packet.hdr.packet_type = READY_TO_SPAWN_EVENT;
+
+	const unsigned int packet_size = sizeof(Packet);
+
+	char packet_data[packet_size];
+
+	packet.serialize(packet_data);
+
+	network->sendToAll(packet_data, packet_size);
+}
+
+void ServerGame::receiveIndSpawnPacket(int offset)
+{
+	struct PacketData* dat = (struct PacketData *) &(network_data[offset]);
+	struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
+
+	engine->SpawnRandomPlayer(pi->id, pi->team_id, pi->skin);
+}
+
 void ServerGame::sendSpawnPacket(PosInfo pi)
 {
     Packet packet;
@@ -285,6 +366,8 @@ void ServerGame::sendRemovePacket(ClassId cid, int oid)
 	r.rem_cid = cid;
 	r.rem_oid = oid;
 
+	printf("sending a remove packet for type %d object %d\n", r.rem_cid, r.rem_oid);
+
 	r.serialize(packet.dat.buf);
 
 	packet.serialize(packet_data);
@@ -296,43 +379,41 @@ void ServerGame::receiveMovePacket(int offset)
 {
 
 	struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset]);
-	printf("recieved move packet from %d\n", hdr->sender_id);
     struct PacketData* dat = (struct PacketData *) &(network_data[offset + sizeof(PacketHeader)]);
     struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
-	shared_ptr<Player> player = engine->GetWorld()->GetPlayer(hdr->sender_id);
+	Entity* ent = (Entity*)(EntitySpawner::instance()->GetEntity(ClassId::PLAYER, hdr->sender_id));
 
     //printf("dummy's current pos is (%d,%d)\n", dpi.x, dpi.y);
 	btVector3* vec;
 	switch (pi->direction) {
 	case MOVE_FORWARD:
-		vec = new btVector3(0, 0, 2);
-		player->Move(vec);
+		vec = new btVector3(0, 0, 25);
+		ent->Move(vec);
 		delete vec;
 		break;
 	case MOVE_BACKWARD:	
-		vec = new btVector3(0, 0, -2);
-		player->Move(vec);
+		vec = new btVector3(0, 0, -25);
+		ent->Move(vec);
 		delete vec;
 		break;
 	case MOVE_LEFT:
-		vec = new btVector3(2, 0, 0);
-		player->Move(vec);
+		vec = new btVector3(25, 0, 0);
+		ent->Move(vec);
 		delete vec;
 		break;
 	case MOVE_RIGHT:
-		vec = new btVector3(-2, 0, 0);
-		player->Move(vec);
+		vec = new btVector3(-25, 0, 0);
+		ent->Move(vec);
 		delete vec;
 		break;
 	}
 
-//	player->Move(pi->direction);
-//	sendMovePacket(hdr->sender_id);
 }
 
 void ServerGame::sendMovePacket(ClassId class_id, int obj_id)
 {
-		shared_ptr<Player> player = engine->GetWorld()->GetPlayer(obj_id); // change this to getting the object
+		Entity* ent = (Entity*)(EntitySpawner::instance()->GetEntity(class_id, obj_id));
+
         Packet packet;
 		packet.hdr.sender_id = SERVER_ID;
         packet.hdr.packet_type = MOVE_EVENT;
@@ -341,21 +422,19 @@ void ServerGame::sendMovePacket(ClassId class_id, int obj_id)
         packet.dat.game_data_id = POS_OBJ;
 	
 		// Extract the vector and send it with the posinfo object
-		btVector3 vec = player->GetPlayerPosition();
+		btVector3 vec = ent->GetEntityPosition();
 
-		p = player->GetPosition();
 		p.cid = class_id;
 		p.oid = obj_id;
 		p.x = vec.getX();
 		p.y = vec.getY();
 		p.z = vec.getZ();
 
-        p.serialize(packet.dat.buf);
+		if (class_id == PLAYER) {
+			p.num_eggs = ((Player*)ent)->GetScore();
+		}
 
-		/*if (p.oid == 1)
-		{
-			printf("position of 1 when server sends is %f, %f, %f\n", p.x, p.y, p.z);
-		}*/
+        p.serialize(packet.dat.buf);
 
         const unsigned int packet_size = sizeof(Packet);
         char packet_data[packet_size];
@@ -365,7 +444,7 @@ void ServerGame::sendMovePacket(ClassId class_id, int obj_id)
         network->sendToAll(packet_data, packet_size);
         //printf("Sent move packet to clients\n");
 }
-bool first = true;
+
 void ServerGame::receiveRotationPacket(int offset) {
 
     struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
@@ -373,21 +452,18 @@ void ServerGame::receiveRotationPacket(int offset) {
 
 	struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset - sizeof(PacketHeader)]);
 
-	shared_ptr<Player> player = engine->GetWorld()->GetPlayer(hdr->sender_id);
+	// All rotation packets will be player type, since it's from client
+	Entity* ent = (Entity*)(EntitySpawner::instance()->GetEntity(ClassId::PLAYER, hdr->sender_id));
 
-	// We need to multiply by -1 and swap w and y, for some reason
-	//player->SetPlayerRotation(-1 * pi->roty, pi->rotx, -1 * pi->rotw, pi->rotz);
-	player->SetPlayerRotation(pi->rotx, pi->roty, pi->rotz, pi->rotw);
-	//printf("received a rotation packet with: %f, %f, %f, %f\n", pi->rotx, pi->roty, pi->rotz, pi->rotw);
-
-	sendRotationPacket(hdr->sender_id, pi->rotw, pi->rotx, pi->roty, pi->rotz);
+	ent->SetEntityRotation(pi->rotx, pi->roty, pi->rotz, pi->rotw);
+	sendRotationPacket(ClassId::PLAYER, hdr->sender_id);
 }
 
-void ServerGame::sendRotationPacket(int client, float w, float x, float y, float z) {
+void ServerGame::sendRotationPacket(int class_id, int obj_id) {
     const unsigned int packet_size = sizeof(Packet);
     char packet_data[packet_size];
 
-	shared_ptr<Player> player = engine->GetWorld()->GetPlayer(client);
+	Entity* ent = (Entity*)(EntitySpawner::instance()->GetEntity(class_id, obj_id));
     Packet packet;
 	packet.hdr.sender_id = SERVER_ID;
     packet.hdr.packet_type = V_ROTATION_EVENT;
@@ -395,12 +471,12 @@ void ServerGame::sendRotationPacket(int client, float w, float x, float y, float
     packet.dat.game_data_id = POS_OBJ;
 
 	PosInfo p;
-	p.cid = ClassId::PLAYER;
-	p.oid = client;
+	p.cid = (ClassId) class_id;
+	p.oid = obj_id;
 
 	// why do we switch w and y and multiply by negative, we don't know but it fixes it
-	btQuaternion q = player->GetPlayerRotation();
-	btVector3 v = player->GetPlayerPosition();
+	btQuaternion q = ent->GetEntityRotation();
+	btVector3 v = ent->GetEntityPosition();
 	p.x = v.getX();
 	p.y = v.getY();
 	p.z = v.getZ();
@@ -408,8 +484,6 @@ void ServerGame::sendRotationPacket(int client, float w, float x, float y, float
 	p.rotx = q.getX();
 	p.roty = q.getY();
 	p.rotz = q.getZ();
-
-	printf("sending a rotation packet with: %f, %f, %f, %f\n", p.rotw, p.rotx, p.roty, p.rotz);
 
     p.serialize(packet.dat.buf);
     
@@ -422,5 +496,62 @@ void ServerGame::receiveJumpPacket(int offset)
 {
     struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset]);
 
-	engine->GetWorld()->GetPlayer(hdr->sender_id)->JumpPlayer();
+	Player* player = (Player*)(EntitySpawner::instance()->GetEntity(ClassId::PLAYER, hdr->sender_id));
+
+	player->JumpPlayer();
+}
+
+void ServerGame::sendScorePacket() {
+	Packet packet;
+	packet.hdr.packet_type = UPDATE_SCORE;
+
+	const unsigned int packet_size = sizeof(Packet);
+
+	char packet_data[packet_size];
+
+	packet.dat.game_data_id = SCORE_OBJ;
+
+	ScoreInfo s;
+	s.t0_score = scores[0];
+	s.t1_score = scores[1];
+
+	printf("sending score packet: %d, %d\n", s.t0_score, s.t1_score);
+	s.serialize(packet.dat.buf);
+
+	packet.serialize(packet_data);
+
+	network->sendToAll(packet_data, packet_size);
+}
+
+void ServerGame::sendGameOverPacket(int winner) {
+	Packet packet;
+	packet.hdr.packet_type = GAME_OVER;
+
+	const unsigned int packet_size = sizeof(Packet);
+
+	char packet_data[packet_size];
+
+	packet.dat.game_data_id = SCORE_OBJ;
+
+	ScoreInfo s;
+	s.t0_score = scores[0];
+	s.t1_score = scores[1];
+
+	printf("sending game over\n");
+	s.serialize(packet.dat.buf);
+
+	packet.serialize(packet_data);
+
+	network->sendToAll(packet_data, packet_size);
+}
+
+void ServerGame::receiveShootPacket(int offset) {
+	//struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset]);
+
+	//shared_ptr<Player> player = engine->GetWorld()->GetPlayer(hdr->sender_id);
+	struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset]);
+	Player* player = (Player*)(EntitySpawner::instance()->GetEntity(ClassId::PLAYER, hdr->sender_id));
+	player->UseWeapon();
+
+	//printf("HELLS YEAH\n");
 }

@@ -16,6 +16,12 @@
     <Filter Include="Source Files\engine">
       <UniqueIdentifier>{f6c08102-e4c8-4092-94a8-f8597e05712e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\engine\Weapons">
+      <UniqueIdentifier>{1aab9e0f-af05-47a9-b076-49c11569e2b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\engine\FieldDetection">
+      <UniqueIdentifier>{9b8f5fb6-c9f1-40f5-bd13-c43bead33a60}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\network\NetworkData.h">
@@ -42,27 +48,44 @@
     <ClInclude Include="..\src\server\engine\Player.h">
       <Filter>Source Files\engine</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\server\ServerPlayer.h" />
     <ClInclude Include="..\src\server\engine\Flag.h">
       <Filter>Source Files\engine</Filter>
     </ClInclude>
     <ClInclude Include="..\src\server\engine\ObjectId.h">
       <Filter>Source Files\engine</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\server\engine\Bullet.h">
-      <Filter>Source Files\engine</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\server\engine\WorldObstacle.h">
       <Filter>Source Files\engine</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\server\engine\SeedGun.h">
+    <ClInclude Include="..\src\server\engine\Entity.h">
       <Filter>Source Files\engine</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\server\engine\Weapon.h">
+    <ClInclude Include="..\src\server\engine\EntitySpawner.h">
+      <Filter>Source Files\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\server\engine\Collectable.h">
       <Filter>Source Files\engine</Filter>
     </ClInclude>
     <ClInclude Include="..\src\server\engine\FireRateReset.h">
-      <Filter>Source Files\engine</Filter>
+      <Filter>Source Files\engine\Weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\server\engine\Weapon.h">
+      <Filter>Source Files\engine\Weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\server\engine\SeedGun.h">
+      <Filter>Source Files\engine\Weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\server\engine\Bullet.h">
+      <Filter>Source Files\engine\Weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\server\engine\DamageField.h">
+      <Filter>Source Files\engine\FieldDetection</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\server\engine\FieldObject.h">
+      <Filter>Source Files\engine\FieldDetection</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\server\engine\Peck.h">
+      <Filter>Source Files\engine\Weapons</Filter>
     </ClInclude>
     <ClInclude Include="..\src\ConfigManager.h">
       <Filter>Source Files</Filter>
@@ -90,24 +113,41 @@
     <ClCompile Include="..\src\server\engine\Player.cpp">
       <Filter>Source Files\engine</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\server\ServerPlayer.cpp" />
     <ClCompile Include="..\src\server\engine\Flag.cpp">
-      <Filter>Source Files\engine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\server\engine\Bullet.cpp">
       <Filter>Source Files\engine</Filter>
     </ClCompile>
     <ClCompile Include="..\src\server\engine\WorldObstacle.cpp">
       <Filter>Source Files\engine</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\server\engine\SeedGun.cpp">
+    <ClCompile Include="..\src\server\engine\Entity.cpp">
       <Filter>Source Files\engine</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\server\engine\Weapon.cpp">
+    <ClCompile Include="..\src\server\engine\EntitySpawner.cpp">
+      <Filter>Source Files\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\server\engine\Collectable.cpp">
       <Filter>Source Files\engine</Filter>
     </ClCompile>
     <ClCompile Include="..\src\server\engine\FireRateReset.cpp">
-      <Filter>Source Files\engine</Filter>
+      <Filter>Source Files\engine\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\server\engine\Weapon.cpp">
+      <Filter>Source Files\engine\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\server\engine\SeedGun.cpp">
+      <Filter>Source Files\engine\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\server\engine\Bullet.cpp">
+      <Filter>Source Files\engine\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\server\engine\DamageField.cpp">
+      <Filter>Source Files\engine\FieldDetection</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\server\engine\FieldObject.cpp">
+      <Filter>Source Files\engine\FieldDetection</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\server\engine\Peck.cpp">
+      <Filter>Source Files\engine\Weapons</Filter>
     </ClCompile>
     <ClCompile Include="..\src\ConfigManager.cpp">
       <Filter>Source Files</Filter>

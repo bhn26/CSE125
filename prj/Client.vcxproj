@@ -198,6 +198,7 @@
   <ItemGroup>
     <ClCompile Include="..\src\Graphics\Objects\InstanceObject.cpp" />
     <ClCompile Include="..\src\Graphics\ShaderManager.cpp" />
+    <ClCompile Include="..\src\Graphics\Objects\ModelEntity.cpp" />
     <ClCompile Include="..\src\client\GameState.cpp" />
     <ClCompile Include="..\src\client\LobbyState.cpp" />
     <ClCompile Include="..\src\client\MenuState.cpp" />
@@ -238,6 +239,7 @@
   <ItemGroup>
     <ClInclude Include="..\src\Graphics\Objects\InstanceObject.h" />
     <ClInclude Include="..\src\Graphics\ShaderManager.h" />
+    <ClInclude Include="..\src\Graphics\Objects\ModelEntity.h" />
     <ClInclude Include="..\src\client\GameState.h" />
     <ClInclude Include="..\src\client\LobbyState.h" />
     <ClInclude Include="..\src\client\MenuState.h" />

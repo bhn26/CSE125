@@ -1,40 +1,32 @@
 #pragma once
-#include "Flag.h"
-#include "Weapon.h"
 #include <memory>
 #include <vector>
-
-#ifndef BULLET_PHYSICS
-#define BULLET_PHYSICS
-#include <BulletPhysics\btBulletDynamicsCommon.h>
-#include <BulletPhysics\btBulletCollisionCommon.h>
-#endif
+#include "Entity.h"
 
 #include "../../network/GameData.h"
 
+class Flag;
+class Weapon;
 
-class Player 
+class Player : public Entity 
 {
 
 private:
 
-	int id;
 	int teamId;
+
 	PosInfo position;
-	btDiscreteDynamicsWorld* curWorld;
-	btRigidBody* playerRigidBody;
-	std::vector<std::shared_ptr<Flag>> *flags;
+	std::vector<Flag*> *flags;
 	int jumpSem;
 	int hitPoints;
 	Weapon* playerWeapon;
+	Weapon* peckWeapon;
 
 public:
 
-	Player(int id, int teamid, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld);
+	Player(int objectid, int teamid, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld);
 
 	~Player();
-
-	int GetId() { return id; }
 
 	PosInfo GetPosition() { return position; };
 
@@ -46,15 +38,6 @@ public:
 	//TODO *********************************
 	void PrintPlayerVelocity();
 
-	// Return current positioning of Player
-	btVector3 GetPlayerPosition();
-
-	// Return current rotation matrix of Player
-	btQuaternion GetPlayerRotation();
-
-	// Sets player rotation using quarternion
-	void SetPlayerRotation(float x, float y, float z, float w);
-
 	// Makes the player jump
 	void JumpPlayer();
 
@@ -62,7 +45,7 @@ public:
 	void ResetJump();
 
 	//Flag handling
-	void AcquireFlag(std::shared_ptr<Flag> flag);
+	void AcquireFlag(Flag* flag);
 
 	void LoseFlags();
 
@@ -70,10 +53,18 @@ public:
 	// Pass in current rotation and position
 	void UseWeapon();
 
-	int GetObjectId();
+	void EquipWeapon(Weapon* newWeapon);
+
+	bool HasWeapon();
 
 	int GetTeamId();
 
+	int GetScore() { return flags->size(); };
+
 	int takeDamage(int damage);
+
+	void UsePeck();
+
+	void HandleDeath();
 };
 

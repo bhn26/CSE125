@@ -125,11 +125,7 @@ void Window::Display_callback(GLFWwindow* window)
     // Clear the color and depth buffers
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    // Use the shader of programID
-    //glUseProgram(shaderProgram);
-
     // Render the object drawPtr is pointing to
-    //chicken->Draw(camera);
     //Scene::Instance()->Draw();
 	m_pStateManager->Draw();
 
@@ -145,75 +141,11 @@ void Window::Key_callback(GLFWwindow* window, int key, int scancode, int action,
     // Check for a key press
     if (action == GLFW_PRESS || action == GLFW_REPEAT)
     {
-        switch (key)
-        {
-            // Check if escape was pressed
-            case GLFW_KEY_ESCAPE:
-                // Close the window. This causes the program to also terminate.
-                ClientGame::instance()->HandleButtonEvent(ConfigManager::instance()->GetConfigValue("PC_Esc"));
-                break;
-
-            case GLFW_KEY_W:
-#ifdef _WIN32
-                ClientGame::instance()->HandleButtonEvent(ConfigManager::instance()->GetConfigValue("PC_W"));
-#endif
-                break;
-            case GLFW_KEY_A:
-#ifdef _WIN32
-                ClientGame::instance()->HandleButtonEvent(ConfigManager::instance()->GetConfigValue("PC_A"));
-#endif
-                break;
-            case GLFW_KEY_S:
-#ifdef _WIN32
-                ClientGame::instance()->HandleButtonEvent(ConfigManager::instance()->GetConfigValue("PC_S"));
-#endif
-                break;
-            case GLFW_KEY_D:
-                ClientGame::instance()->HandleButtonEvent(ConfigManager::instance()->GetConfigValue("PC_D"));
-                break;
-            case GLFW_KEY_SPACE: // jump?
-                ClientGame::instance()->HandleButtonEvent(ConfigManager::instance()->GetConfigValue("PC_Space"));
-                break;
-            case GLFW_KEY_Z:
-                Scene::Instance()->GetPlayer()->ProcessKeyboard(DIRECTION::D_DOWN, 1);
-                break;
-            case GLFW_KEY_C:
-                Scene::Instance()->GetPlayer()->SetModelFile("assets/chickens/objects/pinocchio_chicken.obj");
-                break;
-			// For adjusting placement in world
-			case GLFW_KEY_UP:
-				Scene::Instance()->GetStaticObject(i)->ProcessKeyboard(POSITION::P_UP, 1);
-				break;
-			case GLFW_KEY_DOWN:
-				Scene::Instance()->GetStaticObject(i)->ProcessKeyboard(POSITION::P_DOWN, 1);
-				break;
-			case GLFW_KEY_LEFT:
-				Scene::Instance()->GetStaticObject(i)->ProcessKeyboard(POSITION::P_LEFT, 1);
-				break;
-			case GLFW_KEY_RIGHT:
-				Scene::Instance()->GetStaticObject(i)->ProcessKeyboard(POSITION::P_RIGHT, 1);
-				break;
-			case GLFW_KEY_F:
-				Scene::Instance()->GetStaticObject(i)->ProcessKeyboard(POSITION::P_FORWARD, 1);
-				break;
-			case GLFW_KEY_B:
-				Scene::Instance()->GetStaticObject(i)->ProcessKeyboard(POSITION::P_BACKWARD, 1);
-				break;
-			case GLFW_KEY_1:
-				i++;
-				if (i == Scene::Instance()->GetSize()) i = 0;
-				break;
-			case GLFW_KEY_P:
-				for (int j = 0; j < Scene::Instance()->GetSize(); j++) {
-					std::cout << "Position of StaticObject at [" << j << "]" << std::endl;
-					std::cout << "x: " << Scene::Instance()->GetStaticObject(j)->Position().x << "y : " << Scene::Instance()->GetStaticObject(j)->Position().y << "z : " << Scene::Instance()->GetStaticObject(j)->Position().z << std::endl;
-					std::cout << "----------------------" << std::endl;
-				}
-				break;
-            default:
-                break;
-        }
-    }
+		m_pStateManager->GetActiveState()->OnKeyDown(action, key);
+	}
+	else if (action == GLFW_RELEASE) {
+		m_pStateManager->GetActiveState()->OnKeyUp(action, key);
+	}
 }
 
 
@@ -240,7 +172,7 @@ void Window::Mouse_callback(GLFWwindow* window, double xpos, double ypos)
 
 void Window::Mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 {
-	if (button == GLFW_MOUSE_BUTTON_LEFT && !mouseCaptured)
+	/*if (button == GLFW_MOUSE_BUTTON_LEFT && !mouseCaptured)
 	{
 		mouseCaptured = true;
 		firstMouse = true;
@@ -250,7 +182,7 @@ void Window::Mouse_button_callback(GLFWwindow* window, int button, int action, i
 	{
 		mouseCaptured = false;
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-	}
+	}*/
 
 	double x, y;
 	glfwGetCursorPos(window, &x, &y);

@@ -16,10 +16,10 @@ private:
 	std::map<std::pair<int, unsigned int>, Entity* > entities;
 	static EntitySpawner *spawnInstance;
 	EntitySpawner();
-	unsigned int oid0;  // player
-	unsigned int oid1;  // flag
-	unsigned int oid2;  // bullet
-	unsigned int oid3;  // collectable
+	unsigned int oid_player;  // player
+	unsigned int oid_flag;  // flag
+	unsigned int oid_bullet;  // bullet
+	unsigned int oid_collectable;  // collectable
 
 public:
 
@@ -31,7 +31,7 @@ public:
 
 	Flag*  spawnFlag(PosInfo pos, btDiscreteDynamicsWorld* physicsWorld);
 
-	Bullet* spawnBullet(int playerid, int teamid, int damage, const btVector3* pos, btVector3* velocity, btDiscreteDynamicsWorld* physicsWorld);
+	Bullet* spawnBullet(int playerid, int teamid, int damage, btVector3* pos, btVector3* velocity, btMatrix3x3* rotation, btDiscreteDynamicsWorld* physicsWorld);
 
 	Collectable* spawnCollectable(int objectid, PosInfo pos, btDiscreteDynamicsWorld* curworld);
 

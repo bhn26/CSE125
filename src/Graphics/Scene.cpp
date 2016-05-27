@@ -7,17 +7,19 @@
 #include "Camera.h"
 #include "PointLight.h"
 
+#include "Objects/ModelEntity.h"
 #include "Objects/Entity.h"
 #include "../client/Player.h"
 #include "../client/ClientGame.h"
 
 #include "../server/engine/ObjectId.h"
+
 #include <algorithm>
 #include <vector>
 #include <map>
 
 Scene::Scene() : camera(std::unique_ptr<Camera>(nullptr)), pLight(std::unique_ptr<PointLight>(nullptr)),
-    player(nullptr), players(std::vector<std::shared_ptr<Player>>())
+    player(nullptr)
 {
 }
 const int Scene::WIDTH = 100;
@@ -121,23 +123,6 @@ void Scene::Setup()
 	
 }
 
-void Scene::AddPlayer(int client_id)
-{
-    //TODO - add client_id field to player
-    std::shared_ptr<Player> new_player = std::shared_ptr<Player>(new Player(client_id));
-
-    std::shared_ptr<Shader> modelShader = std::make_shared<Shader>("src/Graphics/Shaders/model_loading.vert", "src/Graphics/Shaders/model_loading.frag");
-    new_player->GetShader() = ShaderManager::Instance()->GetShader("Model");
-
-	// maybe we should add players to entities as well
-	players.push_back(new_player);
-
-	if (client_id == ClientGame::GetClientId()) {
-		printf("set main player to %d\n", client_id);
-//		player = new_player; // set your player
-	}
-}
-
 void Scene::Update()
 {
 	cubeMap->Update();
@@ -159,12 +144,6 @@ void Scene::Draw()
 	{
 		entity.second->Draw();
 		//printf("entity ids are %d, %d\n", entity.second->GetClassId(), entity.second->GetObjId());
-		if (entity.second->GetClassId() == 0 && entity.second->GetObjId() == 1)
-		{
-			//printf("Vector for player being drawn is: %f, %f, %f\n", entity.second->Position().x, entity.second->Position().y,
-				//entity.second->Position().z);
-
-		}
 	}
 
     // Redrawing players??
@@ -197,35 +176,58 @@ void Scene::AddEntity(int cid, int oid, std::unique_ptr<Entity> ent)
 	entities[p] = std::move(ent);
 }
 
-void Scene::AddEntity(int cid, int oid, float x, float y, float z, float rotw, float rotx, float roty, float rotz)
+void Scene::AddEntity(PosInfo p)
 {
 	std::unique_ptr<Player> player;
 	std::unique_ptr<Egg> egg;
+	std::string skin_type;
 
-	switch (cid) {
+	switch (p.cid) {
 	case ClassId::PLAYER:
-		player = std::unique_ptr<Player>(new Player(x,y,z,rotw,rotx,roty,rotz));
-		player->SetModelFile("assets/chickens/objects/pinocchio_chicken.obj");
-        player->Spawn(x, y, z);
+		player = std::unique_ptr<Player>(new Player(p.x, p.y, p.z, p.rotw, p.rotx, p.roty, p.rotz));
+		if (p.skin == 0)
+		{
+			skin_type = "assets/chickens/objects/chicken.obj";
+		}
+		else if (p.skin == 1)
+		{
+			skin_type = "assets/chickens/objects/robot_chicken.obj";
+		}
+		else if (p.skin == 2)
+		{
+			skin_type = "assets/chickens/objects/pinocchio_chicken.obj";
+		}
+		player->SetModelFile(skin_type);
+        player->Spawn(p.x, p.y, p.z);
 		player->GetShader() = ShaderManager::Instance()->GetShader("Model");
-		player->SetObjId(oid);
-		player->SetClassId(cid);
+		player->SetObjId(p.oid);
+		player->SetClassId(p.cid);
+		player->SetTeam(p.team_id);
 		//player->RotateTo(rotw, rotx, roty, rotz);
 		// set main player if the oid matches
-		if (oid == ClientGame::instance()->GetClientId())
+		if (p.oid == ClientGame::instance()->GetClientId())
 			Scene::player = player.get();
 		//players.push_back(player);
 
-		AddEntity(cid, oid, std::move(player));
+		AddEntity(p.cid, p.oid, std::move(player));
 		break;
 	case ClassId::FLAG:
-		egg = std::unique_ptr<Egg>(new Egg(x,y,z));
+		egg = std::unique_ptr<Egg>(new Egg(p.x, p.y, p.z));
 		egg->SetColor(glm::vec3(0.27f, 0.16f, 0.0f));
-        egg->GetShader() = ShaderManager::Instance()->GetShader("Model");
-		egg->SetClassId(cid);
-		egg->SetObjId(oid);
-		AddEntity(cid, oid, std::move(egg));
+		egg->GetShader() = ShaderManager::Instance()->GetShader("Model");
+		egg->SetClassId(p.cid);
+		egg->SetObjId(p.oid);
+		AddEntity(p.cid, p.oid, std::move(egg));
 		break;
+    case ClassId::BULLET:
+    {
+        std::unique_ptr<StaticObject> bullet = std::unique_ptr<StaticObject>(new StaticObject("assets/weapons/pumpkinseed.obj"));
+		bullet->Translate(glm::vec3(p.x, p.y, p.z));
+		printf("creating a bullet at %f, %f, %f\n", p.x, p.y, p.z);
+        //bullet->GetShader() = modelShader;        // Set in ModelEntity
+        AddEntity(p.cid, p.oid, std::move(bullet));
+        break;
+    }
 	default:
 		break;
 	}
@@ -242,3 +244,17 @@ std::unique_ptr<Entity>& Scene::GetEntity(int cid, int oid)
 	std::pair<int, int> p = std::pair<int, int>(cid, oid);
 	return entities.find(p)->second;
 }
+
+glm::vec2 Scene::Get2D(glm::vec3 coords, glm::mat4 view, glm::mat4 projection/*perspective matrix */, int width, int height) {
+	glm::mat4 viewProjectionMatrix = projection * view;
+	
+	//transform world to clipping coordinates
+	glm::vec3 clipping = glm::normalize(glm::vec3(viewProjectionMatrix * glm::vec4(coords, 1.0f)));
+	int winX = (int)std::round(((clipping.x + 1) / 2.0) * width);
+	
+	//we calculate -point3D.getY() because the screen Y axis is
+	//oriented top->down
+	int winY = (int)std::round(((1 - clipping.y) / 2.0) * height);
+	return glm::vec2(winX, winY);
+}
+

@@ -1,34 +1,25 @@
 #pragma once
 
+#include "Entity.h"
 #include "../../network/GameData.h"
-#ifndef BULLET_PHYSICS
-#define BULLET_PHYSICS
-#include <BulletPhysics\btBulletDynamicsCommon.h>
-#include <BulletPhysics\btBulletCollisionCommon.h>
-#endif
 
-class Bullet
+
+class Bullet : public Entity
 {
 private:
-	int id;
 	int playerId;
 	int teamId;
 	int damage;
-	btDiscreteDynamicsWorld* curWorld;
-	btRigidBody* bulletRigidBody;
 
 public:
 
-	Bullet(int objectid, int playerid, int teamid, int damage, PosInfo pos, btVector3* velocity, btDiscreteDynamicsWorld* physicsWorld);
+	Bullet(int objectid, int playerid, int teamid, int damage, btVector3* pos, btVector3* velocity, btMatrix3x3* rotation, btDiscreteDynamicsWorld* physicsWorld);
 
-	~Bullet();
+	virtual ~Bullet();
 
 	btVector3 GetBulletPosition();
 
 	//maybe handleBulletCollision(obA, obB);
-
-	// get bullet object id
-	int GetObjectId();
 
 	// get player id
 	int GetPlayerId();

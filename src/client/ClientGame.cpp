@@ -1,4 +1,3 @@
-
 #include "ClientGame.h"
 
 #include <cstdio>
@@ -80,6 +79,12 @@ void ClientGame::receiveJoinPacket(int offset) {
 	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
 	struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
 
+	// set our team if it's for us
+	if (pi->id == client_id) {
+		client_team = pi->team_id;
+		printf("setting client team to %d for player %d\n", client_team, client_id);
+	}
+
 	printf("receiveJoinPacket for player %d on team %d\n", pi->id, pi->team_id);
 	int player = pi->id;
 	int team = pi->team_id;
@@ -142,6 +147,7 @@ void ClientGame::receiveStartPacket(int offset) {
 	Window::m_pStateManager->ChangeState(CPlayState::GetInstance(Window::m_pStateManager)); // start game
 
 	game_started = true;
+	total_eggs = (team0.size() + team1.size()) * 2;
 	sendReadyPacket();
 }
 
@@ -153,21 +159,42 @@ void ClientGame::sendStartPacket() {
 	packet.hdr.sender_id = client_id;
 	packet.hdr.receiver_id = SERVER_ID;
 	packet.hdr.packet_type = START_GAME;
-	packet.hdr.sender_id = client_id;
 
 	packet.serialize(packet_data);
 
 	NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
 }
 
+// sendIndSpawnPacket
+void ClientGame::receiveReadyToSpawnPacket(int offset)
+{
+	const unsigned int packet_size = sizeof(Packet);
+	char packet_data[packet_size];
+
+	Packet packet;
+	packet.hdr.packet_type = IND_SPAWN_EVENT;
+	packet.hdr.sender_id = client_id;
+	packet.hdr.receiver_id = SERVER_ID;
+
+	PosInfo pi;
+	pi.id = client_id;
+	pi.team_id = client_team;
+	printf("send IndSpawn Packet for player %d on team %d", client_id, pi.team_id);
+	pi.skin = rand() % 3;
+
+	pi.serialize(packet.dat.buf);
+
+	packet.serialize(packet_data);
+	NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
+}
+
 void ClientGame::receiveSpawnPacket(int offset)
 {
-
     struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
     struct PosInfo* p = (struct PosInfo *) (dat->buf);
 
 	// spawn the thing
-	Scene::Instance()->AddEntity(p->cid, p->oid, p->x, p->y, p->z, p->rotw, p->rotx, p->roty, p->rotz);
+	Scene::Instance()->AddEntity((*p));
 
 	if (!iSpawned && p->oid == client_id)
 	{
@@ -191,10 +218,11 @@ void ClientGame::receiveMovePacket(int offset)
     struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
     struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
 
-	//if(pi->oid == 1)
+	//if(pi->oid == 0)
 		//printf("received move packet for obj id %d. Its coordinates are: %f, %f, %f\n", pi->oid, pi->x, pi->y, pi->z);
 
 	Scene::Instance()->GetEntity(pi->cid, pi->oid)->MoveTo(pi->x, pi->y, pi->z);
+	Scene::Instance()->GetEntity(pi->cid, pi->oid)->SetScore(pi->num_eggs);
 
 }
 
@@ -233,7 +261,6 @@ void ClientGame::receiveRotationPacket(int offset) {
 	if (pi->oid != client_id) {
 		Scene::Instance()->GetEntity(pi->cid, pi->oid)->RotateTo(pi->rotw, pi->rotx, pi->roty, pi->rotz);
 		glm::quat quat = Scene::Instance()->GetEntity(pi->cid, pi->oid)->Orientation();
-		printf("rotation of player %d on client is %f, %f, %f, %f\n", pi->oid, quat.w, quat.x, quat.y, quat.z);
 	}
 	
 	// Rotate it if it's not a player
@@ -272,8 +299,6 @@ void ClientGame::sendRotationPacket() {
 	pi.roty = rot.y;
 	pi.rotz = rot.z;
 
-	//printf("sending a rotation packet with: %f, %f, %f, %f\n", pi.rotw, pi.rotx, pi.roty, pi.rotz);
-   // pi.v_rotation = v_rot;
 	//pi.h_rotation = h_rot;
     pi.serialize(packet.dat.buf);
 
@@ -296,22 +321,46 @@ void ClientGame::sendJumpPacket()
 
     NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
 }
-/*std::shared_ptr<Player> ClientGame::FindTarget(int tid) {
-	if (tid == client_id) {
-		return Scene::Instance()->GetPlayer();
-	}
-	else {
-		std::vector<std::shared_ptr<Player>> players = Scene::Instance()->GetPlayers();
 
-		for (int i = 0; i < players.size(); i++) {
-			int pid = players.at(i)->GetID();
-			if (tid == pid) {
-				return players.at(i);	
-			}
-		}
+void ClientGame::receiveScorePacket(int offset) {
+	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
+	struct ScoreInfo* s = (struct ScoreInfo *) &(dat->buf);
+
+	printf("received a score packet t0: %d   t1: %d\n", s->t0_score, s->t1_score);
+
+	scores[0] = s->t0_score;
+	scores[1] = s->t1_score;
+}
+
+void ClientGame::receiveGameOverPacket(int offset) {
+	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
+	struct ScoreInfo* s = (struct ScoreInfo *) &(dat->buf);
+
+	if (s->t0_score != 0) { // t0 win
+		winner = 0;
 	}
-	printf("ERROR - couldn't find target in players");
-}*/
+	else { // t1 win
+		winner = 1;
+	}
+
+	printf("Team %d won!\n", winner);
+	// change state to game over screen
+}
+
+void ClientGame::sendShootPacket() {
+	const unsigned int packet_size = sizeof(Packet);
+	char packet_data[packet_size];
+
+	Packet packet;
+	packet.hdr.packet_type = SHOOT_EVENT;
+	packet.hdr.sender_id = client_id;
+	packet.hdr.receiver_id = SERVER_ID;
+
+	packet.serialize(packet_data);
+
+	NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
+}
+	
 
 void ClientGame::update()
 {
@@ -344,11 +393,13 @@ void ClientGame::update()
 				receiveStartPacket(i);
 				break;
 
-            case SPAWN_EVENT:
+			case READY_TO_SPAWN_EVENT:
+				receiveReadyToSpawnPacket(i);
+				break;
 
+            case SPAWN_EVENT:
                 // You want to offset the packet header
                 receiveSpawnPacket(i + sizeof(PacketHeader));
-
                 break;
 
 			case REMOVE_EVENT:
@@ -364,6 +415,14 @@ void ClientGame::update()
 				receiveRotationPacket(i + sizeof(PacketHeader));
 				break;
 
+			case UPDATE_SCORE:
+				receiveScorePacket(i + sizeof(PacketHeader));
+				break;
+
+			case GAME_OVER:
+				receiveGameOverPacket(i + sizeof(PacketHeader));
+				break;
+
             default:
                 printf("error in packet types %d\n", packet.hdr.packet_type);
                 break;
@@ -376,7 +435,7 @@ void ClientGame::update()
 void ClientGame::Initialize()
 {
     // Create the GLFW window
-    window = Window::Create_window(1024, 768);
+    window = Window::Create_window(1366, 768);
     // Print OpenGL and GLSL versions
     Print_versions();
     // Setup callbacks
@@ -393,6 +452,7 @@ void ClientGame::Initialize()
 
     double lastTime = glfwGetTime();
     int nbFrames = 0;
+	srand(time(NULL));
 }
 
 void ClientGame::Destroy()

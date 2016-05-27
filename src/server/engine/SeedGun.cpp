@@ -2,37 +2,31 @@
 
 #include "SeedGun.h"
 
-SeedGun::SeedGun(std::vector<std::shared_ptr<Weapon>>* frreset): Weapon(gunfireRate, gunDamage, frreset)
+SeedGun::SeedGun(btDiscreteDynamicsWorld* curworld): Weapon(gunfireRate, gunDamage, curworld)
 {
-	int reloaded = 1;
 	nextFireTick = 0;
 }
 
 SeedGun::~SeedGun(){}
 
-void SeedGun::UseWeapon(int playerId)
+void SeedGun::UseWeapon(btVector3* position, btMatrix3x3* rotation, int playerid, int teamid, Entity* owner)
 {
+	printf("SeedGun has been fired!");
 	if (this->fireFlag)
 	{
-		// fire seed gun
-		//TODO Spawn bullet with this gun's damage and given playerId
-		this->fireFlag = 0;
-		this->nextFireTick = currentWorldTick + gunfireRate;
+		printf("Position:  x: %f, y: %f, z: %f  \n", position->getX(), position->getY(), position->getZ());
 
-		// add used weapon to "used" list in World
-		std::shared_ptr<Weapon> weapon = std::shared_ptr<Weapon>(this);
-		frReset->push_back(weapon);
+		// Spawns bullet with this gun's damage, speed, and necessary ids into world
+		Bullet* fireProjectile = EntitySpawner::instance()->spawnBullet(playerid, teamid, this->gunDamage, position, this->gunSpeed, rotation, curWorld);
+		this->fireFlag = 0;
+		this->nextFireTick = FireRateReset::instance()->currentWorldTick + gunfireRate;
+
+		// add used weapon to "used" list in FireRateReset static object
+		FireRateReset::instance()->AddWeapon(this);
 	}
 }
 
-//TODO change this to reload weapon clip?
+//TODO reload weapon clip?
 void SeedGun::ReloadWeapon()
 {
-	if (!(this->fireFlag))
-	{
-		if (nextFireTick == currentWorldTick)
-		{
-			this->fireFlag = 1;
-		}
-	}
 }

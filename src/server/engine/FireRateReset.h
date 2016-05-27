@@ -2,20 +2,27 @@
 
 #include <vector>
 #include <memory>
-#include "Weapon.h"
 #include "../../network/GameData.h"
+
+class Weapon;
 
 class FireRateReset
 {
 
-protected:
-	std::vector<std::shared_ptr<Weapon>> * usedWeapons;
+private:
+	std::vector<Weapon*>* usedWeapons;
+	static FireRateReset *frr;
+	FireRateReset();
 
 public:
 
-	FireRateReset(std::vector<std::shared_ptr<Weapon>> * usedweapons);
+	unsigned int currentWorldTick;
 
 	~FireRateReset();
 
+	static FireRateReset *instance();
+
 	void ResetWeapons();
+
+	void AddWeapon(Weapon* weapon);
 };

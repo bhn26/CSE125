@@ -3,6 +3,7 @@
 #include "../../network/GameData.h"
 #include <vector>
 #include <memory>
+#include "FireRateReset.h"
 
 #ifndef BULLET_PHYSICS
 #define BULLET_PHYSICS
@@ -10,23 +11,25 @@
 #include <BulletPhysics\btBulletCollisionCommon.h>
 #endif
 
+class Entity;
+
 class Weapon
 {
 
 protected:
 	int fireRate;
 	int damage;
-	std::vector<std::shared_ptr<Weapon>>* frReset;
+	btDiscreteDynamicsWorld* curWorld;
 
 public:
 
 	unsigned int nextFireTick;
 	int fireFlag;
 
-	Weapon(int firerate, int wdamage, std::vector<std::shared_ptr<Weapon>>* frreset);
+	Weapon(int firerate, int wdamage, btDiscreteDynamicsWorld* curworld);
 	~Weapon();
 
-	void virtual UseWeapon();
+	void virtual UseWeapon(btVector3 * position, btMatrix3x3* rotation, int playerid, int teamid, Entity* owner);
 
 	void virtual ReloadWeapon();
 };

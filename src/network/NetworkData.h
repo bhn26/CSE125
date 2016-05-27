@@ -15,6 +15,10 @@ enum PacketTypes
 
 	READY_GAME, // The clients send this to say they're ready
 
+	READY_TO_SPAWN_EVENT,
+
+	IND_SPAWN_EVENT,
+
     SPAWN_EVENT,  // Creating a new object, sent to the client
 
 	REMOVE_EVENT, // Removing an object, sent to the client
@@ -23,8 +27,13 @@ enum PacketTypes
 
     V_ROTATION_EVENT,
 
-	JUMP_EVENT
+	JUMP_EVENT,
 
+	SHOOT_EVENT,
+
+	UPDATE_SCORE,
+
+	GAME_OVER
 };
 
 struct PacketHeader

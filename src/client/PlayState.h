@@ -3,6 +3,9 @@
 
 #include "GameState.h"
 
+#include "SpriteRenderer.h"
+#include "../Graphics/Texture.h"
+
 class CPlayState : public CGameState
 {
 public:
@@ -10,12 +13,13 @@ public:
 
 	// Implementation of specific events
 	void OnMouseMove(float xoffset, float yoffset);
-	void OnKeyDown(WPARAM wKey);
+	void OnClick(int button, double x, double y);
+	void OnKeyDown(int action, int key);
+	void OnKeyUp(int action, int key);
 	void Update(DWORD dwCurrentTime);
 	void Draw();
 
 	void Reset();
-	bool IsGameOver()  { return m_bGameOver; }
 
 	// Returns the single instance
 	static CPlayState* GetInstance(CStateManager* pManager);
@@ -24,14 +28,19 @@ protected:
 	CPlayState(CStateManager* pManager);
 
 private:
-	// The text controls to display the current
-	// information.
-	//CTextControl* m_pScoreControl;
-
 	// The current score
-	ULONG m_ulCurrentScore;
+	int scores[2];
 
-	bool m_bGameOver;
+	bool show_scoreboard;
+
+	////// HUD ////////////
+	bool initialized;
+	void InitTextures();
+
+	SpriteRenderer * sprite_renderer;
+
+	Texture* sb_bg;
+	Texture* sb_table;
 };
 
 #endif  // _PLAYSTATE_H_

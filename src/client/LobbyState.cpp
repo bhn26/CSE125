@@ -46,14 +46,13 @@ void LobbyState::OnClick(int button, double x, double y) {
 
 	switch (res[0]) {
 	case 0: printf("None clicked\n"); break;
-	case 1: printf("Logo clicked\n"); break;
-	case 2: printf("Start Button clicked\n"); 
+	case 1: printf("Start Button clicked\n"); 
 		ClientGame::instance()->sendStartPacket();
 		break;
-	case 3: printf("Join T0 clicked\n"); 
+	case 2: printf("Join T0 clicked\n");  // team 1
 		ClientGame::instance()->sendJoinPacket(0);
 		break;
-	case 4: printf("Join T1 clicked\n");
+	case 3: printf("Join T1 clicked\n"); // team 2
 		ClientGame::instance()->sendJoinPacket(1);
 		break;
 	default: printf("%d clicked%s\n", res[0]);
@@ -66,52 +65,32 @@ void LobbyState::RenderSelection() {
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	///////////////////// LOGO ///////////////////////////////////////
-	int x = Texture::GetWindowCenter(logo->Width());
-	int y = 50;
-
-	sprite_renderer->RenderSelection(1, *logo, glm::vec2(x, y), glm::vec2(logo->Width(), logo->Height()), 0.0f);
+	////////////////// BACKGROUND//////////////////////////
+	float x = Texture::GetWindowCenter(bg->Width());
+	float y = Window::height / 2 - bg->Height() / 2;
 
 	////////////// START BUTTON /////////////////////////////////////
-	float btn_width = 200;
-	float btn_height = 50;
+	sprite_renderer->RenderSelection(1, *start_button, glm::vec2(x + 1000, y + 55), glm::vec2(start_button->Width(), start_button->Height()), 0.0f);
 
-	x = Texture::GetWindowCenter(btn_width);
-	y = Window::height - btn_height - 50;
+	//////////////// JOIN BUTTONS ////////////////////////////////
+	float ty = y + 255;
+	float tx1 = x + (bg->Width() / 2) - (table_t1->Width() + 20);
+	float tx2 = tx1 + table_t1->Width() + 40;
 
-	sprite_renderer->RenderSelection(2, *start_button, glm::vec2(x, y), glm::vec2(btn_width, btn_height), 0.0f);
+	// adjust tx, ty for transparent pixels
+	tx1 += 4;
+	tx2 += 4;
+	ty += 5;
 
-	///////////// TEAM 0 //////////////////////////////////////////////
 	std::vector<int> team0 = ClientGame::Team0();
-
-	float panel_width = (Window::width / 2) - 20;
-	float panel_height = 50;
-
-	x = 10;
-	y = 50 + logo->Height() + 50;
-
-	for (int i = 0; i < team0.size(); i++) {
-		y = y + panel_height + 10;
-	}
-
 	if (std::find(team0.begin(), team0.end(), ClientGame::GetClientId()) == team0.end()) {
-		// add join button
-		sprite_renderer->RenderSelection(3, *start_button, glm::vec2(x, y), glm::vec2(panel_width, panel_height), 0.0f);
+		// add join button for t1
+		sprite_renderer->RenderSelection(2, *join, glm::vec2(tx1, ty + 390), glm::vec2(join->Width(), join->Height()), 0.0f);
+	}
+	else { // t2
+		sprite_renderer->RenderSelection(3, *join, glm::vec2(tx2, ty + 390), glm::vec2(join->Width(), join->Height()), 0.0f);
 	}
 
-	///////////// TEAM 1 //////////////////////////////////////////////
-	std::vector<int> team1 = ClientGame::Team1();
-	x = (Window::width / 2) + 10;
-	y = 50 + logo->Height() + 50;
-
-	for (int i = 0; i < team1.size(); i++) {
-		y = y + panel_height + 10;
-	}
-
-	if (std::find(team1.begin(), team1.end(), ClientGame::GetClientId()) == team1.end()) {
-		// add join button
-		sprite_renderer->RenderSelection(4, *start_button, glm::vec2(x, y), glm::vec2(panel_width, panel_height), 0.0f);
-	}
 
 	glClearColor(0.28f, 0.65f, 0.89f, 1.0f); // reset color
 }
@@ -121,66 +100,70 @@ void LobbyState::Draw()
 {
 	InitTextures();
 
-	///////////////////// LOGO ///////////////////////////////////////
-	int x = Texture::GetWindowCenter(logo->Width());
-	int y = 50;
-
-	sprite_renderer->DrawSprite(*logo, glm::vec2(x, y), glm::vec2(logo->Width(), logo->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+	////////////////// BACKGROUND//////////////////////////
+	float x = Texture::GetWindowCenter(bg->Width());
+	float y = Window::height / 2 - bg->Height() / 2;
+	sprite_renderer->DrawSprite(*bg, glm::vec2(x, y), glm::vec2(bg->Width(), bg->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 
 	////////////// START BUTTON /////////////////////////////////////
-	float btn_width = 200;
-	float btn_height = 50;
+	sprite_renderer->DrawSprite(*start_button, glm::vec2(x+1000, y+55), glm::vec2(start_button->Width(), start_button->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 
-	x = Texture::GetWindowCenter(btn_width);
-	y = Window::height - btn_height - 50;
+	///////////////// TABLES ////////////////////////////////////////
+	float ty = y + 255;
 
-	sprite_renderer->DrawSprite(*start_button, glm::vec2(x, y), glm::vec2(btn_width, btn_height), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
-	TextRenderer::RenderText("Start!", x, y, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+	float tx1 = x + (bg->Width() / 2) - (table_t1->Width() + 20);
+	sprite_renderer->DrawSprite(*table_t1, glm::vec2(tx1, ty), glm::vec2(table_t1->Width(), table_t1->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+
+	float tx2 = tx1 + table_t1->Width() + 40;
+	sprite_renderer->DrawSprite(*table_t2, glm::vec2(tx2, ty), glm::vec2(table_t2->Width(), table_t2->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+
+	// adjust tx, ty for transparent pixels
+	tx1 += 4;
+	tx2 += 4;
+	ty += 5;
 
 	///////////// TEAM 0 //////////////////////////////////////////////
 	std::vector<int> team0 = ClientGame::Team0();
-
-	float panel_width = (Window::width / 2) - 20;
-	float panel_height = 50;
-
-	x = 10;
-	y = 50 + logo->Height() + 50;
+	x = tx1 + 6;
+	y = ty + 90 + 6; // skip header
 
 	for (int i = 0; i < team0.size(); i++) {
-		sprite_renderer->DrawSprite(*panel, glm::vec2(x, y), glm::vec2(panel_width, panel_height), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 		char name[20];
 		strcpy_s(name, "Player ");
 		strcat_s(name, std::to_string(team0.at(i)).c_str());
-		TextRenderer::RenderText(name, x, y, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+		TextRenderer::RenderText(name, x, y, 1.0f, glm::vec3(0.5f, 0.5f, 0.5f));
 
-		y = y + panel_height + 10;
+		y = y + 60; // row height
 	}
 
 	if (std::find(team0.begin(), team0.end(), ClientGame::GetClientId()) == team0.end()) {
 		// add join button
-		sprite_renderer->DrawSprite(*start_button, glm::vec2(x, y), glm::vec2(panel_width, panel_height), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
-		TextRenderer::RenderText("+", x, y, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+		sprite_renderer->DrawSprite(*join, glm::vec2(tx1, ty + 390), glm::vec2(join->Width(), join->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+	}
+	else {
+		sprite_renderer->DrawSprite(*join_disabled, glm::vec2(tx1, ty + 390), glm::vec2(join->Width(), join->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 	}
 
 	///////////// TEAM 1 //////////////////////////////////////////////
 	std::vector<int> team1 = ClientGame::Team1();
-	x = (Window::width / 2) + 10;
-	y = 50 + logo->Height() + 50;
+	x = tx2 + 6;
+	y = ty + 90 + 6; // skip header
 
 	for (int i = 0; i < team1.size(); i++) {
-		sprite_renderer->DrawSprite(*panel, glm::vec2(x, y), glm::vec2(panel_width, panel_height), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 		char name[20];
 		strcpy_s(name, "Player ");
 		strcat_s(name, std::to_string(team1.at(i)).c_str());
-		TextRenderer::RenderText(name, x, y, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+		TextRenderer::RenderText(name, x, y, 1.0f, glm::vec3(0.5f, 0.5f, 0.5f));
 
-		y = y + panel_height + 10;
+		y = y + 60; // row height
 	}
 
 	if (std::find(team1.begin(), team1.end(), ClientGame::GetClientId()) == team1.end()) {
 		// add join button
-		sprite_renderer->DrawSprite(*start_button, glm::vec2(x, y), glm::vec2(panel_width, panel_height), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
-		TextRenderer::RenderText("+", x, y, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+		sprite_renderer->DrawSprite(*join, glm::vec2(tx2, ty + 390), glm::vec2(join->Width(), join->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+	}
+	else {
+		sprite_renderer->DrawSprite(*join_disabled, glm::vec2(tx2, ty + 390), glm::vec2(join->Width(), join->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 	}
 }
 
@@ -191,9 +174,14 @@ void LobbyState::EnterState()
 void::LobbyState::InitTextures() {
 	if (!initialized) {
 		// Create the different images
-		logo = new Texture(GL_TEXTURE_2D, "assets/ui/logo.png");
-		panel = new Texture(GL_TEXTURE_2D, "assets/ui/button_yellow.png");
-		start_button = new Texture(GL_TEXTURE_2D, "assets/ui/button_green.png");
+		bg = new Texture(GL_TEXTURE_2D, "assets/ui/lobby/lobby_bg.png");
+		start_button = new Texture(GL_TEXTURE_2D, "assets/ui/lobby/lobby_start.png");
+
+		table_t1 = new Texture(GL_TEXTURE_2D, "assets/ui/lobby/lobby_t1.png");
+		table_t2 = new Texture(GL_TEXTURE_2D, "assets/ui/lobby/lobby_t2.png");
+
+		join = new Texture(GL_TEXTURE_2D, "assets/ui/lobby/lobby_join.png");
+		join_disabled = new Texture(GL_TEXTURE_2D, "assets/ui/lobby/lobby_join_disabled.png");
 
 		initialized = true;
 	}

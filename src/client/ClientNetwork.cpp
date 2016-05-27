@@ -1,4 +1,3 @@
-
 #include "ClientNetwork.h"
 #include "ConfigManager.h"
 
@@ -29,6 +28,7 @@ ClientNetwork::ClientNetwork(void)
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_protocol = IPPROTO_TCP;  //TCP connection!!!
 	
+	ConfigManager::instance()->LoadConfigs("eggs.cfg");
 	ip = ConfigManager::instance()->GetConfigValue("ip");
 	port = ConfigManager::instance()->GetConfigValue("port");
 
@@ -117,7 +117,7 @@ int ClientNetwork::receivePackets(char * recvbuf)
 
     if ( iResult == 0 )
     {
-        printf("Connection closed\n");
+        printf("Connection closed.... %d\n", errno);
         closesocket(ConnectSocket);
         WSACleanup();
         exit(1);
