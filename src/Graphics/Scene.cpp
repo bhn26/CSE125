@@ -19,7 +19,7 @@
 #include <map>
 
 Scene::Scene() : camera(std::unique_ptr<Camera>(nullptr)), pLight(std::unique_ptr<PointLight>(nullptr)),
-    player(nullptr), players(std::vector<std::shared_ptr<Player>>())
+    player(nullptr)
 {
 }
 const int Scene::WIDTH = 100;
@@ -108,23 +108,6 @@ void Scene::Setup()
     //entities.push_back(std::move(cube)); // Don't add cube to scene
     entities.push_back(std::move(cubeMap));*/
 
-}
-
-void Scene::AddPlayer(int client_id)
-{
-    //TODO - add client_id field to player
-    std::shared_ptr<Player> new_player = std::shared_ptr<Player>(new Player(client_id));
-
-    std::shared_ptr<Shader> modelShader = std::make_shared<Shader>("src/Graphics/Shaders/model_loading.vert", "src/Graphics/Shaders/model_loading.frag");
-    new_player->GetShader() = modelShader;
-
-	// maybe we should add players to entities as well
-	players.push_back(new_player);
-
-	if (client_id == ClientGame::GetClientId()) {
-		printf("set main player to %d\n", client_id);
-//		player = new_player; // set your player
-	}
 }
 
 void Scene::Update()
@@ -225,10 +208,19 @@ void Scene::AddEntity(PosInfo p)
 		break;
     case ClassId::BULLET:
     {
-        std::unique_ptr<ModelEntity> bullet = std::unique_ptr<ModelEntity>(new ModelEntity("assets/eggs/objects/egg.obj"));
+       /* std::unique_ptr<ModelEntity> bullet = std::unique_ptr<ModelEntity>(new ModelEntity("assets/weapons/pumpkinseed.obj"));
+		bullet->MoveTo(p.x, p.y, p.z);
+		printf("creating a bullet at %f, %f, %f\n", p.x, p.y, p.z);
         //bullet->GetShader() = modelShader;        // Set in ModelEntity
         AddEntity(p.cid, p.oid, std::move(bullet));
-        break;
+        break;*/
+		egg = std::unique_ptr<Egg>(new Egg(p.x, p.y, p.z));
+		egg->SetColor(glm::vec3(0.27f, 0.16f, 0.0f));
+		egg->GetShader() = diffuseShader;
+		egg->SetClassId(p.cid);
+		egg->SetObjId(p.oid);
+		AddEntity(p.cid, p.oid, std::move(egg));
+		break;
     }
 	default:
 		break;
@@ -246,3 +238,17 @@ std::unique_ptr<Entity>& Scene::GetEntity(int cid, int oid)
 	std::pair<int, int> p = std::pair<int, int>(cid, oid);
 	return entities.find(p)->second;
 }
+
+glm::vec2 Scene::Get2D(glm::vec3 coords, glm::mat4 view, glm::mat4 projection/*perspective matrix */, int width, int height) {
+	glm::mat4 viewProjectionMatrix = projection * view;
+	
+	//transform world to clipping coordinates
+	glm::vec3 clipping = glm::normalize(glm::vec3(viewProjectionMatrix * glm::vec4(coords, 1.0f)));
+	int winX = (int)std::round(((clipping.x + 1) / 2.0) * width);
+	
+	//we calculate -point3D.getY() because the screen Y axis is
+	//oriented top->down
+	int winY = (int)std::round(((1 - clipping.y) / 2.0) * height);
+	return glm::vec2(winX, winY);
+}
+

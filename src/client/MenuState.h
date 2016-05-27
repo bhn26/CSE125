@@ -34,7 +34,7 @@ private:
 	SpriteRenderer * sprite_renderer;
 
 	// stuff below is for optimization later
-	Texture *logo;
+	Texture *bg;
 	Texture *textbox;
 	Texture *join;
 

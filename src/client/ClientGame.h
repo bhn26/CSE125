@@ -54,11 +54,14 @@ public:
 
 	void sendJumpPacket();
 
+	void receiveScorePacket(int offset);
+
+	void receiveGameOverPacket(int offset);
+
 	void sendShootPacket();
 
-	bool hasStarted() { return game_started; }
 
-	std::shared_ptr<Player> FindTarget(int tid);
+	bool hasStarted() { return game_started; };
 
     char network_data[MAX_PACKET_SIZE];
 
@@ -79,6 +82,10 @@ public:
 	static std::vector<int> Team0() { return cg->team0; }
 	static std::vector<int> Team1() { return cg->team1; }
 
+	int TotalEggs() { return total_eggs; };
+	int * GetScores() { return scores; };
+	int GetClientTeam() { return client_team; };
+
 private:
     ClientGame(void);
     ~ClientGame(void);
@@ -92,6 +99,10 @@ private:
 
 	std::vector <int> team0;
 	std::vector <int> team1;
+
+	int total_eggs;
+	int scores[2];
+	int winner; // set on receipt of game over packet
 
 	int tick = 0;
 

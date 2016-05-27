@@ -34,7 +34,7 @@ void World::Init() {
 	btBroadphaseInterface* overlappingPairCache = new btDbvtBroadphase();
 	btSequentialImpulseConstraintSolver* solver = new btSequentialImpulseConstraintSolver;
 	btDiscreteDynamicsWorld* dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfig);
-	dynamicsWorld->setGravity(btVector3(0, -.1, 0));
+	dynamicsWorld->setGravity(btVector3(0, -15, 0));
 
 	// Add Ground Object
 	//btCollisionShape* groundShape = new btStaticPlaneShape(btVector3(btScalar(0.), btScalar(1.), btScalar(0.)), 0);
@@ -43,6 +43,7 @@ void World::Init() {
 	btRigidBody::btRigidBodyConstructionInfo groundRigidBodyCI(0, groundMotionState, groundShape, btVector3(0, 0, 0));
 	groundRigidBodyCI.m_friction = .4;
 	btRigidBody* groundRigidBody = new btRigidBody(groundRigidBodyCI);
+	groundRigidBody->setGravity(btVector3(0, -10, 0));
 	dynamicsWorld->addRigidBody(groundRigidBody);
 	groundRigidBody->setGravity(btVector3(0, 0.1, 0));
 	groundRigidBody->setUserIndex(14);
@@ -212,7 +213,7 @@ void World::PreSpawn()
 void World::UpdateWorld()
 {
 	// Step simulation
-	curWorld->stepSimulation(1 / 60.f, 10);
+	curWorld->stepSimulation(1 / 60.f, 4);
 	currentWorldTick++;
 
 	// Process Weapon Fire Rate Reset
@@ -471,6 +472,7 @@ void World::UpdateWorld()
 	// Delete Marked Entities
 	for (auto it = deleteList.begin(); it != deleteList.end(); it++)
 	{
+		ServerGame::instance()->sendRemovePacket((ClassId) (*it)->GetClassId(), (*it)->GetObjectId());
 		delete (*it);
 	}
 	deleteList.clear();
@@ -489,8 +491,6 @@ void World::UpdateWorld()
 		printf(" back wall at (%f,%f,%f)\n", vecg.getX(), vecg.getY(), vecg.getZ());
 		*/
 
-		// TODO!!! HACK TO PRINT OUT UPDATE FOR ONE PLAYER.  Change to use Map in EntitySpawner
-
 		std::map<std::pair<int,unsigned int>, Entity* > * dynamicMap = EntitySpawner::instance()->GetMap();
 		for (std::map<std::pair<int, unsigned int>, Entity*>::iterator it = dynamicMap->begin(); it != dynamicMap->end(); it++)
 		{
@@ -508,7 +508,7 @@ void World::UpdateWorld()
 	}
 
 	// Send position updates of all dynamic objects
-	if (x % 5 == 0)
+	if (x % 1 == 0)
 	{
 		// Iterates through all dynamic objects in the Map and sends position updates to client
 		std::map<std::pair<int, unsigned int>, Entity* > * dynamicMap = EntitySpawner::instance()->GetMap();

@@ -12,8 +12,14 @@
 #include "client/ClientGame.h"
 #include "Basic/Utils.h"
 
+//// rendering text about the player
+#include "client\Window.h"
+#include "client\TextRenderer.h"
+
 Player::Player(float x, float y, float z, float rotW, float rotX, float rotY, float rotZ) : Entity(x,y,z), camAngle(0.0f), modelFile("assets/chickens/objects/chicken.obj")
 {
+	info_panel = new Texture(GL_TEXTURE_2D, "assets/ui/player_info_panel.png");
+
     //for (int col = 0; col < 3; col++)
     //    for (int row = 0; row < 3; row++)
     //        toWorld[col][row] *= 0.01;
@@ -33,7 +39,7 @@ Player::Player(float x, float y, float z, float rotW, float rotX, float rotY, fl
 
 Player::Player(int client_id) : Player()
 {
-    id = client_id;
+    obj_id = client_id;
 }
 
 Player::~Player()
@@ -76,6 +82,20 @@ void Player::Draw() const
     //skinTechnique->SetWorldMatrix(toWorld);
 
     //m_model->Draw();
+
+	////////////// DRAW SCORE /////////////////////////
+	/*glm::vec2 screen_coords = Scene::Get2D(Position(),
+		Scene::Instance()->GetViewMatrix(),
+		Scene::Instance()->GetPerspectiveMatrix(),
+		Window::width, Window::height);
+	//Scene::sprite_renderer->DrawSprite(*info_panel, glm::vec2(screen_coords.x - 100, screen_coords.y - 400), glm::vec2(info_panel->Width(), info_panel->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+
+	char score[5];
+	strcpy_s(score, "[");
+	strcat_s(score, std::to_string(num_eggs).c_str());
+	strcat_s(score, "]");
+	TextRenderer::RenderText(score, screen_coords.x, screen_coords.y - 400, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));*/
+
 }
 
 void Player::MoveTo(float x, float y, float z)

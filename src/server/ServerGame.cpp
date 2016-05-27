@@ -3,6 +3,10 @@
 #include "engine/Player.h"
 #include <algorithm>
 
+#include <chrono>
+#include <ratio>
+#include <thread>
+
 unsigned int ServerGame::client_id; 
 
 ServerGame* ServerGame::sg = nullptr;
@@ -12,6 +16,9 @@ ServerGame::ServerGame(void)
     // id's to assign clients for our table
     client_id = 0;
 	game_started = false;
+	
+	scores[0] = 0;
+	scores[1] = 0;
 
     // set up the server network to listen 
     network = new ServerNetwork(); 
@@ -36,11 +43,12 @@ void ServerGame::update()
 			// This will be an INIT_CONNECTION packet
 			receiveFromClients();
 		}
-	}
-	
+	}	
+
 	receiveFromClients();
 
 	// Check that all clients are ready
+
 	if (game_started && ready_clients == client_id)
 	{
 		if (spawned_clients == ready_clients && !eggs_spawned) {
@@ -49,13 +57,41 @@ void ServerGame::update()
 				engine->SpawnRandomFlag();
 			}
 			eggs_spawned = true;
+			Sleep(2000); // should wait for clients to respond
 		}
 		if(!engine->hasInitialSpawned())
 			engine->SendPreSpawn(ready_clients);
 
 		// once eggs has spawned, everything has spawned and we can begin the world cycle
+		auto t1 = chrono::high_resolution_clock::now();
+
+
 		if(eggs_spawned)
 			engine->GetWorld()->UpdateWorld();
+
+		auto t2 = chrono::high_resolution_clock::now();
+
+		float thresh = 16.67;
+
+		chrono::duration<double, milli> fp_ms = t2 - t1;
+		//("DIFFERENCE: %f\n", fp_ms.count());
+
+		if(thresh - fp_ms.count() < 0)
+			printf("TIMING ERROR: %f\n", thresh - fp_ms.count());
+		else
+		{
+			//printf("SLEEPING: %f\n", (thresh - fp_ms.count()));
+
+			Sleep((thresh - fp_ms.count()));
+
+			auto t3 = chrono::high_resolution_clock::now();
+
+			chrono::duration<double, milli> fp_after = t3 - t1;
+
+			//("TOTAL AFTER SLEEP: %f\n", fp_after.count());
+
+
+		}
 	}
 
 }
@@ -106,8 +142,8 @@ void ServerGame::receiveFromClients()
 					break;
 
 				case IND_SPAWN_EVENT:
-					spawned_clients++;
 					receiveIndSpawnPacket(i + sizeof(PacketHeader));
+					spawned_clients++;
 					break;
 
 				case START_GAME:
@@ -202,8 +238,10 @@ void ServerGame::receiveJoinPacket(int offset) {
 			sendJoinPacket(it->first);
 		}
 	}
-		
+	
+	printf("(before) team_map size = %d", team_map.size());
 	team_map[client] = pi->team_id;
+	printf("team_map size = %d", team_map.size());
 	sendJoinPacket(client);
 };
 
@@ -294,7 +332,7 @@ void ServerGame::receiveIndSpawnPacket(int offset)
 	struct PacketData* dat = (struct PacketData *) &(network_data[offset]);
 	struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
 
-	engine->SpawnRandomPlayer(pi->team_id, pi->skin);
+	engine->SpawnRandomPlayer(pi->id, pi->team_id, pi->skin);
 }
 
 void ServerGame::sendSpawnPacket(PosInfo pi)
@@ -330,6 +368,8 @@ void ServerGame::sendRemovePacket(ClassId cid, int oid)
 	r.rem_cid = cid;
 	r.rem_oid = oid;
 
+	printf("sending a remove packet for type %d object %d\n", r.rem_cid, r.rem_oid);
+
 	r.serialize(packet.dat.buf);
 
 	packet.serialize(packet_data);
@@ -349,22 +389,22 @@ void ServerGame::receiveMovePacket(int offset)
 	btVector3* vec;
 	switch (pi->direction) {
 	case MOVE_FORWARD:
-		vec = new btVector3(0, 0, 2);
+		vec = new btVector3(0, 0, 25);
 		ent->Move(vec);
 		delete vec;
 		break;
 	case MOVE_BACKWARD:	
-		vec = new btVector3(0, 0, -2);
+		vec = new btVector3(0, 0, -25);
 		ent->Move(vec);
 		delete vec;
 		break;
 	case MOVE_LEFT:
-		vec = new btVector3(2, 0, 0);
+		vec = new btVector3(25, 0, 0);
 		ent->Move(vec);
 		delete vec;
 		break;
 	case MOVE_RIGHT:
-		vec = new btVector3(-2, 0, 0);
+		vec = new btVector3(-25, 0, 0);
 		ent->Move(vec);
 		delete vec;
 		break;
@@ -391,6 +431,10 @@ void ServerGame::sendMovePacket(ClassId class_id, int obj_id)
 		p.x = vec.getX();
 		p.y = vec.getY();
 		p.z = vec.getZ();
+
+		if (class_id == PLAYER) {
+			p.num_eggs = ((Player*)ent)->GetScore();
+		}
 
         p.serialize(packet.dat.buf);
 
@@ -459,6 +503,50 @@ void ServerGame::receiveJumpPacket(int offset)
 	player->JumpPlayer();
 }
 
+void ServerGame::sendScorePacket() {
+	Packet packet;
+	packet.hdr.packet_type = UPDATE_SCORE;
+
+	const unsigned int packet_size = sizeof(Packet);
+
+	char packet_data[packet_size];
+
+	packet.dat.game_data_id = SCORE_OBJ;
+
+	ScoreInfo s;
+	s.t0_score = scores[0];
+	s.t1_score = scores[1];
+
+	printf("sending score packet: %d, %d\n", s.t0_score, s.t1_score);
+	s.serialize(packet.dat.buf);
+
+	packet.serialize(packet_data);
+
+	network->sendToAll(packet_data, packet_size);
+}
+
+void ServerGame::sendGameOverPacket(int winner) {
+	Packet packet;
+	packet.hdr.packet_type = GAME_OVER;
+
+	const unsigned int packet_size = sizeof(Packet);
+
+	char packet_data[packet_size];
+
+	packet.dat.game_data_id = SCORE_OBJ;
+
+	ScoreInfo s;
+	s.t0_score = scores[0];
+	s.t1_score = scores[1];
+
+	printf("sending game over\n");
+	s.serialize(packet.dat.buf);
+
+	packet.serialize(packet_data);
+
+	network->sendToAll(packet_data, packet_size);
+}
+
 void ServerGame::receiveShootPacket(int offset) {
 	//struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset]);
 
@@ -467,5 +555,5 @@ void ServerGame::receiveShootPacket(int offset) {
 	Player* player = (Player*)(EntitySpawner::instance()->GetEntity(ClassId::PLAYER, hdr->sender_id));
 	player->UseWeapon();
 
-	printf("HELLS YEAH\n");
+	//printf("HELLS YEAH\n");
 }

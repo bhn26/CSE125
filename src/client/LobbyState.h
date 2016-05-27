@@ -34,9 +34,14 @@ private:
 	SpriteRenderer * sprite_renderer;
 
 	// stuff below is for optimization later
-	Texture *logo;
-	Texture *panel;
+	Texture *bg;
 	Texture *start_button;
+
+	Texture *table_t1;
+	Texture *table_t2;
+
+	Texture *join;
+	Texture *join_disabled;
 
 	bool initialized;
 };

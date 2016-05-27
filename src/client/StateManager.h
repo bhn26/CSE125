@@ -26,8 +26,8 @@ public:
 
 	// 'Events' function, they are simply redirected to
 	// the active state.
-	void OnKeyDown(WPARAM wKey);
-	void OnKeyUp(WPARAM wKey);
+	void OnKeyDown(int action, int key);
+	void OnKeyUp(int action, int key);
 	void OnChar(WPARAM wChar);
 	void Update(DWORD dwCurrentTime);
 	void Draw();
