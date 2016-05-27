@@ -11,6 +11,7 @@
 #include "Objects/Ground.h"
 #include "Objects/StaticObject.h"
 #include "Objects/Grass.h"
+#include "Objects/InstanceObject.h"
 #include "ShaderManager.h"
 
 class Camera;
@@ -26,6 +27,7 @@ class Scene
 	std::unique_ptr<CubeMap> cubeMap;
 	std::unique_ptr<Ground> ground;
 	std::unique_ptr<Grass> grass;
+	std::unique_ptr<InstanceObject> pumpkin;
 
 	std::shared_ptr<Shader> basicShader;
 	std::shared_ptr<Shader> diffuseShader;
