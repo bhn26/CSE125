@@ -34,6 +34,7 @@ Player::Player(float x, float y, float z, float rotW, float rotX, float rotY, fl
     m_animNames["walk"] = m_model->AddAnimation("assets/chickens/chicken_walk.fbx", true);
     m_animNames["peck"] = m_model->AddAnimation("assets/chickens/chicken_peck.fbx", false);
     m_animNames["jump"] = m_model->AddAnimation("assets/chickens/chicken_jump.fbx", false);
+    m_animNames["death"] = m_model->AddAnimation("assets/chickens/chicken_death.fbx", false);
 
     m_model->RegisterListener(this);
 
@@ -136,12 +137,6 @@ void Player::RotateTo(const glm::quat& newOrientation)
     CalculateCameraFront();
 }
 
-void Player::Jump()
-{
-    ChangeState(State::JUMP);
-}
-
-
 // Process movement
 void Player::ProcessKeyboard(DIRECTION direction, GLfloat deltaTime)
 {
@@ -236,6 +231,12 @@ void Player::ChangeState(State state)
             break;
         case State::PECK:
             m_model->PlayAnimation(m_animNames["peck"]);
+            break;
+        case State::DANCE:
+            m_model->PlayAnimation(m_animNames["dance"]);
+            break;
+        case State::DEATH:
+            m_model->PlayAnimation(m_animNames["death"]);
             break;
     }
 }

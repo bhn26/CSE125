@@ -176,6 +176,12 @@ void Window::Key_callback(GLFWwindow* window, int key, int scancode, int action,
             case GLFW_KEY_C:
                 Scene::Instance()->GetPlayer()->SetModelFile("assets/chickens/objects/pinocchio_chicken.obj");
                 break;
+            case GLFW_KEY_1:
+                Scene::Instance()->GetPlayer()->Dance();
+                break;
+            case GLFW_KEY_2:
+                Scene::Instance()->GetPlayer()->Die();
+                break;
             default:
                 break;
         }
@@ -217,6 +223,10 @@ void Window::Mouse_button_callback(GLFWwindow* window, int button, int action, i
 		mouseCaptured = false;
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 	}*/
+    if (button == GLFW_MOUSE_BUTTON_LEFT && mouseCaptured)
+    {
+        Scene::Instance()->GetPlayer()->Attack();
+    }
 
 	double x, y;
 	glfwGetCursorPos(window, &x, &y);

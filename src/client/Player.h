@@ -40,6 +40,7 @@ public:
         WALK,
         DANCE,
         PECK,
+        DEATH,
     };
 
     Player(float x = 0.0f, float y = 0.0f, float z = 0.0f,
@@ -54,7 +55,10 @@ public:
 
     virtual void MoveTo(float x, float y, float z) override;
     virtual void RotateTo(const glm::quat& newOrientation) override;
-    void Jump();
+    void Jump() { ChangeState(State::JUMP); }
+    void Dance() { ChangeState(State::DANCE); }
+    void Attack() { ChangeState(State::PECK); }
+    void Die() { ChangeState(State::DEATH); }
 
     void SetModelFile(std::string fileName);
 
