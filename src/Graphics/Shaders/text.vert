@@ -1,8 +1,15 @@
 #version 330 core
 layout (location = 0) in vec4 vertex; // <vec2 pos, vec2 tex>
-out vec2 TexCoords;
 
-uniform mat4 projection;
+layout (std140) uniform Matrices
+{
+    mat4 projection;
+    mat4 view;      // Even though not used
+};
+
+//uniform mat4 projection;
+
+out vec2 TexCoords;
 
 void main()
 {

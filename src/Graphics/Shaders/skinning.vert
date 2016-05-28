@@ -8,6 +8,11 @@ layout (location = 4) in vec4 Weights;
 //layout (location = 3) in uint[8] BoneIDs;
 //layout (location = 4) in float[8] Weights;
 
+layout (std140) uniform Matrices
+{
+    mat4 projection;
+    mat4 view;
+};
 
 out vec2 TexCoord0;
 out vec3 Normal0;
@@ -17,8 +22,9 @@ const int MAX_BONES = 100;
 
 uniform mat4 gWVP;
 uniform mat4 perspective;
-uniform mat4 view;
+uniform mat4 view2;
 uniform mat4 gWorld;
+uniform mat4 model;
 uniform mat4 gBones[MAX_BONES];
 
 void main()
@@ -34,7 +40,6 @@ void main()
     TexCoord0    = TexCoord;
     vec4 NormalL = BoneTransform * vec4(Normal, 0.0);
     Normal0      = (gWorld * NormalL).xyz;
-    //Normal0 =
     //WorldPos0    = (gWorld * PosL).xyz;
     WorldPos0 = vec3(gWorld * vec4(Position, 1.0));
 }
