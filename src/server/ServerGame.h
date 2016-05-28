@@ -51,6 +51,8 @@ public:
 
 	void receiveJumpPacket(int offset);
 
+	void receiveDancePacket(int offset);
+	void sendDancePacket(int id);
 
 	void sendScorePacket();
 	void sendGameOverPacket(int winner);

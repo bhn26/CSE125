@@ -312,6 +312,7 @@
     <ClInclude Include="..\src\Graphics\Objects\InstanceObject.h">
       <Filter>Source Files\Graphics\Objects</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\Graphics\Objects\Grass.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\src\Graphics\Shaders\basic_shader.frag">
@@ -383,10 +384,5 @@
     <Filter Include="Source Files\Graphics\Objects">
       <UniqueIdentifier>{15abbdbb-ea4b-49cc-b0aa-9cc6e86ec603}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="..\src\Graphics\Objects\Grass.h">
-      <Filter>Source Files\Graphics\Objects</Filter>
-    </Text>
   </ItemGroup>
 </Project>

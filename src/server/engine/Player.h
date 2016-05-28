@@ -30,10 +30,7 @@ public:
 
 	PosInfo GetPosition() { return position; };
 
-	void Move(btVector3 *changeVelocity);
-
-	// Rotates player according to mouse move
-	void Rotate(float v_rotation, float h_rotation);
+	int GetJump() { return jumpSem; }
 
 	//TODO *********************************
 	void PrintPlayerVelocity();

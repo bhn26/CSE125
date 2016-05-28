@@ -31,6 +31,8 @@ enum PacketTypes
 
 	SHOOT_EVENT,
 
+	DANCE_EVENT,
+
 	UPDATE_SCORE,
 
 	GAME_OVER

@@ -160,7 +160,7 @@ GLint Technique::GetUniformLocation(const char* pUniformName)
 
     if (Location == INVALID_UNIFORM_LOCATION)
     {
-        fprintf(stderr, "Warning! Unable to get the location of uniform '%s'\n", pUniformName);
+        //fprintf(stderr, "Warning! Unable to get the location of uniform '%s'\n", pUniformName);
     }
 
     return Location;
