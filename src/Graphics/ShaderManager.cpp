@@ -3,8 +3,10 @@
 #include "Shader.h"
 #include "ConfigManager.h"
 
+////////////////////////////////////////////////////////////////////////////////
 const std::string ShaderManager::shaderPath = "src/Graphics/Shaders/";
 
+////////////////////////////////////////////////////////////////////////////////
 void ShaderManager::LoadShaders()
 {
     for (std::string& shaderName : _shaderNames)
@@ -14,6 +16,7 @@ void ShaderManager::LoadShaders()
     _shaderNames.clear();
 }
 
+////////////////////////////////////////////////////////////////////////////////
 bool ShaderManager::LoadShader(const std::string& shaderName)
 {
     // Don't duplicate load
@@ -32,20 +35,24 @@ bool ShaderManager::LoadShader(const std::string& shaderName)
         return false;
     }
 
-    _shaderMap[shaderName] = std::make_shared<Shader>(shaderPath + vertShaderPath, shaderPath + fragShaderPath);
+    //_shaderMap[shaderName] = std::make_shared<Shader>(shaderPath + vertShaderPath, shaderPath + fragShaderPath);
+    _shaderMap[shaderName] = std::shared_ptr<Shader>(new Shader(shaderPath + vertShaderPath, shaderPath + fragShaderPath));
     return true;
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void ShaderManager::AddShaderToLoad(std::string shaderName)
 {
     _shaderNames.push_back(shaderName);
 }
 
-std::shared_ptr<Shader> ShaderManager::GetShader(std::string shaderName) const
+////////////////////////////////////////////////////////////////////////////////
+std::shared_ptr<Shader> ShaderManager::GetShader(std::string shaderName)
 {
-    std::map<std::string, std::shared_ptr<Shader>>::const_iterator it = _shaderMap.find(shaderName);
+    ShaderManager* manager = Instance();
+    std::map<std::string, std::shared_ptr<Shader>>::const_iterator it = manager->_shaderMap.find(shaderName);
     // If in map
-    if (it != _shaderMap.end())    // Get shader mapped to this string
+    if (it != manager->_shaderMap.end())    // Get shader mapped to this string
     {
         return it->second;
     }
@@ -53,5 +60,17 @@ std::shared_ptr<Shader> ShaderManager::GetShader(std::string shaderName) const
     {
         std::cout << "Shader not found in map\n";
         return std::shared_ptr<Shader>(nullptr);
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ShaderManager::ApplyUBOToAllShaders(std::string blockName, int index)
+{
+    for (auto& shaderPair : _shaderMap)
+    {
+        GLuint program = shaderPair.second->GetProgram();
+        int blockIndex = glGetUniformBlockIndex(program, blockName.c_str());
+        if (blockIndex != GL_INVALID_INDEX)
+            glUniformBlockBinding(program, blockIndex, index);
     }
 }
