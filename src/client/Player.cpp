@@ -18,12 +18,12 @@
 #include "client/TextRenderer.h"
 
 Player::Player(float x, float y, float z, float rotW, float rotX, float rotY, float rotZ) :
-    Entity(glm::vec3(x,y,z), glm::vec3(0.01f)), camAngle(0.0f), modelFile("assets/chickens/objects/chicken.obj"), defaultCamFront(glm::normalize(glm::vec3(0.0f, -0.20f, 0.97f))),
-    m_distanceThreshhold_t(1.0f)
+    Entity(glm::vec3(x,y,z), glm::vec3(0.01f)), camAngle(0.0f), modelFile("assets/chickens/objects/chicken.obj"),
+    defaultCamFront(glm::normalize(glm::vec3(0.05f, -0.20f, 0.97f))), m_distanceThreshhold_t(1.0f)
 {
     info_panel = new Texture(GL_TEXTURE_2D, "assets/ui/player_info_panel.png");
 
-    SetRelativeCamPosition(glm::vec3(-1.5f, 4.5f, -7.0f));
+    SetRelativeCamPosition(glm::vec3(-2.5f, 4.5f, -7.0f));
     //model = std::unique_ptr<Model>(new Model(modelFile.c_str()));
     //camera = std::unique_ptr<Camera>(new Camera(Position() + relativeCamPosition, glm::vec3(0.0f, 1.0f, 0.0f), 90.0f, -15.0f));
     camera = std::unique_ptr<Camera>(new Camera(Position() + relativeCamPosition));
@@ -32,7 +32,8 @@ Player::Player(float x, float y, float z, float rotW, float rotX, float rotY, fl
     m_model = std::unique_ptr<Animation::AnimatedModel>(new Animation::AnimatedModel);
     m_model->FBXLoadClean("assets/chickens/chicken_dance.fbx", true, "dance");
     m_model->AddAnimation("assets/chickens/chicken_walk.fbx", true, "walk");
-    m_model->AddAnimation("assets/chickens/chicken_attack.fbx", false, "peck");
+    m_model->AddAnimation("assets/chickens/chicken_attack.fbx", false, "melee");
+    m_model->AddAnimation("assets/chickens/chicken_peck.fbx", false, "peck");
     m_model->AddAnimation("assets/chickens/chicken_jump.fbx", false, "jump");
     m_model->AddAnimation("assets/chickens/chicken_death.fbx", false, "death");
 
@@ -214,7 +215,7 @@ glm::mat3 Player::GetNormalMatrix() const
 
 void Player::ChangeState(State state)
 {
-    if (state == m_state)
+    if (state == m_state && !(state == State::DANCE || state == State::DEATH || state == State::PECK))
         return;
 
     SetState(state);
@@ -235,13 +236,16 @@ void Player::ChangeState(State state)
             m_lastPos_t = Position();
             break;
         case State::ATTACK:
-            m_model->PlayAnimation("peck");
+            m_model->PlayAnimation("melee");
             break;
         case State::DANCE:
             m_model->PlayAnimation("dance");
             break;
         case State::DEATH:
             m_model->PlayAnimation("death");
+            break;
+        case State::PECK:
+            m_model->PlayAnimation("peck");
             break;
     }
 }

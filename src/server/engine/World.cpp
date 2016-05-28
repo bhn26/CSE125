@@ -209,7 +209,9 @@ void World::PreSpawn()
 void World::UpdateWorld()
 {
 	// Step simulation
-	curWorld->stepSimulation(1 / 30.f, 4);
+    curWorld->stepSimulation(1 / 60.f, 4);  // 60
+//    curWorld->stepSimulation(1 / 30.f, 4);   // 30 frames
+
 	FireRateReset::instance()->currentWorldTick++;
 
 	// Process Weapon Fire Rate Reset

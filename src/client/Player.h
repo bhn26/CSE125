@@ -41,6 +41,8 @@ public:
         DANCE,
         ATTACK,
         DEATH,
+        TAUNT,
+        PECK,
     };
 
     Player(float x = 0.0f, float y = 0.0f, float z = 0.0f,
@@ -58,6 +60,7 @@ public:
     void Dance() { ChangeState(State::DANCE); }
     void Attack() { ChangeState(State::ATTACK); }
     void Die() { ChangeState(State::DEATH); }
+    void Peck() { ChangeState(State::PECK); }
 
     void SetModelFile(std::string fileName);
 

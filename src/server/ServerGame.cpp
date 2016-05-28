@@ -69,8 +69,8 @@ void ServerGame::update()
 
 		auto t2 = chrono::high_resolution_clock::now();
 
-		//float thresh = 16.67;
-        float thresh = 33;
+		float thresh = 16.67; // 60
+        //float thresh = 33;   // 30 frames
 		chrono::duration<double, milli> fp_ms = t2 - t1;
 		//("DIFFERENCE: %f\n", fp_ms.count());
 

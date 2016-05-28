@@ -127,7 +127,9 @@ private:
     const static std::string EVENT_MOVE_LEFT;
     const static std::string EVENT_MOVE_RIGHT;
     const static std::string EVENT_SCOREBOARD;
-    const static std::string EVENT_TAUNT;
+    const static std::string EVENT_TAUNT_DANCE;
+    const static std::string EVENT_TAUNT_DEATH;
+    const static std::string EVENT_TAUNT_PECK;
 
     ClientGame(void);
     ~ClientGame(void);
