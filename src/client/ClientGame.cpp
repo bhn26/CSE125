@@ -155,7 +155,7 @@ void ClientGame::receiveStartPacket(int offset) {
 	Window::m_pStateManager->ChangeState(CPlayState::GetInstance(Window::m_pStateManager)); // start game
 
 	game_started = true;
-	total_eggs = (team0.size() + team1.size()) * 2;
+	total_eggs = (team0.size() + team1.size()) * 2 + 1;
 	sendReadyPacket();
 }
 

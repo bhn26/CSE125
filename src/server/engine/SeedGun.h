@@ -8,7 +8,7 @@ class SeedGun : public Weapon
 protected:
 	int gunfireRate = 2;
 	int gunDamage = 10;
-	btVector3* gunSpeed = new btVector3(0, 0, 60);
+	btVector3* gunSpeed = new btVector3(0, 8, 60);
 
 	// resets the reloaded flag when tick reaches nextFireTick
 

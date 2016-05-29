@@ -44,7 +44,7 @@ void CPlayState::OnMouseMove(float xoffset, float yoffset) {
 	}
 }
 
-void CPlayState::OnClick(int button, double x, double y) {
+void CPlayState::OnClick(int button, int action, double x, double y) {
 	if (button == GLFW_MOUSE_BUTTON_LEFT && !Window::mouseCaptured)
 	{
 		Window::mouseCaptured = true;
@@ -58,7 +58,8 @@ void CPlayState::OnClick(int button, double x, double y) {
 	}
 	else if (button == GLFW_MOUSE_BUTTON_LEFT && Window::mouseCaptured)
 	{
-		ClientGame::instance()->HandleButtonEvent(ConfigManager::instance()->GetConfigValue("PC_Left_Click"));
+		if (action == GLFW_PRESS || action == GLFW_REPEAT)
+			ClientGame::instance()->HandleButtonEvent(ConfigManager::instance()->GetConfigValue("PC_Left_Click"));
 	}
 }
 

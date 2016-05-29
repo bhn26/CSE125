@@ -49,8 +49,12 @@ void ServerGame::update()
 
 	if (game_started && ready_clients >= client_id)
 	{
+		if (game_over)
+			return;
+
 		if (spawned_clients == ready_clients && !eggs_spawned) {
-			for (int i = 0; i < 2*ready_clients; i++)
+			total_eggs = 2*ready_clients + 1;
+			for (int i = 0; i < total_eggs; i++)
 			{
 				engine->SpawnRandomFlag();
 			}
@@ -544,6 +548,7 @@ void ServerGame::sendScorePacket() {
 void ServerGame::sendGameOverPacket(int winner) {
 	Packet packet;
 	packet.hdr.packet_type = GAME_OVER;
+	game_over = true;
 
 	const unsigned int packet_size = sizeof(Packet);
 

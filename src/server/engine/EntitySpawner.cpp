@@ -94,7 +94,7 @@ Bullet* EntitySpawner::spawnBullet(int playerid, int teamid, int damage, btVecto
 	// Send Bullet Spawn packet
 	btVector3 vec = fireProjectile->GetEntityPosition();
 	btQuaternion quat = fireProjectile->GetEntityRotation();
-	printf("Created Bullet at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
+	//printf("Created Bullet at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
 
 	PosInfo out;
 	out.cid = ClassId::BULLET;

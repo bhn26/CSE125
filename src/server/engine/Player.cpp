@@ -100,8 +100,8 @@ void Player::AcquireFlag(Flag* flag)
 
 	// check if your team won
 	int * scores = ServerGame::instance()->GetScores();
-	printf("Team %d has %d out of %d eggs\n", teamId, scores[teamId], ServerGame::instance()->NumTotalEggs());
-	if(scores[teamId] == ServerGame::instance()->NumTotalEggs()) {
+	printf("Team %d has %d out of %d eggs\n", teamId, scores[teamId], ServerGame::instance()->GetTotalEggs());
+	if(scores[teamId] == ServerGame::instance()->GetTotalEggs()) {
 		printf("sending game over packet\n");
 		ServerGame::instance()->sendGameOverPacket(teamId);
 	}
@@ -126,7 +126,7 @@ int Player::GetTeamId()
 	if (!alive)
 		return;
 
-	printf("Player %u : attempting to use weapon\n", objectId);
+	//printf("Player %u : attempting to use weapon\n", objectId);
 	// If player weapon doesn't exist, exit
 	if(!playerWeapon)
 	{
@@ -135,7 +135,7 @@ int Player::GetTeamId()
 
 	// passes player position when using weapon
 	btVector3 temp = this->GetEntityPosition();
-	printf("TEMP Position:  x: %f, y: %f, z: %f  \n", temp.getX(), temp.getY(), temp.getZ());
+	//printf("TEMP Position:  x: %f, y: %f, z: %f  \n", temp.getX(), temp.getY(), temp.getZ());
 
 	btVector3* position = new btVector3(temp.getX(), temp.getY(), temp.getZ());
 	btTransform currentTrans;
@@ -144,7 +144,7 @@ int Player::GetTeamId()
 	//btQuaternion* playerRotation = new btQuaternion(currentOrientation.getX(), currentOrientation.getY(), currentOrientation.getX(), currentOrientation.getW());
 
 	playerWeapon->UseWeapon(position, &currentOrientation, this->objectId, this->teamId, this);
-	printf("player with objId: %d used weapon\n", objectId);
+	//printf("player with objId: %d used weapon\n", objectId);
 }
 
 void Player::EquipWeapon(Weapon* newWeapon)
