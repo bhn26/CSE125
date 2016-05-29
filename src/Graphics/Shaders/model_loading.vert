@@ -5,14 +5,14 @@ layout (location = 2) in vec2 texCoords;
 
 layout (std140) uniform Matrices
 {
-    mat4 projection;
-    mat4 view;
+    mat4 projection2;
+    mat4 view2;
 };
 
 uniform mat4 model;
 uniform mat3 normalMatrix;
-//uniform mat4 view;
-//uniform mat4 projection;
+uniform mat4 view;
+uniform mat4 projection;
 
 out vec3 FragPos;
 out vec3 Normal;
@@ -24,5 +24,6 @@ void main()
     FragPos = vec3(model * gl_Position);
     Normal = normalMatrix * normal;
     gl_Position = projection * view * model * gl_Position;
+    //gl_Position = projection2 * view2 * model * gl_Position;
     TexCoords = texCoords;
 }

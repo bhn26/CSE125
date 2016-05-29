@@ -8,12 +8,14 @@
 
 class Shader
 {
+    friend class ShaderManager;
 private:
     GLuint program;
 
-public:
-    Shader() : program((GLuint)0) {};
+    Shader() : program((GLuint)0) {};       // To get a shader use the config file and ShaderManager
     Shader(const std::string& vertex_file_path, const std::string& fragment_file_path);
+
+public:
     ~Shader();
 
     // Copy Constructor and Copy Assignment cannot be implemented. If a copied Shader were deleted

@@ -4,12 +4,12 @@
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include "../Graphics/Objects/Chicken.h"
-#include "../Graphics/Shader.h"
-#include "../Graphics/Camera.h"
-#include "../Graphics/Scene.h"
+#include "Graphics/Objects/Chicken.h"
+#include "Graphics/Shader.h"
+#include "Graphics/Camera.h"
+#include "Graphics/Scene.h"
 #include "Player.h"
-#include "../Graphics/Objects/Entity.h"
+#include "Graphics/Objects/Entity.h"
 #include "MenuState.h"
 #include "ConfigManager.h"
 

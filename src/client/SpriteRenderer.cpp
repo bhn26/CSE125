@@ -4,21 +4,18 @@
 #include "SpriteRenderer.h"
 #include "Window.h"
 
-#include "../Graphics/Texture.h"
-#include "../Graphics/Shader.h"
+#include "Graphics/Texture.h"
+#include "Graphics/Shader.h"
+#include "Graphics/ShaderManager.h"
 
-SpriteRenderer::SpriteRenderer() {
-	this->shader = new Shader();
-	this->selectionShader = new Shader();
-	this->initialized = false; // need to wait for glew init before initializing 
+SpriteRenderer::SpriteRenderer() : initialized(false) // need to wait for glew init before initializing 
+{
 }
 
-SpriteRenderer::SpriteRenderer(Shader * shader) // not used
+// not used
+SpriteRenderer::SpriteRenderer(std::shared_ptr<Shader> shader) : shader(shader), initialized(true)
 {
-    this->shader = shader;
     this->initRenderData();
-
-	this->initialized = true;
 }
 
 SpriteRenderer::~SpriteRenderer()
@@ -29,8 +26,10 @@ SpriteRenderer::~SpriteRenderer()
 void SpriteRenderer::DrawSprite(Texture &texture, glm::vec2 position, glm::vec2 size, GLfloat rotate, glm::vec3 color)
 {
 	if (!initialized) {
-		shader = new Shader("src/Graphics/Shaders/sprite.vert", "src/Graphics/Shaders/sprite.frag");
-		selectionShader = new Shader("src/Graphics/Shaders/selection.vert", "src/Graphics/Shaders/selection.frag");
+        //shader = new Shader("src/Graphics/Shaders/sprite.vert", "src/Graphics/Shaders/sprite.frag");
+        //selectionShader = new Shader("src/Graphics/Shaders/selection.vert", "src/Graphics/Shaders/selection.frag");
+        shader = ShaderManager::GetShader("Sprite");
+        selectionShader = ShaderManager::GetShader("Selection");
 
 		initRenderData();
 		initialized = true;
@@ -69,8 +68,10 @@ void SpriteRenderer::DrawSprite(Texture &texture, glm::vec2 position, glm::vec2 
 
 void SpriteRenderer::RenderSelection(int selection_code, Texture &texture, glm::vec2 position, glm::vec2 size, GLfloat rotate) {
 	if (!initialized) {
-		shader = new Shader("src/Graphics/Shaders/sprite.vert", "src/Graphics/Shaders/sprite.frag");
-		selectionShader = new Shader("src/Graphics/Shaders/selection.vert", "src/Graphics/Shaders/selection.frag");
+        //shader = new Shader("src/Graphics/Shaders/sprite.vert", "src/Graphics/Shaders/sprite.frag");
+        //selectionShader = new Shader("src/Graphics/Shaders/selection.vert", "src/Graphics/Shaders/selection.frag");
+        shader = ShaderManager::GetShader("Sprite");
+        selectionShader = ShaderManager::GetShader("Selection");
 
 		initRenderData();
 		initialized = true;

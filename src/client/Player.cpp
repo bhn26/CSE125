@@ -21,7 +21,7 @@ Player::Player(float x, float y, float z, float rotW, float rotX, float rotY, fl
     Entity(glm::vec3(x,y,z), glm::vec3(0.01f)), camAngle(0.0f), modelFile("assets/chickens/objects/chicken.obj"),
     defaultCamFront(glm::normalize(glm::vec3(0.05f, -0.20f, 0.97f))), m_distanceThreshhold_t(1.0f)
 {
-    info_panel = new Texture(GL_TEXTURE_2D, "assets/ui/player_info_panel.png");
+    //info_panel = new Texture(GL_TEXTURE_2D, "assets/ui/player_info_panel.png");
 
     SetRelativeCamPosition(glm::vec3(-2.5f, 4.5f, -7.0f));
     //model = std::unique_ptr<Model>(new Model(modelFile.c_str()));
@@ -64,7 +64,7 @@ Player::Player(int client_id) : Player()
 
 Player::~Player()
 {
-    delete info_panel;
+    //delete info_panel;
 }
 
 void Player::SetModelFile(std::string fileName){

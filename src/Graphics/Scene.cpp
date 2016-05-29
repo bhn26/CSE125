@@ -9,31 +9,33 @@
 
 #include "Objects/ModelEntity.h"
 #include "Objects/Entity.h"
-#include "../client/Player.h"
-#include "../client/ClientGame.h"
+#include "client/Player.h"
+#include "client/ClientGame.h"
 
-#include "../server/engine/ObjectId.h"
+#include "server/engine/ObjectId.h"
 
 #include <algorithm>
 #include <vector>
 #include <map>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
-Scene::Scene() : camera(std::unique_ptr<Camera>(nullptr)), pLight(std::unique_ptr<PointLight>(nullptr)),
-    player(nullptr)
-{
-}
+////////////////////////////////////////////////////////////////////////////////
 const int Scene::WIDTH = 100;
 const int Scene::HEIGHT = 100;
 
+////////////////////////////////////////////////////////////////////////////////
+Scene::Scene() : camera(std::unique_ptr<Camera>(nullptr)), pLight(std::unique_ptr<PointLight>(nullptr)),
+player(nullptr)
+{
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void Scene::Setup()
 {
     entities.clear();
 
-    //instanceShader = std::make_shared<Shader>("src/Graphics/Shaders/instancing.vert", "src/Graphics/Shaders/instancing.frag");
-    //basicShader = std::make_shared<Shader>("src/Graphics/Shaders/basic_shader.vert", "src/Graphics/Shaders/basic_shader.frag");
-    //diffuseShader = std::make_shared<Shader>("src/Graphics/Shaders/basic_shader.vert", "src/Graphics/Shaders/diffuse.frag");
-    //modelShader = std::make_shared<Shader>("src/Graphics/Shaders/model_loading.vert", "src/Graphics/Shaders/model_loading.frag");
-    //cubeMapShader = std::make_shared<Shader>("src/Graphics/Shaders/cubemap.vert", "src/Graphics/Shaders/cubemap.frag");
+    InitializeUBOs();
 
     //camera = std::unique_ptr<Camera>(new Camera(glm::vec3(0.0f, 9.0f, -15.0f), glm::vec3(0.0f, 1.0f, 0.0f), 90.0f, -25.0f));
     camera = std::unique_ptr<Camera>(new Camera(glm::vec3(0.0f, 9.0f, -15.0f)));
@@ -107,8 +109,8 @@ void Scene::Setup()
     cubeMap = std::unique_ptr<CubeMap>(new CubeMap);
     cubeMap->LoadCubeMap();
 
-    grass->GetShader() = ShaderManager::Instance()->GetShader("Instancing");
-    cubeMap->GetShader() = ShaderManager::Instance()->GetShader("CubeMap");
+    grass->GetShader() = ShaderManager::GetShader("Instancing");
+    cubeMap->GetShader() = ShaderManager::GetShader("CubeMap");
 
 	//static_objects.push_back(std::move(boat));
 	static_objects.push_back(std::move(barn));
@@ -124,6 +126,43 @@ void Scene::Setup()
 	
 }
 
+////////////////////////////////////////////////////////////////////////////////
+void Scene::InitializeUBOs()
+{
+    ShaderManager::Instance()->ApplyUBOToAllShaders("Matrices", UBOIndex::Matrices);
+
+    glGenBuffers(1, &this->uboMatricesBuffer);
+
+    glBindBuffer(GL_UNIFORM_BUFFER, uboMatricesBuffer);
+    glBufferData(GL_UNIFORM_BUFFER, 2*sizeof(glm::mat4), NULL, GL_STATIC_DRAW);
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);
+    glBindBufferRange(GL_UNIFORM_BUFFER, UBOIndex::Matrices, uboMatricesBuffer, 0, 2*sizeof(glm::mat4));
+    //glBindBufferBase(GL_UNIFORM_BUFFER, UBOIndex::Matrices, uboMatricesBuffer);
+
+    SetProjectionUBO();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Scene::SetViewUBO()
+{
+    if (GetPlayer())
+    {
+        glm::mat4 view = GetPlayer()->GetViewMatrix();
+        glBindBuffer(GL_UNIFORM_BUFFER, uboMatricesBuffer);
+        glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(view));
+        glBindBuffer(GL_UNIFORM_BUFFER, 0);
+    }
+}
+
+void Scene::SetProjectionUBO()
+{
+    glm::mat4 projection = glm::perspective(45.0f, (float)Window::width/(float)Window::height, 0.1f, 1000.0f);
+    glBindBuffer(GL_UNIFORM_BUFFER, uboMatricesBuffer);
+    glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), glm::value_ptr(projection));
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void Scene::Update()
 {
     double nextTime = Utils::CurrentTime();
@@ -136,8 +175,10 @@ void Scene::Update()
 		entity.second->Update(deltaTime);
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void Scene::Draw()
 {
+    SetViewUBO();
 	cubeMap->Draw();
 	grass->Draw();
 
@@ -153,30 +194,35 @@ void Scene::Draw()
 }
 
 
+////////////////////////////////////////////////////////////////////////////////
 glm::mat4 Scene::GetViewMatrix()
 {
     if (player) return player->GetViewMatrix();
     return camera->GetViewMatrix();
 }
 
+////////////////////////////////////////////////////////////////////////////////
 glm::vec3 Scene::GetCameraPosition()
 {
     if (player) return player->CameraPosition();
     return camera->Position();
 }
 
+////////////////////////////////////////////////////////////////////////////////
 glm::mat4 Scene::GetPerspectiveMatrix()
 {
     if (player) return player->GetPerspectiveMatrix();
     return camera->GetPerspectiveMatrix();
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void Scene::AddEntity(int cid, int oid, std::unique_ptr<Entity> ent)
 {
 	std::pair<int, int> p = std::pair<int, int>(cid, oid);
 	entities[p] = std::move(ent);
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void Scene::AddEntity(PosInfo p)
 {
 	std::unique_ptr<Player> player;
@@ -199,7 +245,7 @@ void Scene::AddEntity(PosInfo p)
 			skin_type = "assets/chickens/objects/pinocchio_chicken.obj";
 		}
 		player->SetModelFile(skin_type);
-		player->GetShader() = ShaderManager::Instance()->GetShader("Model");
+		player->GetShader() = ShaderManager::GetShader("Model");
 		player->SetObjId(p.oid);
 		player->SetClassId(p.cid);
 		player->SetTeam(p.team_id);
@@ -214,7 +260,7 @@ void Scene::AddEntity(PosInfo p)
 	case ClassId::FLAG:
 		egg = std::unique_ptr<Egg>(new Egg(p.x, p.y, p.z));
 		egg->SetColor(glm::vec3(0.27f, 0.16f, 0.0f));
-		egg->GetShader() = ShaderManager::Instance()->GetShader("Model");
+		egg->GetShader() = ShaderManager::GetShader("Model");
 		egg->SetClassId(p.cid);
 		egg->SetObjId(p.oid);
 		AddEntity(p.cid, p.oid, std::move(egg));
@@ -234,17 +280,20 @@ void Scene::AddEntity(PosInfo p)
 	
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void Scene::RemoveEntity(int cid, int oid)
 {
 	int removed = entities.erase(std::make_pair(cid, oid));
 }
 
+////////////////////////////////////////////////////////////////////////////////
 std::unique_ptr<Entity>& Scene::GetEntity(int cid, int oid)
 {
 	std::pair<int, int> p = std::pair<int, int>(cid, oid);
 	return entities.find(p)->second;
 }
 
+////////////////////////////////////////////////////////////////////////////////
 glm::vec2 Scene::Get2D(glm::vec3 coords, glm::mat4 view, glm::mat4 projection/*perspective matrix */, int width, int height)
 {
 	glm::mat4 viewProjectionMatrix = projection * view;

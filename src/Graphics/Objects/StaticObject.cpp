@@ -14,7 +14,7 @@ StaticObject::StaticObject(const GLchar* path)
 {
     this->toWorld = glm::mat4(1.0f);
     model = new Model(path);
-    shader = ShaderManager::Instance()->GetShader("Model");
+    shader = ShaderManager::GetShader("Model");
 }
 
 StaticObject::~StaticObject()

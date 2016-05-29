@@ -55,7 +55,7 @@ void LobbyState::OnClick(int button, double x, double y) {
 	case 3: printf("Join T1 clicked\n"); // team 2
 		ClientGame::instance()->sendJoinPacket(1);
 		break;
-	default: printf("%d clicked%s\n", res[0]);
+	default: printf("%d clicked %s\n", res[0]);
 	}
 }
 

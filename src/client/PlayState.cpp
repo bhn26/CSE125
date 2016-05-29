@@ -193,7 +193,7 @@ void CPlayState::OnKeyUp(int action, int key) {
 	switch (key)
 	{
 	case GLFW_KEY_TAB:
-		show_scoreboard = false;
+        ClientGame::instance()->HandleButtonEvent(ConfigManager::instance()->GetConfigValue("PC_Tab"), false);
 		break;
 	default:
 		break;

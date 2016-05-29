@@ -3,7 +3,7 @@
 
 #include <GL/glew.h>
 #include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
+#include <memory>
 
 class Texture;
 class Shader;
@@ -13,7 +13,7 @@ class SpriteRenderer
 public:
     // Constructor (inits shaders/shapes)
 	SpriteRenderer();
-    SpriteRenderer(Shader * shader);
+    SpriteRenderer(std::shared_ptr<Shader> shader);
     // Destructor
     ~SpriteRenderer();
     // Renders a defined quad textured with given sprite
@@ -22,8 +22,8 @@ public:
 private:
     // Render state
 	bool initialized;
-    Shader * shader; 
-	Shader * selectionShader;
+    std::shared_ptr<Shader> shader; 
+    std::shared_ptr<Shader> selectionShader;
     GLuint quadVAO;
     // Initializes and configures the quad's buffer and vertex attributes
     void initRenderData();

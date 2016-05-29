@@ -2,6 +2,7 @@
 #include <memory>
 #include <vector>
 
+#include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <vector>
 #include <map>
@@ -25,7 +26,15 @@ class ChickenAnim;
 
 class Scene
 {
+    enum UBOIndex
+    {
+        Matrices = 0,
+        Lights = 1,
+    };
+
     float lastTime;
+    GLuint uboMatricesBuffer;
+
     std::unique_ptr<Camera> camera;
     std::unique_ptr<PointLight> pLight;
 	std::unique_ptr<CubeMap> cubeMap;
@@ -43,14 +52,11 @@ class Scene
 
     Scene();
     void Setup();
+    void InitializeUBOs();
+    void SetViewUBO();
+    void SetProjectionUBO();
 
 public:
-    std::shared_ptr<Shader> basicShader;
-    std::shared_ptr<Shader> diffuseShader;
-    std::shared_ptr<Shader> modelShader;
-    std::shared_ptr<Shader> cubeMapShader;
-    std::shared_ptr<Shader> instanceShader;
-
 	static SpriteRenderer * sprite_renderer;
 
     static Scene* Instance()

@@ -49,7 +49,7 @@ void ShaderManager::AddShaderToLoad(std::string shaderName)
 ////////////////////////////////////////////////////////////////////////////////
 std::shared_ptr<Shader> ShaderManager::GetShader(std::string shaderName)
 {
-    ShaderManager* manager = Instance();
+    const ShaderManager* manager = Instance();
     std::map<std::string, std::shared_ptr<Shader>>::const_iterator it = manager->_shaderMap.find(shaderName);
     // If in map
     if (it != manager->_shaderMap.end())    // Get shader mapped to this string
@@ -64,13 +64,13 @@ std::shared_ptr<Shader> ShaderManager::GetShader(std::string shaderName)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ShaderManager::ApplyUBOToAllShaders(std::string blockName, int index)
+void ShaderManager::ApplyUBOToAllShaders(std::string blockName, int binding)
 {
     for (auto& shaderPair : _shaderMap)
     {
         GLuint program = shaderPair.second->GetProgram();
         int blockIndex = glGetUniformBlockIndex(program, blockName.c_str());
         if (blockIndex != GL_INVALID_INDEX)
-            glUniformBlockBinding(program, blockIndex, index);
+            glUniformBlockBinding(program, blockIndex, binding);
     }
 }
