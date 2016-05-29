@@ -7,6 +7,9 @@
 
 #include <map>
 #include <iostream>
+#include <chrono>
+#include <ratio>
+#include <thread>
 
 class ServerGame
 {
@@ -96,6 +99,7 @@ private:
 	bool eggs_spawned = false;
 	int ready_clients = 0; // # of clients ready for the game
 	int spawned_clients = 0;
+	chrono::time_point<chrono::steady_clock> start_time;
 
 	Engine * engine;
 

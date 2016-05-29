@@ -61,6 +61,8 @@ public:
 
 	int GetScore() { return flags->size(); };
 
+	int GetJumpSem() { return jumpSem; };
+
 	int takeDamage(int damage);
 
 	void UsePeck();
