@@ -33,6 +33,10 @@ enum PacketTypes
 
 	DANCE_EVENT,
 
+	DEATH_EVENT,
+
+	RESPAWN_EVENT,
+
 	UPDATE_SCORE,
 
 	GAME_OVER

@@ -57,7 +57,7 @@ public:
     void Jump() { ChangeState(State::JUMP); }
     void Dance() { ChangeState(State::DANCE); }
     void Attack() { ChangeState(State::ATTACK); }
-    void Die() { ChangeState(State::DEATH); }
+	void Die() { ChangeState(State::DEATH); alive = false; }
 
     void SetModelFile(std::string fileName);
 
@@ -87,6 +87,9 @@ public:
 
     void SetTeam(int team) { team_id = team; }
     int GetTeam() const { return team_id; }
+
+	bool IsAlive() { return alive; }
+	void SetAlive(bool a) { alive = a; }
 
 private:
     // AnimationPlayer::Listener
@@ -119,6 +122,8 @@ private:
     float m_VViewSensitivity = 5.0f;
 
     int tick = 0;
+
+	bool alive;
 
     // Path name for chicken model texture
     std::string modelFile;

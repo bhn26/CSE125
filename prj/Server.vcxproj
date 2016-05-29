@@ -172,6 +172,7 @@
     <ClInclude Include="..\src\server\engine\ObjectId.h" />
     <ClInclude Include="..\src\server\engine\Peck.h" />
     <ClInclude Include="..\src\server\engine\Player.h" />
+    <ClInclude Include="..\src\server\engine\RespawnHandler.h" />
     <ClInclude Include="..\src\server\engine\SeedGun.h" />
     <ClInclude Include="..\src\server\engine\Weapon.h" />
     <ClInclude Include="..\src\server\engine\World.h" />
@@ -193,6 +194,7 @@
     <ClCompile Include="..\src\server\engine\Flag.cpp" />
     <ClCompile Include="..\src\server\engine\Peck.cpp" />
     <ClCompile Include="..\src\server\engine\Player.cpp" />
+    <ClCompile Include="..\src\server\engine\RespawnHandler.cpp" />
     <ClCompile Include="..\src\server\engine\SeedGun.cpp" />
     <ClCompile Include="..\src\server\engine\Weapon.cpp" />
     <ClCompile Include="..\src\server\engine\World.cpp" />

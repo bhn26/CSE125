@@ -54,6 +54,10 @@ public:
 	void receiveDancePacket(int offset);
 	void sendDancePacket(int id);
 
+	void sendDeathPacket(int id);
+
+	void sendRespawnPacket(int id);
+
 	void sendScorePacket();
 	void sendGameOverPacket(int winner);
 

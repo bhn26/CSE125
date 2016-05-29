@@ -12,5 +12,5 @@ protected:
 public:
 	DamageField(int ttl, int damage, btVector3* origin, btCollisionShape* fieldshape, Entity* fieldowner, btDiscreteDynamicsWorld* curworld);
 	virtual ~DamageField();
-	int handleField();
+	int handleField(int world_tick);
 };

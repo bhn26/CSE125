@@ -405,9 +405,19 @@ void ClientGame::sendDancePacket()
 	NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
 }
 
+void ClientGame::receiveDeathPacket(int offset)
+{
+	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
+	struct EmoteInfo* e = (struct EmoteInfo *) &(dat->buf);
+	((Player *)(Scene::Instance()->GetEntity(ClassId::PLAYER, e->id).get()))->Die();
+}
 
-
-
+void ClientGame::receiveRespawnPacket(int offset) 
+{
+	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
+	struct EmoteInfo* e = (struct EmoteInfo *) &(dat->buf);
+	((Player *)(Scene::Instance()->GetEntity(ClassId::PLAYER, e->id).get()))->SetAlive(true);
+}
 
 void ClientGame::update()
 {
@@ -460,6 +470,14 @@ void ClientGame::update()
 
 			case DANCE_EVENT:
 				receiveDancePacket(i + sizeof(PacketHeader));
+				break;
+
+			case DEATH_EVENT:
+				receiveDeathPacket(i + sizeof(PacketHeader));
+				break;
+
+			case RESPAWN_EVENT:
+				receiveRespawnPacket(i + sizeof(PacketHeader));
 				break;
 
 			case V_ROTATION_EVENT:

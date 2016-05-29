@@ -7,6 +7,7 @@
 #include "Flag.h"
 #include "Peck.h"
 #include "SeedGun.h"
+#include "RespawnHandler.h"
 #include <time.h>
 #include "../ServerGame.h"
 
@@ -37,6 +38,8 @@ Player::Player(int objectid, int teamid, PosInfo pos, btDiscreteDynamicsWorld* p
 	this->playerWeapon = nullptr;
 	this->peckWeapon = new Peck(curWorld);
 	this->playerWeapon = new SeedGun(curWorld);
+	this->alive = true;
+	this->death_time = 0;
 
 
 	// Set RigidBody to point to Player
@@ -64,6 +67,9 @@ void Player::PrintPlayerVelocity()
 
 void Player::JumpPlayer()
 {
+	if (!alive)
+		return;
+
 	if (jumpSem)
 	{
 		// Change jump semaphore, change upward y-axis velocity
@@ -82,6 +88,8 @@ void Player::ResetJump()
 
 void Player::AcquireFlag(Flag* flag)
 {
+	if (!alive)
+		return;
 	// player collects flag, remove from entity list
 	flags->push_back(flag);
 	printf("FLAG ACQUIRED\n");
@@ -115,6 +123,9 @@ int Player::GetTeamId()
 
  void Player::UseWeapon()
 {
+	if (!alive)
+		return;
+
 	printf("Player %u : attempting to use weapon\n", objectId);
 	// If player weapon doesn't exist, exit
 	if(!playerWeapon)
@@ -138,6 +149,8 @@ int Player::GetTeamId()
 
 void Player::EquipWeapon(Weapon* newWeapon)
 {
+	if (!alive)
+		return;
 	this->playerWeapon = newWeapon;
 }
 
@@ -147,14 +160,17 @@ bool Player::HasWeapon()
 }
 
  // If player is dead, returns 1,  else returns 0
-int Player::takeDamage(int damage)
+int Player::takeDamage(int damage, unsigned int world_tick)
 {
+	if (!alive)
+		return 0;
+
 	this->hitPoints = this->hitPoints - damage;
 
 	printf("Player %u has taken damage!  Hitpoints:%d, damage: %d\n", objectId, this->hitPoints, damage);
 	if (this->hitPoints <= 0)
 	{
-		this->HandleDeath();
+		this->HandleDeath(world_tick);
 		return 1;
 	}
 	else
@@ -165,6 +181,9 @@ int Player::takeDamage(int damage)
 
 void Player::UsePeck()
 {
+	if (!alive)
+		return;
+
 	// passes player position when using weapon
 	btTransform currentTrans;
 	entityRigidBody->getMotionState()->getWorldTransform(currentTrans);
@@ -173,21 +192,23 @@ void Player::UsePeck()
 	printf("player with objId: %d used peck! \n", objectId);
 }
 
-void Player::HandleDeath()
+void Player::HandleDeath(unsigned int death_tick)
 {
 	printf("Player %u has died!", objectId);
-	// reset hitpoints
-	this->hitPoints = 100;
+	this->alive = false;
+	death_time = death_tick;
+	ServerGame::instance()->sendDeathPacket(objectId);
+	//EntitySpawner::instance()->RemoveEntity(classId, objectId);
+
+	RespawnHandler::instance()->KillPlayer(this);   // Schedule this guy to respawn in the future
 
 	btVector3 deathPos = entityRigidBody->getCenterOfMassPosition();
 	deathPos.setY((deathPos.getY() + 4));
-	srand(time(NULL));
+	//srand(time(NULL));
 	btTransform currentTrans;
 	btVector3 ranVelocity;
 
-	//std::vector<Flag*>::iterator it = flags->begin();
-
-	//while (it != flags->end())
+	// Disperse the player's flags
 	for (auto it = flags->begin(); it != flags->end(); it++)
 	{
 		Flag* curFlag = (*it);
@@ -214,20 +235,29 @@ void Player::HandleDeath()
 		out.rotx = quat.getX();
 		out.roty = quat.getY();
 		out.rotz = quat.getZ();
-		ServerGame::instance()->sendSpawnPacket(out);
 		// add Flag to Entity Map
+		ServerGame::instance()->sendSpawnPacket(out);
 		EntitySpawner::instance()->AddEntity(curFlag->GetClassId(), curFlag->GetObjectId(), curFlag);
-		
+
 		// erase flag from player
 		//flags->erase(it);
 	}
 	flags->clear(); //Actually calls delete on flags... didn't seem to correctly work for bullet deletion anways... maybe cause of void pointer
-
-
-	// Teleport Player to a random spot in the world
-	btVector3 ranPos = btVector3((rand() % WORLD_WIDTH), 25, (rand() % WORLD_WIDTH));
-	this->GetRigidBody()->getMotionState()->getWorldTransform(currentTrans);
-	currentTrans.setOrigin(ranPos);
-	this->GetRigidBody()->getMotionState()->setWorldTransform(currentTrans);
-	this->GetRigidBody()->setCenterOfMassTransform(currentTrans);
 }
+
+
+void Player::Move(btVector3* changeVelocity)
+{
+	if (!alive)
+		return;
+	Entity::Move(changeVelocity);
+}
+
+void Player::SetEntityRotation(float x, float y, float z, float w)
+{
+	if (!alive)
+		return;
+	Entity::SetEntityRotation(x, y, z, w);
+}
+
+
