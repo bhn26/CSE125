@@ -5,7 +5,7 @@
 
 #include "client/Window.h"
 #include "Graphics/Scene.h"
-#include "Graphics/PointLight.h"
+#include "Graphics/Lights.h"
 #include "Graphics/Camera.h"
 #include "client/Player.h"
 
@@ -84,8 +84,8 @@ void Ground::Draw() const
     glUniformMatrix4fv(projectionLocation, 1, false, glm::value_ptr(Scene::Instance()->GetPerspectiveMatrix()));
 
     glUniform3fv(objectColorLoc, 1, glm::value_ptr(this->color));
-    glUniform3fv(lightColorLoc, 1, glm::value_ptr(Scene::Instance()->GetPointLight()->color));
-    glUniform3fv(lightPosLoc, 1, glm::value_ptr(Scene::Instance()->GetPointLight()->position));
+    glUniform3fv(lightColorLoc, 1, glm::value_ptr(Scene::Instance()->GetPointLight()->_color));
+    glUniform3fv(lightPosLoc, 1, glm::value_ptr(Scene::Instance()->GetPointLight()->_position));
     glUniform3fv(viewPosLoc, 1, glm::value_ptr(Scene::Instance()->GetCameraPosition()));
 
 

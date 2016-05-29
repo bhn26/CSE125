@@ -7,7 +7,7 @@
 #include "Graphics/Objects/Chicken.h"
 #include "Graphics/Shader.h"
 #include "Graphics/Scene.h"
-#include "Graphics/PointLight.h"
+#include "Graphics/Lights.h"
 #include "Graphics/Model.h"
 #include "Graphics/Animation/AnimatedModel.h"
 #include "client/ClientGame.h"
@@ -39,13 +39,13 @@ Player::Player(float x, float y, float z, float rotW, float rotX, float rotY, fl
 
     m_model->RegisterListener(this);
 
-    DirectionalLight m_directionalLight;
+    Animation::DirectionalLight m_directionalLight;
     m_directionalLight.color = glm::vec3(1.0f, 1.0f, 1.0f);
     m_directionalLight.ambientIntensity = 0.55f;
     m_directionalLight.diffuseIntensity = 0.9f;
     m_directionalLight.direction = glm::vec3(1.0f, 0.0, 0.0);
 
-    SkinningTechnique* skinTechnique = m_model->GetMesh().GetSkinningTechnique();
+    Animation::SkinningTechnique* skinTechnique = m_model->GetMesh().GetSkinningTechnique();
 
     skinTechnique->Enable();
 
@@ -75,7 +75,7 @@ void Player::SetModelFile(std::string fileName){
 
 void Player::Draw() const
 {
-    SkinningTechnique* skinTechnique = m_model->GetMesh().GetSkinningTechnique();
+    Animation::SkinningTechnique* skinTechnique = m_model->GetMesh().GetSkinningTechnique();
     skinTechnique->Enable(); // use shader
 
     skinTechnique->SetEyeWorldPos(Scene::Instance()->GetCameraPosition());

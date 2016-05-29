@@ -5,7 +5,7 @@
 #include "Objects/Egg.h"
 #include "Objects/Chicken.h"
 #include "Camera.h"
-#include "PointLight.h"
+#include "Lights.h"
 
 #include "Objects/ModelEntity.h"
 #include "Objects/Entity.h"

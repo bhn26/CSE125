@@ -198,9 +198,6 @@
     <ClInclude Include="..\src\Graphics\Nodes.h">
       <Filter>Source Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Graphics\PointLight.h">
-      <Filter>Source Files\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Graphics\Scene.h">
       <Filter>Source Files\Graphics</Filter>
     </ClInclude>
@@ -317,6 +314,9 @@
     </ClInclude>
     <ClInclude Include="..\src\client\StateManager.h">
       <Filter>Source Files\GameState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Graphics\Lights.h">
+      <Filter>Source Files\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

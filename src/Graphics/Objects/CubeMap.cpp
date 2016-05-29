@@ -5,7 +5,7 @@
 
 #include "CubeMap.h"
 #include "../Scene.h"
-#include "../PointLight.h"
+#include "../Lights.h"
 #include "../Shader.h"
 #include "../Camera.h"
 #include "../../client/Window.h"

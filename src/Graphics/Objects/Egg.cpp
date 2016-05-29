@@ -8,7 +8,7 @@
 
 #include "Egg.h"
 #include "../Scene.h"
-#include "../PointLight.h"
+#include "../Lights.h"
 #include "../Camera.h"
 #include "../Model.h"
 

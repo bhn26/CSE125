@@ -5,7 +5,7 @@
 
 #include "../../client/Window.h"
 #include "../Scene.h"
-#include "../PointLight.h"
+#include "../Lights.h"
 #include "../Camera.h"
 #include "../../client/Player.h"
 #include "../Model.h"

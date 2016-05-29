@@ -1,5 +1,13 @@
 #version 330 core
 
+struct DirectionalLight
+{
+    vec3 _direction;
+    vec3 _color;
+    float ambientIntensity;
+    float diffuseIntensity;
+};
+
 in vec2 TexCoords;
 
 out vec4 color;

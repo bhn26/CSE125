@@ -1,7 +1,7 @@
 #include "Cube.h"
 #include "../../client/Window.h"
 #include "../Camera.h"
-#include "../PointLight.h"
+#include "../Lights.h"
 
 #include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale, glm::perspective
 #include <glm/gtc/type_ptr.hpp>
@@ -104,8 +104,8 @@ void Cube::Draw() const
     glUniformMatrix4fv(projectionLocation, 1, false, glm::value_ptr(Scene::Instance()->GetPerspectiveMatrix()));
 
     glUniform3fv(objectColorLoc, 1, glm::value_ptr(this->color));
-    glUniform3fv(lightColorLoc, 1, glm::value_ptr(Scene::Instance()->GetPointLight()->color));
-    glUniform3fv(lightPosLoc, 1, glm::value_ptr(Scene::Instance()->GetPointLight()->position));
+    glUniform3fv(lightColorLoc, 1, glm::value_ptr(Scene::Instance()->GetPointLight()->_color));
+    glUniform3fv(lightPosLoc, 1, glm::value_ptr(Scene::Instance()->GetPointLight()->_position));
     glUniform3fv(viewPosLoc, 1, glm::value_ptr(Scene::Instance()->GetCameraPosition()));
 
     glBindVertexArray(VAO);
