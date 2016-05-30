@@ -7,6 +7,9 @@
 
 #include <map>
 #include <iostream>
+#include <chrono>
+#include <ratio>
+#include <thread>
 
 class ServerGame
 {
@@ -51,15 +54,17 @@ public:
 
 	void receiveJumpPacket(int offset);
 
+	void sendScorePacket();
+	void sendGameOverPacket(int winner);
+
+	void sendTimeStampPacket();
+
 	void receiveDancePacket(int offset);
 	void sendDancePacket(int id);
 
 	void sendDeathPacket(int id);
 
 	void sendRespawnPacket(int id);
-
-	void sendScorePacket();
-	void sendGameOverPacket(int winner);
 
 	void sendShootPacket(int id);
 	void receiveShootPacket(int offset);
@@ -102,7 +107,11 @@ private:
 	bool eggs_spawned = false;
 	int ready_clients = 0; // # of clients ready for the game
 	int spawned_clients = 0;
+
+	chrono::time_point<chrono::steady_clock> start_time;
+
 	int total_eggs = 0;
+
 
 	Engine * engine;
 

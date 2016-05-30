@@ -250,7 +250,6 @@ void Player::HandleDeath(unsigned int death_tick)
 	ServerGame::instance()->sendScorePacket();
 }
 
-
 void Player::Move(btVector3* changeVelocity)
 {
 	if (!alive)
@@ -264,5 +263,4 @@ void Player::SetEntityRotation(float x, float y, float z, float w)
 		return;
 	Entity::SetEntityRotation(x, y, z, w);
 }
-
 

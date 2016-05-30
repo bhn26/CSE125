@@ -33,6 +33,7 @@ public:
 	PosInfo GetPosition() { return position; };
 
 	int GetJump() { return jumpSem; }
+	void SetJump() { jumpSem = 0; }
 
 	//TODO *********************************
 	void PrintPlayerVelocity();

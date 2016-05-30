@@ -32,6 +32,7 @@ void RespawnHandler::RespawnAPlayer(Player* p)
 	// reset hitpoints
 	p->SetHitPoints(100);
 	p->SetAlive(true);
+	p->SetJump();
 
 	btTransform currentTrans;
 
