@@ -8,7 +8,7 @@
 class Flag;
 class Weapon;
 
-class Player : public Entity 
+class Player : public Entity
 {
 
 private:
@@ -21,6 +21,8 @@ private:
 	int hitPoints;
 	Weapon* playerWeapon;
 	Weapon* peckWeapon;
+	bool alive;   // am i alive?
+	unsigned int death_time; // when did i die?
 
 public:
 
@@ -30,10 +32,8 @@ public:
 
 	PosInfo GetPosition() { return position; };
 
-	void Move(btVector3 *changeVelocity);
-
-	// Rotates player according to mouse move
-	void Rotate(float v_rotation, float h_rotation);
+	int GetJump() { return jumpSem; }
+	void SetJump() { jumpSem = 0; }
 
 	//TODO *********************************
 	void PrintPlayerVelocity();
@@ -61,12 +61,26 @@ public:
 
 	int GetScore() { return flags->size(); };
 
-	int GetJumpSem() { return jumpSem; };
-
-	int takeDamage(int damage);
+	// How much damage did they take, what is the world tick when they took this damage?
+	int takeDamage(int damage, unsigned int world_tick);
 
 	void UsePeck();
 
-	void HandleDeath();
+	// Which tick did this player die on? Disperses the player's flags then schedules his respawn for later
+	void HandleDeath(unsigned int death_tick);
+
+	void Move(btVector3* changeVelocity);
+
+	void SetEntityRotation(float x, float y, float z, float w);
+
+	unsigned int GetDeathTime() { return death_time; }
+	void SetDeathTime(unsigned int dt) { death_time = dt; }
+
+	int GetHitPoints() { return hitPoints; }
+	void SetHitPoints(int hp) { hitPoints = hp; }
+
+	bool IsAlive() { return alive; }
+	void SetAlive(bool a) { alive = a; }
+
 };
 

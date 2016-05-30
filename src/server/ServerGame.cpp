@@ -74,8 +74,12 @@ void ServerGame::update()
 
 	if (game_started && ready_clients >= client_id)
 	{
+		if (game_over)
+			return;
+
 		if (spawned_clients == ready_clients && !eggs_spawned) {
-			for (int i = 0; i < 2*ready_clients; i++)
+			total_eggs = 2*ready_clients + 1;
+			for (int i = 0; i < total_eggs; i++)
 			{
 				engine->SpawnRandomFlag();
 			}
@@ -183,6 +187,10 @@ void ServerGame::receiveFromClients()
 
 				case JUMP_EVENT:
 					receiveJumpPacket(i);
+					break;
+
+				case DANCE_EVENT:
+					receiveDancePacket(i);
 					break;
 
                 case V_ROTATION_EVENT:
@@ -411,7 +419,7 @@ void ServerGame::receiveMovePacket(int offset)
 
 	btVector3* vec;
 	Player* player = (Player*)(EntitySpawner::instance()->GetEntity(ClassId::PLAYER, hdr->sender_id));
-	if (player->GetJumpSem())
+	if (player->GetJump())
 	{
 		switch (pi->direction) {
 		case MOVE_FORWARD:
@@ -440,22 +448,22 @@ void ServerGame::receiveMovePacket(int offset)
 	{
 		switch (pi->direction) {
 		case MOVE_FORWARD:
-			vec = new btVector3(0, -10, 25);
+			vec = new btVector3(0, -6, 25);
 			ent->Move(vec);
 			delete vec;
 			break;
 		case MOVE_BACKWARD:
-			vec = new btVector3(0, -10, -25);
+			vec = new btVector3(0, -6, -25);
 			ent->Move(vec);
 			delete vec;
 			break;
 		case MOVE_LEFT:
-			vec = new btVector3(25, -10, 0);
+			vec = new btVector3(25, -6, 0);
 			ent->Move(vec);
 			delete vec;
 			break;
 		case MOVE_RIGHT:
-			vec = new btVector3(-25, -10, 0);
+			vec = new btVector3(-25, -6, 0);
 			ent->Move(vec);
 			delete vec;
 			break;
@@ -466,6 +474,13 @@ void ServerGame::receiveMovePacket(int offset)
 void ServerGame::sendMovePacket(ClassId class_id, int obj_id)
 {
 		Entity* ent = (Entity*)(EntitySpawner::instance()->GetEntity(class_id, obj_id));
+
+		// If this is not a player and the player is dead, don't update
+		if (class_id == ClassId::PLAYER)
+		{
+			if (!((Player*)ent)->IsAlive())
+				return;
+		}
 
         Packet packet;
 		packet.hdr.sender_id = SERVER_ID;
@@ -485,6 +500,7 @@ void ServerGame::sendMovePacket(ClassId class_id, int obj_id)
 
 		if (class_id == PLAYER) {
 			p.num_eggs = ((Player*)ent)->GetScore();
+			p.jump = ((Player*)ent)->GetJump();
 		}
 
         p.serialize(packet.dat.buf);
@@ -516,6 +532,14 @@ void ServerGame::sendRotationPacket(int class_id, int obj_id) {
     char packet_data[packet_size];
 
 	Entity* ent = (Entity*)(EntitySpawner::instance()->GetEntity(class_id, obj_id));
+
+	// If this is not a player and the player is dead, don't update
+	if (class_id == ClassId::PLAYER)
+	{
+		if (!((Player*)ent)->IsAlive())
+			return;
+	}
+
     Packet packet;
 	packet.hdr.sender_id = SERVER_ID;
     packet.hdr.packet_type = V_ROTATION_EVENT;
@@ -578,6 +602,7 @@ void ServerGame::sendScorePacket() {
 void ServerGame::sendGameOverPacket(int winner) {
 	Packet packet;
 	packet.hdr.packet_type = GAME_OVER;
+	game_over = true;
 
 	const unsigned int packet_size = sizeof(Packet);
 
@@ -604,11 +629,86 @@ void ServerGame::receiveShootPacket(int offset) {
 	struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset]);
 	Player* player = (Player*)(EntitySpawner::instance()->GetEntity(ClassId::PLAYER, hdr->sender_id));
 	player->UseWeapon();
-
-	//printf("HELLS YEAH\n");
 }
 
 void ServerGame::sendTimeStampPacket()
 {
 	printf("SENDING TIMESTAMP PACKET\n");
+}
+
+void ServerGame::sendShootPacket(int id) {
+	const unsigned int packet_size = sizeof(Packet);
+	char packet_data[packet_size];
+
+	Packet packet;
+	packet.hdr.sender_id = SERVER_ID;
+	packet.hdr.packet_type = SHOOT_EVENT;
+
+	packet.dat.game_data_id = EMOTE_OBJ;
+
+	EmoteInfo e;
+	e.id = id;
+	e.serialize(packet.dat.buf);
+
+	packet.serialize(packet_data);
+	network->sendToAll(packet_data, packet_size);
+}
+
+void ServerGame::receiveDancePacket(int offset) {
+	struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset]);
+	sendDancePacket(hdr->sender_id);
+}
+
+void ServerGame::sendDancePacket(int id) {
+	const unsigned int packet_size = sizeof(Packet);
+	char packet_data[packet_size];
+
+	Packet packet;
+	packet.hdr.sender_id = SERVER_ID;
+	packet.hdr.packet_type = DANCE_EVENT;
+
+	packet.dat.game_data_id = EMOTE_OBJ;
+
+	EmoteInfo e;
+	e.id = id;
+	e.serialize(packet.dat.buf);
+
+	packet.serialize(packet_data);
+	network->sendToAll(packet_data, packet_size);
+}
+
+void ServerGame::sendDeathPacket(int id) {
+	const unsigned int packet_size = sizeof(Packet);
+	char packet_data[packet_size];
+
+	Packet packet;
+	packet.hdr.sender_id = SERVER_ID;
+	packet.hdr.packet_type = DEATH_EVENT;
+
+	packet.dat.game_data_id = EMOTE_OBJ;
+
+	EmoteInfo e;
+	e.id = id;
+	e.serialize(packet.dat.buf);
+
+	packet.serialize(packet_data);
+	network->sendToAll(packet_data, packet_size);
+}
+
+void ServerGame::sendRespawnPacket(int id) {
+	const unsigned int packet_size = sizeof(Packet);
+	char packet_data[packet_size];
+
+	Packet packet;
+	packet.hdr.sender_id = SERVER_ID;
+	packet.hdr.packet_type = RESPAWN_EVENT;
+
+	packet.dat.game_data_id = EMOTE_OBJ;
+
+	EmoteInfo e;
+	e.id = id;
+	e.serialize(packet.dat.buf);
+
+	packet.serialize(packet_data);
+	network->sendToAll(packet_data, packet_size);
 }

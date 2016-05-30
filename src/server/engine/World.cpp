@@ -2,6 +2,7 @@
 #include "ObjectId.h"
 #include "../ServerGame.h"
 #include "FireRateReset.h"
+#include "RespawnHandler.h"
 #include "Player.h"
 #include "Flag.h"
 #include "Bullet.h"
@@ -240,13 +241,13 @@ void World::UpdateWorld()
 			if (obB->getUserIndex() == PLAYER)
 			{
 				Player * collidePlayer = (Player *)obB->getUserPointer();
-				printf("Pushed to delete!, hit playerB");
+				//printf("Pushed to delete!, hit playerB");
 				deleteList.push_back(collideBullet);
 				collideBullet->SetToMarked();
 				//TODO send "you got hit"
-				if (collidePlayer->takeDamage(collideBullet->GetDamage()))
+				if (collidePlayer->takeDamage(collideBullet->GetDamage(),world_tick))
 				{
-					printf("Player is dead!");
+					//printf("Player is dead!");
 					//TODO Handle Player death:  send player death to client
 				}
 			}
@@ -255,7 +256,7 @@ void World::UpdateWorld()
 			else if (obB->getUserIndex() == BULLET)
 			{
 				Bullet * collideBullet2 = (Bullet *)obB->getUserPointer();
-				printf("Pushed to delete!, hit bullet B");
+				//printf("Pushed to delete!, hit bullet B");
 				deleteList.push_back(collideBullet);
 				collideBullet->SetToMarked();
 				//delete collideBullet2;
@@ -263,11 +264,11 @@ void World::UpdateWorld()
 			else if (obB->getUserIndex() < 15)
 			{
 				// deletes bulletA regardless
-				printf("Pushed to delete!, hit ground B,  %d", obB->getUserIndex());
+				//printf("Pushed to delete!, hit ground B,  %d", obB->getUserIndex());
 				btVector3 bulPos = collideBullet->GetEntityPosition();
-				printf("Current position:  x: %f, y: %f, z: %f  \n", bulPos.getX(), bulPos.getY(), bulPos.getZ());
+				//printf("Current position:  x: %f, y: %f, z: %f  \n", bulPos.getX(), bulPos.getY(), bulPos.getZ());
 				bulPos = collideBullet->GetRigidBody()->getLinearVelocity();
-				printf("Current velocity:  x: %f, y: %f, z: %f  \n", bulPos.getX(), bulPos.getY(), bulPos.getZ());
+				//printf("Current velocity:  x: %f, y: %f, z: %f  \n", bulPos.getX(), bulPos.getY(), bulPos.getZ());
 
 				deleteList.push_back(collideBullet);
 				collideBullet->SetToMarked();
@@ -292,7 +293,7 @@ void World::UpdateWorld()
 				printf("Pushed to delete! hit player A");
 				deleteList.push_back(collideBullet);
 				collideBullet->SetToMarked();
-				if (collidePlayer->takeDamage(collideBullet->GetDamage()))
+				if (collidePlayer->takeDamage(collideBullet->GetDamage(),world_tick))
 				{
 					printf("Player is dead!");
 					//TODO Handle Player death:  send player death to client
@@ -332,6 +333,9 @@ void World::UpdateWorld()
 			// TODO, if Obj B is collectable, HandleCollectable();
 			if (obB->getUserIndex() == COLLECTABLE)
 			{
+				// Ignore dead guy
+				if (!collidePlayer->IsAlive())
+					continue;
 
 				// Handle Collectable Collection
 				Collectable* collectObj = (Collectable*)obB->getUserPointer();
@@ -342,6 +346,10 @@ void World::UpdateWorld()
 			// if Obj B is Flag
 			else if (obB->getUserIndex() == FLAG)
 			{
+
+				// Ignore dead guy
+				if (!collidePlayer->IsAlive())
+					continue;
 
 				// Handle Flag Collection
 				Flag * collideFlag = (Flag *)obB->getUserPointer();
@@ -399,6 +407,10 @@ void World::UpdateWorld()
 			// If Obj A is collectable, HandleCollectable();
 			if (obA->getUserIndex() == COLLECTABLE)
 			{
+				// Ignore dead guy
+				if (!collidePlayer->IsAlive())
+					continue;
+
 				// Handle Collectable Collection
 				Collectable* collectObj = (Collectable*)obA->getUserPointer();
 				collectObj->HandleCollect(collidePlayer);
@@ -408,6 +420,10 @@ void World::UpdateWorld()
 			// if Obj A is Flag
 			else if (obA->getUserIndex() == FLAG)
 			{
+				// Ignore dead guy
+				if (!collidePlayer->IsAlive())
+					continue;
+
 				// Handle Flag Collection
 				Flag * collideFlag = (Flag *)obA->getUserPointer();
 				if (collideFlag->MarkStatus())
@@ -473,9 +489,8 @@ void World::UpdateWorld()
 	}
 	deleteList.clear();
 
-
 	//if (x++ % 10000 == 0) {
-	if (x++ % 500 == 0) {
+	if (world_tick % 500 == 0) {
 		/*
 		btVector3 vecg = rightWall->getCenterOfMassPosition();
 		printf(" right wall at (%f,%f,%f)\n", vecg.getX(), vecg.getY(), vecg.getZ());
@@ -503,8 +518,10 @@ void World::UpdateWorld()
 		*/
 	}
 
+	RespawnHandler::instance()->RespawnPlayers(world_tick);
+
 	// Send position updates of all dynamic objects
-	if (x % 1 == 0)
+	if (world_tick % 4 == 0)
 	{
 		// Iterates through all dynamic objects in the Map and sends position updates to client
 		std::map<std::pair<int, unsigned int>, Entity* > * dynamicMap = EntitySpawner::instance()->GetMap();
@@ -515,7 +532,8 @@ void World::UpdateWorld()
 			ServerGame::instance()->sendMovePacket((ClassId)it->second->GetClassId(), it->second->GetObjectId());
 		}
 	}
-	
+
+	world_tick++;
 }
 
 void World::removeFlag(Flag* collectedFlag)
@@ -531,3 +549,4 @@ void World::removeFlag(Flag* collectedFlag)
 		}
 	}
 }
+

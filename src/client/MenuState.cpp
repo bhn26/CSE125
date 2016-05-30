@@ -30,7 +30,7 @@ void CMenuState::OnKeyDown(WPARAM wKey)
 {
 }
 
-void CMenuState::OnClick(int button, double x, double y) {
+void CMenuState::OnClick(int button, int action, double x, double y) {
 	GLubyte res[4];
 	GLint viewport[4];
 
@@ -40,14 +40,17 @@ void CMenuState::OnClick(int button, double x, double y) {
 	glGetIntegerv(GL_VIEWPORT, viewport);
 	glReadPixels(x, viewport[3] - y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, &res); 
 
-	switch(res[0]) {
-		case 0: printf("None clicked\n"); break;
-		case 1: printf("Textbox clicked\n"); break;
-		case 2: printf("Button clicked\n");
-			// change state
-			m_pStateManager->ChangeState(LobbyState::GetInstance(m_pStateManager));
-			break;
-		default: printf("%d clicked%s\n", res[0]);
+	if (action == GLFW_PRESS)
+	{
+		switch (res[0]) {
+			case 0: printf("None clicked\n"); break;
+			case 1: printf("Textbox clicked\n"); break;
+			case 2: printf("Button clicked\n");
+				// change state
+				m_pStateManager->ChangeState(LobbyState::GetInstance(m_pStateManager));
+				break;
+			default: printf("%d clicked%s\n", res[0]);
+		}
 	}
 }
 

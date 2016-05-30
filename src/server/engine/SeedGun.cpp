@@ -11,7 +11,7 @@ SeedGun::~SeedGun(){}
 
 void SeedGun::UseWeapon(btVector3* position, btMatrix3x3* rotation, int playerid, int teamid, Entity* owner)
 {
-	printf("SeedGun has been fired!");
+	//printf("SeedGun has been fired!");
 	if (this->fireFlag)
 	{
 		printf("Position:  x: %f, y: %f, z: %f  \n", position->getX(), position->getY(), position->getZ());
