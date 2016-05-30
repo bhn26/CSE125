@@ -331,6 +331,9 @@ void World::UpdateWorld()
 			// TODO, if Obj B is collectable, HandleCollectable();
 			if (obB->getUserIndex() == COLLECTABLE)
 			{
+				// Ignore dead guy
+				if (!collidePlayer->IsAlive())
+					continue;
 
 				// Handle Collectable Collection
 				Collectable* collectObj = (Collectable*)obB->getUserPointer();
@@ -341,6 +344,10 @@ void World::UpdateWorld()
 			// if Obj B is Flag
 			else if (obB->getUserIndex() == FLAG)
 			{
+
+				// Ignore dead guy
+				if (!collidePlayer->IsAlive())
+					continue;
 
 				// Handle Flag Collection
 				Flag * collideFlag = (Flag *)obB->getUserPointer();
@@ -398,6 +405,10 @@ void World::UpdateWorld()
 			// If Obj A is collectable, HandleCollectable();
 			if (obA->getUserIndex() == COLLECTABLE)
 			{
+				// Ignore dead guy
+				if (!collidePlayer->IsAlive())
+					continue;
+
 				// Handle Collectable Collection
 				Collectable* collectObj = (Collectable*)obA->getUserPointer();
 				collectObj->HandleCollect(collidePlayer);
@@ -407,6 +418,10 @@ void World::UpdateWorld()
 			// if Obj A is Flag
 			else if (obA->getUserIndex() == FLAG)
 			{
+				// Ignore dead guy
+				if (!collidePlayer->IsAlive())
+					continue;
+
 				// Handle Flag Collection
 				Flag * collideFlag = (Flag *)obA->getUserPointer();
 				if (collideFlag->MarkStatus())

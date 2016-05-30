@@ -209,7 +209,7 @@ void Player::HandleDeath(unsigned int death_tick)
 	btVector3 ranVelocity;
 
 	// Disperse the player's flags
-	for (auto it = flags->begin(); it != flags->end(); it++)
+	for (auto it = flags->begin(); it != flags->end();)
 	{
 		Flag* curFlag = (*it);
 		curFlag->GetRigidBody()->getMotionState()->getWorldTransform(currentTrans);
@@ -240,9 +240,13 @@ void Player::HandleDeath(unsigned int death_tick)
 		EntitySpawner::instance()->AddEntity(curFlag->GetClassId(), curFlag->GetObjectId(), curFlag);
 
 		// erase flag from player
-		//flags->erase(it);
+		it = flags->erase(it);
+		ServerGame::instance()->DecScore(teamId, 1);
+
 	}
-	flags->clear(); //Actually calls delete on flags... didn't seem to correctly work for bullet deletion anways... maybe cause of void pointer
+	//flags->clear(); //Actually calls delete on flags... didn't seem to correctly work for bullet deletion anways... maybe cause of void pointer
+	//LoseFlags();
+	ServerGame::instance()->sendScorePacket();
 }
 
 
