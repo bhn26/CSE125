@@ -29,12 +29,6 @@ void Scene::Setup()
 {
     entities.clear();
 
-    //instanceShader = std::make_shared<Shader>("src/Graphics/Shaders/instancing.vert", "src/Graphics/Shaders/instancing.frag");
-    //basicShader = std::make_shared<Shader>("src/Graphics/Shaders/basic_shader.vert", "src/Graphics/Shaders/basic_shader.frag");
-    //diffuseShader = std::make_shared<Shader>("src/Graphics/Shaders/basic_shader.vert", "src/Graphics/Shaders/diffuse.frag");
-    //modelShader = std::make_shared<Shader>("src/Graphics/Shaders/model_loading.vert", "src/Graphics/Shaders/model_loading.frag");
-    //cubeMapShader = std::make_shared<Shader>("src/Graphics/Shaders/cubemap.vert", "src/Graphics/Shaders/cubemap.frag");
-
     //camera = std::unique_ptr<Camera>(new Camera(glm::vec3(0.0f, 9.0f, -15.0f), glm::vec3(0.0f, 1.0f, 0.0f), 90.0f, -25.0f));
     camera = std::unique_ptr<Camera>(new Camera(glm::vec3(0.0f, 9.0f, -15.0f)));
     pLight = std::unique_ptr<PointLight>(new PointLight(glm::vec3(0.0f, 20.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)));
@@ -94,10 +88,15 @@ void Scene::Setup()
 	seed->Scale(0.5f);
 	seed->Translate(glm::vec3(0.0f, 1.0f, 0.0f));
 
-	// Boat
-	//std::unique_ptr<StaticObject> boat = std::unique_ptr<StaticObject>(new StaticObject("assets/map/new_models/boat.obj"));
-//	boat->Scale(15.0f);
-//	boat->Translate(glm::vec3(0.0f, 100.4f, 0.0f));
+	//// Boat
+ //   std::unique_ptr<StaticObject> boat = std::unique_ptr<StaticObject>(new StaticObject("assets/map/new_models/boat.obj"));
+ //   boat->Scale(100.0f);
+ //   boat->Translate(glm::vec3(0.0f, 50.4f, 40.0f));
+
+    std::unique_ptr<StaticObject> windMill = std::unique_ptr<StaticObject>(new StaticObject("assets/map/new_models/windmill.obj"));
+    windMill->Scale(1/4.0f);
+    windMill->Translate(glm::vec3(75.0f, 0.0f, 75.0f));
+    static_objects.push_back(std::move(windMill));
 
 	grass = std::unique_ptr<Grass>(new Grass);
 	// Pumpkins

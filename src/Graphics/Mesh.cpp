@@ -7,12 +7,16 @@
 // GL Includes
 #include <GL/glew.h> // Contains all the necessery OpenGL includes
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
-Mesh::Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices, std::vector<Mesh::Texture> textures)
+#include "Shader.h"
+
+Mesh::Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices, std::vector<Mesh::Texture> textures, Material material)
 {
     this->vertices = vertices;
     this->indices = indices;
     this->textures = textures;
+    this->material = material;
 
     // Now that we have all the required data, set the vertex buffers and its attribute pointers.
     this->SetupMesh();
@@ -37,8 +41,13 @@ void Mesh::Draw(const Shader* shader)
     GLuint specularNr = 1;
 
     // Textures
+    if (!this->textures.size())
+    {
+        glUniform1i(shader->GetUniform("useTexture"), FALSE);
+    }
     for (GLuint i = 0; i < this->textures.size(); i++)
     {
+        glUniform1i(shader->GetUniform("useTexture"), TRUE);        // I think this is right??
         glActiveTexture(GL_TEXTURE0 + i); // Active proper texture unit before binding
                                           // Retrieve texture number (the N in diffuse_textureN)
         std::stringstream ss;
@@ -57,6 +66,16 @@ void Mesh::Draw(const Shader* shader)
 
     // Also set each mesh's shininess property to a default value (if you want you could extend this to another mesh property and possibly change this value)
     glUniform1f(shader->GetUniform("material.shininess"), 16.0f);
+
+    if (material.Valid())       // Test if there's a diffuse
+    {
+        SetMaterial(shader, material);
+        glUniform1i(shader->GetUniform("useMaterial"), TRUE);
+    }
+    else
+    {
+        glUniform1i(shader->GetUniform("useMaterial"), FALSE);
+    }
 
     // Draw mesh
     glBindVertexArray(this->vao);
@@ -104,4 +123,12 @@ void Mesh::SetupMesh()
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, texCoords));
 
     glBindVertexArray(0);
+}
+
+void Mesh::SetMaterial(const Shader* shader, const Material & material) const
+{
+    glUniform3fv(shader->GetUniform("material._diffuse"), 1, glm::value_ptr(material._diffuse));
+    glUniform3fv(shader->GetUniform("material._specular"), 1, glm::value_ptr(material._specular));
+    glUniform3fv(shader->GetUniform("material._ambient"), 1, glm::value_ptr(material._ambient));
+    glUniform1f(shader->GetUniform("material._shininess"), material._shininess);
 }
