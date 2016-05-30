@@ -414,6 +414,13 @@ void ClientGame::receiveDeathPacket(int offset)
 	((Player *)(Scene::Instance()->GetEntity(ClassId::PLAYER, e->id).get()))->Die();
 }
 
+void ClientGame::receiveShootPacket(int offset)
+{
+	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
+	struct EmoteInfo* e = (struct EmoteInfo *) &(dat->buf);
+	((Player *)(Scene::Instance()->GetEntity(ClassId::PLAYER, e->id).get()))->Attack();
+}
+
 void ClientGame::receiveRespawnPacket(int offset) 
 {
 	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
@@ -485,6 +492,9 @@ void ClientGame::update()
 			case V_ROTATION_EVENT:
 				receiveRotationPacket(i + sizeof(PacketHeader));
 				break;
+
+			case SHOOT_EVENT:
+				receiveShootPacket(i + sizeof(PacketHeader));
 
 			case UPDATE_SCORE:
 				receiveScorePacket(i + sizeof(PacketHeader));
@@ -804,7 +814,6 @@ void ClientGame::HandleButtonEvent(const std::string& event, bool buttonDown)
         }
         else if (event == EVENT_ATTACK)
         {
-            Scene::Instance()->GetPlayer()->Attack();
             sendShootPacket();
         }
         else if (event == EVENT_JUMP)

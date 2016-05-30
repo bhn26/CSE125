@@ -256,7 +256,7 @@ void Player::ChangeState(State state)
 void Player::OnFinish()
 {
 	if (m_state != State::DEATH)
-		SetState(State::IDLE);
+		ChangeState(State::IDLE);
 }
 
 void Player::SetRelativeCamPosition(glm::vec3 relativePos)

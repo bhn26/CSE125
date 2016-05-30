@@ -93,7 +93,7 @@ namespace Animation
         void ToggleAnimation() { m_animating = !m_animating; }
         void RestartAnimation() { m_animating = true; m_playTimer = 0.0f; }
         void Reset() { Pause(); m_playTimer = 0.0f; InitBones0(); }
-        void Finish() { Reset(); OnFinish(); }
+        void Finish() { /*Reset();*/ OnFinish(); }
 
         void Update(float delta);
 

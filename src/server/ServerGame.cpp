@@ -576,7 +576,25 @@ void ServerGame::receiveShootPacket(int offset) {
 	Player* player = (Player*)(EntitySpawner::instance()->GetEntity(ClassId::PLAYER, hdr->sender_id));
 	player->UseWeapon();
 
-	//printf("HELLS YEAH\n");
+
+}
+
+void ServerGame::sendShootPacket(int id) {
+	const unsigned int packet_size = sizeof(Packet);
+	char packet_data[packet_size];
+
+	Packet packet;
+	packet.hdr.sender_id = SERVER_ID;
+	packet.hdr.packet_type = SHOOT_EVENT;
+
+	packet.dat.game_data_id = EMOTE_OBJ;
+
+	EmoteInfo e;
+	e.id = id;
+	e.serialize(packet.dat.buf);
+
+	packet.serialize(packet_data);
+	network->sendToAll(packet_data, packet_size);
 }
 
 void ServerGame::receiveDancePacket(int offset) {
