@@ -2,7 +2,6 @@
 
 #include <vector>
 #include <memory>
-#include "../../network/GameData.h"
 
 class Weapon;
 

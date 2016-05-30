@@ -1,4 +1,5 @@
 #pragma once
+
 #include "Weapon.h"
 #include "EntitySpawner.h"
 
@@ -11,8 +12,8 @@ public:
 	Peck(btDiscreteDynamicsWorld* curWorld);
 	~Peck();
 
-	void virtual UseWeapon(const btVector3* position, btMatrix3x3* rotation, int playerid, int teamid, Entity* user);
+	void virtual UseWeapon(btVector3* position, btMatrix3x3* rotation, int playerid, int teamid, Entity* owner);
 
-	void virtual ReloadWeapon() {};
+	void ReloadWeapon();
 
 };

@@ -16,29 +16,29 @@ DamageField::~DamageField()
 	delete FieldGhostObject;
 }
 
+
+// returns 0 when field should be removed from the queue
 int DamageField::handleField()
 {
 	fieldTtl--;
-	if (fieldTtl == 0)
+	int numOverlap = FieldGhostObject->getNumOverlappingObjects();
+
+	for (int i = 0; i < numOverlap; i++)
 	{
-		int numOverlap = FieldGhostObject->getNumOverlappingObjects();
-		for (int i = 0; i < numOverlap; i++)
+		btRigidBody *pRigidBody = dynamic_cast<btRigidBody *>(FieldGhostObject->getOverlappingObject(i));
+		if (pRigidBody && pRigidBody->getUserIndex() == ClassId::PLAYER)
 		{
-			btRigidBody *pRigidBody = dynamic_cast<btRigidBody *>(FieldGhostObject->getOverlappingObject(i));
-			if (pRigidBody && pRigidBody->getUserIndex() == ClassId::PLAYER)
+			Player * collidedPlayer = (Player *)pRigidBody->getUserPointer();
+			if (collidedPlayer->GetObjectId() != fieldOwner->GetObjectId())
 			{
-				Player * collidedPlayer = (Player *)pRigidBody->getUserPointer();
-				if (collidedPlayer->GetObjectId() != fieldOwner->GetObjectId())
+				printf("player is taking damage from Damage Field\n");
+				if (collidedPlayer->takeDamage(this->fieldDamage))
 				{
-					if (collidedPlayer->takeDamage(this->fieldDamage))
-					{
-						printf("Player is dead!");
-						//TODO Handle Player Death: send player death to client...  Maybe handle this on player
-						return 1;
-					}
+					printf("Player is dead!\n");
+					//TODO Handle Player Death: send player death to client...  Maybe handle this on player
 				}
 			}
 		}
 	}
-	return 0;
+	return fieldTtl;
 }

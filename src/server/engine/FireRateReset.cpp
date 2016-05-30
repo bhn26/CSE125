@@ -1,6 +1,7 @@
 
 #include "FireRateReset.h"
 #include "Weapon.h"
+#include "../../network/GameData.h"
 
 
 FireRateReset* FireRateReset::frr = nullptr;

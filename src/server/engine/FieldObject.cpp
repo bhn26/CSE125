@@ -16,12 +16,13 @@ FieldObject::FieldObject(btVector3* origin,  btCollisionShape* fieldshape, Entit
 
 FieldObject::~FieldObject(){}
 
+// 0 means remove field from queue
 int FieldObject::handleField()
 {
-	return 1;
+	return 0;
 }
 
-// returns 1 if field is still "alive"
+// returns 1 if field is still "alive"... not really necessary
 int FieldObject::isAlive()
 {
 	return (fieldTtl != 0);

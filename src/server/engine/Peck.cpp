@@ -15,7 +15,7 @@ Peck::Peck(btDiscreteDynamicsWorld* curworld): Weapon(meleefireRate, meleeDamage
 
 Peck::~Peck(){}
 
-void Peck::UseWeapon(const btVector3* position, btMatrix3x3* rotation, int playerid, int teamid, Entity* user)
+void Peck::UseWeapon(btVector3* position, btMatrix3x3* rotation, int playerid, int teamid, Entity* owner)
 {
 	printf("Player uses Peck!!!!!!!!!!!\n");
 	printf("FireFlag: %d\n", this->fireFlag);
@@ -27,7 +27,7 @@ void Peck::UseWeapon(const btVector3* position, btMatrix3x3* rotation, int playe
 		vec = ((vec) + (*position));
 		btVector3 * fieldPos = new btVector3(vec.getX(), vec.getY(), vec.getZ());
 		btCollisionShape* peckSphere = new btSphereShape(btScalar(.5));
-		DamageField* peckField = new DamageField(1, meleeDamage, fieldPos, peckSphere, user, curWorld);
+		DamageField* peckField = new DamageField(1, meleeDamage, fieldPos, peckSphere, owner, curWorld);
 
 		//TODO: Add to damage field checker. Add this new field to the checker
 		FieldHandler::instance()->AddField(peckField);
@@ -39,3 +39,6 @@ void Peck::UseWeapon(const btVector3* position, btMatrix3x3* rotation, int playe
 		FireRateReset::instance()->AddWeapon(this);
 	}
 }
+
+void Peck::ReloadWeapon() {}
+

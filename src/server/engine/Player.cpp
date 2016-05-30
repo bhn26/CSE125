@@ -35,8 +35,8 @@ Player::Player(int objectid, int teamid, PosInfo pos, btDiscreteDynamicsWorld* p
 	this->flags = new std::vector<Flag*>;
 	this->position = pos;
 	//this->playerWeapon = nullptr;
-	//this->playerWeapon = new Peck(curWorld); 
-	this->playerWeapon = new SeedGun(curWorld);
+	this->playerWeapon = new Peck(curWorld); 
+	//this->playerWeapon = new SeedGun(curWorld);
 
 
 	// Set RigidBody to point to Player
