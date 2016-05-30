@@ -54,9 +54,10 @@ public:
 
 	void receiveJumpPacket(int offset);
 
-
 	void sendScorePacket();
 	void sendGameOverPacket(int winner);
+
+	void sendTimeStampPacket();
 
 	void receiveShootPacket(int offset);
 

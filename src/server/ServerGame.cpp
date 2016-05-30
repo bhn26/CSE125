@@ -47,7 +47,9 @@ void ServerGame::update()
 
 	chrono::duration<double, milli> fp_stamp = curr_time - start_time;
 
-	if (fp_stamp.count() >= 300000)
+	int diff = fp_stamp.count();
+
+	if (eggs_spawned && diff >= 300000)
 	{
 		if(scores[0] > scores[1])
 		{
@@ -56,6 +58,13 @@ void ServerGame::update()
 		else
 		{
 			sendGameOverPacket(1);
+		}
+	}
+	else
+	{
+		if ((diff % 10000) <= 16)
+		{
+			sendTimeStampPacket();
 		}
 	}
 
@@ -597,4 +606,9 @@ void ServerGame::receiveShootPacket(int offset) {
 	player->UseWeapon();
 
 	//printf("HELLS YEAH\n");
+}
+
+void ServerGame::sendTimeStampPacket()
+{
+	printf("SENDING TIMESTAMP PACKET\n");
 }
