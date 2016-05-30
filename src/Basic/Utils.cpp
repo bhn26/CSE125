@@ -25,5 +25,9 @@ bool Utils::ReadFile(const std::string& filename, std::string& outString)
 
 double Utils::CurrentTime()
 {
+#ifdef EGGS_CLIENT
     return glfwGetTime();
+#elif defined(EGGS_SERVER)
+    return GetTickCount();
+#endif
 }

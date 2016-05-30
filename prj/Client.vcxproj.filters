@@ -312,7 +312,9 @@
     <ClInclude Include="..\src\Graphics\Objects\InstanceObject.h">
       <Filter>Source Files\Graphics\Objects</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Graphics\Objects\Grass.h" />
+    <ClInclude Include="..\src\Graphics\Objects\Grass.h">
+      <Filter>Source Files\Graphics\Objects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\src\Graphics\Shaders\basic_shader.frag">

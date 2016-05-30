@@ -210,7 +210,9 @@ void World::PreSpawn()
 void World::UpdateWorld()
 {
 	// Step simulation
-	curWorld->stepSimulation(1 / 30.f, 4);
+    curWorld->stepSimulation(1 / 60.f, 4);  // 60
+//    curWorld->stepSimulation(1 / 30.f, 4);   // 30 frames
+
 	FireRateReset::instance()->currentWorldTick++;
 
 	// Process Weapon Fire Rate Reset
@@ -519,7 +521,7 @@ void World::UpdateWorld()
 	RespawnHandler::instance()->RespawnPlayers(world_tick);
 
 	// Send position updates of all dynamic objects
-	if (world_tick % 1 == 0)
+	if (world_tick % 4 == 0)
 	{
 		// Iterates through all dynamic objects in the Map and sends position updates to client
 		std::map<std::pair<int, unsigned int>, Entity* > * dynamicMap = EntitySpawner::instance()->GetMap();

@@ -27,7 +27,9 @@ const std::string ClientGame::EVENT_MOVE_BACKWARD = "Move_Backward";
 const std::string ClientGame::EVENT_MOVE_LEFT = "Move_Left";
 const std::string ClientGame::EVENT_MOVE_RIGHT = "Move_Right";
 const std::string ClientGame::EVENT_SCOREBOARD = "Scoreboard";
-const std::string ClientGame::EVENT_TAUNT = "Taunt";
+const std::string ClientGame::EVENT_TAUNT_DANCE = "Taunt_Dance";
+const std::string ClientGame::EVENT_TAUNT_DEATH = "Taunt_Death";
+const std::string ClientGame::EVENT_TAUNT_PECK = "Taunt_Peck";
 
 ClientGame::ClientGame(void)
 {
@@ -734,79 +736,126 @@ void ClientGame::HandleButtonPress(const unsigned char* buttons)
     using namespace Controller;
     if (buttons[Buttons::A])
         HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_A"));
+    else
+        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_A"), false);
     if (buttons[Buttons::B])
         HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_B"));
+    else
+        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_B"), false);
     if (buttons[Buttons::X])
         HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_X"));
+    else
+        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_X"), false);
     if (buttons[Buttons::Y])
         HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_Y"));
+    else
+        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_Y"), false);
     if (buttons[Buttons::BACK])
         HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_Back"));
+    else
+        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_Back"), false);
     if (buttons[Buttons::START])
         HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_Start"));
+    else
+        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_Start"), false);
     if (buttons[Buttons::L_ANALOG])
         HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_L_Analog"));
+    else
+        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_L_Analog"), false);
     if (buttons[Buttons::R_ANALOG])
         HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_R_Analog"));
+    else
+        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_R_Analog"), false);
     if (buttons[Buttons::L_BUMPER])
         HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_L_Bumper"));
+    else
+        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_L_Bumper"), false);
     if (buttons[Buttons::R_BUMPER])
         HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_R_Bumper"));
+    else
+        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_R_Bumper"), false);
     if (buttons[Buttons::D_PAD_UP])
         HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_D_Pad_Up"));
+    else
+        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_D_Pad_Up"), false);
     if (buttons[Buttons::D_PAD_RIGHT])
         HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_D_Pad_Right"));
+    else
+        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_D_Pad_Right"), false);
     if (buttons[Buttons::D_PAD_DOWN])
         HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_D_Pad_Down"));
+    else
+        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_D_Pad_Down"), false);
     if (buttons[Buttons::D_PAD_LEFT])
         HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_D_Pad_Left"));
+    else
+        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_D_Pad_Left"), false);
 }
 
 void ClientGame::HandleButtonEvent(const std::string& event, bool buttonDown)
 {
     if (!event.size())
         return;
-
-    if (event == EVENT_QUIT)
+    if (buttonDown)
     {
-        glfwSetWindowShouldClose(this->window, GL_TRUE);
-    }
-    else if (event == EVENT_ATTACK)
-    {
-        Scene::Instance()->GetPlayer()->Attack();
-        sendShootPacket();
-	}
-    else if (event == EVENT_JUMP)
-    {
-        //Scene::Instance()->GetPlayer()->Jump();
-        sendJumpPacket();
-    }
-    else if (event == EVENT_MOVE_FORWARD)
-    {
-        sendMovePacket(MOVE_FORWARD);
-    }
-    else if (event == EVENT_MOVE_BACKWARD)
-    {
-        sendMovePacket(MOVE_BACKWARD);
-    }
-    else if (event == EVENT_MOVE_LEFT)
-    {
-        sendMovePacket(MOVE_LEFT);
-    }
-    else if (event == EVENT_MOVE_RIGHT)
-    {
-        sendMovePacket(MOVE_RIGHT);
-    }
-    else if (event == EVENT_SCOREBOARD)
-    {
-        if (Window::m_pStateManager->GetActiveState() == CPlayState::GetInstance(Window::m_pStateManager))
+        if (event == EVENT_QUIT)
         {
-            CPlayState::GetInstance(Window::m_pStateManager)->show_scoreboard = buttonDown;
+            glfwSetWindowShouldClose(this->window, GL_TRUE);
+        }
+        else if (event == EVENT_ATTACK)
+        {
+            Scene::Instance()->GetPlayer()->Attack();
+            sendShootPacket();
+        }
+        else if (event == EVENT_JUMP)
+        {
+            sendJumpPacket();
+        }
+        else if (event == EVENT_MOVE_FORWARD)
+        {
+            sendMovePacket(MOVE_FORWARD);
+        }
+        else if (event == EVENT_MOVE_BACKWARD)
+        {
+            sendMovePacket(MOVE_BACKWARD);
+        }
+        else if (event == EVENT_MOVE_LEFT)
+        {
+            sendMovePacket(MOVE_LEFT);
+        }
+        else if (event == EVENT_MOVE_RIGHT)
+        {
+            sendMovePacket(MOVE_RIGHT);
+        }
+        else if (event == EVENT_SCOREBOARD)
+        {
+            if (Window::m_pStateManager->GetActiveState() == CPlayState::GetInstance(Window::m_pStateManager))
+            {
+                CPlayState::GetInstance(Window::m_pStateManager)->show_scoreboard = true;
+            }
+        }
+        else if (event == EVENT_TAUNT_DANCE)
+        {
+			printf("dance event triggered\n");
+			sendDancePacket();
+        }
+        else if (event == EVENT_TAUNT_DEATH)
+        {
+            Scene::Instance()->GetPlayer()->Die();
+        }
+        else if (event == EVENT_TAUNT_PECK)
+        {
+            Scene::Instance()->GetPlayer()->Peck();
         }
     }
-    else if (event == EVENT_TAUNT)
+    else        // !buttonDown
     {
-		printf("dance event triggered\n");
-		sendDancePacket();
+        if (event == EVENT_SCOREBOARD)
+        {
+            if (Window::m_pStateManager->GetActiveState() == CPlayState::GetInstance(Window::m_pStateManager))
+            {
+                CPlayState::GetInstance(Window::m_pStateManager)->show_scoreboard = false;
+            }
+        }
     }
 }
