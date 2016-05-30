@@ -1,7 +1,8 @@
 # 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
 # File Created: 09.09.2015 12:10:43
 
-mtllib 3d-model.mtl
+#mtllib 3d-model.mtl
+mtllib windmill.mtl
 
 #
 # object Component_1_068
