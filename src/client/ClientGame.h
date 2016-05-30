@@ -12,6 +12,7 @@
 #include <GLFW/glfw3.h>
 
 #include "Player.h"
+#include "Graphics/Objects/Entity.h"
 #include <memory>
 #include <vector>
 
@@ -84,6 +85,13 @@ public:
     void sendRotationPacket(); 
 
 	void sendJumpPacket();
+
+	void sendDancePacket();
+	void receiveDancePacket(int offset);
+
+	void receiveDeathPacket(int offset);
+
+	void receiveRespawnPacket(int offset);
 
 	void receiveScorePacket(int offset);
 

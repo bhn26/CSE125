@@ -1,5 +1,3 @@
-
-
 #include "Entity.h"
 
 Entity::Entity(int classid, int objectid, btDiscreteDynamicsWorld* physicsworld)

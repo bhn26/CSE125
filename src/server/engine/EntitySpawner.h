@@ -42,4 +42,5 @@ public:
 	void RemoveEntity(int cid, unsigned int oid);
 
 	std::map<std::pair<int, unsigned int>, Entity* > * GetMap();
+
 };

@@ -15,6 +15,7 @@
 #include "client/PlayState.h"
 #include "ConfigManager.h"
 
+
 #include "Client/Window.h"
 
 const std::string ClientGame::EVENT_QUIT = "Quit";
@@ -156,7 +157,7 @@ void ClientGame::receiveStartPacket(int offset) {
 	Window::m_pStateManager->ChangeState(CPlayState::GetInstance(Window::m_pStateManager)); // start game
 
 	game_started = true;
-	total_eggs = (team0.size() + team1.size()) * 2;
+	total_eggs = (team0.size() + team1.size()) * 2 + 1;
 	sendReadyPacket();
 }
 
@@ -236,6 +237,13 @@ void ClientGame::receiveMovePacket(int offset)
 
 	Scene::Instance()->GetEntity(pi->cid, pi->oid)->MoveTo(pi->x, pi->y, pi->z);
 	Scene::Instance()->GetEntity(pi->cid, pi->oid)->SetScore(pi->num_eggs);
+
+	// check the jump animation
+	if (pi->cid == ClassId::PLAYER)
+	{
+		if(pi->jump == 0)
+			((Player *)(Scene::Instance()->GetEntity(pi->cid, pi->oid).get()))->Jump();
+	}
 
 }
 
@@ -373,7 +381,45 @@ void ClientGame::sendShootPacket() {
 
 	NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
 }
-	
+
+
+//	NOTE: We're going to use the sender id as the guy that's dancing instead of changing
+void ClientGame::receiveDancePacket(int offset)
+{
+	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
+	struct EmoteInfo* e = (struct EmoteInfo *) &(dat->buf);
+	((Player *)(Scene::Instance()->GetEntity(ClassId::PLAYER, e->id).get()))->Dance();
+}
+
+void ClientGame::sendDancePacket()
+{
+
+	const unsigned int packet_size = sizeof(Packet);
+	char packet_data[packet_size];
+
+	Packet packet;
+	packet.hdr.packet_type = DANCE_EVENT;
+	packet.hdr.sender_id = client_id;
+	packet.hdr.receiver_id = SERVER_ID;
+
+	packet.serialize(packet_data);
+
+	NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
+}
+
+void ClientGame::receiveDeathPacket(int offset)
+{
+	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
+	struct EmoteInfo* e = (struct EmoteInfo *) &(dat->buf);
+	((Player *)(Scene::Instance()->GetEntity(ClassId::PLAYER, e->id).get()))->Die();
+}
+
+void ClientGame::receiveRespawnPacket(int offset) 
+{
+	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
+	struct EmoteInfo* e = (struct EmoteInfo *) &(dat->buf);
+	((Player *)(Scene::Instance()->GetEntity(ClassId::PLAYER, e->id).get()))->SetAlive(true);
+}
 
 void ClientGame::update()
 {
@@ -423,6 +469,18 @@ void ClientGame::update()
 				if(game_started) // the game needs to start for the client before this can happen
 					receiveMovePacket(i + sizeof(PacketHeader));
                 break;
+
+			case DANCE_EVENT:
+				receiveDancePacket(i + sizeof(PacketHeader));
+				break;
+
+			case DEATH_EVENT:
+				receiveDeathPacket(i + sizeof(PacketHeader));
+				break;
+
+			case RESPAWN_EVENT:
+				receiveRespawnPacket(i + sizeof(PacketHeader));
+				break;
 
 			case V_ROTATION_EVENT:
 				receiveRotationPacket(i + sizeof(PacketHeader));
@@ -751,7 +809,6 @@ void ClientGame::HandleButtonEvent(const std::string& event, bool buttonDown)
         }
         else if (event == EVENT_JUMP)
         {
-            Scene::Instance()->GetPlayer()->Jump();
             sendJumpPacket();
         }
         else if (event == EVENT_MOVE_FORWARD)
@@ -779,7 +836,8 @@ void ClientGame::HandleButtonEvent(const std::string& event, bool buttonDown)
         }
         else if (event == EVENT_TAUNT_DANCE)
         {
-            Scene::Instance()->GetPlayer()->Dance();
+			printf("dance event triggered\n");
+			sendDancePacket();
         }
         else if (event == EVENT_TAUNT_DEATH)
         {

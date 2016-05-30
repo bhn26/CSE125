@@ -55,6 +55,7 @@ Player::Player(float x, float y, float z, float rotW, float rotX, float rotY, fl
     skinTechnique->SetMatSpecularPower(0);
 
     m_model->InitBones0();  // Initialize bones to 0 time spot
+	alive = true;
 }
 
 Player::Player(int client_id) : Player()
@@ -155,7 +156,8 @@ void Player::ProcessMouseMovement(GLfloat xoffset, GLfloat yoffset, GLboolean co
     CalculateCameraPosition();
     CalculateCameraFront();
 
-    if (++tick % 10 == 0)
+	// Don't send me stuff unless you're alive
+	if (++tick % 10 == 0 && alive == true)
     {
         ClientGame::instance()->sendRotationPacket();
         tick = 0;
@@ -253,7 +255,8 @@ void Player::ChangeState(State state)
 // AnimationPlayer::Listener
 void Player::OnFinish()
 {
-    SetState(State::IDLE);
+	if (m_state != State::DEATH)
+		SetState(State::IDLE);
 }
 
 void Player::SetRelativeCamPosition(glm::vec3 relativePos)
