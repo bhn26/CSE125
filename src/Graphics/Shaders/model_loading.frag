@@ -34,9 +34,6 @@ vec4 CalcLight(BaseLight light, vec3 lightDirection)
 
     vec4 ambientColor = vec4(light._color * light._ambientIntensity, 1.0);
     float diffuseFactor = dot(fs_in._normal, -lightDirection);
-    //vec3 normal = vec3(0.0f, 1.0f, 0.0f);
-    //float diffuseFactor = dot(normal, -lightDirection);
-    //diffuseFactor = 1.0f;
 
     vec4 diffuseColor  = vec4(0, 0, 0, 0);
     vec4 specularColor = vec4(0, 0, 0, 0);
@@ -44,7 +41,6 @@ vec4 CalcLight(BaseLight light, vec3 lightDirection)
     if (diffuseFactor > 0.0)
     {
         diffuseColor = vec4(light._color * light._diffuseIntensity * diffuseFactor, 1.0);
-        //diffuseColor = vec4(0.0f, 1.0f, 0.0f, 1.0f);
 
         vec3 vertexToEye = normalize(cameraEye - fs_in._fragPos);
         vec3 lightReflect = normalize(reflect(lightDirection, fs_in._normal));
@@ -54,10 +50,6 @@ vec4 CalcLight(BaseLight light, vec3 lightDirection)
             specularFactor = pow(specularFactor, specularPower);
             specularColor = vec4(light._color * specularIntensity * specularFactor, 1.0);
         }
-    }
-    else
-    {
-        //diffuseColor = vec4(1.0f, 0.0f, 0.0f, 1.0f);
     }
 
     return (ambientColor + diffuseColor + specularColor);

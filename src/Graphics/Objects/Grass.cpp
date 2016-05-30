@@ -79,13 +79,11 @@ void Grass::Draw() const
 
 	// Draw the loaded model
 	shader->Use();
-	GLint viewLoc = shader->GetUniform("view");
-	glUniformMatrix4fv(viewLoc, 1, false, glm::value_ptr(Scene::Instance()->GetViewMatrix()));
-	GLint modelLocation = shader->GetUniform("model");
-	GLint projectionLocation = shader->GetUniform("projection");
+	glUniformMatrix4fv(shader->GetUniform("view"), 1, false, glm::value_ptr(Scene::Instance()->GetViewMatrix()));
+	glUniformMatrix4fv(shader->GetUniform("model"), 1, false, glm::value_ptr(this->toWorld));
+	glUniformMatrix4fv(shader->GetUniform("projection"), 1, false, glm::value_ptr(Scene::Instance()->GetPerspectiveMatrix()));
 
-	glUniformMatrix4fv(modelLocation, 1, false, glm::value_ptr(this->toWorld));
-	glUniformMatrix4fv(projectionLocation, 1, false, glm::value_ptr(Scene::Instance()->GetPerspectiveMatrix()));
+    LoadDirectionalLight(Scene::Instance()->GetDirectionalLight());
 
 	glBindTexture(GL_TEXTURE_2D, grass->Textures()[0].id);
 	for (GLuint i = 0; i < grass->Meshes().size(); i++) {

@@ -14,6 +14,13 @@ uniform mat3 normalMatrix;
 uniform mat4 view;
 uniform mat4 projection;
 
+out VS_OUT
+{
+    vec3 _fragPos;
+    vec3 _normal;
+    vec2 _texCoords;
+} vs_out;
+
 out vec3 FragPos;
 out vec3 Normal;
 out vec4 Eye;
@@ -21,8 +28,9 @@ out vec4 Eye;
 void main()
 {
     gl_Position = vec4(position, 1.0f);
-    FragPos = vec3(model * gl_Position);
     Eye = vec3(normalize(-((view * model) * gl_Position)));
     gl_Position = projection * view * model * gl_Position;
-    Normal = normalMatrix * normal;
+
+    vs_out._fragPos = vec3(model * gl_Position);
+    vs_out._normal = normalMatrix * normal;
 }

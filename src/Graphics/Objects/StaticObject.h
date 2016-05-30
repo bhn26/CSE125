@@ -31,5 +31,4 @@ public:
     void Spin(float deg);
 
 private:
-    void LoadDirectionalLight(DirectionalLight* dLight) const;
 };

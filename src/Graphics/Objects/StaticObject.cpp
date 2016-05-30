@@ -59,11 +59,3 @@ void StaticObject::Spin(float deg)
 	this->toWorld = toWorld * glm::rotate(glm::mat4(1.0f), glm::radians(deg), glm::vec3(0.0f, 1.0f, 0.0f));
     CalculateNormalMatrix();
 }
-
-void StaticObject::LoadDirectionalLight(DirectionalLight * dLight) const
-{
-    glUniform3fv(shader->GetUniform("dLight._base._color"), 1, glm::value_ptr(dLight->_color));
-    glUniform1f(shader->GetUniform("dLight._base._ambientIntensity"), dLight->_ambientIntensity);
-    glUniform1f(shader->GetUniform("dLight._base._diffuseIntensity"), dLight->_diffuseIntensity);
-    glUniform3fv(shader->GetUniform("dLight._direction"), 1, glm::value_ptr(dLight->_direction));
-}

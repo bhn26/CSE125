@@ -15,6 +15,7 @@
 #include <SFML/Audio.hpp>
 
 class Shader;
+struct DirectionalLight;
 
 enum POSITION
 {
@@ -42,6 +43,7 @@ protected:
 
     void ApplyScale();
     void CalculateNormalMatrix();
+    void LoadDirectionalLight(DirectionalLight* dLight) const;
 public:
     ////////////////////////////////////////////////////////////////////////////////
     // NOTE: Constructors do not initialize vertex/element buffers, nor shader

@@ -7,7 +7,10 @@
 //
 
 #include "Entity.h"
+#include "Graphics/Shader.h"
+#include "Graphics/Lights.h"
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////
 // NOTE: Constructors do not initialize vertex/element buffers, nor shader
@@ -111,6 +114,14 @@ void Entity::CalculateNormalMatrix()
                 copy[col][row] /= this->scale[col];
     }
     normalMatrix = glm::mat3(glm::transpose(glm::inverse(copy)));
+}
+
+void Entity::LoadDirectionalLight(DirectionalLight * dLight) const
+{
+    glUniform3fv(shader->GetUniform("dLight._base._color"), 1, glm::value_ptr(dLight->_color));
+    glUniform1f(shader->GetUniform("dLight._base._ambientIntensity"), dLight->_ambientIntensity);
+    glUniform1f(shader->GetUniform("dLight._base._diffuseIntensity"), dLight->_diffuseIntensity);
+    glUniform3fv(shader->GetUniform("dLight._direction"), 1, glm::value_ptr(dLight->_direction));
 }
 
 // Process movement
