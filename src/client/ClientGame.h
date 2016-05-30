@@ -98,6 +98,7 @@ public:
 	void receiveGameOverPacket(int offset);
 
 	void sendShootPacket();
+	void receiveShootPacket(int offset);
 
 
 	bool hasStarted() { return game_started; };

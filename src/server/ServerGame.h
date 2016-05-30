@@ -61,6 +61,7 @@ public:
 	void sendScorePacket();
 	void sendGameOverPacket(int winner);
 
+	void sendShootPacket(int id);
 	void receiveShootPacket(int offset);
 
 	static ServerGame* instance()
