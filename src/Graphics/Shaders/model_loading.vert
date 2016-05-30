@@ -18,12 +18,19 @@ out vec3 FragPos;
 out vec3 Normal;
 out vec2 TexCoords;
 
+out VS_OUT
+{
+    vec3 _fragPos;
+    vec3 _normal;
+    vec2 _texCoords;
+} vs_out;
+
 void main()
 {
     gl_Position = vec4(position, 1.0f);
-    FragPos = vec3(model * gl_Position);
-    Normal = normalMatrix * normal;
+    vs_out._fragPos = vec3(model * gl_Position);
+    vs_out._normal = normalize(normalMatrix * normal);
+    vs_out._texCoords = texCoords;
     gl_Position = projection * view * model * gl_Position;
     //gl_Position = projection2 * view2 * model * gl_Position;
-    TexCoords = texCoords;
 }

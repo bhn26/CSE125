@@ -24,6 +24,7 @@
 #include "skinning_technique.h"
 #include "Basic/Utils.h"
 #include "../Texture.h"
+#include "Graphics/Lights.h"
 
 namespace Animation
 {
@@ -212,6 +213,15 @@ namespace Animation
         glm::vec3 Direction = glm::normalize(light.direction);
         glUniform3f(m_dirLightLocation.direction, Direction.x, Direction.y, Direction.z);
         glUniform1f(m_dirLightLocation.diffuseIntensity, light.diffuseIntensity);
+    }
+
+    void SkinningTechnique::SetDirectionalLight(const ::DirectionalLight& light)
+    {
+        glUniform3f(m_dirLightLocation.color, light._color.x, light._color.y, light._color.z);
+        glUniform1f(m_dirLightLocation.ambientIntensity, light._ambientIntensity);
+        glm::vec3 direction = glm::normalize(light._direction);
+        glUniform3f(m_dirLightLocation.direction, direction.x, direction.y, direction.z);
+        glUniform1f(m_dirLightLocation.diffuseIntensity, light._diffuseIntensity);
     }
 
 

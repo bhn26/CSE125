@@ -19,6 +19,8 @@
 #include "technique.h"
 #include <glm/glm.hpp>
 
+struct DirectionalLight;
+
 struct Material;
 namespace Animation
 {
@@ -96,6 +98,7 @@ namespace Animation
         void SetWorldMatrix(const glm::mat4& WVP);
         void SetColorTextureUnit(unsigned int textureUnit);
         void SetDirectionalLight(const DirectionalLight& light);
+        void SetDirectionalLight(const ::DirectionalLight& light);
         void SetPointLights(unsigned int numLights, const PointLight2* lights);
         void SetSpotLights(unsigned int numLights, const SpotLight* lights);
         void SetEyeWorldPos(const glm::vec3& eyeWorldPos);

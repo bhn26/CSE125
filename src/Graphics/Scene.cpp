@@ -25,8 +25,8 @@ const int Scene::WIDTH = 100;
 const int Scene::HEIGHT = 100;
 
 ////////////////////////////////////////////////////////////////////////////////
-Scene::Scene() : camera(std::unique_ptr<Camera>(nullptr)), pLight(std::unique_ptr<PointLight>(nullptr)),
-player(nullptr)
+Scene::Scene() : camera(std::unique_ptr<Camera>(nullptr)), pLight(nullptr),
+    dLight(nullptr), player(nullptr)
 {
 }
 
@@ -40,37 +40,38 @@ void Scene::Setup()
     //camera = std::unique_ptr<Camera>(new Camera(glm::vec3(0.0f, 9.0f, -15.0f), glm::vec3(0.0f, 1.0f, 0.0f), 90.0f, -25.0f));
     camera = std::unique_ptr<Camera>(new Camera(glm::vec3(0.0f, 9.0f, -15.0f)));
     pLight = std::unique_ptr<PointLight>(new PointLight(glm::vec3(0.0f, 20.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)));
+    dLight = std::unique_ptr<DirectionalLight>(new DirectionalLight(glm::vec3(0.5, -sqrt(3)/2.0f, 0.0f)));
 
 	// Barn
-	std::unique_ptr<StaticObject> barn = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/barn2.obj"));
-	barn->Scale(17.0f);
-	barn->Translate(glm::vec3(0.0f, 0.0f, 20.0f));
+	std::unique_ptr<StaticObject> barn = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/barn2.obj", 0.0f, 0.0f, 20.0f));
+	barn->SetScale(17.0f);
+	//barn->Translate(glm::vec3(0.0f, 0.0f, 20.0f));
 
 	// Tractors
-	std::unique_ptr<StaticObject> red_tractor = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/tractors/red_tractor.obj"));
-	red_tractor->Scale(12.0f);
+	std::unique_ptr<StaticObject> red_tractor = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/tractors/red_tractor.obj", 17.0f, 0.0f, -13.0f));
+	red_tractor->SetScale(4.0f);
 	red_tractor->Rotate(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-	red_tractor->Translate(glm::vec3(17.0f, 0.0f, -13.0f));
+	//red_tractor->Translate(glm::vec3(17.0f, 0.0f, -13.0f));
 
-	std::unique_ptr<StaticObject> green_tractor = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/tractors/green_tractor.obj"));
-	green_tractor->Scale(12.0f);
+	std::unique_ptr<StaticObject> green_tractor = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/tractors/green_tractor.obj", 34.0f, 0.0f, 13.0f));
+	green_tractor->SetScale(4.0f);
 	green_tractor->Rotate(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-	green_tractor->Translate(glm::vec3(34.0f, 0.0f, 13.0f));
+	//green_tractor->Translate(glm::vec3(34.0f, 0.0f, 13.0f));
 
-	std::unique_ptr<StaticObject> orange_tractor = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/tractors/orange_tractor.obj"));
-	orange_tractor->Scale(12.0f);
+	std::unique_ptr<StaticObject> orange_tractor = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/tractors/orange_tractor.obj", -17.0f, 0.0f, -13.0f));
+	orange_tractor->SetScale(4.0f);
 	orange_tractor->Rotate(90.0f, glm::vec3(0.0f, -1.0f, 0.0f));
-	orange_tractor->Translate(glm::vec3(-17.0f, 0.0f, -13.0f));
+	//orange_tractor->Translate(glm::vec3(-17.0f, 0.0f, -13.0f));
 
 	// Silo
-	std::unique_ptr<StaticObject> silo = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/silo.obj"));
-	silo->Scale(10.0f);
-	silo->Translate(glm::vec3(-28.0f, 0.0f, -4.0f));
+	std::unique_ptr<StaticObject> silo = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/silo.obj", -28.0f, 0.0f, -4.0f));
+	silo->SetScale(10.0f);
+	//silo->Translate(glm::vec3(-28.0f, 0.0f, -4.0f));
 
 	// Bench
-	std::unique_ptr<StaticObject> bench = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/bench3.obj"));
-	bench->Scale(4.0f);
-	bench->Translate(glm::vec3(40.0f, 3.2f, 0.0f));
+	std::unique_ptr<StaticObject> bench = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/bench3.obj", 40.0f, 3.2f, 0.0f));
+	bench->SetScale(2.0f);
+	//bench->Translate(glm::vec3(40.0f, 3.2f, 0.0f));
 	bench->Rotate(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 
 	// Pumpkin
@@ -78,22 +79,22 @@ void Scene::Setup()
 
 	// Rocks
 	std::unique_ptr<StaticObject> rocks = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/nature/rocks.obj"));
-	rocks->Scale(4.0f);
+	rocks->SetScale(4.0f);
 	rocks->Translate(glm::vec3(28.0f, 0.2f, -20.0f));
 
 	// Rocks
 	std::unique_ptr<StaticObject> stump = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/nature/stump.obj"));
-	stump->Scale(4.0f);
+	stump->SetScale(4.0f);
 	stump->Translate(glm::vec3(-28.0f, 0.2f, -20.0f));
 
 	// Ground
-	std::unique_ptr<StaticObject> ground = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/nature/ground.obj"));
-	ground->Scale(15.0f);
-	ground->Translate(glm::vec3(0.0f, 100.4f, 0.0f));
+	std::unique_ptr<StaticObject> ground = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/nature/ground.obj", 0.0f, 67.0f, 0.0f));
+	ground->SetScale(10.0f);
+	//ground->Translate(glm::vec3(0.0f, 100.4f, 0.0f));
 
 	// Seed
 	std::unique_ptr<StaticObject> seed = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/pumpkinseed.obj"));
-	seed->Scale(0.5f);
+	seed->SetScale(0.5f);
 	seed->Translate(glm::vec3(0.0f, 1.0f, 0.0f));
 
 	// Boat

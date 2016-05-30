@@ -64,6 +64,15 @@ void Entity::RotateTo(const glm::mat3 & newOrientation)
     CalculateNormalMatrix();
 }
 
+void Entity::SetScale(glm::vec3 scale)
+{
+    for (int col = 0; col < 3; col++)
+        for (int row = 0; row < 3; row++)
+            toWorld[col][row] /= this->scale[col];
+    this->scale = scale;
+    ApplyScale();
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // Getters
 
@@ -91,7 +100,18 @@ void Entity::ApplyScale()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Entity::CalculateNormalMatrix() { normalMatrix = glm::mat3(glm::transpose(glm::inverse(toWorld))); }
+void Entity::CalculateNormalMatrix()
+{
+    glm::mat4 copy = toWorld;
+
+    if (scale != glm::vec3(1.0f))
+    {
+        for (int col = 0; col < 3; col++)
+            for (int row = 0; row < 3; row++)
+                copy[col][row] /= this->scale[col];
+    }
+    normalMatrix = glm::mat3(glm::transpose(glm::inverse(copy)));
+}
 
 // Process movement
 void Entity::ProcessKeyboard(POSITION position, GLfloat deltaTime)

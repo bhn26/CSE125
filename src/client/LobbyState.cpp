@@ -42,7 +42,7 @@ void LobbyState::OnClick(int button, double x, double y) {
 	RenderSelection();
 
 	glGetIntegerv(GL_VIEWPORT, viewport);
-	glReadPixels(x, viewport[3] - y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, &res);
+	glReadPixels((GLint)x, viewport[3] - (GLint) y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, &res);
 
 	switch (res[0]) {
 	case 0: printf("None clicked\n"); break;
@@ -55,7 +55,7 @@ void LobbyState::OnClick(int button, double x, double y) {
 	case 3: printf("Join T1 clicked\n"); // team 2
 		ClientGame::instance()->sendJoinPacket(1);
 		break;
-	default: printf("%d clicked %s\n", res[0]);
+	default: printf("%d clicked\n", res[0]);
 	}
 }
 
@@ -66,8 +66,8 @@ void LobbyState::RenderSelection() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	////////////////// BACKGROUND//////////////////////////
-	float x = Texture::GetWindowCenter(bg->Width());
-	float y = Window::height / 2 - bg->Height() / 2;
+	float x = (float) Texture::GetWindowCenter(bg->Width());
+	float y = Window::height / 2.0f - bg->Height() / 2.0f;
 
 	////////////// START BUTTON /////////////////////////////////////
 	sprite_renderer->RenderSelection(1, *start_button, glm::vec2(x + 1000, y + 55), glm::vec2(start_button->Width(), start_button->Height()), 0.0f);
@@ -101,8 +101,8 @@ void LobbyState::Draw()
 	InitTextures();
 
 	////////////////// BACKGROUND//////////////////////////
-	float x = Texture::GetWindowCenter(bg->Width());
-	float y = Window::height / 2 - bg->Height() / 2;
+	float x = (float) Texture::GetWindowCenter(bg->Width());
+	float y = Window::height / 2.0f - bg->Height() / 2.0f;
 	sprite_renderer->DrawSprite(*bg, glm::vec2(x, y), glm::vec2(bg->Width(), bg->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 
 	////////////// START BUTTON /////////////////////////////////////
@@ -127,7 +127,7 @@ void LobbyState::Draw()
 	x = tx1 + 6;
 	y = ty + 90 + 6; // skip header
 
-	for (int i = 0; i < team0.size(); i++) {
+	for (unsigned int i = 0; i < team0.size(); i++) {
 		char name[20];
 		strcpy_s(name, "Player ");
 		strcat_s(name, std::to_string(team0.at(i)).c_str());
@@ -149,7 +149,7 @@ void LobbyState::Draw()
 	x = tx2 + 6;
 	y = ty + 90 + 6; // skip header
 
-	for (int i = 0; i < team1.size(); i++) {
+	for (unsigned int i = 0; i < team1.size(); i++) {
 		char name[20];
 		strcpy_s(name, "Player ");
 		strcat_s(name, std::to_string(team1.at(i)).c_str());

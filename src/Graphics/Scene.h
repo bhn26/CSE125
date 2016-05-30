@@ -14,14 +14,15 @@
 #include "Objects/Grass.h"
 #include "Objects/InstanceObject.h"
 #include "ShaderManager.h"
-#include "client\SpriteRenderer.h"
-#include "../network/GameData.h"
+#include "client/SpriteRenderer.h"
+#include "network/GameData.h"
 
 
 class Camera;
 class Player;
 
 struct PointLight;
+struct DirectionalLight;
 class ChickenAnim;
 
 class Scene
@@ -37,6 +38,7 @@ class Scene
 
     std::unique_ptr<Camera> camera;
     std::unique_ptr<PointLight> pLight;
+    std::unique_ptr<DirectionalLight> dLight;
 	std::unique_ptr<CubeMap> cubeMap;
 	std::unique_ptr<Ground> ground;
 	std::unique_ptr<Grass> grass;
@@ -84,6 +86,7 @@ public:
     std::unique_ptr<PointLight>& GetPointLight() { return pLight; }
 	Player*& GetPlayer() { return player; }
 	StaticObject* GetStaticObject(int i) { return static_objects[i].get(); }
+    DirectionalLight* GetDirectionalLight() { return dLight.get(); }
 	int GetSize() { return static_objects.size(); }
 
 	// helpers 

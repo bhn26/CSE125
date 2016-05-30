@@ -40,6 +40,8 @@ protected:
     int obj_id; // This refers to the specific object
     int class_id; // This refers to the type of object
 
+    void ApplyScale();
+    void CalculateNormalMatrix();
 public:
     ////////////////////////////////////////////////////////////////////////////////
     // NOTE: Constructors do not initialize vertex/element buffers, nor shader
@@ -61,6 +63,8 @@ public:
     virtual void RotateTo(float w, float x, float y, float z) { RotateTo(glm::quat(w, x, y, z)); }
     virtual void RotateTo(const glm::quat& newOrientation);
     virtual void RotateTo(const glm::mat3& newOrientation);
+    void SetScale(glm::vec3 scale);
+    void SetScale(float scale) { SetScale(glm::vec3(scale)); }
 
     ////////////////////////////////////////////////////////////////////////////////
     // Getters
@@ -85,6 +89,4 @@ public:
     virtual int GetScore() const { return 0; }
 
 private:
-    void ApplyScale();
-    void CalculateNormalMatrix();
 };

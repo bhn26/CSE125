@@ -50,7 +50,8 @@ Player::Player(float x, float y, float z, float rotW, float rotX, float rotY, fl
     skinTechnique->Enable();
 
     skinTechnique->SetColorTextureUnit(0); // color texture unit index = 0
-    skinTechnique->SetDirectionalLight(m_directionalLight);
+    skinTechnique->SetDirectionalLight(*Scene::Instance()->GetDirectionalLight());
+    //skinTechnique->SetDirectionalLight(m_directionalLight);
     skinTechnique->SetMatSpecularIntensity(0.0f);
     skinTechnique->SetMatSpecularPower(0);
 

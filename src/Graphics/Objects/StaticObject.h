@@ -10,16 +10,16 @@
 #include "Entity.h"
 #include "../ShaderManager.h"
 
+struct DirectionalLight;
 class Model;
 
 class StaticObject : public Entity
 {
 public:
-    StaticObject(const GLchar* path);
+    StaticObject(const GLchar* path, float x = 0.0f, float y = 0.0f, float z = 0.0f);
     ~StaticObject();
 
     void Translate(glm::vec3 translate);
-    void Scale(float scaleFactor);
     void Rotate(float deg, glm::vec3 axis);
 
     Model* model;
@@ -29,4 +29,7 @@ public:
     void Draw() const override;
     void Update(float deltaTime) override;
     void Spin(float deg);
+
+private:
+    void LoadDirectionalLight(DirectionalLight* dLight) const;
 };
