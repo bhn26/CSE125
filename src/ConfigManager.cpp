@@ -7,6 +7,7 @@
 
 #ifdef EGGS_CLIENT
 #include "Graphics/ShaderManager.h"
+#include "Graphics/ModelManager.h"
 #endif
 
 // use this to load the file into the manager
@@ -27,11 +28,16 @@ void ConfigManager::LoadConfigs(const std::string& file_name)
 #ifdef EGGS_CLIENT
         // Tell the ShaderManager what shaders to load
         static const std::string shaderPrefix = "Shader_";
+        static const std::string modelPrefix = "Model_";
         if (field.substr(0, shaderPrefix.length()) == shaderPrefix)
         {
             // Subtract 7 for "Shader_" and 5 for "_Frag"/"_Vert"/"_Geom"
             ShaderManager::Instance()->AddShaderToLoad(field.substr(shaderPrefix.length(),
                                                                     field.length()-(shaderPrefix.length()+5)));
+        }
+        else if (field.substr(0, modelPrefix.length()) == modelPrefix)
+        {
+            ModelManager::Instance()->AddModelToLoad(field.substr(modelPrefix.length(), field.length()));
         }
 #endif
     }

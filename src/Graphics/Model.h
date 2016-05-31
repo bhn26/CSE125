@@ -15,6 +15,7 @@ GLint TextureFromFile(const char* path, std::string directory);
 
 class Model
 {
+    friend class ModelManager;
 public:
     /*  Functions   */
     // Constructor, expects a filepath to a 3D model.
