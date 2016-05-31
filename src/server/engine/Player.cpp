@@ -219,7 +219,7 @@ void Player::HandleDeath(unsigned int death_tick)
 		curFlag->GetRigidBody()->setCenterOfMassTransform(currentTrans);
 		deathPos.setY((deathPos.getY() + 4));
 		std::pair<int, int> vel = EntitySpawner::getRandomLoc();
-		ranVelocity = btVector3((vel.first % 50), (rand() % 50), (vel.second % 50));
+		ranVelocity = btVector3((vel.first % 100), (rand() % 100), (vel.second % 100));
 		printf("random velocity:  x: %f, y: %f, z: %f  \n", ranVelocity.getX(), ranVelocity.getY(), ranVelocity.getZ());
 
 		// add Flag to world

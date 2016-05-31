@@ -167,25 +167,30 @@ std::map<std::pair<int, unsigned int>, Entity* > *EntitySpawner::GetMap()
 std::pair<int, int> EntitySpawner::getRandomLoc()
 {
 	std::pair<int, int> loc;
-	if (rand() % 4 == 0)
+	loc.first = 0;
+	loc.second = 0;
+	while (loc.first == 0 && loc.second == 0)
 	{
-		loc.first = (rand() % WORLD_WIDTH+1);
-		loc.second = (rand() % WORLD_WIDTH+1);
-	}
-	else if (rand() % 4 == 1)
-	{
-		loc.first = (rand() % WORLD_WIDTH+1);
-		loc.second = (-1*rand() % WORLD_WIDTH+1);
-	}
-	else if (rand() % 4 == 2)
-	{
-		loc.first = (-1*rand() % WORLD_WIDTH+1);
-		loc.second = (rand() % WORLD_WIDTH+1);
-	}
-	else if (rand() % 4 == 3)
-	{
-		loc.first = (-1*rand() % WORLD_WIDTH+1);
-		loc.second = (-1*rand() % WORLD_WIDTH+1);
+		if (rand() % 4 == 0)
+		{
+			loc.first = (rand() % WORLD_WIDTH + 1);
+			loc.second = (rand() % WORLD_WIDTH + 1);
+		}
+		else if (rand() % 4 == 1)
+		{
+			loc.first = (rand() % WORLD_WIDTH + 1);
+			loc.second = (-1 * rand() % WORLD_WIDTH + 1);
+		}
+		else if (rand() % 4 == 2)
+		{
+			loc.first = (-1 * rand() % WORLD_WIDTH + 1);
+			loc.second = (rand() % WORLD_WIDTH + 1);
+		}
+		else if (rand() % 4 == 3)
+		{
+			loc.first = (-1 * rand() % WORLD_WIDTH + 1);
+			loc.second = (-1 * rand() % WORLD_WIDTH + 1);
+		}
 	}
 	return loc;
 }
