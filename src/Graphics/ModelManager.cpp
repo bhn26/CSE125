@@ -8,6 +8,10 @@ void ModelManager::LoadModels()
 {
     for (std::string& shaderName : _modelNames)
     {
+        if (shaderName == std::string("Pumpkin"))
+        {
+            printf("Pumpkin!\n");
+        }
         LoadModel(shaderName);
     }
     _modelNames.clear();
@@ -28,7 +32,8 @@ bool ModelManager::LoadModel(const std::string& modelName)
         return false;
     }
 
-    _modelMap[modelName] = std::shared_ptr<Model>(new Model(modelPath.c_str()));
+    Model* model = new Model(modelPath.c_str());
+    _modelMap[modelName] = std::shared_ptr<Model>(model);
     return true;
 }
 
@@ -37,11 +42,12 @@ void ModelManager::AddModelToLoad(std::string modelName)
     _modelNames.push_back(modelName);
 }
 
-std::shared_ptr<Model> ModelManager::GetModel(std::string shaderName) const
+std::shared_ptr<Model> ModelManager::GetModel(std::string shaderName)
 {
-    std::map<std::string, std::shared_ptr<Model>>::const_iterator it = _modelMap.find(shaderName);
+    const ModelManager* manager = Instance();
+    std::map<std::string, std::shared_ptr<Model>>::const_iterator it = manager->_modelMap.find(shaderName);
     // If in map
-    if (it != _modelMap.end())    // Get shader mapped to this string
+    if (it != manager->_modelMap.end())    // Get shader mapped to this string
     {
         return it->second;
     }

@@ -37,7 +37,9 @@ void ConfigManager::LoadConfigs(const std::string& file_name)
         }
         else if (field.substr(0, modelPrefix.length()) == modelPrefix)
         {
-            ModelManager::Instance()->AddModelToLoad(field.substr(modelPrefix.length(), field.length()));
+            std::string name = field.substr(modelPrefix.length(), field.length());
+            if (name == std::string("Pumpkin")) continue;
+            ModelManager::Instance()->AddModelToLoad(name);
         }
 #endif
     }

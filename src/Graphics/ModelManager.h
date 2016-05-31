@@ -23,5 +23,5 @@ public:
         return instance;
     }
 
-    std::shared_ptr<Model> GetModel(std::string shaderName) const;
+    static std::shared_ptr<Model> GetModel(std::string shaderName);
 };

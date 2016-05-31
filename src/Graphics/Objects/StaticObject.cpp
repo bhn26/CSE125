@@ -10,16 +10,20 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-StaticObject::StaticObject(const GLchar* path)
+StaticObject::StaticObject(const GLchar* path) : Entity()
 {
-    this->toWorld = glm::mat4(1.0f);
-    model = new Model(path);
+    model = std::shared_ptr<Model>(new Model(path));
+    shader = ShaderManager::Instance()->GetShader("Model");
+}
+
+StaticObject::StaticObject(std::shared_ptr<Model> model) : Entity(), model(model)
+{
     shader = ShaderManager::Instance()->GetShader("Model");
 }
 
 StaticObject::~StaticObject()
 {
-	delete(model);
+	//delete model;
 }
 
 void StaticObject::Translate(glm::vec3 translate)
