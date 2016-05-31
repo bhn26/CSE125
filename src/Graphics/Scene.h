@@ -34,6 +34,7 @@ class Scene
     };
 
     const GLuint SHADOW_DEPTH_WIDTH = 1024, SHADOW_DEPTH_HEIGHT = 1024;
+    unsigned int shadowMapIndex = 7;
     float lastTime;
     GLuint uboMatricesBuffer;
     GLuint depthMapFBO;
@@ -102,6 +103,8 @@ public:
     bool IsRenderingDepth() const { return renderingDepthMap; }
     std::shared_ptr<Shader>& GetDepthShader() { return depthShader; }
 
+    unsigned int ShadowMapIndex() const { return shadowMapIndex; }
+    GLuint DepthMap() const { return depthMap; }
     const glm::mat4& LightSpaceMatrix() const { return lightSpaceMatrix; }
 
 private:
