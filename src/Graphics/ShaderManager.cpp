@@ -1,7 +1,8 @@
 #include "ShaderManager.h"
-#include "iostream"
 #include "Shader.h"
 #include "ConfigManager.h"
+
+#include <iostream>
 
 const std::string ShaderManager::shaderPath = "src/Graphics/Shaders/";
 

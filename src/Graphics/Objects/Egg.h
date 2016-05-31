@@ -27,7 +27,7 @@ public:
 	Egg(float x, float y, float z);
 	~Egg();
 
-	Model* model;
+	std::shared_ptr<Model> model;
 	float angle; // For spinning if we want
 
 	glm::vec3 color;

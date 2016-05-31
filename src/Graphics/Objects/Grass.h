@@ -25,7 +25,8 @@ public:
 	Grass();
 	~Grass();
 
-	Model* grass;
+    //Model* grass;
+    std::shared_ptr<Model> grass;
 	glm::mat4* modelMatrices;
 	GLuint amount;
 
