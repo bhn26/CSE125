@@ -181,6 +181,9 @@
     <ClCompile Include="..\src\Graphics\Objects\InstanceObject.cpp">
       <Filter>Source Files\Graphics\Objects</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\client\GameOverState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Graphics\Camera.h">
@@ -314,6 +317,9 @@
     </ClInclude>
     <ClInclude Include="..\src\Graphics\Objects\Grass.h">
       <Filter>Source Files\Graphics\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\client\GameOverState.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
