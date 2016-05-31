@@ -38,9 +38,13 @@ void Scene::Setup()
     entities.clear();
 
     InitializeUBOs();
-    //InitializeFBO();
+    InitializeFBO();
 
-    //depthShader = ShaderManager::GetShader("Depth_Map");
+    glm::vec3 pos = glm::vec3(0.0f, 100.0f, 0.0f);
+    lightSpaceMatrix = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.1f, 1000.0f) *
+        glm::lookAt(pos, pos + dLight->_direction, glm::vec3(0.0f, 1.0f, 0.0));
+
+    depthShader = ShaderManager::GetShader("Depth_Map");
 
     //camera = std::unique_ptr<Camera>(new Camera(glm::vec3(0.0f, 9.0f, -15.0f), glm::vec3(0.0f, 1.0f, 0.0f), 90.0f, -25.0f));
     camera = std::unique_ptr<Camera>(new Camera(glm::vec3(0.0f, 9.0f, -15.0f)));
@@ -154,7 +158,7 @@ void Scene::InitializeFBO()
     if (this->depthMapFBO)
         return;
 
-    glGenTextures(1, &this->depthMapFBO);
+    glGenFramebuffers(1, &this->depthMapFBO);
 
     // Generate the Depth Map texture
     glGenTextures(1, &this->depthMap);
@@ -199,9 +203,6 @@ void Scene::SetProjectionUBO()
 void Scene::ConfigureShaderAndMatrices()
 {
     depthShader->Use();
-    glm::vec3 pos = glm::vec3(0.0f, 100.0f, 0.0f);
-    lightSpaceMatrix = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.1f, 1000.0f) *
-        glm::lookAt(pos, pos + dLight->_direction, glm::vec3(0.0f, 1.0f, 0.0));
 
     glUniformMatrix4fv(depthShader->GetUniform("lightSpaceMatrix"), 1, GL_FALSE, glm::value_ptr(lightSpaceMatrix));
 }
@@ -256,7 +257,7 @@ void Scene::Update()
 ////////////////////////////////////////////////////////////////////////////////
 void Scene::Draw()
 {
-    //RenderDepthMap();
+    RenderDepthMap();
     RenderScene();
 }
 

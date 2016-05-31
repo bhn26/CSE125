@@ -61,6 +61,7 @@ class Scene
     Scene();
     void Setup();
     void InitializeUBOs();
+    void InitializeFBO();
     void SetViewUBO();
     void SetProjectionUBO();
     void ConfigureShaderAndMatrices();
@@ -68,7 +69,6 @@ class Scene
     void RenderScene();
 
 public:
-    void InitializeFBO();
     static SpriteRenderer * sprite_renderer;
 
     static Scene* Instance()
@@ -97,11 +97,14 @@ public:
 	Player*& GetPlayer() { return player; }
 	StaticObject* GetStaticObject(int i) { return static_objects[i].get(); }
     DirectionalLight* GetDirectionalLight() { return dLight.get(); }
-	int GetSize() { return static_objects.size(); }
+    int NumberOfStaticObjects() { return static_objects.size(); }
 
     bool IsRenderingDepth() const { return renderingDepthMap; }
     std::shared_ptr<Shader>& GetDepthShader() { return depthShader; }
 
-	// helpers 
-	static glm::vec2 Get2D(glm::vec3 coords, glm::mat4 view, glm::mat4 projection/*perspective matrix */, int width, int height);
+    const glm::mat4& LightSpaceMatrix() const { return lightSpaceMatrix; }
+
+private:
+    // helpers 
+    static glm::vec2 Get2D(glm::vec3 coords, glm::mat4 view, glm::mat4 projection/*perspective matrix */, int width, int height);
 };

@@ -255,7 +255,6 @@ void CPlayState::Draw()
 
 void CPlayState::EnterState()
 {
-    Scene::Instance()->InitializeFBO();
 }
 
 void CPlayState::InitTextures() {
