@@ -494,6 +494,7 @@ void ClientGame::update()
 
 			case SHOOT_EVENT:
 				receiveShootPacket(i + sizeof(PacketHeader));
+				break;
 
 			case UPDATE_SCORE:
 				receiveScorePacket(i + sizeof(PacketHeader));
