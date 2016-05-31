@@ -3,16 +3,18 @@
 #include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale, glm::perspective
 #include <glm/gtc/type_ptr.hpp>
 
-#include "../../client/Window.h"
+#include "client/Window.h"
 #include "../Scene.h"
 #include "../PointLight.h"
 #include "../Camera.h"
 #include "../../client/Player.h"
 #include "../Model.h"
+#include "../ModelManager.h"
 
 Grass::Grass() : Entity()
 {
-	grass = new Model("assets/map/objects/nature/plant.obj");
+	//grass = new Model("assets/map/objects/nature/plant.obj");
+    grass = ModelManager::GetModel("Grass");
 
 	// Generate large list of semi-random transformation matrices
 	amount = 10000;

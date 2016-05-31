@@ -10,10 +10,10 @@
 class ModelEntity : public Entity
 {
 public:
-    ModelEntity(std::string filename = "");
+    ModelEntity(std::shared_ptr<Model> model);
 
 private:
-    std::unique_ptr<Model> m_model;
+    std::shared_ptr<Model> m_model;
 
     // Inherited via Entity
     virtual void Draw() const override;
