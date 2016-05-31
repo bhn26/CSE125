@@ -80,9 +80,9 @@ void Scene::Setup()
 	stump->Translate(glm::vec3(-28.0f, 0.2f, -20.0f));
 
 	// Ground
-	std::unique_ptr<StaticObject> ground = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/nature/ground.obj"));
-	ground->Scale(15.0f);
-	ground->Translate(glm::vec3(0.0f, 100.4f, 0.0f));
+	std::unique_ptr<StaticObject> ground = std::unique_ptr<StaticObject>(new StaticObject("assets/map/new_objects/nature/ground.obj"));
+	//ground->Scale(15.0f);
+	//ground->Translate(glm::vec3(0.0f, 100.4f, 0.0f));
 
 	// Seed
 	std::unique_ptr<StaticObject> seed = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/pumpkinseed.obj"));
@@ -97,10 +97,10 @@ void Scene::Setup()
     std::unique_ptr<StaticObject> windMill = std::unique_ptr<StaticObject>(new StaticObject("assets/map/new_models/windmill.obj"));
     windMill->Scale(1/4.0f);
     windMill->Translate(glm::vec3(75.0f, 0.0f, 75.0f));
-    static_objects.push_back(std::move(windMill));
+    
 
 	grass = std::unique_ptr<InstanceObject>(new InstanceObject("assets/map/objects/nature/plant.obj", 10000, 1.0f));
-	pumpkin = std::unique_ptr<InstanceObject>(new InstanceObject("assets/map/objects/pumpkin.obj", 40, 10.0f));
+	pumpkin = std::unique_ptr<InstanceObject>(new InstanceObject("assets/map/new_objects/pumpkin.obj", 40, 10.0f));
 	// Pumpkins
 	//pumpkin = std::unique_ptr<InstanceObject>(new InstanceObject("assets/map/objects/pumpkin.obj", 10000));
 	//pumpkin->Translate(glm::vec3(0.0f, 0.0f, -1.0f));
@@ -109,20 +109,21 @@ void Scene::Setup()
     cubeMap->LoadCubeMap();
     cubeMap->GetShader() = ShaderManager::Instance()->GetShader("CubeMap");
 
-	static_objects.push_back(std::move(map));
+	//static_objects.push_back(std::move(map));
 	//static_objects.push_back(std::move(boat));
-	/*static_objects.push_back(std::move(barn));*/
+	static_objects.push_back(std::move(barn));
+	static_objects.push_back(std::move(ground));
 	static_objects.push_back(std::move(red_tractor));
 	static_objects.push_back(std::move(green_tractor));
 	static_objects.push_back(std::move(orange_tractor));
-	/*static_objects.push_back(std::move(construction_site));
+	static_objects.push_back(std::move(construction_site));
+	static_objects.push_back(std::move(windMill));
 	static_objects.push_back(std::move(maze));
 	static_objects.push_back(std::move(silo));
 	static_objects.push_back(std::move(rocks));
 	static_objects.push_back(std::move(bench));
 	//static_objects.push_back(std::move(pumpkinObj));
-	static_objects.push_back(std::move(seed));*/
-	static_objects.push_back(std::move(ground));
+	static_objects.push_back(std::move(seed));
 }
 
 void Scene::Update()
