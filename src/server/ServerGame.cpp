@@ -385,7 +385,7 @@ void ServerGame::sendSpawnPacket(PosInfo pi)
 
 }
 
-void ServerGame::sendRemovePacket(ClassId cid, int oid)
+void ServerGame::sendRemovePacket(ClassId rem_cid, int rem_oid)
 {
 	Packet packet;
 	packet.hdr.packet_type = REMOVE_EVENT;
@@ -397,10 +397,32 @@ void ServerGame::sendRemovePacket(ClassId cid, int oid)
 	packet.dat.game_data_id = REM_OBJ;
 
 	RemInfo r;
-	r.rem_cid = cid;
-	r.rem_oid = oid;
+	r.rem_cid = rem_cid;
+	r.rem_oid = rem_oid;
 
-	printf("sending a remove packet for type %d object %d\n", r.rem_cid, r.rem_oid);
+	r.serialize(packet.dat.buf);
+
+	packet.serialize(packet_data);
+
+	network->sendToAll(packet_data, packet_size);
+}
+
+void ServerGame::sendRemovePacket(ClassId rem_cid, int rem_oid, ClassId rec_cid, int rec_oid)
+{
+	Packet packet;
+	packet.hdr.packet_type = REMOVE_EVENT;
+
+	const unsigned int packet_size = sizeof(Packet);
+
+	char packet_data[packet_size];
+
+	packet.dat.game_data_id = REM_OBJ;
+
+	RemInfo r;
+	r.rem_cid = rem_cid;
+	r.rem_oid = rem_oid;
+	r.rec_cid = rec_cid;
+	r.rec_oid = rec_oid;
 
 	r.serialize(packet.dat.buf);
 

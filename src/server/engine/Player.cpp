@@ -96,7 +96,7 @@ void Player::AcquireFlag(Flag* flag)
 
 	// note - individual scores are updated with move packets
 	ServerGame::instance()->IncScore(teamId, 1);
-	ServerGame::instance()->sendScorePacket();
+	//ServerGame::instance()->sendScorePacket();
 
 	// check if your team won
 	int * scores = ServerGame::instance()->GetScores();
@@ -113,7 +113,7 @@ void Player::LoseFlags()
 
 	// Change this, we need the flags to come out of the player back into the world
 	flags->clear();
-	ServerGame::instance()->sendScorePacket();
+	//ServerGame::instance()->sendScorePacket();
 }
 
 int Player::GetTeamId()
@@ -247,7 +247,7 @@ void Player::HandleDeath(unsigned int death_tick)
 	}
 	//flags->clear(); //Actually calls delete on flags... didn't seem to correctly work for bullet deletion anways... maybe cause of void pointer
 	//LoseFlags();
-	ServerGame::instance()->sendScorePacket();
+	//ServerGame::instance()->sendScorePacket();
 }
 
 void Player::Move(btVector3* changeVelocity)

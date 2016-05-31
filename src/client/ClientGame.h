@@ -100,8 +100,10 @@ public:
 	void sendShootPacket();
 	void receiveShootPacket(int offset);
 
-
 	bool hasStarted() { return game_started; };
+
+	void decScore(int team, int amount) { scores[team] -= amount; }
+	void incScore(int team, int amount) { scores[team] += amount; }
 
     char network_data[MAX_PACKET_SIZE];
 

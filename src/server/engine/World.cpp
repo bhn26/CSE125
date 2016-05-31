@@ -340,7 +340,7 @@ void World::UpdateWorld()
 				// Handle Collectable Collection
 				Collectable* collectObj = (Collectable*)obB->getUserPointer();
 				collectObj->HandleCollect(collidePlayer);
-				ServerGame::instance()->sendRemovePacket(ClassId::COLLECTABLE, collectObj->GetObjectId());
+				ServerGame::instance()->sendRemovePacket(ClassId::COLLECTABLE, collectObj->GetObjectId(), ClassId::PLAYER, collidePlayer->GetObjectId());
 			}
 
 			// if Obj B is Flag
@@ -358,7 +358,7 @@ void World::UpdateWorld()
 					continue;
 				}
 				collideFlag->HandleCollectable(collidePlayer);
-				ServerGame::instance()->sendRemovePacket(ClassId::FLAG, collideFlag->GetObjectId());
+				ServerGame::instance()->sendRemovePacket(ClassId::FLAG, collideFlag->GetObjectId(), ClassId::PLAYER, collidePlayer->GetObjectId());
 				markedList.push_back(collideFlag);
 				collideFlag->SetToMarked();
 				//TODO send a packet for the player to acquire the item for GUI
@@ -414,7 +414,7 @@ void World::UpdateWorld()
 				// Handle Collectable Collection
 				Collectable* collectObj = (Collectable*)obA->getUserPointer();
 				collectObj->HandleCollect(collidePlayer);
-				ServerGame::instance()->sendRemovePacket(ClassId::COLLECTABLE, collectObj->GetObjectId());
+				ServerGame::instance()->sendRemovePacket(ClassId::COLLECTABLE, collectObj->GetObjectId(), ClassId::PLAYER, collidePlayer->GetObjectId());
 			}
 
 			// if Obj A is Flag
@@ -431,7 +431,7 @@ void World::UpdateWorld()
 					continue;
 				}
 				collideFlag->HandleCollectable(collidePlayer);
-				ServerGame::instance()->sendRemovePacket(ClassId::FLAG, collideFlag->GetObjectId());
+				ServerGame::instance()->sendRemovePacket(ClassId::FLAG, collideFlag->GetObjectId(), ClassId::PLAYER, collidePlayer->GetObjectId());
 				markedList.push_back(collideFlag);
 				collideFlag->SetToMarked();
 				//TODO send a packet for the player to acquire the item for GUI

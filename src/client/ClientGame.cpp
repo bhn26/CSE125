@@ -221,9 +221,17 @@ void ClientGame::receiveRemovePacket(int offset)
 	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
 	struct RemInfo* r = (struct RemInfo *) &(dat->buf);
 
-	printf("received a remove packet for type %d object %d\n", r->rem_cid, r->rem_oid);
-
 	Scene::Instance()->RemoveEntity(r->rem_cid, r->rem_oid);
+
+	// if it's a flag, then a player should've removed it
+	if (r->rem_cid == ClassId::FLAG)
+	{
+		// change the player's score based on that flag
+		if (r->rec_cid == ClassId::PLAYER)
+		{
+			incScore(((Player *)(Scene::Instance()->GetEntity(ClassId::PLAYER, r->rec_oid).get()))->GetTeam(), 1);
+		}
+	}
 }
 
 void ClientGame::receiveMovePacket(int offset)
@@ -236,11 +244,11 @@ void ClientGame::receiveMovePacket(int offset)
 		//printf("received move packet for obj id %d. Its coordinates are: %f, %f, %f\n", pi->oid, pi->x, pi->y, pi->z);
 
 	Scene::Instance()->GetEntity(pi->cid, pi->oid)->MoveTo(pi->x, pi->y, pi->z);
-	Scene::Instance()->GetEntity(pi->cid, pi->oid)->SetScore(pi->num_eggs);
 
 	// check the jump animation
 	if (pi->cid == ClassId::PLAYER)
 	{
+		Scene::Instance()->GetEntity(pi->cid, pi->oid)->SetScore(pi->num_eggs);
 		if(pi->jump == 0)
 			((Player *)(Scene::Instance()->GetEntity(pi->cid, pi->oid).get()))->Jump();
 	}
@@ -412,6 +420,8 @@ void ClientGame::receiveDeathPacket(int offset)
 	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
 	struct EmoteInfo* e = (struct EmoteInfo *) &(dat->buf);
 	((Player *)(Scene::Instance()->GetEntity(ClassId::PLAYER, e->id).get()))->Die();
+	decScore(((Player *)(Scene::Instance()->GetEntity(ClassId::PLAYER, e->id).get()))->GetTeam(), 
+		((Player *)(Scene::Instance()->GetEntity(ClassId::PLAYER, e->id).get()))->GetScore());
 }
 
 void ClientGame::receiveShootPacket(int offset)
@@ -495,6 +505,7 @@ void ClientGame::update()
 
 			case SHOOT_EVENT:
 				receiveShootPacket(i + sizeof(PacketHeader));
+				break;
 
 			case UPDATE_SCORE:
 				receiveScorePacket(i + sizeof(PacketHeader));

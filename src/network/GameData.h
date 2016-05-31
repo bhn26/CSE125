@@ -92,6 +92,10 @@ struct RemInfo : GameInfo
 	int rem_oid;
 	ClassId rem_cid;
 
+	int rec_oid;    // What was responsible for the removal, i.e. player 2 collects an egg, p2's info goes here
+	ClassId rec_cid;
+	int team_id;
+
 	void serialize(char * data) {
 		memcpy(data, this, sizeof(RemInfo));
 	}

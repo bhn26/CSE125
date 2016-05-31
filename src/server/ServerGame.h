@@ -42,7 +42,10 @@ public:
     void sendSpawnPacket(PosInfo pi); // Spawn an object with position pi, pi holds obj type and obj id
 
 	// Send what you want to remove, with the object's ids
-	void sendRemovePacket(ClassId cid, int oid);
+	void sendRemovePacket(ClassId rem_cid, int rem_oid);
+	// this one is used when another object is responsible for removing an object, like if a chicken collects an egg, then the chicken
+	// is responsible. The chicken's information would be the rec_cid and rec_oid
+	void sendRemovePacket(ClassId rem_cid, int rem_oid, ClassId rec_cid, int rec_oid);
 
     // Returns the direction to be moved, if it can't move there, returns BAD_MOVE
     void receiveMovePacket(int offset);
@@ -54,7 +57,9 @@ public:
 
 	void receiveJumpPacket(int offset);
 
+	// not used
 	void sendScorePacket();
+
 	void sendGameOverPacket(int winner);
 
 	void sendTimeStampPacket();
