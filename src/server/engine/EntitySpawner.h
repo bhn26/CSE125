@@ -8,6 +8,7 @@
 class Player;
 class Flag;
 class Bullet;
+class Grenade;
 class Collectable;
 
 class EntitySpawner
@@ -32,6 +33,8 @@ public:
 	Flag*  spawnFlag(PosInfo pos, btDiscreteDynamicsWorld* physicsWorld);
 
 	Bullet* spawnBullet(int playerid, int teamid, int damage, btVector3* pos, btVector3* velocity, btMatrix3x3* rotation, btDiscreteDynamicsWorld* physicsWorld);
+
+	Grenade* spawnGrenade(int playerid, int teamid, int damage, btVector3* pos, btVector3* velocity, btMatrix3x3* rotation, btDiscreteDynamicsWorld* physicsWorld, Entity* owner);
 
 	Collectable* spawnCollectable(int objectid, PosInfo pos, btDiscreteDynamicsWorld* curworld);
 

@@ -7,6 +7,7 @@
 #include "Flag.h"
 #include "Peck.h"
 #include "SeedGun.h"
+#include "GrenadeLauncher.h"
 #include "RespawnHandler.h"
 #include <time.h>
 #include "../ServerGame.h"

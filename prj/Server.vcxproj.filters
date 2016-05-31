@@ -96,6 +96,12 @@
     <ClInclude Include="..\src\server\engine\FieldHandler.h">
       <Filter>Source Files\engine\FieldDetection</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\server\engine\GrenadeLauncher.h">
+      <Filter>Source Files\engine\Weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\server\engine\Grenade.h">
+      <Filter>Source Files\engine\Weapons</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\network\NetworkServices.cpp">
@@ -163,6 +169,12 @@
     </ClCompile>
     <ClCompile Include="..\src\server\engine\FieldHandler.cpp">
       <Filter>Source Files\engine\FieldDetection</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\server\engine\GrenadeLauncher.cpp">
+      <Filter>Source Files\engine\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\server\engine\Grenade.cpp">
+      <Filter>Source Files\engine\Weapons</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

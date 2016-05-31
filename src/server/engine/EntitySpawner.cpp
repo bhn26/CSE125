@@ -2,6 +2,7 @@
 #include "Entity.h"
 #include "Bullet.h"
 #include "Player.h"
+#include "Grenade.h"
 #include "Flag.h"
 #include "Collectable.h"
 #include "../ServerGame.h"
@@ -88,6 +89,32 @@ Bullet* EntitySpawner::spawnBullet(int playerid, int teamid, int damage, btVecto
 {
 	// Create Bullet and add to Entity Map
 	Bullet* fireProjectile = new Bullet(oid_bullet, playerid, teamid, damage, pos, velocity, rotation, physicsWorld);
+	AddEntity(ClassId::BULLET, oid_bullet, fireProjectile);
+	oid_bullet++;
+
+	// Send Bullet Spawn packet
+	btVector3 vec = fireProjectile->GetEntityPosition();
+	btQuaternion quat = fireProjectile->GetEntityRotation();
+	//printf("Created Bullet at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
+
+	PosInfo out;
+	out.cid = ClassId::BULLET;
+	out.oid = fireProjectile->GetObjectId();
+	out.x = vec.getX();
+	out.y = vec.getY();
+	out.z = vec.getZ();
+	out.rotw = quat.getW();
+	out.rotx = quat.getX();
+	out.roty = quat.getY();
+	out.rotz = quat.getZ();
+	ServerGame::instance()->sendSpawnPacket(out);
+	return fireProjectile;
+}
+
+Grenade* EntitySpawner::spawnGrenade(int playerid, int teamid, int damage, btVector3* pos, btVector3* velocity, btMatrix3x3* rotation, btDiscreteDynamicsWorld* physicsWorld, Entity* owner)
+{
+	// Create Bullet and add to Entity Map
+	Grenade* fireProjectile = new Grenade(oid_bullet, playerid, teamid, damage, pos, velocity, rotation, physicsWorld, owner);
 	AddEntity(ClassId::BULLET, oid_bullet, fireProjectile);
 	oid_bullet++;
 

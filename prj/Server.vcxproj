@@ -170,6 +170,8 @@
     <ClInclude Include="..\src\server\engine\FieldObject.h" />
     <ClInclude Include="..\src\server\engine\FireRateReset.h" />
     <ClInclude Include="..\src\server\engine\Flag.h" />
+    <ClInclude Include="..\src\server\engine\Grenade.h" />
+    <ClInclude Include="..\src\server\engine\GrenadeLauncher.h" />
     <ClInclude Include="..\src\server\engine\ObjectId.h" />
     <ClInclude Include="..\src\server\engine\Peck.h" />
     <ClInclude Include="..\src\server\engine\Player.h" />
@@ -194,6 +196,8 @@
     <ClCompile Include="..\src\server\engine\FieldObject.cpp" />
     <ClCompile Include="..\src\server\engine\FireRateReset.cpp" />
     <ClCompile Include="..\src\server\engine\Flag.cpp" />
+    <ClCompile Include="..\src\server\engine\Grenade.cpp" />
+    <ClCompile Include="..\src\server\engine\GrenadeLauncher.cpp" />
     <ClCompile Include="..\src\server\engine\Peck.cpp" />
     <ClCompile Include="..\src\server\engine\Player.cpp" />
     <ClCompile Include="..\src\server\engine\RespawnHandler.cpp" />

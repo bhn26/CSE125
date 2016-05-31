@@ -7,6 +7,7 @@
 #include "Player.h"
 #include "Flag.h"
 #include "Bullet.h"
+#include "Grenade.h"
 #include "WorldObstacle.h"
 #include "BulletCollision\CollisionDispatch\btGhostObject.h"
 
@@ -229,6 +230,19 @@ void World::UpdateWorld()
 		btPersistentManifold* contactManifold = curWorld->getDispatcher()->getManifoldByIndexInternal(i);
 		const btCollisionObject* obA = contactManifold->getBody0();
 		const btCollisionObject* obB = contactManifold->getBody1();
+
+		if (obA->getUserIndex() == GRENADE)
+		{
+			// Grab Grenade Object
+			Grenade * collideGrenade = (Grenade *)obA->getUserPointer();
+			if (collideGrenade->MarkStatus())
+			{
+				continue;
+			}
+			collideGrenade->HandleExplosion();
+			deleteList.push_back(collideGrenade);
+			collideGrenade->SetToMarked();
+		}
 
 		// Handle Bullet Collisions--------------------------
 		// If object A of collision is a Bullet
