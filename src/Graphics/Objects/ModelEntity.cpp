@@ -1,10 +1,10 @@
 #include "ModelEntity.h"
 #include "../Model.h"
+#include "../ShaderManager.h"
 
-ModelEntity::ModelEntity(std::string filename) : Entity()
+ModelEntity::ModelEntity(std::shared_ptr<Model> model) : Entity(), m_model(model)
 {
-    m_model = std::unique_ptr<Model>(new Model(filename.c_str()));
-    this->shader = std::make_shared<Shader>("src/Graphics/Shaders/model_loading.vert", "src/Graphics/Shaders/model_loading.frag");
+    this->shader = ShaderManager::Instance()->GetShader("Model");
 }
 
 void ModelEntity::Draw() const

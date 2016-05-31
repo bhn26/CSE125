@@ -10,12 +10,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-StaticObject::StaticObject(const GLchar* path) : Entity()
-{
-    model = std::shared_ptr<Model>(new Model(path));
-    shader = ShaderManager::Instance()->GetShader("Model");
-}
-
 StaticObject::StaticObject(std::shared_ptr<Model> model) : Entity(), model(model)
 {
     shader = ShaderManager::Instance()->GetShader("Model");

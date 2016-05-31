@@ -16,11 +16,13 @@ GLint TextureFromFile(const char* path, std::string directory);
 class Model
 {
     friend class ModelManager;
-public:
-    /*  Functions   */
+
     // Constructor, expects a filepath to a 3D model.
     // "assets/model
-    Model(const GLchar* path) { this->LoadModel(path); }
+    // In order to use a Model, please see ModelManager.h
+    Model(const std::string path) { this->LoadModel(path); }
+public:
+    /*  Functions   */
 
     // Draws the model, and thus all its meshes
     void Draw(const Shader* shader)

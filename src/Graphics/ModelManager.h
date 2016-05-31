@@ -6,6 +6,9 @@
 
 class Model;
 
+// ModelManager should be used to use any model.
+// ModelManager owns all models and allows others to use them as well.
+// ModelManager gets all models via config files in the form of Model_<name>
 class ModelManager
 {
     std::map<std::string, std::shared_ptr<Model>> _modelMap;

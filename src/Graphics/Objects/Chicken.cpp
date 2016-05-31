@@ -11,6 +11,7 @@
 #include "../PointLight.h"
 #include "../Camera.h"
 #include "../Model.h"
+#include "../ModelManager.h"
 
 #include <stdio.h>
 #include <string>
@@ -23,12 +24,11 @@ Chicken::Chicken() : Chicken (0.0f, 0.0f, 0.0f)
 
 Chicken::Chicken(float x, float y, float z) : Entity(glm::vec3(x, y, z))
 {
-	model = new Model("assets/chickens/objects/chicken.obj");
+    model = ModelManager::GetModel("Chicken");
 }
 
 Chicken::~Chicken()
 {
-    delete(model);
 }
 
 void Chicken::Draw() const

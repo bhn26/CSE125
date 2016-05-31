@@ -15,7 +15,6 @@ class Model;
 class StaticObject : public Entity
 {
 public:
-    StaticObject(const GLchar* path);
     StaticObject(std::shared_ptr<Model> model);
     ~StaticObject();
 
