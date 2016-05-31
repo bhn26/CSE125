@@ -25,13 +25,16 @@ public:
     ChickenAnim();
     ~ChickenAnim() {}
 
+    // Inherited via Entity
     void Draw() const override;
     void Update(float deltaTime) override;
+    virtual void SetShaderUniforms() const override;
     void Scale(float s);
 
     void Walk();
     void Attack();
     void Jump();
     void Dance();
+
 };
 

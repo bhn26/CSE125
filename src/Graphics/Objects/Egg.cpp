@@ -31,6 +31,13 @@ void Egg::SetColor(glm::vec3 color)
 	this->color = color;
 }
 
+void Egg::SetShaderUniforms() const
+{
+    glUniformMatrix4fv(shader->GetUniform("view"), 1, false, glm::value_ptr(Scene::Instance()->GetViewMatrix()));
+    glUniformMatrix4fv(shader->GetUniform("model"), 1, false, glm::value_ptr(this->toWorld));
+    glUniformMatrix4fv(shader->GetUniform("projection"), 1, false, glm::value_ptr(Scene::Instance()->GetPerspectiveMatrix()));
+}
+
 Egg::~Egg()
 {
     delete model;
@@ -38,18 +45,11 @@ Egg::~Egg()
 
 void Egg::Draw() const
 {
-	shader->Use();
+    // Use the appropriate shader (depth or model)
+    UseShader();
 
-	// Draw the loaded model
-	GLint viewLoc = shader->GetUniform("view");
-	GLint modelLocation = shader->GetUniform("model");
-	GLint projectionLocation = shader->GetUniform("projection");
-
-	glUniformMatrix4fv(viewLoc, 1, false, glm::value_ptr(Scene::Instance()->GetViewMatrix()));
-	glUniformMatrix4fv(modelLocation, 1, false, glm::value_ptr(this->toWorld));
-	glUniformMatrix4fv(projectionLocation, 1, false, glm::value_ptr(Scene::Instance()->GetPerspectiveMatrix()));
-
-	model->Draw(shader.get());
+    // Draw the loaded model
+    model->Draw(shader.get());
 }
 
 void Egg::Update(float deltaTime)

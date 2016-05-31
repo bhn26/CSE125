@@ -68,6 +68,9 @@ public:
     void SetScale(glm::vec3 scale);
     void SetScale(float scale) { SetScale(glm::vec3(scale)); }
 
+    void UseShader() const;
+    virtual void SetShaderUniforms() const = 0;
+
     ////////////////////////////////////////////////////////////////////////////////
     // Getters
     glm::quat Orientation() const;

@@ -3,11 +3,11 @@
 #include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale, glm::perspective
 #include <glm/gtc/type_ptr.hpp>
 
-#include "../../client/Window.h"
+#include "client/Window.h"
 #include "../Scene.h"
 #include "../Lights.h"
 #include "../Camera.h"
-#include "../../client/Player.h"
+#include "client/Player.h"
 #include "../Model.h"
 
 InstanceObject::InstanceObject(const GLchar* path, GLuint num) : Entity()
@@ -71,15 +71,8 @@ InstanceObject::~InstanceObject()
 
 void InstanceObject::Draw() const
 {
-	// Draw the loaded model
-	shader->Use();
-	glUniformMatrix4fv(shader->GetUniform("view"), 1, false, glm::value_ptr(Scene::Instance()->GetViewMatrix()));
-    glUniformMatrix4fv(shader->GetUniform("model"), 1, false, glm::value_ptr(this->toWorld));
-	glUniformMatrix4fv(shader->GetUniform("projection"), 1, false, glm::value_ptr(Scene::Instance()->GetPerspectiveMatrix()));
-
-    LoadDirectionalLight(Scene::Instance()->GetDirectionalLight());
-
-	glBindTexture(GL_TEXTURE_2D, instance->Textures()[0].id);
+    // Draw the loaded model
+    glBindTexture(GL_TEXTURE_2D, instance->Textures()[0].id);
 	for (GLuint i = 0; i < instance->Meshes().size(); i++) {
 		glBindVertexArray(instance->Meshes()[i].VAO());
 		glDrawElementsInstanced(GL_TRIANGLES, instance->Meshes()[i].vertices.size(), GL_UNSIGNED_INT, 0, amount);
@@ -87,5 +80,14 @@ void InstanceObject::Draw() const
 	}
 
 	//model->Draw(shader.get());
+}
+
+void InstanceObject::SetShaderUniforms() const
+{
+    glUniformMatrix4fv(shader->GetUniform("view"), 1, false, glm::value_ptr(Scene::Instance()->GetViewMatrix()));
+    glUniformMatrix4fv(shader->GetUniform("model"), 1, false, glm::value_ptr(this->toWorld));
+    glUniformMatrix4fv(shader->GetUniform("projection"), 1, false, glm::value_ptr(Scene::Instance()->GetPerspectiveMatrix()));
+
+    LoadDirectionalLight(Scene::Instance()->GetDirectionalLight());
 }
 

@@ -18,8 +18,9 @@ public:
     Ground();
     ~Ground();
 
-    virtual void Draw() const override;
 
     // Inherited via Entity
+    virtual void Draw() const override;
     virtual void Update(float deltaTime) override;
+    virtual void SetShaderUniforms() const override;
 };

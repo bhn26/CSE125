@@ -26,9 +26,13 @@ public:
 
     float angle; // For spinning if we want
 
+    // Inherited via Entity
     void Draw() const override;
     void Update(float deltaTime) override;
+    virtual void SetShaderUniforms() const override;
+
     void Spin(float deg);
 
 private:
+
 };

@@ -8,11 +8,8 @@
 #include <map>
 
 #include "Objects/Entity.h"
-#include "Objects/CubeMap.h"
 #include "Objects/Ground.h"
-#include "Objects/StaticObject.h"
 #include "Objects/Grass.h"
-#include "Objects/InstanceObject.h"
 #include "ShaderManager.h"
 #include "client/SpriteRenderer.h"
 #include "network/GameData.h"
@@ -20,10 +17,13 @@
 
 class Camera;
 class Player;
+class Shader;
+class CubeMap;
+class InstanceObject;
+class StaticObject;
 
 struct PointLight;
 struct DirectionalLight;
-class ChickenAnim;
 
 class Scene
 {
@@ -33,8 +33,14 @@ class Scene
         Lights = 1,
     };
 
+    const GLuint SHADOW_DEPTH_WIDTH = 1024, SHADOW_DEPTH_HEIGHT = 1024;
     float lastTime;
     GLuint uboMatricesBuffer;
+    GLuint depthMapFBO;
+    GLuint depthMap;
+    bool renderingDepthMap = false;
+    std::shared_ptr<Shader> depthShader;
+    glm::mat4 lightSpaceMatrix;
 
     std::unique_ptr<Camera> camera;
     std::unique_ptr<PointLight> pLight;
@@ -57,9 +63,13 @@ class Scene
     void InitializeUBOs();
     void SetViewUBO();
     void SetProjectionUBO();
+    void ConfigureShaderAndMatrices();
+    void RenderDepthMap();
+    void RenderScene();
 
 public:
-	static SpriteRenderer * sprite_renderer;
+    void InitializeFBO();
+    static SpriteRenderer * sprite_renderer;
 
     static Scene* Instance()
     {
@@ -88,6 +98,9 @@ public:
 	StaticObject* GetStaticObject(int i) { return static_objects[i].get(); }
     DirectionalLight* GetDirectionalLight() { return dLight.get(); }
 	int GetSize() { return static_objects.size(); }
+
+    bool IsRenderingDepth() const { return renderingDepthMap; }
+    std::shared_ptr<Shader>& GetDepthShader() { return depthShader; }
 
 	// helpers 
 	static glm::vec2 Get2D(glm::vec3 coords, glm::mat4 view, glm::mat4 projection/*perspective matrix */, int width, int height);

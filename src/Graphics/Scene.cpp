@@ -4,6 +4,8 @@
 #include "Objects/Cube.h"
 #include "Objects/Egg.h"
 #include "Objects/Chicken.h"
+#include "Objects/InstanceObject.h"
+#include "Objects/StaticObject.h"
 #include "Camera.h"
 #include "Lights.h"
 
@@ -36,6 +38,9 @@ void Scene::Setup()
     entities.clear();
 
     InitializeUBOs();
+    //InitializeFBO();
+
+    //depthShader = ShaderManager::GetShader("Depth_Map");
 
     //camera = std::unique_ptr<Camera>(new Camera(glm::vec3(0.0f, 9.0f, -15.0f), glm::vec3(0.0f, 1.0f, 0.0f), 90.0f, -25.0f));
     camera = std::unique_ptr<Camera>(new Camera(glm::vec3(0.0f, 9.0f, -15.0f)));
@@ -144,6 +149,32 @@ void Scene::InitializeUBOs()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void Scene::InitializeFBO()
+{
+    if (this->depthMapFBO)
+        return;
+
+    glGenTextures(1, &this->depthMapFBO);
+
+    // Generate the Depth Map texture
+    glGenTextures(1, &this->depthMap);
+    glBindTexture(GL_TEXTURE_2D, this->depthMap);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_DEPTH_WIDTH, SHADOW_DEPTH_HEIGHT,
+        0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+    // Bind depth map texture to frame buffer
+    glBindFramebuffer(GL_FRAMEBUFFER, this->depthMapFBO);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, this->depthMap, 0);
+    glDrawBuffer(GL_NONE);
+    glReadBuffer(GL_NONE);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void Scene::SetViewUBO()
 {
     if (GetPlayer())
@@ -155,12 +186,58 @@ void Scene::SetViewUBO()
     }
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void Scene::SetProjectionUBO()
 {
     glm::mat4 projection = glm::perspective(45.0f, (float)Window::width/(float)Window::height, 0.1f, 1000.0f);
     glBindBuffer(GL_UNIFORM_BUFFER, uboMatricesBuffer);
     glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), glm::value_ptr(projection));
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Scene::ConfigureShaderAndMatrices()
+{
+    depthShader->Use();
+    glm::vec3 pos = glm::vec3(0.0f, 100.0f, 0.0f);
+    lightSpaceMatrix = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.1f, 1000.0f) *
+        glm::lookAt(pos, pos + dLight->_direction, glm::vec3(0.0f, 1.0f, 0.0));
+
+    glUniformMatrix4fv(depthShader->GetUniform("lightSpaceMatrix"), 1, GL_FALSE, glm::value_ptr(lightSpaceMatrix));
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Scene::RenderDepthMap()
+{
+    renderingDepthMap = true;
+    glViewport(0, 0, SHADOW_DEPTH_WIDTH, SHADOW_DEPTH_HEIGHT);
+    glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        ConfigureShaderAndMatrices();
+        RenderScene();
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    renderingDepthMap = false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Scene::RenderScene()
+{
+    // Clear the color and depth buffers
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glViewport(0, 0, Window::width, Window::height);
+    SetViewUBO();
+    cubeMap->Draw();
+    grass->Draw();
+
+    for (auto& const obj : static_objects)
+        obj->Draw();
+
+    //ground->Draw();
+    for (auto& const entity : entities)
+    {
+        entity.second->Draw();
+        //printf("entity ids are %d, %d\n", entity.second->GetClassId(), entity.second->GetObjId());
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -179,25 +256,17 @@ void Scene::Update()
 ////////////////////////////////////////////////////////////////////////////////
 void Scene::Draw()
 {
-    SetViewUBO();
-	cubeMap->Draw();
-	grass->Draw();
-
-	for (auto& const obj : static_objects)
-		obj->Draw();
-
-	//ground->Draw();
-	for (auto& const entity : entities)
-	{
-		entity.second->Draw();
-		//printf("entity ids are %d, %d\n", entity.second->GetClassId(), entity.second->GetObjId());
-	}
+    //RenderDepthMap();
+    RenderScene();
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
 glm::mat4 Scene::GetViewMatrix()
 {
+    if (renderingDepthMap)
+    {
+    }
     if (player) return player->GetViewMatrix();
     return camera->GetViewMatrix();
 }

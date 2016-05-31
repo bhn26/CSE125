@@ -19,6 +19,7 @@ public:
 	void OnKeyUp(int action, int key);
 	void Update(DWORD dwCurrentTime);
 	void Draw();
+    virtual void EnterState() override;
 
 	void Reset();
 

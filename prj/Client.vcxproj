@@ -175,6 +175,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="..\eggs.cfg" />
+    <None Include="..\src\Graphics\Shaders\depthMap.frag" />
+    <None Include="..\src\Graphics\Shaders\depthMap.vert" />
     <None Include="..\src\Graphics\Shaders\skinning.frag" />
     <None Include="..\src\Graphics\Shaders\skinning.vert" />
     <None Include="..\src\Graphics\Shaders\cubemap.frag" />

@@ -128,18 +128,9 @@ void CubeMap::Draw() const
 {
     // Draw skybox as last
     glDepthFunc(GL_LEQUAL);  // Change depth function so depth test passes when values are equal to depth buffer's content
-    shader->Use();
-    
-    GLint viewLoc = shader->GetUniform("view");
-    GLint modelLocation = shader->GetUniform("model");
-    GLint projectionLocation = shader->GetUniform("projection");
-    
-    
-    glUniformMatrix4fv(viewLoc, 1, false, glm::value_ptr(glm::mat4(glm::mat3(Scene::Instance()->GetViewMatrix()))));
-    //glUniformMatrix4fv(viewLoc, 1, false, glm::value_ptr(Scene::Instance()->GetViewMatrix()));
-    glUniformMatrix4fv(modelLocation, 1, false, glm::value_ptr(this->toWorld));
-    glUniformMatrix4fv(projectionLocation, 1, false, glm::value_ptr(Scene::Instance()->GetPerspectiveMatrix()));
-    
+    // Use the appropriate shader (depth or model)
+    UseShader();
+
     // skybox cube
     glBindVertexArray(VAO);
     glActiveTexture(GL_TEXTURE0);
@@ -148,4 +139,12 @@ void CubeMap::Draw() const
     glDrawArrays(GL_TRIANGLES, 0, 36);
     glBindVertexArray(0);
     glDepthFunc(GL_LESS); // Set depth function back to default
+}
+
+void CubeMap::SetShaderUniforms() const
+{
+    glUniformMatrix4fv(shader->GetUniform("view"), 1, false, glm::value_ptr(glm::mat4(glm::mat3(Scene::Instance()->GetViewMatrix()))));
+    //glUniformMatrix4fv(shader->GetUniform("view"), 1, false, glm::value_ptr(Scene::Instance()->GetViewMatrix()));
+    glUniformMatrix4fv(shader->GetUniform("model"), 1, false, glm::value_ptr(this->toWorld));
+    glUniformMatrix4fv(shader->GetUniform("projection"), 1, false, glm::value_ptr(Scene::Instance()->GetPerspectiveMatrix()));
 }

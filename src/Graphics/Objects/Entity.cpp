@@ -9,6 +9,8 @@
 #include "Entity.h"
 #include "Graphics/Shader.h"
 #include "Graphics/Lights.h"
+#include "Graphics/Scene.h"
+
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
@@ -74,6 +76,21 @@ void Entity::SetScale(glm::vec3 scale)
             toWorld[col][row] /= this->scale[col];
     this->scale = scale;
     ApplyScale();
+}
+
+void Entity::UseShader() const
+{
+    // For rendering Depth, only need model
+    if (Scene::Instance()->IsRenderingDepth())
+    {
+        std::shared_ptr<Shader>& shader = Scene::Instance()->GetDepthShader();
+        glUniformMatrix4fv(shader->GetUniform("model"), 1, GL_FALSE, glm::value_ptr(toWorld));
+    }
+    else
+    {
+        shader->Use();
+        this->SetShaderUniforms();
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

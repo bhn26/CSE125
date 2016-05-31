@@ -77,14 +77,10 @@ void Grass::Draw() const
 	//deltaTime = currentFrame - lastFrame;
 	//lastFrame = currentFrame;
 
-	// Draw the loaded model
-	shader->Use();
-	glUniformMatrix4fv(shader->GetUniform("view"), 1, false, glm::value_ptr(Scene::Instance()->GetViewMatrix()));
-	glUniformMatrix4fv(shader->GetUniform("model"), 1, false, glm::value_ptr(this->toWorld));
-	glUniformMatrix4fv(shader->GetUniform("projection"), 1, false, glm::value_ptr(Scene::Instance()->GetPerspectiveMatrix()));
+    // Use the appropriate shader (depth or model)
+    UseShader();
 
-    LoadDirectionalLight(Scene::Instance()->GetDirectionalLight());
-
+    // Draw the loaded model
 	glBindTexture(GL_TEXTURE_2D, grass->Textures()[0].id);
 	for (GLuint i = 0; i < grass->Meshes().size(); i++) {
 		glBindVertexArray(grass->Meshes()[i].VAO());
@@ -97,4 +93,12 @@ void Grass::Draw() const
 
 void Grass::Update(float deltaTime)
 {
+}
+
+void Grass::SetShaderUniforms() const
+{
+    glUniformMatrix4fv(shader->GetUniform("view"), 1, false, glm::value_ptr(Scene::Instance()->GetViewMatrix()));
+    glUniformMatrix4fv(shader->GetUniform("model"), 1, false, glm::value_ptr(this->toWorld));
+    glUniformMatrix4fv(shader->GetUniform("projection"), 1, false, glm::value_ptr(Scene::Instance()->GetPerspectiveMatrix()));
+    LoadDirectionalLight(Scene::Instance()->GetDirectionalLight());
 }

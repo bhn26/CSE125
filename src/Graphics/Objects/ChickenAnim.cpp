@@ -59,12 +59,9 @@ ChickenAnim::ChickenAnim() : m_toWorld(glm::scale(glm::mat4(1.0f), glm::vec3(0.0
 
 void ChickenAnim::Draw() const
 {
-    Animation::SkinningTechnique* skinTechnique = m_model.GetMesh().GetSkinningTechnique();
-    skinTechnique->Enable(); // use shader
-
-    skinTechnique->SetEyeWorldPos(Scene::Instance()->GetCameraPosition());
-    skinTechnique->SetWVP(Scene::Instance()->GetPerspectiveMatrix() * Scene::Instance()->GetViewMatrix() * m_toWorld);
-    skinTechnique->SetWorldMatrix(m_toWorld);
+    // Use the appropriate shader (shadow or model)
+    UseShader();
+    // Draw the loaded model
     m_model.Draw();
 }
 
@@ -96,4 +93,14 @@ void ChickenAnim::Jump()
 void ChickenAnim::Dance()
 {
     m_model.PlayAnimation(m_dance);
+}
+
+void ChickenAnim::SetShaderUniforms() const
+{
+    Animation::SkinningTechnique* skinTechnique = m_model.GetMesh().GetSkinningTechnique();
+    skinTechnique->Enable(); // use shader
+
+    skinTechnique->SetEyeWorldPos(Scene::Instance()->GetCameraPosition());
+    skinTechnique->SetWVP(Scene::Instance()->GetPerspectiveMatrix() * Scene::Instance()->GetViewMatrix() * m_toWorld);
+    skinTechnique->SetWorldMatrix(m_toWorld);
 }
