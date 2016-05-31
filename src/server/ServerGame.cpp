@@ -633,7 +633,7 @@ void ServerGame::receiveShootPacket(int offset) {
 
 void ServerGame::sendTimeStampPacket()
 {
-	printf("SENDING TIMESTAMP PACKET\n");
+	//printf("SENDING TIMESTAMP PACKET\n");
 }
 
 void ServerGame::sendShootPacket(int id) {
