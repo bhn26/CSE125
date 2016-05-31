@@ -36,7 +36,7 @@ Player::Player(int objectid, int teamid, PosInfo pos, btDiscreteDynamicsWorld* p
 	this->flags = new std::vector<Flag*>;
 	this->position = pos;
 	this->playerWeapon = nullptr;
-	this->peckWeapon = new Peck(curWorld);
+	//this->peckWeapon = new Peck(curWorld);
 	this->playerWeapon = new SeedGun(curWorld);
 	this->alive = true;
 	this->death_time = 0;
