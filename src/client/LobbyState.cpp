@@ -34,7 +34,7 @@ void LobbyState::OnKeyDown(WPARAM wKey)
 {
 }
 
-void LobbyState::OnClick(int button, double x, double y) {
+void LobbyState::OnClick(int button, int action, double x, double y) {
 	GLubyte res[4];
 	GLint viewport[4];
 
@@ -43,19 +43,20 @@ void LobbyState::OnClick(int button, double x, double y) {
 
 	glGetIntegerv(GL_VIEWPORT, viewport);
 	glReadPixels(x, viewport[3] - y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, &res);
-
-	switch (res[0]) {
-	case 0: printf("None clicked\n"); break;
-	case 1: printf("Start Button clicked\n"); 
-		ClientGame::instance()->sendStartPacket();
-		break;
-	case 2: printf("Join T0 clicked\n");  // team 1
-		ClientGame::instance()->sendJoinPacket(0);
-		break;
-	case 3: printf("Join T1 clicked\n"); // team 2
-		ClientGame::instance()->sendJoinPacket(1);
-		break;
-	default: printf("%d clicked%s\n", res[0]);
+	if (action == GLFW_PRESS) {
+		switch (res[0]) {
+		case 0: printf("None clicked\n"); break;
+		case 1: printf("Start Button clicked\n");
+			ClientGame::instance()->sendStartPacket();
+			break;
+		case 2: printf("Join T0 clicked\n");  // team 1
+			ClientGame::instance()->sendJoinPacket(0);
+			break;
+		case 3: printf("Join T1 clicked\n"); // team 2
+			ClientGame::instance()->sendJoinPacket(1);
+			break;
+		default: printf("%d clicked%s\n", res[0]);
+		}
 	}
 }
 

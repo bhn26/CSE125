@@ -43,19 +43,49 @@ void ServerGame::update()
 		}
 	}	
 
+	auto curr_time = chrono::high_resolution_clock::now();
+
+	chrono::duration<double, milli> fp_stamp = curr_time - start_time;
+
+	int diff = fp_stamp.count();
+
+	if (eggs_spawned && diff >= 300000)
+	{
+		if(scores[0] > scores[1])
+		{
+			sendGameOverPacket(0);
+		}
+		else
+		{
+			sendGameOverPacket(1);
+		}
+	}
+	else
+	{
+		if ((diff % 10000) <= 16)
+		{
+			sendTimeStampPacket();
+		}
+	}
+
 	receiveFromClients();
 
 	// Check that all clients are ready
 
 	if (game_started && ready_clients >= client_id)
 	{
+		if (game_over)
+			return;
+
 		if (spawned_clients == ready_clients && !eggs_spawned) {
-			for (int i = 0; i < 2*ready_clients; i++)
+			total_eggs = 2*ready_clients + 1;
+			for (int i = 0; i < total_eggs; i++)
 			{
 				engine->SpawnRandomFlag();
 			}
 			eggs_spawned = true;
 			Sleep(2000); // should wait for clients to respond
+			start_time = chrono::high_resolution_clock::now();
 		}
 		if(!engine->hasInitialSpawned())
 			engine->SendPreSpawn(ready_clients);
@@ -157,6 +187,10 @@ void ServerGame::receiveFromClients()
 
 				case JUMP_EVENT:
 					receiveJumpPacket(i);
+					break;
+
+				case DANCE_EVENT:
+					receiveDancePacket(i);
 					break;
 
                 case V_ROTATION_EVENT:
@@ -384,34 +418,69 @@ void ServerGame::receiveMovePacket(int offset)
 	Entity* ent = (Entity*)(EntitySpawner::instance()->GetEntity(ClassId::PLAYER, hdr->sender_id));
 
 	btVector3* vec;
-	switch (pi->direction) {
-	case MOVE_FORWARD:
-		vec = new btVector3(0, 0, 25);
-		ent->Move(vec);
-		delete vec;
-		break;
-	case MOVE_BACKWARD:	
-		vec = new btVector3(0, 0, -25);
-		ent->Move(vec);
-		delete vec;
-		break;
-	case MOVE_LEFT:
-		vec = new btVector3(25, 0, 0);
-		ent->Move(vec);
-		delete vec;
-		break;
-	case MOVE_RIGHT:
-		vec = new btVector3(-25, 0, 0);
-		ent->Move(vec);
-		delete vec;
-		break;
+	Player* player = (Player*)(EntitySpawner::instance()->GetEntity(ClassId::PLAYER, hdr->sender_id));
+	if (player->GetJump())
+	{
+		switch (pi->direction) {
+		case MOVE_FORWARD:
+			vec = new btVector3(0, 0, 25);
+			ent->Move(vec);
+			delete vec;
+			break;
+		case MOVE_BACKWARD:
+			vec = new btVector3(0, 0, -25);
+			ent->Move(vec);
+			delete vec;
+			break;
+		case MOVE_LEFT:
+			vec = new btVector3(25, 0, 0);
+			ent->Move(vec);
+			delete vec;
+			break;
+		case MOVE_RIGHT:
+			vec = new btVector3(-25, 0, 0);
+			ent->Move(vec);
+			delete vec;
+			break;
+		}
 	}
-
+	else
+	{
+		switch (pi->direction) {
+		case MOVE_FORWARD:
+			vec = new btVector3(0, -6, 25);
+			ent->Move(vec);
+			delete vec;
+			break;
+		case MOVE_BACKWARD:
+			vec = new btVector3(0, -6, -25);
+			ent->Move(vec);
+			delete vec;
+			break;
+		case MOVE_LEFT:
+			vec = new btVector3(25, -6, 0);
+			ent->Move(vec);
+			delete vec;
+			break;
+		case MOVE_RIGHT:
+			vec = new btVector3(-25, -6, 0);
+			ent->Move(vec);
+			delete vec;
+			break;
+		}
+	}
 }
 
 void ServerGame::sendMovePacket(ClassId class_id, int obj_id)
 {
 		Entity* ent = (Entity*)(EntitySpawner::instance()->GetEntity(class_id, obj_id));
+
+		// If this is not a player and the player is dead, don't update
+		if (class_id == ClassId::PLAYER)
+		{
+			if (!((Player*)ent)->IsAlive())
+				return;
+		}
 
         Packet packet;
 		packet.hdr.sender_id = SERVER_ID;
@@ -431,6 +500,7 @@ void ServerGame::sendMovePacket(ClassId class_id, int obj_id)
 
 		if (class_id == PLAYER) {
 			p.num_eggs = ((Player*)ent)->GetScore();
+			p.jump = ((Player*)ent)->GetJump();
 		}
 
         p.serialize(packet.dat.buf);
@@ -462,6 +532,14 @@ void ServerGame::sendRotationPacket(int class_id, int obj_id) {
     char packet_data[packet_size];
 
 	Entity* ent = (Entity*)(EntitySpawner::instance()->GetEntity(class_id, obj_id));
+
+	// If this is not a player and the player is dead, don't update
+	if (class_id == ClassId::PLAYER)
+	{
+		if (!((Player*)ent)->IsAlive())
+			return;
+	}
+
     Packet packet;
 	packet.hdr.sender_id = SERVER_ID;
     packet.hdr.packet_type = V_ROTATION_EVENT;
@@ -524,6 +602,7 @@ void ServerGame::sendScorePacket() {
 void ServerGame::sendGameOverPacket(int winner) {
 	Packet packet;
 	packet.hdr.packet_type = GAME_OVER;
+	game_over = true;
 
 	const unsigned int packet_size = sizeof(Packet);
 
@@ -550,6 +629,86 @@ void ServerGame::receiveShootPacket(int offset) {
 	struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset]);
 	Player* player = (Player*)(EntitySpawner::instance()->GetEntity(ClassId::PLAYER, hdr->sender_id));
 	player->UseWeapon();
+}
 
-	//printf("HELLS YEAH\n");
+void ServerGame::sendTimeStampPacket()
+{
+	printf("SENDING TIMESTAMP PACKET\n");
+}
+
+void ServerGame::sendShootPacket(int id) {
+	const unsigned int packet_size = sizeof(Packet);
+	char packet_data[packet_size];
+
+	Packet packet;
+	packet.hdr.sender_id = SERVER_ID;
+	packet.hdr.packet_type = SHOOT_EVENT;
+
+	packet.dat.game_data_id = EMOTE_OBJ;
+
+	EmoteInfo e;
+	e.id = id;
+	e.serialize(packet.dat.buf);
+
+	packet.serialize(packet_data);
+	network->sendToAll(packet_data, packet_size);
+}
+
+void ServerGame::receiveDancePacket(int offset) {
+	struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset]);
+	sendDancePacket(hdr->sender_id);
+}
+
+void ServerGame::sendDancePacket(int id) {
+	const unsigned int packet_size = sizeof(Packet);
+	char packet_data[packet_size];
+
+	Packet packet;
+	packet.hdr.sender_id = SERVER_ID;
+	packet.hdr.packet_type = DANCE_EVENT;
+
+	packet.dat.game_data_id = EMOTE_OBJ;
+
+	EmoteInfo e;
+	e.id = id;
+	e.serialize(packet.dat.buf);
+
+	packet.serialize(packet_data);
+	network->sendToAll(packet_data, packet_size);
+}
+
+void ServerGame::sendDeathPacket(int id) {
+	const unsigned int packet_size = sizeof(Packet);
+	char packet_data[packet_size];
+
+	Packet packet;
+	packet.hdr.sender_id = SERVER_ID;
+	packet.hdr.packet_type = DEATH_EVENT;
+
+	packet.dat.game_data_id = EMOTE_OBJ;
+
+	EmoteInfo e;
+	e.id = id;
+	e.serialize(packet.dat.buf);
+
+	packet.serialize(packet_data);
+	network->sendToAll(packet_data, packet_size);
+}
+
+void ServerGame::sendRespawnPacket(int id) {
+	const unsigned int packet_size = sizeof(Packet);
+	char packet_data[packet_size];
+
+	Packet packet;
+	packet.hdr.sender_id = SERVER_ID;
+	packet.hdr.packet_type = RESPAWN_EVENT;
+
+	packet.dat.game_data_id = EMOTE_OBJ;
+
+	EmoteInfo e;
+	e.id = id;
+	e.serialize(packet.dat.buf);
+
+	packet.serialize(packet_data);
+	network->sendToAll(packet_data, packet_size);
 }

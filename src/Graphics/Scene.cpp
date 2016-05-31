@@ -1,5 +1,6 @@
 #include "Scene.h"
 
+#include "Graphics/ModelManager.h"
 #include "Objects/CubeMap.h"
 #include "Objects/Cube.h"
 #include "Objects/Egg.h"
@@ -9,10 +10,11 @@
 
 #include "Objects/ModelEntity.h"
 #include "Objects/Entity.h"
-#include "../client/Player.h"
-#include "../client/ClientGame.h"
+#include "client/Player.h"
+#include "client/ClientGame.h"
 
-#include "../server/engine/ObjectId.h"
+#include "server/engine/ObjectId.h"
+
 
 #include <algorithm>
 #include <vector>
@@ -29,32 +31,33 @@ void Scene::Setup()
 {
     entities.clear();
 
-    //camera = std::unique_ptr<Camera>(new Camera(glm::vec3(0.0f, 9.0f, -15.0f), glm::vec3(0.0f, 1.0f, 0.0f), 90.0f, -25.0f));
     camera = std::unique_ptr<Camera>(new Camera(glm::vec3(0.0f, 9.0f, -15.0f)));
     pLight = std::unique_ptr<PointLight>(new PointLight(glm::vec3(0.0f, 20.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)));
 
-	std::unique_ptr<StaticObject> map = std::unique_ptr<StaticObject>(new StaticObject("assets/map/new_objects/map.obj"));
+	//std::unique_ptr<StaticObject> map = std::unique_ptr<StaticObject>(new StaticObject("assets/map/new_objects/map.obj"));
 
 	// Barn
-	std::unique_ptr<StaticObject> barn = std::unique_ptr<StaticObject>(new StaticObject("assets/map/new_objects/structures/barn.obj"));
+	// Tractors
+    std::unique_ptr<StaticObject> barn = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Barn")));
+    //barn->Scale(17.0f);
 	//barn->Translate(glm::vec3(0.0f, 0.0f, 20.0f));
 
 	// Tractors
-	std::unique_ptr<StaticObject> red_tractor = std::unique_ptr<StaticObject>(new StaticObject("assets/map/new_objects/tractors/red_tractor.obj"));
+    std::unique_ptr<StaticObject> red_tractor = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Tractor_Red")));
 	red_tractor->Rotate(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 	red_tractor->Translate(glm::vec3(17.0f, 0.0f, -13.0f));
 
-	std::unique_ptr<StaticObject> green_tractor = std::unique_ptr<StaticObject>(new StaticObject("assets/map/new_objects/tractors/green_tractor.obj"));
+    std::unique_ptr<StaticObject> green_tractor = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Tractor_Green")));
 	green_tractor->Rotate(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 	green_tractor->Translate(glm::vec3(34.0f, 0.0f, 13.0f));
 
-	std::unique_ptr<StaticObject> orange_tractor = std::unique_ptr<StaticObject>(new StaticObject("assets/map/new_objects/tractors/orange_tractor.obj"));
+    std::unique_ptr<StaticObject> orange_tractor = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Tractor_Orange")));
 	orange_tractor->Rotate(90.0f, glm::vec3(0.0f, -1.0f, 0.0f));
 	orange_tractor->Translate(glm::vec3(-17.0f, 0.0f, -13.0f));
 
 	// Silo
-	std::unique_ptr<StaticObject> silo = std::unique_ptr<StaticObject>(new StaticObject("assets/map/new_objects/structures/silo.obj"));
-	silo->Translate(glm::vec3(-28.0f, 0.0f, -4.0f));
+    std::unique_ptr<StaticObject> silo = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Silo")));
+	//silo->Translate(glm::vec3(-28.0f, 0.0f, -4.0f));
 
 	// Construction
 	std::unique_ptr<StaticObject> construction_site = std::unique_ptr<StaticObject>(new StaticObject("assets/map/new_objects/structures/construction.obj"));
@@ -63,30 +66,32 @@ void Scene::Setup()
 	std::unique_ptr<StaticObject> maze = std::unique_ptr<StaticObject>(new StaticObject("assets/map/new_objects/nature/maze.obj"));
 
 	// Bench
-	std::unique_ptr<StaticObject> bench = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/bench3.obj"));
-	bench->Scale(4.0f);
+    std::unique_ptr<StaticObject> bench = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Bench")));
+    bench->Scale(4.0f);
 	bench->Translate(glm::vec3(40.0f, 3.2f, 0.0f));
 	bench->Rotate(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 
 	// Pumpkin
-	//std::unique_ptr<StaticObject> pumpkinObj = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/nature/pumpkin.obj"));
+    // TODO NO IDEA WHY PUMPKIN HACK WORKS HERE
+    ModelManager::Instance()->AddModelToLoad("Pumpkin");
+    ModelManager::Instance()->LoadModels();
+    std::unique_ptr<StaticObject> pumpkinObj = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Pumpkin")));
 
 	// Rocks
-	std::unique_ptr<StaticObject> rocks = std::unique_ptr<StaticObject>(new StaticObject("assets/map/new_objects/nature/rocks.obj"));
+    std::unique_ptr<StaticObject> rocks = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Rocks")));
 	rocks->Translate(glm::vec3(28.0f, 0.2f, -20.0f));
 
 	// Stump
-	std::unique_ptr<StaticObject> stump = std::unique_ptr<StaticObject>(new StaticObject("assets/map/new_objects/nature/stump.obj"));
+    std::unique_ptr<StaticObject> stump = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Stump")));
 	stump->Translate(glm::vec3(-28.0f, 0.2f, -20.0f));
 
 	// Ground
-	std::unique_ptr<StaticObject> ground = std::unique_ptr<StaticObject>(new StaticObject("assets/map/new_objects/nature/ground.obj"));
-	//ground->Scale(15.0f);
+    std::unique_ptr<StaticObject> ground = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Ground")));
 	//ground->Translate(glm::vec3(0.0f, 100.4f, 0.0f));
 
 	// Seed
-	std::unique_ptr<StaticObject> seed = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/pumpkinseed.obj"));
-	seed->Scale(0.5f);
+    std::unique_ptr<StaticObject> seed = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Pumpkin_Seed")));
+    seed->Scale(0.5f);
 	seed->Translate(glm::vec3(0.0f, 1.0f, 0.0f));
 
 	//// Boat
@@ -224,7 +229,8 @@ void Scene::AddEntity(PosInfo p)
 		break;
     case ClassId::BULLET:
     {
-        std::unique_ptr<StaticObject> bullet = std::unique_ptr<StaticObject>(new StaticObject("assets/weapons/pumpkinseed.obj"));
+        //std::unique_ptr<StaticObject> bullet = std::unique_ptr<StaticObject>(new StaticObject("assets/weapons/pumpkinseed.obj"));
+        std::unique_ptr<StaticObject> bullet = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Pumpkin_Seed")));
 		bullet->Translate(glm::vec3(p.x, p.y, p.z));
 		printf("creating a bullet at %f, %f, %f\n", p.x, p.y, p.z);
         //bullet->GetShader() = modelShader;        // Set in ModelEntity

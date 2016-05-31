@@ -3,8 +3,8 @@
 #ifdef _WIN32
 #include <winsock2.h>
 #include "ClientNetwork.h"
-#include "../network/NetworkData.h"
-#include "../network/GameData.h"
+#include "network/NetworkData.h"
+#include "network/GameData.h"
 #include <Windows.h>
 #endif
 
@@ -12,6 +12,7 @@
 #include <GLFW/glfw3.h>
 
 #include "Player.h"
+#include "Graphics/Objects/Entity.h"
 #include <memory>
 #include <vector>
 
@@ -85,11 +86,19 @@ public:
 
 	void sendJumpPacket();
 
+	void sendDancePacket();
+	void receiveDancePacket(int offset);
+
+	void receiveDeathPacket(int offset);
+
+	void receiveRespawnPacket(int offset);
+
 	void receiveScorePacket(int offset);
 
 	void receiveGameOverPacket(int offset);
 
 	void sendShootPacket();
+	void receiveShootPacket(int offset);
 
 
 	bool hasStarted() { return game_started; };

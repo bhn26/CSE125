@@ -94,7 +94,7 @@ Bullet* EntitySpawner::spawnBullet(int playerid, int teamid, int damage, btVecto
 	// Send Bullet Spawn packet
 	btVector3 vec = fireProjectile->GetEntityPosition();
 	btQuaternion quat = fireProjectile->GetEntityRotation();
-	printf("Created Bullet at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
+	//printf("Created Bullet at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
 
 	PosInfo out;
 	out.cid = ClassId::BULLET;
@@ -156,10 +156,42 @@ void EntitySpawner::RemoveEntity(int cid, unsigned int oid)
 	std::pair<int, unsigned int> key = std::pair<int, unsigned int>(cid, oid);
 	it = this->entities.find(key);
 	entities.erase(it);
-	printf("? supposedly removed entity from map\n");
+	//printf("? supposedly removed entity from map\n");
 }
 
 std::map<std::pair<int, unsigned int>, Entity* > *EntitySpawner::GetMap()
 {
 	return (&entities);
 }
+
+std::pair<int, int> EntitySpawner::getRandomLoc()
+{
+	std::pair<int, int> loc;
+	loc.first = 0;
+	loc.second = 0;
+	while (loc.first == 0 && loc.second == 0)
+	{
+		if (rand() % 4 == 0)
+		{
+			loc.first = (rand() % WORLD_WIDTH + 1);
+			loc.second = (rand() % WORLD_WIDTH + 1);
+		}
+		else if (rand() % 4 == 1)
+		{
+			loc.first = (rand() % WORLD_WIDTH + 1);
+			loc.second = (-1 * rand() % WORLD_WIDTH + 1);
+		}
+		else if (rand() % 4 == 2)
+		{
+			loc.first = (-1 * rand() % WORLD_WIDTH + 1);
+			loc.second = (rand() % WORLD_WIDTH + 1);
+		}
+		else if (rand() % 4 == 3)
+		{
+			loc.first = (-1 * rand() % WORLD_WIDTH + 1);
+			loc.second = (-1 * rand() % WORLD_WIDTH + 1);
+		}
+	}
+	return loc;
+}
+

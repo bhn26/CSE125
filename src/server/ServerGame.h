@@ -7,6 +7,9 @@
 
 #include <map>
 #include <iostream>
+#include <chrono>
+#include <ratio>
+#include <thread>
 
 class ServerGame
 {
@@ -51,10 +54,19 @@ public:
 
 	void receiveJumpPacket(int offset);
 
-
 	void sendScorePacket();
 	void sendGameOverPacket(int winner);
 
+	void sendTimeStampPacket();
+
+	void receiveDancePacket(int offset);
+	void sendDancePacket(int id);
+
+	void sendDeathPacket(int id);
+
+	void sendRespawnPacket(int id);
+
+	void sendShootPacket(int id);
 	void receiveShootPacket(int offset);
 
 	static ServerGame* instance()
@@ -68,12 +80,10 @@ public:
 
 	int * GetScores() { return scores; }
 
-	int NumTotalEggs() {
-		for (std::map<int, int>::iterator it = team_map.begin(); it != team_map.end(); it++) {
-			std::cout << it->first << " " << it->second << endl;
-		}
-		return team_map.size() * 2;
+	int GetTotalEggs() {
+		return total_eggs;
 	};
+
 	int GetTeam(int player) const
 	{
 		if (team_map.find(player) != team_map.end())
@@ -93,9 +103,15 @@ private:
 	// variables for starting the game
 
 	bool game_started = false;
+	bool game_over = false;
 	bool eggs_spawned = false;
 	int ready_clients = 0; // # of clients ready for the game
 	int spawned_clients = 0;
+
+	chrono::time_point<chrono::steady_clock> start_time;
+
+	int total_eggs = 0;
+
 
 	Engine * engine;
 

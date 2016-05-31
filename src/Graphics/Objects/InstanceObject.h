@@ -22,10 +22,12 @@ class Model;
 class InstanceObject : public Entity
 {
 public:
-	InstanceObject(const GLchar* path, GLuint num, GLfloat delta);
+	//InstanceObject(const GLchar* path, GLuint num, GLfloat delta);
+	InstanceObject(std::shared_ptr<Model> instanceModel, GLuint num, GLfloat delta);
 	~InstanceObject();
 
-	Model* instance;
+    //Model* instance;
+    std::shared_ptr<Model> instance;
 	glm::mat4* modelMatrices;
 	GLuint amount;
 

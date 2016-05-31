@@ -7,10 +7,11 @@
 #include <sstream>
 #include <math.h>
 
-#include "../Graphics/Scene.h"
+#include "Graphics/Scene.h"
+#include "ConfigManager.h"
 #include "Player.h"
-#include "client\ClientGame.h"
-#include "client\TextRenderer.h"
+#include "client/ClientGame.h"
+#include "client/TextRenderer.h"
 
 using namespace std;
 
@@ -44,7 +45,7 @@ void CPlayState::OnMouseMove(float xoffset, float yoffset) {
 	}
 }
 
-void CPlayState::OnClick(int button, double x, double y) {
+void CPlayState::OnClick(int button, int action, double x, double y) {
 	if (button == GLFW_MOUSE_BUTTON_LEFT && !Window::mouseCaptured)
 	{
 		Window::mouseCaptured = true;
@@ -58,7 +59,8 @@ void CPlayState::OnClick(int button, double x, double y) {
 	}
 	else if (button == GLFW_MOUSE_BUTTON_LEFT && Window::mouseCaptured)
 	{
-		ClientGame::instance()->HandleButtonEvent(ConfigManager::instance()->GetConfigValue("PC_Left_Click"));
+		if (action == GLFW_PRESS || action == GLFW_REPEAT)
+			ClientGame::instance()->HandleButtonEvent(ConfigManager::instance()->GetConfigValue("PC_Left_Click"));
 	}
 }
 
@@ -181,7 +183,7 @@ void CPlayState::OnKeyDown(int action, int key)
             ClientGame::instance()->HandleButtonEvent(ConfigManager::instance()->GetConfigValue("PC_Space"));
             break;
         case GLFW_KEY_TAB:
-			// Check if escape was pressed
+            // Check if escape was pressed
             ClientGame::instance()->HandleButtonEvent(ConfigManager::instance()->GetConfigValue("PC_Tab"));
             break;
         default:

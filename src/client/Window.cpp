@@ -173,5 +173,5 @@ void Window::Mouse_button_callback(GLFWwindow* window, int button, int action, i
 	double x, y;
 	glfwGetCursorPos(window, &x, &y);
 
-	m_pStateManager->GetActiveState()->OnClick(button, x, y);
+	m_pStateManager->GetActiveState()->OnClick(button, action, x, y);
 }

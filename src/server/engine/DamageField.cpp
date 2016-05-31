@@ -17,7 +17,7 @@ DamageField::~DamageField()
 	delete FieldGhostObject;
 }
 
-int DamageField::handleField()
+int DamageField::handleField(int world_tick)
 {
 	fieldTtl--;
 	if (fieldTtl < 1)
@@ -31,7 +31,7 @@ int DamageField::handleField()
 				Player * collidedPlayer = (Player *)pRigidBody->getUserPointer();
 				if (collidedPlayer->GetObjectId() != fieldOwner->GetObjectId())
 				{
-					if (collidedPlayer->takeDamage(this->fieldDamage))
+					if (collidedPlayer->takeDamage(this->fieldDamage, world_tick))
 					{
 						printf("Player is dead!");
 						//TODO Handle Player Death: send player death to client...  Maybe handle this on player

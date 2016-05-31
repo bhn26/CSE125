@@ -28,7 +28,7 @@ void FireRateReset::ResetWeapons()
 	// Check through list of used weapons
 	while (it != usedWeapons->end())
 	{
-		printf("checking weapon.  Current World Tick:  %u, nextFireTick %u \n", currentWorldTick, (*it)->nextFireTick);
+		//printf("checking weapon.  Current World Tick:  %u, nextFireTick %u \n", currentWorldTick, (*it)->nextFireTick);
 
 		// reset fire flag if it can be fired again
 		if ((*it)->nextFireTick == currentWorldTick)

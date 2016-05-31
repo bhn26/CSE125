@@ -30,7 +30,8 @@ enum GameDataId
 {
     POS_OBJ,
 	REM_OBJ,
-	SCORE_OBJ
+	SCORE_OBJ,
+	EMOTE_OBJ
 };
 
 struct GameInfo
@@ -74,6 +75,7 @@ struct PosInfo : GameInfo
 	float rotz;
 
 	int num_eggs; // num eggs this player has 
+	int jump;     // jumping semaphore of the player
 
     void serialize(char * data) {
         memcpy(data, this, sizeof(PosInfo));
@@ -113,4 +115,15 @@ struct ScoreInfo : GameInfo {
 	}
 };
 
+// Who's emoting, also will include death
+struct EmoteInfo : GameInfo {
+	int id;
 
+	void serialize(char * data) {
+		memcpy(data, this, sizeof(ScoreInfo));
+	}
+
+	void deserialize(char * data) {
+		memcpy(this, data, sizeof(ScoreInfo));
+	}
+};

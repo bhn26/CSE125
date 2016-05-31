@@ -3,16 +3,18 @@
 #include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale, glm::perspective
 #include <glm/gtc/type_ptr.hpp>
 
-#include "../../client/Window.h"
+#include "client/Window.h"
 #include "../Scene.h"
 #include "../PointLight.h"
 #include "../Camera.h"
 #include "../../client/Player.h"
 #include "../Model.h"
+#include "../ModelManager.h"
 
 Grass::Grass(const GLchar* path, GLuint num) : Entity()
 {
-	grass = new Model(path);
+	//grass = new Model(path);
+	grass = ModelManager::GetModel("Grass");
 	amount = num;
 	shader = ShaderManager::Instance()->GetShader("Instancing");
 

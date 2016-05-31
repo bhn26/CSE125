@@ -49,8 +49,7 @@ public:
 	~World();
 
 	// ticker used for now
-	int x = 0;
-	int y = 0;
+	unsigned int world_tick = 0;
 
 	void Init();
 

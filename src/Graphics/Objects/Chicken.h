@@ -26,7 +26,7 @@ public:
     Chicken(float x, float y, float z);
     ~Chicken();
     
-    Model* model;
+    std::shared_ptr<Model> model;
 
     void Draw() const override;
     void Update(float deltaTime) override;
