@@ -20,6 +20,7 @@ private:
 	unsigned int oid_player;  // player
 	unsigned int oid_flag;  // flag
 	unsigned int oid_bullet;  // bullet
+	unsigned int oid_grenade; // grenade
 	unsigned int oid_collectable;  // collectable
 
 public:

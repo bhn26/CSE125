@@ -243,6 +243,18 @@ void World::UpdateWorld()
 			deleteList.push_back(collideGrenade);
 			collideGrenade->SetToMarked();
 		}
+		if (obB->getUserIndex() == GRENADE)
+		{
+			// Grab Grenade Object
+			Grenade * collideGrenade = (Grenade *)obB->getUserPointer();
+			if (collideGrenade->MarkStatus())
+			{
+				continue;
+			}
+			collideGrenade->HandleExplosion();
+			deleteList.push_back(collideGrenade);
+			collideGrenade->SetToMarked();
+		}
 
 		// Handle Bullet Collisions--------------------------
 		// If object A of collision is a Bullet

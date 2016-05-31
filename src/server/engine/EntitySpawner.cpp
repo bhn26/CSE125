@@ -23,6 +23,7 @@ EntitySpawner::EntitySpawner()
 	oid_player = 0;
 	oid_flag = 0;
 	oid_bullet = 0;
+	oid_grenade = 0;
 	oid_collectable = 0;
 }
 
@@ -114,17 +115,16 @@ Bullet* EntitySpawner::spawnBullet(int playerid, int teamid, int damage, btVecto
 Grenade* EntitySpawner::spawnGrenade(int playerid, int teamid, int damage, btVector3* pos, btVector3* velocity, btMatrix3x3* rotation, btDiscreteDynamicsWorld* physicsWorld, Entity* owner)
 {
 	// Create Bullet and add to Entity Map
-	Grenade* fireProjectile = new Grenade(oid_bullet, playerid, teamid, damage, pos, velocity, rotation, physicsWorld, owner);
-	AddEntity(ClassId::BULLET, oid_bullet, fireProjectile);
-	oid_bullet++;
+	Grenade* fireProjectile = new Grenade(oid_grenade, playerid, teamid, damage, pos, velocity, rotation, physicsWorld, owner);
+	AddEntity(ClassId::GRENADE, oid_grenade, fireProjectile);
+	oid_grenade++;
 
-	// Send Bullet Spawn packet
+	// Send Grenade Spawn packet
 	btVector3 vec = fireProjectile->GetEntityPosition();
 	btQuaternion quat = fireProjectile->GetEntityRotation();
-	//printf("Created Bullet at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
 
 	PosInfo out;
-	out.cid = ClassId::BULLET;
+	out.cid = ClassId::GRENADE;
 	out.oid = fireProjectile->GetObjectId();
 	out.x = vec.getX();
 	out.y = vec.getY();

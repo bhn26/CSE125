@@ -38,7 +38,7 @@ Player::Player(int objectid, int teamid, PosInfo pos, btDiscreteDynamicsWorld* p
 	this->position = pos;
 	this->playerWeapon = nullptr;
 	//this->peckWeapon = new Peck(curWorld);
-	this->playerWeapon = new SeedGun(curWorld);
+	this->playerWeapon = new GrenadeLauncher(curWorld);
 	this->alive = true;
 	this->death_time = 0;
 
@@ -145,7 +145,7 @@ int Player::GetTeamId()
 	//btQuaternion* playerRotation = new btQuaternion(currentOrientation.getX(), currentOrientation.getY(), currentOrientation.getX(), currentOrientation.getW());
 
 	playerWeapon->UseWeapon(position, &currentOrientation, this->objectId, this->teamId, this);
-	ServerGame::instance()->sendShootPacket(objectId);
+	//ServerGame::instance()->sendShootPacket(objectId);
 	//printf("player with objId: %d used weapon\n", objectId);
 }
 

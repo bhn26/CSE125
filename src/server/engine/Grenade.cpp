@@ -52,6 +52,7 @@ Grenade::~Grenade()
 	delete entityRigidBody->getCollisionShape();
 	delete entityRigidBody;
 	EntitySpawner::instance()->RemoveEntity(ClassId::GRENADE, objectId);
+	printf("Grenade has been removed from dynamic map\n");
 }
 
 btVector3 Grenade::GetGrenadePosition()
@@ -79,8 +80,8 @@ void Grenade::HandleExplosion()
 	entityRigidBody->getMotionState()->getWorldTransform(currentTrans);
 	btMatrix3x3 currentOrientation = currentTrans.getBasis();
 
-	btCollisionShape* peckSphere = new btSphereShape(btScalar(10));
-	DamageField* explosionField = new DamageField(1, this->damage, position, peckSphere, owner, curWorld);
+	btCollisionShape* expSphere = new btSphereShape(btScalar(17));
+	DamageField* explosionField = new DamageField(1, this->damage, position, expSphere, owner, curWorld);
 
 	//TODO: Add to damage field checker. Add this new field to the checker
 	FieldHandler::instance()->AddField(explosionField);

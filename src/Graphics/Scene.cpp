@@ -181,6 +181,7 @@ void Scene::AddEntity(PosInfo p)
 {
 	std::unique_ptr<Player> player;
 	std::unique_ptr<Egg> egg;
+	std::unique_ptr<Egg> grenade;
 	std::string skin_type;
 
 	switch (p.cid) {
@@ -228,6 +229,15 @@ void Scene::AddEntity(PosInfo p)
         AddEntity(p.cid, p.oid, std::move(bullet));
         break;
     }
+	case ClassId::GRENADE:
+	{
+		grenade = std::unique_ptr<Egg>(new Egg(p.x, p.y, p.z));
+		grenade->SetColor(glm::vec3(0.27f, 0.16f, 0.0f));
+		grenade->GetShader() = ShaderManager::Instance()->GetShader("Model");
+		grenade->SetClassId(p.cid);
+		grenade->SetObjId(p.oid);
+		AddEntity(p.cid, p.oid, std::move(grenade));
+	}
 	default:
 		break;
 	}
