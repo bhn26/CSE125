@@ -1,4 +1,4 @@
-#include "InstanceObject.h"
+#include "Grass.h"
 
 #include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale, glm::perspective
 #include <glm/gtc/type_ptr.hpp>
@@ -10,22 +10,27 @@
 #include "../../client/Player.h"
 #include "../Model.h"
 
-InstanceObject::InstanceObject(const GLchar* path, GLuint num) : Entity()
+InstanceObject::InstanceObject(const GLchar* path, GLuint num, GLfloat delta) : Entity()
 {
 	instance = new Model(path);
+	amount = num;
+	shader = ShaderManager::Instance()->GetShader("Instancing");
 
 	// Generate large list of semi-random transformation matrices
-	modelMatrices = new glm::mat4[num];
+	amount = 10000;
+	modelMatrices = new glm::mat4[amount];
 	srand(glfwGetTime()); // initialize random seed
 	GLfloat radius = 150.0f;
 	GLfloat offset = 25.0f;
+	GLfloat size = sqrt(num)/2.0f;
+
 	int index = 0;
-	for (GLfloat i = -50.0f; i < 50.0f; i++)
+	for (GLfloat i = -size; i < size; i++)
 	{
-		for (GLfloat j = -50.0f; j < 50.0f; j++) {
+		for (GLfloat j = -size; j < size; j++) {
 			glm::mat4 model;
-			model = glm::translate(model, glm::vec3(0.0f, 0.0f, i));
-			model = glm::translate(model, glm::vec3(j, 0.0f, 0.0f));
+			model = glm::translate(model, glm::vec3(0.0f, 0.0f, i * delta));
+			model = glm::translate(model, glm::vec3(j * delta, 0.0f, 0.0f));
 			GLfloat scale = ((rand() % 20) / 100.0f + 0.05) * 5.0f;
 			model = glm::scale(model, glm::vec3(scale));
 
@@ -71,6 +76,11 @@ InstanceObject::~InstanceObject()
 
 void InstanceObject::Draw() const
 {
+	// Set frame time
+	//GLfloat currentFrame = glfwGetTime();
+	//deltaTime = currentFrame - lastFrame;
+	//lastFrame = currentFrame;
+
 	// Draw the loaded model
 	shader->Use();
 	GLint viewLoc = shader->GetUniform("view");
@@ -81,8 +91,8 @@ void InstanceObject::Draw() const
 	glUniformMatrix4fv(modelLocation, 1, false, glm::value_ptr(this->toWorld));
 	glUniformMatrix4fv(projectionLocation, 1, false, glm::value_ptr(Scene::Instance()->GetPerspectiveMatrix()));
 
-	glBindTexture(GL_TEXTURE_2D, instance->Textures()[0].id);
 	for (GLuint i = 0; i < instance->Meshes().size(); i++) {
+		glBindTexture(GL_TEXTURE_2D, instance->Textures()[i].id);
 		glBindVertexArray(instance->Meshes()[i].VAO());
 		glDrawElementsInstanced(GL_TRIANGLES, instance->Meshes()[i].vertices.size(), GL_UNSIGNED_INT, 0, amount);
 		glBindVertexArray(0);
@@ -91,3 +101,6 @@ void InstanceObject::Draw() const
 	//model->Draw(shader.get());
 }
 
+void InstanceObject::Update(float deltaTime)
+{
+}

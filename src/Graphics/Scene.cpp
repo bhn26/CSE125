@@ -99,15 +99,14 @@ void Scene::Setup()
 //	boat->Scale(15.0f);
 //	boat->Translate(glm::vec3(0.0f, 100.4f, 0.0f));
 
-	grass = std::unique_ptr<Grass>(new Grass);
+	grass = std::unique_ptr<InstanceObject>(new InstanceObject("assets/map/objects/nature/plant.obj", 10000, 1.0f));
+	pumpkin = std::unique_ptr<InstanceObject>(new InstanceObject("assets/map/objects/pumpkin.obj", 20, 10.0f));
 	// Pumpkins
 	//pumpkin = std::unique_ptr<InstanceObject>(new InstanceObject("assets/map/objects/pumpkin.obj", 10000));
 	//pumpkin->Translate(glm::vec3(0.0f, 0.0f, -1.0f));
 
     cubeMap = std::unique_ptr<CubeMap>(new CubeMap);
     cubeMap->LoadCubeMap();
-
-    grass->GetShader() = ShaderManager::Instance()->GetShader("Instancing");
     cubeMap->GetShader() = ShaderManager::Instance()->GetShader("CubeMap");
 
 	//static_objects.push_back(std::move(boat));
@@ -121,7 +120,6 @@ void Scene::Setup()
 	static_objects.push_back(std::move(pumpkinObj));
 	static_objects.push_back(std::move(seed));
 	static_objects.push_back(std::move(ground));
-	
 }
 
 void Scene::Update()
@@ -140,6 +138,7 @@ void Scene::Draw()
 {
 	cubeMap->Draw();
 	grass->Draw();
+	pumpkin->Draw();
 
 	for (auto& const obj : static_objects)
 		obj->Draw();

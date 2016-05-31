@@ -30,7 +30,7 @@ class Scene
     std::unique_ptr<PointLight> pLight;
 	std::unique_ptr<CubeMap> cubeMap;
 	std::unique_ptr<Ground> ground;
-	std::unique_ptr<Grass> grass;
+	std::unique_ptr<InstanceObject> grass;
 	std::unique_ptr<InstanceObject> pumpkin;
 
     Player* player;

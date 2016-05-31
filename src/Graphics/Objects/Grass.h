@@ -22,7 +22,7 @@ class Model;
 class Grass : public Entity
 {
 public:
-	Grass();
+	Grass(const GLchar* path, GLuint num);
 	~Grass();
 
 	Model* grass;

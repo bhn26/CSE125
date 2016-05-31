@@ -10,9 +10,11 @@
 #include "../../client/Player.h"
 #include "../Model.h"
 
-Grass::Grass() : Entity()
+Grass::Grass(const GLchar* path, GLuint num) : Entity()
 {
-	grass = new Model("assets/map/objects/nature/plant.obj");
+	grass = new Model(path);
+	amount = num;
+	shader = ShaderManager::Instance()->GetShader("Instancing");
 
 	// Generate large list of semi-random transformation matrices
 	amount = 10000;
@@ -87,8 +89,8 @@ void Grass::Draw() const
 	glUniformMatrix4fv(modelLocation, 1, false, glm::value_ptr(this->toWorld));
 	glUniformMatrix4fv(projectionLocation, 1, false, glm::value_ptr(Scene::Instance()->GetPerspectiveMatrix()));
 
-	glBindTexture(GL_TEXTURE_2D, grass->Textures()[0].id);
 	for (GLuint i = 0; i < grass->Meshes().size(); i++) {
+		glBindTexture(GL_TEXTURE_2D, grass->Textures()[i].id);
 		glBindVertexArray(grass->Meshes()[i].VAO());
 		glDrawElementsInstanced(GL_TRIANGLES, grass->Meshes()[i].vertices.size(), GL_UNSIGNED_INT, 0, amount);
 		glBindVertexArray(0);

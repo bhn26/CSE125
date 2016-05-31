@@ -1,5 +1,5 @@
 //
-//  InstanceObject.h
+//  Grass.h
 //  egg scramble
 //
 //  Created by Michelle on 4/11/16.
@@ -22,7 +22,7 @@ class Model;
 class InstanceObject : public Entity
 {
 public:
-	InstanceObject(const GLchar* path, GLuint num);
+	InstanceObject(const GLchar* path, GLuint num, GLfloat delta);
 	~InstanceObject();
 
 	Model* instance;
@@ -33,5 +33,7 @@ public:
 	static GLfloat deltaTime;
 	static GLfloat lastFrame;
 	void Draw() const override;
-    void Update(float deltaTime) override {}
+	void Update(float deltaTime) override;
+	void SetColor(glm::vec3 color);
 };
+
