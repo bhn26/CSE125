@@ -1,4 +1,5 @@
 #include "Model.h"
+#include "Texture.h"
 
 // Std. Includes
 #include <fstream>
@@ -58,6 +59,7 @@ Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
     std::vector<Mesh::Vertex> vertices;
     std::vector<GLuint> indices;
     std::vector<Mesh::Texture> textures;
+    Material material;
 
     // Walk through each of the mesh's vertices
     for (GLuint i = 0; i < mesh->mNumVertices; i++)
@@ -106,7 +108,7 @@ Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
     
     if (mesh->mMaterialIndex >= 0)
     {
-        aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+        aiMaterial* aimaterial = scene->mMaterials[mesh->mMaterialIndex];
         // We assume a convention for sampler names in the shaders. Each diffuse texture should be named
         // as 'texture_diffuseN' where N is a sequential number ranging from 1 to MAX_SAMPLER_NUMBER. 
         // Same applies to other texture as the following list summarizes:
@@ -115,16 +117,36 @@ Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
         // Normal: texture_normalN
 
         // 1. Diffuse maps
-        std::vector<Mesh::Texture> diffuseMaps = this->LoadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
+        std::vector<Mesh::Texture> diffuseMaps = this->LoadMaterialTextures(aimaterial, aiTextureType_DIFFUSE, "texture_diffuse");
         textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
 
         // 2. Specular maps
-        std::vector<Mesh::Texture> specularMaps = this->LoadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
+        std::vector<Mesh::Texture> specularMaps = this->LoadMaterialTextures(aimaterial, aiTextureType_SPECULAR, "texture_specular");
         textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
+
+        bool matExist = true;
+        aiColor3D diffuse;
+        aiColor3D specular;
+        aiColor3D ambient;
+        matExist &= (aimaterial->Get(AI_MATKEY_COLOR_DIFFUSE, diffuse) == AI_SUCCESS);
+        matExist &= (aimaterial->Get(AI_MATKEY_COLOR_SPECULAR, specular) == AI_SUCCESS);
+        matExist &= (aimaterial->Get(AI_MATKEY_COLOR_AMBIENT, ambient) == AI_SUCCESS);
+        matExist &= (aimaterial->Get(AI_MATKEY_SHININESS, material._shininess) == AI_SUCCESS);
+
+        if (matExist)
+        {
+            material._diffuse = glm::vec3(diffuse.r, diffuse.g, diffuse.b);
+            material._specular = glm::vec3(specular.r, specular.g, specular.b);
+            material._ambient = glm::vec3(ambient.r, ambient.g, ambient.b);
+        }
+        else
+        {
+            material._diffuse = material._specular = material._ambient = glm::vec3(0.0f);
+        }
     }
 
     // Return a mesh object created from the extracted mesh data
-    return Mesh(vertices, indices, textures);
+    return Mesh(vertices, indices, textures, material);
 }
 
 std::vector<Mesh::Texture> Model::LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName)

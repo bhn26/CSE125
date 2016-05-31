@@ -45,12 +45,6 @@ class Scene
     void Setup();
 
 public:
-    std::shared_ptr<Shader> basicShader;
-    std::shared_ptr<Shader> diffuseShader;
-    std::shared_ptr<Shader> modelShader;
-    std::shared_ptr<Shader> cubeMapShader;
-    std::shared_ptr<Shader> instanceShader;
-
 	static SpriteRenderer * sprite_renderer;
 
     static Scene* Instance()
