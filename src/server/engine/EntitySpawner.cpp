@@ -111,7 +111,7 @@ Bullet* EntitySpawner::spawnBullet(int playerid, int teamid, int damage, btVecto
 }
 
 
-Collectable* EntitySpawner::spawnCollectable(int objectid, PosInfo pos, btDiscreteDynamicsWorld* curworld)
+Collectable* EntitySpawner::spawnCollectable(PosInfo pos, btDiscreteDynamicsWorld* curworld)
 {
 	Collectable* ranCollectable = new Collectable(oid_collectable, pos, curworld);
 	AddEntity(ClassId::COLLECTABLE, oid_collectable, ranCollectable);

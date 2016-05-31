@@ -8,7 +8,6 @@
 
 Collectable::Collectable(int objectid, PosInfo pos, btDiscreteDynamicsWorld* curworld) : Entity(ClassId::COLLECTABLE, objectid, curworld)
 {
-	srand(time(NULL));
 	this->curWorld = curworld;
 	btCollisionShape* collectableShape = new btBoxShape(btVector3(1, 1, 1));
 

@@ -33,7 +33,7 @@ public:
 
 	Bullet* spawnBullet(int playerid, int teamid, int damage, btVector3* pos, btVector3* velocity, btMatrix3x3* rotation, btDiscreteDynamicsWorld* physicsWorld);
 
-	Collectable* spawnCollectable(int objectid, PosInfo pos, btDiscreteDynamicsWorld* curworld);
+	Collectable* spawnCollectable(PosInfo pos, btDiscreteDynamicsWorld* curworld);
 
 	void AddEntity(int cid, unsigned int oid, Entity* ent);
 

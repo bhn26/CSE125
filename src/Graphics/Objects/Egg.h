@@ -24,7 +24,8 @@ class Egg : public Entity
 {
 public:
 	Egg();
-	Egg(float x, float y, float z);
+	//Egg(float x, float y, float z);
+	Egg(float x, float y, float z, const GLchar* path);
 	~Egg();
 
 	Model* model;
