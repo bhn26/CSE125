@@ -28,8 +28,9 @@ void Engine::SpawnRandomPlayer(int player, int team, int skin)
 	p.id = player;
 	p.team_id = team;
 	p.skin = skin;
-	p.x = rand() % WORLD_WIDTH + 1;
-	p.z = rand() % WORLD_WIDTH + 1;
+	std::pair<int, int> loc = EntitySpawner::getRandomLoc();
+	p.x = loc.first;
+	p.z = loc.second;
 	p.y = 3;
 	EntitySpawner::instance()->spawnPlayer(team, p, world->GetPhysicsWorld());
 }
@@ -37,8 +38,9 @@ void Engine::SpawnRandomPlayer(int player, int team, int skin)
 void Engine::SpawnRandomFlag()
 {
 	PosInfo p;
-	p.x = rand() % WORLD_WIDTH + 1;
-	p.z = rand() % WORLD_WIDTH + 1;
+	std::pair<int, int> loc = EntitySpawner::getRandomLoc();
+	p.x = loc.first;
+	p.z = loc.second;
 	p.y = 3;
 	EntitySpawner::instance()->spawnFlag(p, world->GetPhysicsWorld());
 }

@@ -43,4 +43,6 @@ public:
 
 	std::map<std::pair<int, unsigned int>, Entity* > * GetMap();
 
+	static std::pair<int, int> getRandomLoc();
+
 };
