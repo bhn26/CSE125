@@ -39,31 +39,34 @@ void Scene::Setup()
     camera = std::unique_ptr<Camera>(new Camera(glm::vec3(0.0f, 9.0f, -15.0f)));
     pLight = std::unique_ptr<PointLight>(new PointLight(glm::vec3(0.0f, 20.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)));
 
+	std::unique_ptr<StaticObject> map = std::unique_ptr<StaticObject>(new StaticObject("assets/map/new_objects/map.obj"));
+
 	// Barn
-	std::unique_ptr<StaticObject> barn = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/barn2.obj"));
-	barn->Scale(17.0f);
-	barn->Translate(glm::vec3(0.0f, 0.0f, 20.0f));
+	std::unique_ptr<StaticObject> barn = std::unique_ptr<StaticObject>(new StaticObject("assets/map/new_objects/structures/barn.obj"));
+	//barn->Translate(glm::vec3(0.0f, 0.0f, 20.0f));
 
 	// Tractors
-	std::unique_ptr<StaticObject> red_tractor = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/tractors/red_tractor.obj"));
-	red_tractor->Scale(12.0f);
+	std::unique_ptr<StaticObject> red_tractor = std::unique_ptr<StaticObject>(new StaticObject("assets/map/new_objects/tractors/red_tractor.obj"));
 	red_tractor->Rotate(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 	red_tractor->Translate(glm::vec3(17.0f, 0.0f, -13.0f));
 
-	std::unique_ptr<StaticObject> green_tractor = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/tractors/green_tractor.obj"));
-	green_tractor->Scale(12.0f);
+	std::unique_ptr<StaticObject> green_tractor = std::unique_ptr<StaticObject>(new StaticObject("assets/map/new_objects/tractors/green_tractor.obj"));
 	green_tractor->Rotate(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 	green_tractor->Translate(glm::vec3(34.0f, 0.0f, 13.0f));
 
-	std::unique_ptr<StaticObject> orange_tractor = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/tractors/orange_tractor.obj"));
-	orange_tractor->Scale(12.0f);
+	std::unique_ptr<StaticObject> orange_tractor = std::unique_ptr<StaticObject>(new StaticObject("assets/map/new_objects/tractors/orange_tractor.obj"));
 	orange_tractor->Rotate(90.0f, glm::vec3(0.0f, -1.0f, 0.0f));
 	orange_tractor->Translate(glm::vec3(-17.0f, 0.0f, -13.0f));
 
 	// Silo
-	std::unique_ptr<StaticObject> silo = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/silo.obj"));
-	silo->Scale(10.0f);
+	std::unique_ptr<StaticObject> silo = std::unique_ptr<StaticObject>(new StaticObject("assets/map/new_objects/structures/silo.obj"));
 	silo->Translate(glm::vec3(-28.0f, 0.0f, -4.0f));
+
+	// Construction
+	std::unique_ptr<StaticObject> construction_site = std::unique_ptr<StaticObject>(new StaticObject("assets/map/new_objects/structures/construction.obj"));
+
+	// Maze
+	std::unique_ptr<StaticObject> maze = std::unique_ptr<StaticObject>(new StaticObject("assets/map/new_objects/nature/maze.obj"));
 
 	// Bench
 	std::unique_ptr<StaticObject> bench = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/bench3.obj"));
@@ -72,16 +75,14 @@ void Scene::Setup()
 	bench->Rotate(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 
 	// Pumpkin
-	std::unique_ptr<StaticObject> pumpkinObj = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/pumpkin.obj"));
+	//std::unique_ptr<StaticObject> pumpkinObj = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/nature/pumpkin.obj"));
 
 	// Rocks
-	std::unique_ptr<StaticObject> rocks = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/nature/rocks.obj"));
-	rocks->Scale(4.0f);
+	std::unique_ptr<StaticObject> rocks = std::unique_ptr<StaticObject>(new StaticObject("assets/map/new_objects/nature/rocks.obj"));
 	rocks->Translate(glm::vec3(28.0f, 0.2f, -20.0f));
 
-	// Rocks
-	std::unique_ptr<StaticObject> stump = std::unique_ptr<StaticObject>(new StaticObject("assets/map/objects/nature/stump.obj"));
-	stump->Scale(4.0f);
+	// Stump
+	std::unique_ptr<StaticObject> stump = std::unique_ptr<StaticObject>(new StaticObject("assets/map/new_objects/nature/stump.obj"));
 	stump->Translate(glm::vec3(-28.0f, 0.2f, -20.0f));
 
 	// Ground
@@ -100,7 +101,7 @@ void Scene::Setup()
 //	boat->Translate(glm::vec3(0.0f, 100.4f, 0.0f));
 
 	grass = std::unique_ptr<InstanceObject>(new InstanceObject("assets/map/objects/nature/plant.obj", 10000, 1.0f));
-	pumpkin = std::unique_ptr<InstanceObject>(new InstanceObject("assets/map/objects/pumpkin.obj", 20, 10.0f));
+	pumpkin = std::unique_ptr<InstanceObject>(new InstanceObject("assets/map/objects/pumpkin.obj", 40, 10.0f));
 	// Pumpkins
 	//pumpkin = std::unique_ptr<InstanceObject>(new InstanceObject("assets/map/objects/pumpkin.obj", 10000));
 	//pumpkin->Translate(glm::vec3(0.0f, 0.0f, -1.0f));
@@ -109,16 +110,19 @@ void Scene::Setup()
     cubeMap->LoadCubeMap();
     cubeMap->GetShader() = ShaderManager::Instance()->GetShader("CubeMap");
 
+	static_objects.push_back(std::move(map));
 	//static_objects.push_back(std::move(boat));
-	static_objects.push_back(std::move(barn));
+	/*static_objects.push_back(std::move(barn));*/
 	static_objects.push_back(std::move(red_tractor));
 	static_objects.push_back(std::move(green_tractor));
 	static_objects.push_back(std::move(orange_tractor));
+	/*static_objects.push_back(std::move(construction_site));
+	static_objects.push_back(std::move(maze));
 	static_objects.push_back(std::move(silo));
 	static_objects.push_back(std::move(rocks));
 	static_objects.push_back(std::move(bench));
-	static_objects.push_back(std::move(pumpkinObj));
-	static_objects.push_back(std::move(seed));
+	//static_objects.push_back(std::move(pumpkinObj));
+	static_objects.push_back(std::move(seed));*/
 	static_objects.push_back(std::move(ground));
 }
 

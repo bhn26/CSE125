@@ -76,11 +76,6 @@ InstanceObject::~InstanceObject()
 
 void InstanceObject::Draw() const
 {
-	// Set frame time
-	//GLfloat currentFrame = glfwGetTime();
-	//deltaTime = currentFrame - lastFrame;
-	//lastFrame = currentFrame;
-
 	// Draw the loaded model
 	shader->Use();
 	GLint viewLoc = shader->GetUniform("view");
@@ -88,13 +83,14 @@ void InstanceObject::Draw() const
 	GLint modelLocation = shader->GetUniform("model");
 	GLint projectionLocation = shader->GetUniform("projection");
 
+	shader->Use();
 	glUniformMatrix4fv(modelLocation, 1, false, glm::value_ptr(this->toWorld));
 	glUniformMatrix4fv(projectionLocation, 1, false, glm::value_ptr(Scene::Instance()->GetPerspectiveMatrix()));
 
 	for (GLuint i = 0; i < instance->Meshes().size(); i++) {
 		glBindTexture(GL_TEXTURE_2D, instance->Textures()[i].id);
 		glBindVertexArray(instance->Meshes()[i].VAO());
-		glDrawElementsInstanced(GL_TRIANGLES, instance->Meshes()[i].vertices.size(), GL_UNSIGNED_INT, 0, amount);
+		glDrawElementsInstanced(GL_TRIANGLES, instance->Meshes()[i].indices.size(), GL_UNSIGNED_INT, 0, amount);
 		glBindVertexArray(0);
 	}
 
