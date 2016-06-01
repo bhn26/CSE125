@@ -60,10 +60,13 @@ void Scene::Setup()
 	//silo->Translate(glm::vec3(-28.0f, 0.0f, -4.0f));
 
 	// Construction
-	std::unique_ptr<StaticObject> construction_site = std::unique_ptr<StaticObject>(new StaticObject("assets/map/new_objects/structures/construction.obj"));
+	std::unique_ptr<StaticObject> construction_site = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Construction_Site")));
+    construction_site->Scale(0.15f);
+    construction_site->Rotate(270.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    construction_site->Translate(glm::vec3(2.0f, 0.0f, -216.0f));
 
 	// Maze
-	std::unique_ptr<StaticObject> maze = std::unique_ptr<StaticObject>(new StaticObject("assets/map/new_objects/nature/maze.obj"));
+	std::unique_ptr<StaticObject> maze = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Maze")));
 
 	// Bench
     std::unique_ptr<StaticObject> bench = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Bench")));
@@ -99,13 +102,13 @@ void Scene::Setup()
  //   boat->Scale(100.0f);
  //   boat->Translate(glm::vec3(0.0f, 50.4f, 40.0f));
 
-    std::unique_ptr<StaticObject> windMill = std::unique_ptr<StaticObject>(new StaticObject("assets/map/new_models/windmill.obj"));
+    std::unique_ptr<StaticObject> windMill = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Windmill")));
     windMill->Scale(1/4.0f);
     windMill->Translate(glm::vec3(75.0f, 0.0f, 75.0f));
     
 
-	grass = std::unique_ptr<InstanceObject>(new InstanceObject("assets/map/objects/nature/plant.obj", 10000, 1.0f));
-	pumpkin = std::unique_ptr<InstanceObject>(new InstanceObject("assets/map/new_objects/pumpkin.obj", 40, 10.0f));
+	grass = std::unique_ptr<InstanceObject>(new InstanceObject(ModelManager::GetModel("Grass"), 10000, 1.0f));
+	pumpkin = std::unique_ptr<InstanceObject>(new InstanceObject(ModelManager::GetModel("Pumpkin"), 40, 10.0f));
 	// Pumpkins
 	//pumpkin = std::unique_ptr<InstanceObject>(new InstanceObject("assets/map/objects/pumpkin.obj", 10000));
 	//pumpkin->Translate(glm::vec3(0.0f, 0.0f, -1.0f));
