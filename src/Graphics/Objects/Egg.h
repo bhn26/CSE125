@@ -24,7 +24,7 @@ class Egg : public Entity
 {
 public:
 	Egg();
-	Egg(float x, float y, float z);
+	Egg(float x, float y, float z, std::string type);
 	~Egg();
 
 	std::shared_ptr<Model> model;

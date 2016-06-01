@@ -34,13 +34,10 @@ void Scene::Setup()
     camera = std::unique_ptr<Camera>(new Camera(glm::vec3(0.0f, 9.0f, -15.0f)));
     pLight = std::unique_ptr<PointLight>(new PointLight(glm::vec3(0.0f, 20.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)));
 
-	//std::unique_ptr<StaticObject> map = std::unique_ptr<StaticObject>(new StaticObject("assets/map/new_objects/map.obj"));
+	std::unique_ptr<StaticObject> map = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Map")));
 
 	// Barn
-	// Tractors
     std::unique_ptr<StaticObject> barn = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Barn")));
-    //barn->Scale(17.0f);
-	//barn->Translate(glm::vec3(0.0f, 0.0f, 20.0f));
 
 	// Tractors
     std::unique_ptr<StaticObject> red_tractor = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Tractor_Red")));
@@ -117,7 +114,7 @@ void Scene::Setup()
     cubeMap->LoadCubeMap();
     cubeMap->GetShader() = ShaderManager::Instance()->GetShader("CubeMap");
 
-	//static_objects.push_back(std::move(map));
+//	static_objects.push_back(std::move(map));
 	//static_objects.push_back(std::move(boat));
 	static_objects.push_back(std::move(barn));
 	static_objects.push_back(std::move(ground));
@@ -223,7 +220,7 @@ void Scene::AddEntity(PosInfo p)
 		AddEntity(p.cid, p.oid, std::move(player));
 		break;
 	case ClassId::FLAG:
-		egg = std::unique_ptr<Egg>(new Egg(p.x, p.y, p.z));
+		egg = std::unique_ptr<Egg>(new Egg(p.x, p.y, p.z, "Easter_Egg"));
 		egg->SetColor(glm::vec3(0.27f, 0.16f, 0.0f));
 		egg->GetShader() = ShaderManager::Instance()->GetShader("Model");
 		egg->SetClassId(p.cid);
