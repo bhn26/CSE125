@@ -147,6 +147,15 @@ void Player::ProcessMouseMovement(GLfloat xoffset, GLfloat yoffset, GLboolean co
     yoffset *= 0.03f;
 
     // Update Front, Right and Up Vectors using the updated Eular angles
+	glm::mat4 temp = this->toWorld * glm::rotate(glm::mat4(1.0f), glm::radians(-xoffset), glm::vec3(1.0f, 1.0f, 1.0f));
+	glm::mat3 tempmat = glm::mat3(temp);
+	for (int col = 0; col < 3; col++)
+		for (int row = 0; row < 3; row++)
+			tempmat[col][row] /= scale[col];
+	glm::quat trot = static_cast<glm::quat>(tempmat);
+
+	printf("TROT VALS: %f, %f\n", trot.x, trot.z);
+
     this->toWorld = this->toWorld * glm::rotate(glm::mat4(1.0f), glm::radians(-xoffset), glm::vec3(0.0f, 1.0f, 0.0f));
 
     camAngle += glm::radians(yoffset);
@@ -159,7 +168,7 @@ void Player::ProcessMouseMovement(GLfloat xoffset, GLfloat yoffset, GLboolean co
 	// Don't send me stuff unless you're alive
 	if (++tick % 10 == 0 && alive == true)
     {
-        ClientGame::instance()->sendRotationPacket();
+        ClientGame::instance()->sendRotationPacket(trot.x, trot.y);
         tick = 0;
     }
 }
@@ -171,6 +180,12 @@ void Player::ProcessViewMovement(GLfloat xoffset, GLfloat yoffset, GLboolean con
     yoffset *= m_VViewSensitivity;
 
     // Update Front, Right and Up Vectors using the updated Eular angles
+	glm::mat4 temp = this->toWorld * glm::rotate(glm::mat4(1.0f), glm::radians(-xoffset), glm::vec3(1.0f, 1.0f, 1.0f));
+	for (int col = 0; col < 3; col++)
+		for (int row = 0; row < 3; row++)
+			temp[col][row] /= scale[col];
+	glm::quat trot = static_cast<glm::quat>(temp);
+
     this->toWorld = this->toWorld * glm::rotate(glm::mat4(1.0f), glm::radians(-xoffset), glm::vec3(0.0f, 1.0f, 0.0f));
 
     camAngle += glm::radians(yoffset);
@@ -182,7 +197,7 @@ void Player::ProcessViewMovement(GLfloat xoffset, GLfloat yoffset, GLboolean con
 
     if (++tick % 10 == 0)
     {
-        ClientGame::instance()->sendRotationPacket();
+        ClientGame::instance()->sendRotationPacket(trot.x, trot.y);
         tick = 0;
     }
 }

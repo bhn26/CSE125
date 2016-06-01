@@ -303,7 +303,7 @@ void ClientGame::receiveRotationPacket(int offset) {
 
 }
 
-void ClientGame::sendRotationPacket() {
+void ClientGame::sendRotationPacket(float trotx, float trotz) {
     const unsigned int packet_size = sizeof(Packet);
     char packet_data[packet_size];
 
@@ -319,6 +319,11 @@ void ClientGame::sendRotationPacket() {
 	pi.rotx = rot.x;
 	pi.roty = rot.y;
 	pi.rotz = rot.z;
+
+	pi.camx = trotx;
+	pi.camz = trotz;
+
+	printf("CLIENT ROTS: %f, %f, %f, %f\n", pi.camx, pi.roty, pi.camz, pi.rotw);
 
 	//pi.h_rotation = h_rot;
     pi.serialize(packet.dat.buf);
@@ -357,14 +362,20 @@ void ClientGame::receiveGameOverPacket(int offset) {
 	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
 	struct ScoreInfo* s = (struct ScoreInfo *) &(dat->buf);
 
-	if (s->t0_score != 0) { // t0 win
+	if (s->t0_score == s->t1_score) {
+		winner = -1;
+	}
+	else if (s->t0_score > s->t1_score) { // t0 win
 		winner = 0;
 	}
 	else { // t1 win
 		winner = 1;
 	}
 
-	printf("Team %d won!\n", winner);
+	if (winner == -1)
+		printf("Game was a tie!\n");
+	else
+		printf("Team %d won!\n", winner);
 	// change state to game over screen
 	Window::m_pStateManager->ChangeState(GOState::GetInstance(Window::m_pStateManager));
 }
@@ -569,7 +580,7 @@ void ClientGame::GameLoop()
 
 		if (++tick % 15 == 0 && iSpawned)
 		{
-			ClientGame::instance()->sendRotationPacket();
+			ClientGame::instance()->sendRotationPacket(0.0, 0.0);
 			tick = 0;
 		}
     }
