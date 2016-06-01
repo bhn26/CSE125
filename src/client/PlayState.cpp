@@ -28,6 +28,10 @@ CPlayState::~CPlayState()
 
 	delete sb_bg;
 	delete sb_table;
+
+	delete hud_egg;
+	delete hud_health;
+	delete hud_weapon_and_timer;
 }
 
 CPlayState* CPlayState::GetInstance(CStateManager* pManager)
@@ -217,14 +221,7 @@ void CPlayState::Draw()
 
 	Scene::Instance()->Draw();
 
-	// SELF NUMBER OF EGGS
-	if (Scene::Instance()->GetPlayer() != NULL) {
-		char score[20];
-		strcpy_s(score, "Eggs Collected: ");
-		strcat_s(score, std::to_string(Scene::Instance()->GetPlayer()->GetScore()).c_str());
-		TextRenderer::RenderText(score, Window::width/2 - 100, Window::height - 50, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
-	}
-
+	//////////////// SCOREBOARD ///////////////////////////////////
 	if (show_scoreboard) {
 		int our_team = ClientGame::instance()->GetClientTeam();
 
@@ -297,8 +294,29 @@ void CPlayState::Draw()
 		printf("score 1: %d\n", ClientGame::instance()->GetScores()[1]);
 		n = n - ClientGame::instance()->GetScores()[0] - ClientGame::instance()->GetScores()[1];
 		TextRenderer::RenderText(std::to_string(n).c_str(),25, 595, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f));
-	}
 
+	} else if (Scene::Instance()->GetPlayer() != NULL) {
+		int x = 20;
+		int y = Window::height - hud_egg->Height() - 20;
+
+		//////////////// EGGS COLLECTED ///////////////////////////
+		int score = Scene::Instance()->GetPlayer()->GetScore();
+		for (int i = 0; i < score; i++) {
+			sprite_renderer->DrawSprite(*hud_egg, glm::vec2(x, y), glm::vec2(hud_egg->Width(), hud_egg->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+			x = x + hud_egg->Width() + 5;
+		}
+
+		////////////////////// HEALTH BAR /////////////////////////////////
+		x = Texture::GetWindowCenter(hud_health->Width());
+		y = 20;
+
+		sprite_renderer->DrawSprite(*hud_health, glm::vec2(x, y), glm::vec2(hud_health->Width(), hud_health->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+
+		////////////// WEAPON & TIMER ///////////////////////////////////
+		x = Window::width - hud_weapon_and_timer->Width() - 20;
+		y = Window::height - hud_weapon_and_timer->Height() - 20;
+		sprite_renderer->DrawSprite(*hud_weapon_and_timer, glm::vec2(x, y), glm::vec2(hud_weapon_and_timer->Width(), hud_weapon_and_timer->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+	}
 }
 
 void CPlayState::InitTextures() {
@@ -306,6 +324,10 @@ void CPlayState::InitTextures() {
 		// Create the different images
 		sb_bg = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/scoreboard_bg.png");
 		sb_table = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/scoreboard.png");
+
+		hud_egg = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/hud_egg.png");
+		hud_health = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/hud_health.png");
+		hud_weapon_and_timer = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/hud_weapon&timer.png");
 
 		initialized = true;
 	}

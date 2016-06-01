@@ -40,8 +40,12 @@ private:
 
 	SpriteRenderer * sprite_renderer;
 
-	Texture* sb_bg;
-	Texture* sb_table;
+	Texture * sb_bg;
+	Texture * sb_table;
+
+	Texture * hud_egg;
+	Texture * hud_health;
+	Texture * hud_weapon_and_timer;
 };
 
 #endif  // _PLAYSTATE_H_
