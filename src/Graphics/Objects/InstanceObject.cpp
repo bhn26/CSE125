@@ -91,8 +91,6 @@ void InstanceObject::Draw() const
 		glDrawElementsInstanced(GL_TRIANGLES, instance->Meshes()[i].indices.size(), GL_UNSIGNED_INT, 0, amount);
 		glBindVertexArray(0);
 	}
-
-	//model->Draw(shader.get());
 }
 
 void InstanceObject::Update(float deltaTime)

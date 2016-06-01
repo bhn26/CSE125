@@ -102,9 +102,9 @@ void Scene::Setup()
  //   boat->Scale(100.0f);
  //   boat->Translate(glm::vec3(0.0f, 50.4f, 40.0f));
 
-    std::unique_ptr<StaticObject> windMill = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Windmill")));
-    windMill->Scale(1/4.0f);
-    windMill->Translate(glm::vec3(75.0f, 0.0f, 75.0f));
+    std::unique_ptr<StaticObject> windmill = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Windmill")));
+    windmill->Scale(1/4.0f);
+    windmill->Translate(glm::vec3(75.0f, 0.0f, 75.0f));
     
 
 	grass = std::unique_ptr<InstanceObject>(new InstanceObject(ModelManager::GetModel("Grass"), 10000, 1.0f));
@@ -125,7 +125,7 @@ void Scene::Setup()
 	static_objects.push_back(std::move(green_tractor));
 	static_objects.push_back(std::move(orange_tractor));
 	static_objects.push_back(std::move(construction_site));
-	static_objects.push_back(std::move(windMill));
+	static_objects.push_back(std::move(windmill));
 	static_objects.push_back(std::move(maze));
 	static_objects.push_back(std::move(silo));
 	static_objects.push_back(std::move(rocks));
