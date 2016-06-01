@@ -38,6 +38,8 @@ public:
 
 	int GetClassId();
 
+	btDiscreteDynamicsWorld* GetPhysicsWorld() { return curWorld; }
+
 	btRigidBody* GetRigidBody();
 
 	// Marks this entity to be ignored
