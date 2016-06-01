@@ -88,10 +88,11 @@ Flag*  EntitySpawner::spawnFlag(PosInfo pos, btDiscreteDynamicsWorld* physicsWor
 	return newFlag;
 }
 
-Bullet* EntitySpawner::spawnBullet(int playerid, int teamid, int damage, btVector3* pos, btVector3* velocity, btMatrix3x3* rotation, btDiscreteDynamicsWorld* physicsWorld)
+Bullet* EntitySpawner::spawnBullet(int playerid, int teamid, int damage, btRigidBody* bullet_body, btDiscreteDynamicsWorld* physicsWorld)
 {
 	// Create Bullet and add to Entity Map
-	Bullet* fireProjectile = new Bullet(oid_bullet, playerid, teamid, damage, pos, velocity, rotation, physicsWorld);
+	//Bullet* fireProjectile = new Bullet(oid_bullet, playerid, teamid, damage, pos, velocity, rotation, physicsWorld);
+	Bullet* fireProjectile = new Bullet(oid_bullet, playerid, teamid, damage, bullet_body, physicsWorld);
 	AddEntity(ClassId::BULLET, oid_bullet, fireProjectile);
 	oid_bullet++;
 

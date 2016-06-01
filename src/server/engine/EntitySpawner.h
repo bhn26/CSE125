@@ -32,7 +32,7 @@ public:
 
 	Flag*  spawnFlag(PosInfo pos, btDiscreteDynamicsWorld* physicsWorld);
 
-	Bullet* spawnBullet(int playerid, int teamid, int damage, btVector3* pos, btVector3* velocity, btMatrix3x3* rotation, btDiscreteDynamicsWorld* physicsWorld);
+	Bullet* spawnBullet(int playerid, int teamid, int damage, btRigidBody* bullet_body, btDiscreteDynamicsWorld* physicsWorld);
 
 	void spawnCollectable(btDiscreteDynamicsWorld* curworld, WeaponType w_type);
 

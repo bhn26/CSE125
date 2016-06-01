@@ -14,9 +14,7 @@ private:
 
 public:
 
-	Bullet(int objectid, int playerid, int teamid, int damage, btVector3* pos, btVector3* velocity, btMatrix3x3* rotation, btDiscreteDynamicsWorld* physicsWorld);
-
-	Bullet(int objectid, Player* p, Weapon* weapon, btVector3* bullet_spawn_vector);
+	Bullet(unsigned int objectid, int playerid, int teamid, int damage, btRigidBody* bullet_body, btDiscreteDynamicsWorld* physicsWorld);
 
 	virtual ~Bullet();
 
