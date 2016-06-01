@@ -31,8 +31,16 @@ GOState* GOState::GetInstance(CStateManager* pManager)
 	return &Instance;
 }
 
-void GOState::OnKeyDown(WPARAM wKey)
+void GOState::OnKeyDown(int action, int key)
 {
+	switch (key)
+	{
+	case GLFW_KEY_ESCAPE:
+		glfwSetWindowShouldClose(ClientGame::instance()->window, GL_TRUE);
+		break;
+	default:
+		break;
+	}
 }
 
 void GOState::OnClick(int button, double x, double y) {

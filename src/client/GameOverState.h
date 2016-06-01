@@ -17,7 +17,7 @@ class GOState : public CGameState
 public:
 	~GOState();
 
-	void OnKeyDown(WPARAM wKey);
+	void OnKeyDown(int action, int key);
 	void OnClick(int button, double x, double y);
 	void Draw();
 	void EnterState();

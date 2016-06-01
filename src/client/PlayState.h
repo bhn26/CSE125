@@ -40,7 +40,8 @@ private:
 
 	SpriteRenderer * sprite_renderer;
 
-	Texture * sb_bg;
+	Texture * sb_chick;
+	Texture * sb_side;
 	Texture * sb_table;
 
 	Texture * hud_egg;
