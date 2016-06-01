@@ -18,6 +18,11 @@ CMenuState::CMenuState(CStateManager* pManager)
 
 CMenuState::~CMenuState()
 {
+	delete sprite_renderer;
+
+	delete bg;
+	delete textbox;
+	delete join;
 }
 
 CMenuState* CMenuState::GetInstance(CStateManager* pManager)

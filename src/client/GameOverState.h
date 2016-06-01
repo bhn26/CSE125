@@ -36,6 +36,8 @@ private:
 	SpriteRenderer * sprite_renderer;
 
 	Texture * bg;
+	Texture * win;
+	Texture * lose;
 
 	bool initialized;
 };
