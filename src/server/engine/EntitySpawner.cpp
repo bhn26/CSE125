@@ -115,12 +115,12 @@ Bullet* EntitySpawner::spawnBullet(int playerid, int teamid, int damage, btVecto
 }
 
 
-Collectable* EntitySpawner::spawnCollectable(PosInfo pos, btDiscreteDynamicsWorld* curWorld, CollectableType col_type)
+void EntitySpawner::spawnCollectable(btDiscreteDynamicsWorld* curWorld, WeaponType w_type)
 {
 	Weapon* wp;
-	switch (col_type)
+	switch (w_type)
 		{
-		case CollectableType::SEEDGUN:
+		case WeaponType::SEEDGUN:
 		{
 			wp = new SeedGun(curWorld);
 			break;
@@ -135,7 +135,13 @@ Collectable* EntitySpawner::spawnCollectable(PosInfo pos, btDiscreteDynamicsWorl
 	if (wp == nullptr)
 		return;
 
-	Collectable* ranCollectable = new Collectable(oid_collectable, pos, curWorld);
+	std::pair<int, int> p = getRandomLoc();
+	PosInfo pos;
+	pos.x = p.first;
+	pos.y = 90;
+	pos.z = p.second;
+
+	Collectable* ranCollectable = new Collectable(oid_collectable, pos, curWorld, wp);
 	AddEntity(ClassId::COLLECTABLE, oid_collectable, ranCollectable);
 	oid_collectable++;
 
@@ -155,7 +161,6 @@ Collectable* EntitySpawner::spawnCollectable(PosInfo pos, btDiscreteDynamicsWorl
 	out.roty = quat.getY();
 	out.rotz = quat.getZ();
 	ServerGame::instance()->sendSpawnPacket(out);
-	return ranCollectable;
 }
 
 

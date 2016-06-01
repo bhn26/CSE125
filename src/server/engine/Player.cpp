@@ -37,7 +37,7 @@ Player::Player(int objectid, int teamid, PosInfo pos, btDiscreteDynamicsWorld* p
 	this->position = pos;
 	this->playerWeapon = nullptr;
 	this->peckWeapon = new Peck(curWorld);
-	this->playerWeapon = new SeedGun(curWorld);
+	//this->playerWeapon = new SeedGun(curWorld);
 	this->alive = true;
 	this->death_time = 0;
 
@@ -143,8 +143,12 @@ int Player::GetTeamId()
 	btMatrix3x3 currentOrientation = currentTrans.getBasis();
 	//btQuaternion* playerRotation = new btQuaternion(currentOrientation.getX(), currentOrientation.getY(), currentOrientation.getX(), currentOrientation.getW());
 
-	playerWeapon->UseWeapon(position, &currentOrientation, this->objectId, this->teamId, this);
-	ServerGame::instance()->sendShootPacket(objectId);
+	if (playerWeapon->UseWeapon(position, &currentOrientation, this->objectId, this->teamId, this) == 0)
+	{
+		delete playerWeapon;
+		playerWeapon = nullptr;
+	}
+	ServerGame::instance()->sendAttackPacket(objectId);
 	//printf("player with objId: %d used weapon\n", objectId);
 }
 
@@ -153,6 +157,17 @@ void Player::EquipWeapon(Weapon* newWeapon)
 	if (!alive)
 		return;
 	this->playerWeapon = newWeapon;
+}
+
+void Player::DiscardWeapon()
+{
+	if (playerWeapon)
+	{
+		delete playerWeapon;
+		playerWeapon = nullptr;
+	}
+
+	//if(alive) send packet for discard animation
 }
 
 bool Player::HasWeapon()
@@ -189,14 +204,16 @@ void Player::UsePeck()
 	btTransform currentTrans;
 	entityRigidBody->getMotionState()->getWorldTransform(currentTrans);
 	btMatrix3x3 currentOrientation = currentTrans.getBasis();
+	ServerGame::instance()->sendAttackPacket(objectId);
 //	peckWeapon->UseWeapon(&(entityRigidBody->getCenterOfMassPosition()), &currentOrientation, this->objectId, this->teamId, this);
-	printf("player with objId: %d used peck! \n", objectId);
+	//printf("player with objId: %d used peck! \n", objectId);
 }
 
 void Player::HandleDeath(unsigned int death_tick)
 {
-	printf("Player %u has died!", objectId);
+	//printf("Player %u has died!", objectId);
 	this->alive = false;
+	DiscardWeapon();
 	death_time = death_tick;
 	ServerGame::instance()->sendDeathPacket(objectId);
 	//EntitySpawner::instance()->RemoveEntity(classId, objectId);

@@ -1,4 +1,5 @@
 #include "Collectable.h"
+#include "CollectableSpawner.h"
 //#include "EntitySpawner.h"
 #include "Player.h"
 #include <time.h>
@@ -40,10 +41,16 @@ void Collectable::HandleCollect(Player* collidedPlayer)
 
 	//Remove collectable object from EntitySpawner Map
 	EntitySpawner::instance()->RemoveEntity(ClassId::COLLECTABLE, objectId);
+	CollectableSpawner::instance()->DecCollectables();
 
 	// If player already has usable
 	if (collidedPlayer->HasWeapon())
 	{
+		if (this->weapon->GetWeaponType() == collidedPlayer->GetPlayerWeaponType())
+		{
+			collidedPlayer->GetWeapon()->ReloadWeapon();
+		}
+
 		return;
 	}
 

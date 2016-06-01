@@ -228,12 +228,13 @@ void Scene::AddEntity(PosInfo p)
     }
 	case ClassId::COLLECTABLE:
 	{
-		egg = std::unique_ptr<Egg>(new Egg(p.x, p.y, p.z));
-		egg->SetColor(glm::vec3(0.27f, 0.16f, 0.0f));
-		egg->GetShader() = ShaderManager::Instance()->GetShader("Model");
-		egg->SetClassId(p.cid);
-		egg->SetObjId(p.oid);
-		AddEntity(p.cid, p.oid, std::move(egg));
+		//std::unique_ptr<StaticObject> bullet = std::unique_ptr<StaticObject>(new StaticObject("assets/weapons/pumpkinseed.obj"));
+		std::unique_ptr<StaticObject> bullet = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Pumpkin")));
+		bullet->Translate(glm::vec3(p.x, p.y, p.z));
+		bullet->SetClassId(p.cid);
+		bullet->SetObjId(p.oid);
+		//bullet->GetShader() = modelShader;        // Set in ModelEntity
+		AddEntity(p.cid, p.oid, std::move(bullet));
 		break;
 	}
 	default:

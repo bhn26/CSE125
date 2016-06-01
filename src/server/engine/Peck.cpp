@@ -15,7 +15,7 @@ Peck::Peck(btDiscreteDynamicsWorld* curworld): Weapon(meleefireRate, meleeDamage
 
 Peck::~Peck(){}
 
-void Peck::UseWeapon(const btVector3* position, btMatrix3x3* rotation, int playerid, int teamid, Entity* user)
+int Peck::UseWeapon(const btVector3* position, btMatrix3x3* rotation, int playerid, int teamid, Entity* user)
 {
 	if (this->fireFlag)
 	{
@@ -35,4 +35,5 @@ void Peck::UseWeapon(const btVector3* position, btMatrix3x3* rotation, int playe
 		// add used weapon to "used" list in FireRateReset static object
 		FireRateReset::instance()->AddWeapon(this);
 	}
+	return 1; //infinite ammo
 }

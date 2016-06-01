@@ -52,10 +52,15 @@ void CPlayState::OnClick(int button, int action, double x, double y) {
 		Window::firstMouse = true;
 		glfwSetInputMode(ClientGame::instance()->window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	}
-	else if (button == GLFW_MOUSE_BUTTON_RIGHT && Window::mouseCaptured)
+	else if (button == GLFW_MOUSE_BUTTON_MIDDLE && Window::mouseCaptured)
 	{
 		Window::mouseCaptured = false;
 		glfwSetInputMode(ClientGame::instance()->window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+	}
+	else if (button == GLFW_MOUSE_BUTTON_RIGHT && Window::mouseCaptured)
+	{
+		if (action == GLFW_PRESS || action == GLFW_REPEAT)
+			ClientGame::instance()->HandleButtonEvent(ConfigManager::instance()->GetConfigValue("PC_Right_Click"));
 	}
 	else if (button == GLFW_MOUSE_BUTTON_LEFT && Window::mouseCaptured)
 	{

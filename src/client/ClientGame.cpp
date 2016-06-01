@@ -19,7 +19,9 @@
 
 const std::string ClientGame::EVENT_QUIT = "Quit";
 const std::string ClientGame::EVENT_JUMP = "Jump";
-const std::string ClientGame::EVENT_ATTACK = "Attack";
+const std::string ClientGame::EVENT_WEAPON_ATTACK = "Weapon_Attack";
+const std::string ClientGame::EVENT_PECK_ATTACK = "Peck_Attack";
+const std::string ClientGame::EVENT_DISCARD_WEAPON = "Discard_Weapon";
 const std::string ClientGame::EVENT_START = "Start";
 const std::string ClientGame::EVENT_MOVE_FORWARD = "Move_Forward";
 const std::string ClientGame::EVENT_MOVE_BACKWARD = "Move_Backward";
@@ -375,20 +377,45 @@ void ClientGame::receiveGameOverPacket(int offset) {
 	// change state to game over screen
 }
 
-void ClientGame::sendShootPacket() {
+void ClientGame::sendAttackPacket(AttackType t) {
 	const unsigned int packet_size = sizeof(Packet);
 	char packet_data[packet_size];
 
 	Packet packet;
-	packet.hdr.packet_type = SHOOT_EVENT;
+	packet.hdr.packet_type = ATTACK_EVENT;
 	packet.hdr.sender_id = client_id;
 	packet.hdr.receiver_id = SERVER_ID;
+
+	MiscInfo m;
+	m.misc1 = t;
+	m.serialize(packet.dat.buf);
 
 	packet.serialize(packet_data);
 
 	NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
 }
 
+void ClientGame::receiveAttackPacket(int offset)
+{
+	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
+	struct EmoteInfo* e = (struct EmoteInfo *) &(dat->buf); // later parse this to miscinfo
+	((Player *)(Scene::Instance()->GetEntity(ClassId::PLAYER, e->id).get()))->Attack();
+}
+
+void ClientGame::sendDiscardPacket()
+{
+
+	const unsigned int packet_size = sizeof(Packet);
+	char packet_data[packet_size];
+
+	Packet packet;
+	packet.hdr.packet_type = DISCARD_EVENT;
+	packet.hdr.sender_id = client_id;
+	packet.hdr.receiver_id = SERVER_ID;
+
+	packet.serialize(packet_data);
+	NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
+}
 
 //	NOTE: We're going to use the sender id as the guy that's dancing instead of changing
 void ClientGame::receiveDancePacket(int offset)
@@ -421,13 +448,6 @@ void ClientGame::receiveDeathPacket(int offset)
 	((Player *)(Scene::Instance()->GetEntity(ClassId::PLAYER, e->id).get()))->Die();
 	decScore(((Player *)(Scene::Instance()->GetEntity(ClassId::PLAYER, e->id).get()))->GetTeam(), 
 		((Player *)(Scene::Instance()->GetEntity(ClassId::PLAYER, e->id).get()))->GetScore());
-}
-
-void ClientGame::receiveShootPacket(int offset)
-{
-	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
-	struct EmoteInfo* e = (struct EmoteInfo *) &(dat->buf);
-	((Player *)(Scene::Instance()->GetEntity(ClassId::PLAYER, e->id).get()))->Attack();
 }
 
 void ClientGame::receiveRespawnPacket(int offset) 
@@ -502,8 +522,8 @@ void ClientGame::update()
 				receiveRotationPacket(i + sizeof(PacketHeader));
 				break;
 
-			case SHOOT_EVENT:
-				receiveShootPacket(i + sizeof(PacketHeader));
+			case ATTACK_EVENT:
+				receiveAttackPacket(i + sizeof(PacketHeader));
 				break;
 
 			case UPDATE_SCORE:
@@ -671,7 +691,7 @@ void ClientGame::PrintFrameRate()
 // Checks the controller input on Microsoft PC-joystick driver
 // axis[0] = (left) right
 // axis[1] = (left) down
-// axis[2] = 
+// axis[2] = (< 0) Left trigger, (> 0) Right trigger
 // axis[3] = (right) down
 // axis[4] = (right) right
 // button[0-3] = a, b, x, y
@@ -708,6 +728,21 @@ void ClientGame::CheckController()
         HandleRightAnalog(axes);
         HandleButtonPress(buttons);
     }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// axis[2] = (< 0) Left trigger, (> 0) Right trigger
+void ClientGame::HandleTriggers(const float * axes)
+{
+	static const float threshold = 0.5f;
+	if (axes[2] < -threshold)
+	{
+		HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_L_Trigger"));
+	}
+	if (axes[2] > threshold)
+	{
+		HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_R_Trigger"));
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -823,10 +858,18 @@ void ClientGame::HandleButtonEvent(const std::string& event, bool buttonDown)
         {
             glfwSetWindowShouldClose(this->window, GL_TRUE);
         }
-        else if (event == EVENT_ATTACK)
+        else if (event == EVENT_WEAPON_ATTACK)
         {
-            sendShootPacket();
+            sendAttackPacket(AttackType::WEAPON_ATTACK);
         }
+		else if (event == EVENT_PECK_ATTACK)
+		{
+			sendAttackPacket(AttackType::PECK);
+		}
+		else if (event == EVENT_DISCARD_WEAPON)
+		{
+			sendDiscardPacket(); // TODOCHANGETHIS
+		}
         else if (event == EVENT_JUMP)
         {
             sendJumpPacket();
