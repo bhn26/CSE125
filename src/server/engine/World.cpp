@@ -242,6 +242,11 @@ void World::UpdateWorld()
 			if (obB->getUserIndex() == PLAYER)
 			{
 				Player * collidePlayer = (Player *)obB->getUserPointer();
+				// ignore friendly fire
+				if (collideBullet->GetTeamId() == collidePlayer->GetTeamId())
+				{
+					continue;
+				}
 				//printf("Pushed to delete!, hit playerB");
 				deleteList.push_back(collideBullet);
 				collideBullet->SetToMarked();
@@ -290,6 +295,11 @@ void World::UpdateWorld()
 			if (obA->getUserIndex() == PLAYER)
 			{
 				Player * collidePlayer = (Player *)obA->getUserPointer();
+				// ignore team fire
+				if (collideBullet->GetTeamId() == collidePlayer->GetTeamId())
+				{
+					continue;
+				}
 
 				//printf("Pushed to delete! hit player A");
 				deleteList.push_back(collideBullet);

@@ -13,6 +13,7 @@
 #include "network/NetworkData.h"
 #include "TextRenderer.h"
 #include "client/PlayState.h"
+#include "client/GameOverState.h"
 #include "ConfigManager.h"
 #include "Graphics/ShaderManager.h"
 #include "Graphics/ModelManager.h"
@@ -375,6 +376,7 @@ void ClientGame::receiveGameOverPacket(int offset) {
 
 	printf("Team %d won!\n", winner);
 	// change state to game over screen
+	Window::m_pStateManager->ChangeState(GOState::GetInstance(Window::m_pStateManager));
 }
 
 void ClientGame::sendAttackPacket(AttackType t) {
