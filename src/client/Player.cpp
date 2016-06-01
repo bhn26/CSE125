@@ -149,9 +149,6 @@ void Player::ProcessMouseMovement(GLfloat xoffset, GLfloat yoffset, GLboolean co
     // Update Front, Right and Up Vectors using the updated Eular angles
 	glm::mat4 temp = this->toWorld * glm::rotate(glm::mat4(1.0f), glm::radians(-xoffset), glm::vec3(1.0f, 1.0f, 1.0f));
 	glm::mat3 tempmat = glm::mat3(temp);
-	for (int col = 0; col < 3; col++)
-		for (int row = 0; row < 3; row++)
-			tempmat[col][row] /= scale[col];
 	glm::quat trot = static_cast<glm::quat>(tempmat);
 
 	printf("TROT VALS: %f, %f\n", trot.x, trot.z);

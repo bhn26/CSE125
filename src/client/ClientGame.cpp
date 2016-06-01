@@ -323,7 +323,7 @@ void ClientGame::sendRotationPacket(float trotx, float trotz) {
 	pi.camx = trotx;
 	pi.camz = trotz;
 
-	printf("CLIENT ROTS: %f, %f, %f, %f\n", pi.camx, pi.roty, pi.camz, pi.rotw);
+	printf("CLIENT ROTS: %f, %f, %f, %f\n", pi.camx, pi.roty, pi.rotz, pi.rotw);
 
 	//pi.h_rotation = h_rot;
     pi.serialize(packet.dat.buf);
