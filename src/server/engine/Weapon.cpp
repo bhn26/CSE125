@@ -12,7 +12,7 @@ Weapon::Weapon(int firerate, int wdamage, btDiscreteDynamicsWorld* curWorld)
 Weapon::~Weapon(){}
 
 // to be overwritten
-void Weapon::UseWeapon(btVector3 * position, btMatrix3x3* rotation, int playerid, int teamid, Entity* owner){}
+int Weapon::UseWeapon(btVector3 * position, btMatrix3x3* rotation, int playerid, int teamid, Entity* owner) { return 0; }
 
 // to be overwritten
-void Weapon::ReloadWeapon(){}
+void Weapon::ReloadWeapon() {currentAmmo = maxAmmo;}

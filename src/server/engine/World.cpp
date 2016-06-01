@@ -3,6 +3,7 @@
 #include "../ServerGame.h"
 #include "FireRateReset.h"
 #include "RespawnHandler.h"
+#include "CollectableSpawner.h"
 #include "Player.h"
 #include "Flag.h"
 #include "Bullet.h"
@@ -314,18 +315,18 @@ void World::UpdateWorld()
 			else if (obA->getUserIndex() == BULLET)
 			{
 				Bullet * collideBullet2 = (Bullet *)obA->getUserPointer();
-				printf("Pushed to delete! hit bullet A");
+				//printf("Pushed to delete! hit bullet A");
 				deleteList.push_back(collideBullet);
 				collideBullet->SetToMarked();
 			}
 			else if (obA->getUserIndex() < 15)
 			{
 				// deletes bulletB regardless
-				printf("Pushed to delete!, hit ground A,  %d", obA->getUserIndex());
+				//printf("Pushed to delete!, hit ground A,  %d", obA->getUserIndex());
 				btVector3 bulPos = collideBullet->GetEntityPosition();
-				printf("Current position:  x: %f, y: %f, z: %f  \n", bulPos.getX(), bulPos.getY(), bulPos.getZ());
+				//printf("Current position:  x: %f, y: %f, z: %f  \n", bulPos.getX(), bulPos.getY(), bulPos.getZ());
 				bulPos = collideBullet->GetRigidBody()->getLinearVelocity();
-				printf("Current velocity:  x: %f, y: %f, z: %f  \n", bulPos.getX(), bulPos.getY(), bulPos.getZ());
+				//printf("Current velocity:  x: %f, y: %f, z: %f  \n", bulPos.getX(), bulPos.getY(), bulPos.getZ());
 
 				deleteList.push_back(collideBullet);
 				collideBullet->SetToMarked();
@@ -350,7 +351,7 @@ void World::UpdateWorld()
 				// Handle Collectable Collection
 				Collectable* collectObj = (Collectable*)obB->getUserPointer();
 				collectObj->HandleCollect(collidePlayer);
-				ServerGame::instance()->sendRemovePacket(ClassId::COLLECTABLE, collectObj->GetObjectId());
+				ServerGame::instance()->sendRemovePacket(ClassId::COLLECTABLE, collectObj->GetObjectId(), ClassId::PLAYER, collidePlayer->GetObjectId());
 			}
 
 			// if Obj B is Flag
@@ -368,7 +369,7 @@ void World::UpdateWorld()
 					continue;
 				}
 				collideFlag->HandleCollectable(collidePlayer);
-				ServerGame::instance()->sendRemovePacket(ClassId::FLAG, collideFlag->GetObjectId());
+				ServerGame::instance()->sendRemovePacket(ClassId::FLAG, collideFlag->GetObjectId(), ClassId::PLAYER, collidePlayer->GetObjectId());
 				markedList.push_back(collideFlag);
 				collideFlag->SetToMarked();
 				//TODO send a packet for the player to acquire the item for GUI
@@ -424,7 +425,7 @@ void World::UpdateWorld()
 				// Handle Collectable Collection
 				Collectable* collectObj = (Collectable*)obA->getUserPointer();
 				collectObj->HandleCollect(collidePlayer);
-				ServerGame::instance()->sendRemovePacket(ClassId::COLLECTABLE, collectObj->GetObjectId());
+				ServerGame::instance()->sendRemovePacket(ClassId::COLLECTABLE, collectObj->GetObjectId(), ClassId::PLAYER, collidePlayer->GetObjectId());
 			}
 
 			// if Obj A is Flag
@@ -441,7 +442,7 @@ void World::UpdateWorld()
 					continue;
 				}
 				collideFlag->HandleCollectable(collidePlayer);
-				ServerGame::instance()->sendRemovePacket(ClassId::FLAG, collideFlag->GetObjectId());
+				ServerGame::instance()->sendRemovePacket(ClassId::FLAG, collideFlag->GetObjectId(), ClassId::PLAYER, collidePlayer->GetObjectId());
 				markedList.push_back(collideFlag);
 				collideFlag->SetToMarked();
 				//TODO send a packet for the player to acquire the item for GUI
@@ -516,7 +517,7 @@ void World::UpdateWorld()
 		for (std::map<std::pair<int, unsigned int>, Entity*>::iterator it = dynamicMap->begin(); it != dynamicMap->end(); it++)
 		{
 			btVector3 vec = it->second->GetEntityPosition();
-			printf(" Dynamic object classid: %d, objid: %d, at (%f,%f,%f)\n", it->second->GetClassId(), it->second->GetObjectId(), vec.getX(), vec.getY(), vec.getZ());
+			//printf(" Dynamic object classid: %d, objid: %d, at (%f,%f,%f)\n", it->second->GetClassId(), it->second->GetObjectId(), vec.getX(), vec.getY(), vec.getZ());
 		}
 
 		/*
@@ -528,7 +529,9 @@ void World::UpdateWorld()
 		*/
 	}
 
+	// Handle spawning for this tick
 	RespawnHandler::instance()->RespawnPlayers(world_tick);
+	CollectableSpawner::instance()->SpawnRandomCollectables(curWorld, world_tick);
 
 	// Send position updates of all dynamic objects
 	if (world_tick % 4 == 0)
@@ -537,8 +540,15 @@ void World::UpdateWorld()
 		std::map<std::pair<int, unsigned int>, Entity* > * dynamicMap = EntitySpawner::instance()->GetMap();
 		for (std::map<std::pair<int, unsigned int>, Entity*>::iterator it = dynamicMap->begin(); it != dynamicMap->end(); it++)
 		{
-			btVector3 vec = it->second->GetEntityPosition();
-			//printf(" Dynamic object classid: %d, objid: %d, at (%f,%f,%f)\n", it->second->GetClassId(), it->second->GetObjectId(), vec.getX(), vec.getY(), vec.getZ());
+			//btVector3 vec = it->second->GetEntityPosition();
+			btVector3 vec = it->second->GetRigidBody()->getLinearVelocity();
+			float thresh = .0005;
+			// don't send packets if the object is stationary?
+			if (abs(vec.getX()) < thresh && abs(vec.getY()) < thresh && abs(vec.getZ()) < thresh)
+			{
+				//printf(" Dynamic object classid: %d, objid: %d, velocity (%f,%f,%f)\n", it->second->GetClassId(), it->second->GetObjectId(), vec.getX(), vec.getY(), vec.getZ());
+				continue;
+			}
 			ServerGame::instance()->sendMovePacket((ClassId)it->second->GetClassId(), it->second->GetObjectId());
 		}
 	}

@@ -7,12 +7,6 @@
 const int WORLD_WIDTH = 300;
 const int WORLD_HEIGHT = 300;
 
-/*
-static int oid0 = 0;
-static int oid1 = 0;
-static int oid2 = 0;
-*/
-
 enum MoveType {
 
     BAD_MOVE = -1,
@@ -24,6 +18,12 @@ enum MoveType {
     MOVE_LEFT = 2,
 
     MOVE_RIGHT = 3
+};
+
+enum AttackType {
+	PECK,
+
+	WEAPON_ATTACK
 };
 
 enum GameDataId 
@@ -92,6 +92,10 @@ struct RemInfo : GameInfo
 	int rem_oid;
 	ClassId rem_cid;
 
+	int rec_oid;    // What was responsible for the removal, i.e. player 2 collects an egg, p2's info goes here
+	ClassId rec_cid;
+	int team_id;
+
 	void serialize(char * data) {
 		memcpy(data, this, sizeof(RemInfo));
 	}
@@ -118,6 +122,21 @@ struct ScoreInfo : GameInfo {
 // Who's emoting, also will include death
 struct EmoteInfo : GameInfo {
 	int id;
+
+	void serialize(char * data) {
+		memcpy(data, this, sizeof(ScoreInfo));
+	}
+
+	void deserialize(char * data) {
+		memcpy(this, data, sizeof(ScoreInfo));
+	}
+};
+
+// Anything that just needs some ints, i.e. attacktype
+struct MiscInfo : GameInfo {
+	int misc1;
+	int misc2;
+	int misc3;
 
 	void serialize(char * data) {
 		memcpy(data, this, sizeof(ScoreInfo));

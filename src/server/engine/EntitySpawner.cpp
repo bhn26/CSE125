@@ -3,8 +3,12 @@
 #include "Bullet.h"
 #include "Player.h"
 #include "Flag.h"
-#include "Collectable.h"
 #include "../ServerGame.h"
+
+//Collectables
+#include "Collectable.h"
+#include "CollectableSpawner.h"
+#include "SeedGun.h"
 
 EntitySpawner* EntitySpawner::spawnInstance = nullptr;
 
@@ -111,13 +115,37 @@ Bullet* EntitySpawner::spawnBullet(int playerid, int teamid, int damage, btVecto
 }
 
 
-Collectable* EntitySpawner::spawnCollectable(int objectid, PosInfo pos, btDiscreteDynamicsWorld* curworld)
+void EntitySpawner::spawnCollectable(btDiscreteDynamicsWorld* curWorld, WeaponType w_type)
 {
-	Collectable* ranCollectable = new Collectable(oid_collectable, pos, curworld);
+	Weapon* wp;
+	switch (w_type)
+		{
+		case WeaponType::SEEDGUN:
+		{
+			wp = new SeedGun(curWorld);
+			break;
+		}
+		default:
+		{
+				wp = nullptr;
+				break;
+		}
+	}
+
+	if (wp == nullptr)
+		return;
+
+	std::pair<int, int> p = getRandomLoc();
+	PosInfo pos;
+	pos.x = p.first;
+	pos.y = 90;
+	pos.z = p.second;
+
+	Collectable* ranCollectable = new Collectable(oid_collectable, pos, curWorld, wp);
 	AddEntity(ClassId::COLLECTABLE, oid_collectable, ranCollectable);
 	oid_collectable++;
 
-	// Send Flag Spawn packet
+	// Send Collectable Spawn packet
 	btVector3 vec = ranCollectable->GetEntityPosition();
 	btQuaternion quat = ranCollectable->GetEntityRotation();
 	printf("Created Collectable at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
@@ -133,7 +161,6 @@ Collectable* EntitySpawner::spawnCollectable(int objectid, PosInfo pos, btDiscre
 	out.roty = quat.getY();
 	out.rotz = quat.getZ();
 	ServerGame::instance()->sendSpawnPacket(out);
-	return ranCollectable;
 }
 
 
