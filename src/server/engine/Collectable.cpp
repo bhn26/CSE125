@@ -6,9 +6,10 @@
 //List of weapons
 #include "SeedGun.h"
 
-Collectable::Collectable(int objectid, PosInfo pos, btDiscreteDynamicsWorld* curworld) : Entity(ClassId::COLLECTABLE, objectid, curworld)
+Collectable::Collectable(int objectid, PosInfo pos, btDiscreteDynamicsWorld* curworld, Weapon* wp) : Entity(ClassId::COLLECTABLE, objectid, curworld)
 {
 	this->curWorld = curworld;
+	this->weapon = wp;
 	btCollisionShape* collectableShape = new btBoxShape(btVector3(1, 1, 1));
 
 	// Create Collectable physics object
@@ -48,13 +49,11 @@ void Collectable::HandleCollect(Player* collidedPlayer)
 
 	// Otherwise, give random useable
 	// Randomize what type of weapon or powerup that player would get
-	int ranPower = rand() % 2;
 //	switch (ranPower)
 //	{
 //	}
 
-	Weapon* seedGun = new SeedGun(curWorld);
-	collidedPlayer->EquipWeapon(seedGun);
+	collidedPlayer->EquipWeapon(weapon);
 }
 
 Collectable::~Collectable()

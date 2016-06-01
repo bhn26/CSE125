@@ -12,17 +12,8 @@ void CollectableSpawner::SpawnRandomCollectable(btDiscreteDynamicsWorld* curworl
 	for(int i = 0; i < num_spawns; i++)\
 	{
 		// determine which weapon and spawn the number of weapons
-		switch (rand() % NUM_WEAPON_TYPES)
-		{
-			case CollectableType::SEEDGUN:
-			{
-				break;
-			}
-			default:
-			{
-				break;
-			}
-		}
+		EntitySpawner::instance()->spawnCollectable();
+
 	}
 
 	// schedule the next spawn

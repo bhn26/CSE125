@@ -24,11 +24,10 @@ class Egg : public Entity
 {
 public:
 	Egg();
-	//Egg(float x, float y, float z);
-	Egg(float x, float y, float z, const GLchar* path);
+	Egg(float x, float y, float z);
 	~Egg();
 
-	Model* model;
+	std::shared_ptr<Model> model;
 	float angle; // For spinning if we want
 
 	glm::vec3 color;

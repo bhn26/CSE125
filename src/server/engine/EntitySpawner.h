@@ -10,6 +10,10 @@ class Flag;
 class Bullet;
 class Collectable;
 
+enum CollectableType {
+	SEEDGUN
+};
+
 class EntitySpawner
 {
 private:
@@ -33,7 +37,7 @@ public:
 
 	Bullet* spawnBullet(int playerid, int teamid, int damage, btVector3* pos, btVector3* velocity, btMatrix3x3* rotation, btDiscreteDynamicsWorld* physicsWorld);
 
-	Collectable* spawnCollectable(PosInfo pos, btDiscreteDynamicsWorld* curworld);
+	Collectable* spawnCollectable(PosInfo pos, btDiscreteDynamicsWorld* curworld, CollectableType col_type);
 
 	void AddEntity(int cid, unsigned int oid, Entity* ent);
 
@@ -42,5 +46,7 @@ public:
 	void RemoveEntity(int cid, unsigned int oid);
 
 	std::map<std::pair<int, unsigned int>, Entity* > * GetMap();
+
+	static std::pair<int, int> getRandomLoc();
 
 };

@@ -3,8 +3,12 @@
 #include "Bullet.h"
 #include "Player.h"
 #include "Flag.h"
-#include "Collectable.h"
 #include "../ServerGame.h"
+
+//Collectables
+#include "Collectable.h"
+#include "CollectableSpawner.h"
+#include "SeedGun.h"
 
 EntitySpawner* EntitySpawner::spawnInstance = nullptr;
 
@@ -111,13 +115,31 @@ Bullet* EntitySpawner::spawnBullet(int playerid, int teamid, int damage, btVecto
 }
 
 
-Collectable* EntitySpawner::spawnCollectable(PosInfo pos, btDiscreteDynamicsWorld* curworld)
+Collectable* EntitySpawner::spawnCollectable(PosInfo pos, btDiscreteDynamicsWorld* curWorld, CollectableType col_type)
 {
-	Collectable* ranCollectable = new Collectable(oid_collectable, pos, curworld);
+	Weapon* wp;
+	switch (col_type)
+		{
+		case CollectableType::SEEDGUN:
+		{
+			wp = new SeedGun(curWorld);
+			break;
+		}
+		default:
+		{
+				wp = nullptr;
+				break;
+		}
+	}
+
+	if (wp == nullptr)
+		return;
+
+	Collectable* ranCollectable = new Collectable(oid_collectable, pos, curWorld);
 	AddEntity(ClassId::COLLECTABLE, oid_collectable, ranCollectable);
 	oid_collectable++;
 
-	// Send Flag Spawn packet
+	// Send Collectable Spawn packet
 	btVector3 vec = ranCollectable->GetEntityPosition();
 	btQuaternion quat = ranCollectable->GetEntityRotation();
 	printf("Created Collectable at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
@@ -164,5 +186,34 @@ std::map<std::pair<int, unsigned int>, Entity* > *EntitySpawner::GetMap()
 	return (&entities);
 }
 
-
+std::pair<int, int> EntitySpawner::getRandomLoc()
+{
+	std::pair<int, int> loc;
+	loc.first = 0;
+	loc.second = 0;
+	while (loc.first == 0 && loc.second == 0)
+	{
+		if (rand() % 4 == 0)
+		{
+			loc.first = (rand() % WORLD_WIDTH + 1);
+			loc.second = (rand() % WORLD_WIDTH + 1);
+		}
+		else if (rand() % 4 == 1)
+		{
+			loc.first = (rand() % WORLD_WIDTH + 1);
+			loc.second = (-1 * rand() % WORLD_WIDTH + 1);
+		}
+		else if (rand() % 4 == 2)
+		{
+			loc.first = (-1 * rand() % WORLD_WIDTH + 1);
+			loc.second = (rand() % WORLD_WIDTH + 1);
+		}
+		else if (rand() % 4 == 3)
+		{
+			loc.first = (-1 * rand() % WORLD_WIDTH + 1);
+			loc.second = (-1 * rand() % WORLD_WIDTH + 1);
+		}
+	}
+	return loc;
+}
 
