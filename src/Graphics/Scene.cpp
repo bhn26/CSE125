@@ -45,7 +45,7 @@ void Scene::Setup()
     pLight = std::unique_ptr<PointLight>(new PointLight(glm::vec3(0.0f, 20.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)));
     dLight = std::unique_ptr<DirectionalLight>(new DirectionalLight(glm::vec3(0.5, -sqrt(3)/2.0f, 0.0f)));
 
-    glm::vec3 pos = glm::vec3(0.0f, 100.0f, 0.0f);
+    glm::vec3 pos = glm::vec3(0.0f, 30.0f, 0.0f);
     lightSpaceMatrix = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.1f, 1000.0f) *
         glm::lookAt(pos, pos + dLight->_direction, glm::vec3(0.0f, 1.0f, 0.0));
 
@@ -203,7 +203,6 @@ void Scene::SetProjectionUBO()
 void Scene::ConfigureShaderAndMatrices()
 {
     depthShader->Use();
-
     glUniformMatrix4fv(depthShader->GetUniform("lightSpaceMatrix"), 1, GL_FALSE, glm::value_ptr(lightSpaceMatrix));
 }
 
@@ -218,6 +217,20 @@ void Scene::RenderDepthMap()
         RenderScene();
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     renderingDepthMap = false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Scene::DrawDepthMap()
+{
+    glViewport(0, 0, Window::width, Window::height);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    std::shared_ptr<Shader>& shader = ShaderManager::Instance()->GetShader("Depth_Draw");
+    shader->Use();
+    glUniform1f(shader->GetUniform("near_plane"), 0.1f);
+    glUniform1f(shader->GetUniform("far_plane"), 1000.0f);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, depthMap);
+    RenderQuad();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -242,6 +255,36 @@ void Scene::RenderScene()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void Scene::RenderQuad()
+{
+    static GLuint quadVAO = 0;
+    static GLuint quadVBO = 0;
+    if (quadVAO == 0)
+    {
+        GLfloat quadVertices[] = {
+            // Positions        // Texture Coords
+            -1.0f,  1.0f, 0.0f,  0.0f, 1.0f,
+            -1.0f, -1.0f, 0.0f,  0.0f, 0.0f,
+            1.0f,  1.0f, 0.0f,  1.0f, 1.0f,
+            1.0f, -1.0f, 0.0f,  1.0f, 0.0f,
+        };
+        // Setup plane VAO
+        glGenVertexArrays(1, &quadVAO);
+        glGenBuffers(1, &quadVBO);
+        glBindVertexArray(quadVAO);
+        glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)0);
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+    }
+    glBindVertexArray(quadVAO);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    glBindVertexArray(0);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void Scene::Update()
 {
     double nextTime = Utils::CurrentTime();
@@ -257,7 +300,8 @@ void Scene::Update()
 ////////////////////////////////////////////////////////////////////////////////
 void Scene::Draw()
 {
-    RenderDepthMap();
+    //RenderDepthMap();
+    //DrawDepthMap();
     RenderScene();
 }
 

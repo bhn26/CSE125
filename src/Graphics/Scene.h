@@ -67,7 +67,9 @@ class Scene
     void SetProjectionUBO();
     void ConfigureShaderAndMatrices();
     void RenderDepthMap();
+    void DrawDepthMap();
     void RenderScene();
+    void RenderQuad();
 
 public:
     static SpriteRenderer * sprite_renderer;

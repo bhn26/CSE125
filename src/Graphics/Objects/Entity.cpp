@@ -84,6 +84,7 @@ void Entity::UseShader() const
     if (Scene::Instance()->IsRenderingDepth())
     {
         std::shared_ptr<Shader>& shader = Scene::Instance()->GetDepthShader();
+        shader->Use();
         glUniformMatrix4fv(shader->GetUniform("model"), 1, GL_FALSE, glm::value_ptr(toWorld));
     }
     else

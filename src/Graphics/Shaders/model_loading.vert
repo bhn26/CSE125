@@ -24,7 +24,7 @@ out VS_OUT
     vec3 _fragPos;
     vec3 _normal;
     vec2 _texCoords;
-    vec3 _fragPosLightSpace;
+    vec4 _fragPosLightSpace;
 } vs_out;
 
 void main()

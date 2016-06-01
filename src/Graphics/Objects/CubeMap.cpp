@@ -126,6 +126,8 @@ GLuint CubeMap::LoadCubeMap(){
 
 void CubeMap::Draw() const
 {
+    if (Scene::Instance()->IsRenderingDepth())
+        return;
     // Draw skybox as last
     glDepthFunc(GL_LEQUAL);  // Change depth function so depth test passes when values are equal to depth buffer's content
     // Use the appropriate shader (depth or model)

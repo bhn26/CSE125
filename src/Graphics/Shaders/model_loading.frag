@@ -26,7 +26,7 @@ in VS_OUT
     vec3 _fragPos;
     vec3 _normal;
     vec2 _texCoords;
-    vec3 _fragPosLightSpace;
+    vec4 _fragPosLightSpace;
 } fs_in;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -75,8 +75,11 @@ vec4 CalcLight(BaseLight light, vec3 lightDirection)
             specularColor = vec4(light._color * specularIntensity * specularFactor, 1.0);
         }
     }
-    float shadow = ShadowCalculation(fs_in._fragPosLightSpace);
-    return (ambientColor + (1.0f - shadow)*(diffuseColor + specularColor));
+    vec4 red = vec4(1.0f, 0.0f, 0.0f, 1.0f);
+    //float shadow = ShadowCalculation(fs_in._fragPosLightSpace);
+    //if (shadow > 0.0f)
+    //    return (ambientColor + diffuseColor + specularColor) * (shadow) * red;
+    return (ambientColor + diffuseColor + specularColor);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
