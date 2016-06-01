@@ -3,8 +3,8 @@
 #ifdef _WIN32
 #include <winsock2.h>
 #include "ClientNetwork.h"
-#include "../network/NetworkData.h"
-#include "../network/GameData.h"
+#include "network/NetworkData.h"
+#include "network/GameData.h"
 #include <Windows.h>
 #endif
 

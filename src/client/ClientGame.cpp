@@ -15,9 +15,8 @@
 #include "client/PlayState.h"
 #include "client/GameOverState.h"
 #include "ConfigManager.h"
-
-
-#include "Client/Window.h"
+#include "Graphics/ShaderManager.h"
+#include "Graphics/ModelManager.h"
 
 const std::string ClientGame::EVENT_QUIT = "Quit";
 const std::string ClientGame::EVENT_JUMP = "Jump";
@@ -497,6 +496,7 @@ void ClientGame::update()
 
 			case SHOOT_EVENT:
 				receiveShootPacket(i + sizeof(PacketHeader));
+				break;
 
 			case UPDATE_SCORE:
 				receiveScorePacket(i + sizeof(PacketHeader));
@@ -527,6 +527,7 @@ void ClientGame::Initialize()
     Setup_opengl_settings();
     // Initialize the shaders
     ShaderManager::Instance()->LoadShaders();
+    ModelManager::Instance()->LoadModels();
     // Initialize objects/pointers for rendering
     Window::Initialize_objects();
 

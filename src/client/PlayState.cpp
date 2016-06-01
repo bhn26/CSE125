@@ -7,10 +7,11 @@
 #include <sstream>
 #include <math.h>
 
-#include "../Graphics/Scene.h"
+#include "Graphics/Scene.h"
+#include "ConfigManager.h"
 #include "Player.h"
-#include "client\ClientGame.h"
-#include "client\TextRenderer.h"
+#include "client/ClientGame.h"
+#include "client/TextRenderer.h"
 
 using namespace std;
 
@@ -182,7 +183,7 @@ void CPlayState::OnKeyDown(int action, int key)
             ClientGame::instance()->HandleButtonEvent(ConfigManager::instance()->GetConfigValue("PC_Space"));
             break;
         case GLFW_KEY_TAB:
-			// Check if escape was pressed
+            // Check if escape was pressed
             ClientGame::instance()->HandleButtonEvent(ConfigManager::instance()->GetConfigValue("PC_Tab"));
             break;
         default:

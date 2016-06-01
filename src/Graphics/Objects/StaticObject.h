@@ -15,14 +15,14 @@ class Model;
 class StaticObject : public Entity
 {
 public:
-    StaticObject(const GLchar* path);
+    StaticObject(std::shared_ptr<Model> model);
     ~StaticObject();
 
     void Translate(glm::vec3 translate);
     void Scale(float scaleFactor);
     void Rotate(float deg, glm::vec3 axis);
 
-    Model* model;
+    std::shared_ptr<Model> model;
 
     float angle; // For spinning if we want
 
