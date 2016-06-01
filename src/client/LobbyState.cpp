@@ -22,6 +22,13 @@ LobbyState::LobbyState(CStateManager* pManager)
 
 LobbyState::~LobbyState()
 {
+    delete sprite_renderer;
+    delete bg;
+    delete start_button;
+    delete table_t1;
+    delete table_t2;
+    delete join;
+    delete join_disabled;
 }
 
 LobbyState* LobbyState::GetInstance(CStateManager* pManager)

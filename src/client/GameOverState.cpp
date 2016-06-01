@@ -19,6 +19,8 @@ GOState::GOState(CStateManager* pManager)
 
 GOState::~GOState()
 {
+    delete sprite_renderer;
+    delete bg;
 }
 
 GOState* GOState::GetInstance(CStateManager* pManager)

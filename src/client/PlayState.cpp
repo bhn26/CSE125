@@ -24,7 +24,9 @@ CPlayState::CPlayState(CStateManager* pManager)
 
 CPlayState::~CPlayState()
 {
-	
+    delete sprite_renderer;
+    delete sb_bg;
+    delete sb_table;
 }
 
 CPlayState* CPlayState::GetInstance(CStateManager* pManager)

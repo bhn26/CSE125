@@ -18,6 +18,7 @@ CMenuState::CMenuState(CStateManager* pManager)
 
 CMenuState::~CMenuState()
 {
+    delete sprite_renderer;
 }
 
 CMenuState* CMenuState::GetInstance(CStateManager* pManager)

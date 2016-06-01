@@ -65,11 +65,11 @@ InstanceObject::InstanceObject(std::shared_ptr<Model> instanceModel, GLuint num,
 
         glBindVertexArray(0);
     }
+    delete[] modelMatrices;
 }
 
 InstanceObject::~InstanceObject()
 {
-	delete[] modelMatrices;
 }
 
 void InstanceObject::Draw() const

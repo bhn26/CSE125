@@ -256,7 +256,7 @@ void Scene::RenderScene()
     SetViewUBO();
     cubeMap->Draw();
     grass->Draw();
-    pumpkin->Draw();
+    //pumpkin->Draw();
 
     for (auto& const obj : static_objects)
         obj->Draw();
