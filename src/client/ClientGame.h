@@ -82,7 +82,7 @@ public:
     void sendMovePacket(int direction);
 
     void receiveRotationPacket(int offset);
-    void sendRotationPacket(float trotx, float trotz); 
+    void sendRotationPacket(); 
 
 	void sendJumpPacket();
 
