@@ -126,6 +126,8 @@ public:
 	int * GetScores() { return scores; };
 	int GetClientTeam() { return client_team; };
 
+	int GetWinner() { return winner; };
+
 private:
     const static std::string EVENT_QUIT;
     const static std::string EVENT_JUMP;
