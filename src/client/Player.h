@@ -53,6 +53,7 @@ public:
     // Inherited via Entity
     virtual void Update(float deltaTime) override;
     virtual void Draw() const override;
+    virtual void SetShaderUniforms() const override;
 
     virtual void MoveTo(float x, float y, float z) override;
     virtual void RotateTo(const glm::quat& newOrientation) override;
@@ -137,5 +138,6 @@ private:
     float m_lastTime_t;     // Test
     float m_distanceThreshhold_t;
     glm::vec3 m_lastPos_t;
+
 };
 

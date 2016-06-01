@@ -32,10 +32,14 @@ public:
 
 	glm::vec3 color;
 
-	void Draw() const override;
+    // Inherited via Entity
+    void Draw() const override;
     void Update(float deltaTime) override;
-	void Spin(float deg);
+    virtual void SetShaderUniforms() const override;
+
+    void Spin(float deg);
 	void SetColor(glm::vec3 color);
+
 };
 
 #endif /* Egg_h */

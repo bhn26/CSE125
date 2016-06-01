@@ -7,7 +7,12 @@
 //
 
 #include "Entity.h"
+#include "Graphics/Shader.h"
+#include "Graphics/Lights.h"
+#include "Graphics/Scene.h"
+
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////
 // NOTE: Constructors do not initialize vertex/element buffers, nor shader
@@ -64,6 +69,31 @@ void Entity::RotateTo(const glm::mat3 & newOrientation)
     CalculateNormalMatrix();
 }
 
+void Entity::SetScale(glm::vec3 scale)
+{
+    for (int col = 0; col < 3; col++)
+        for (int row = 0; row < 3; row++)
+            toWorld[col][row] /= this->scale[col];
+    this->scale = scale;
+    ApplyScale();
+}
+
+void Entity::UseShader() const
+{
+    // For rendering Depth, only need model
+    if (Scene::Instance()->IsRenderingDepth())
+    {
+        std::shared_ptr<Shader>& shader = Scene::Instance()->GetDepthShader();
+        shader->Use();
+        glUniformMatrix4fv(shader->GetUniform("model"), 1, GL_FALSE, glm::value_ptr(toWorld));
+    }
+    else
+    {
+        shader->Use();
+        this->SetShaderUniforms();
+    }
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // Getters
 
@@ -91,7 +121,26 @@ void Entity::ApplyScale()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Entity::CalculateNormalMatrix() { normalMatrix = glm::mat3(glm::transpose(glm::inverse(toWorld))); }
+void Entity::CalculateNormalMatrix()
+{
+    glm::mat4 copy = toWorld;
+
+    if (scale != glm::vec3(1.0f))
+    {
+        for (int col = 0; col < 3; col++)
+            for (int row = 0; row < 3; row++)
+                copy[col][row] /= this->scale[col];
+    }
+    normalMatrix = glm::mat3(glm::transpose(glm::inverse(copy)));
+}
+
+void Entity::LoadDirectionalLight(DirectionalLight * dLight) const
+{
+    glUniform3fv(shader->GetUniform("dLight._base._color"), 1, glm::value_ptr(dLight->_color));
+    glUniform1f(shader->GetUniform("dLight._base._ambientIntensity"), dLight->_ambientIntensity);
+    glUniform1f(shader->GetUniform("dLight._base._diffuseIntensity"), dLight->_diffuseIntensity);
+    glUniform3fv(shader->GetUniform("dLight._direction"), 1, glm::value_ptr(dLight->_direction));
+}
 
 // Process movement
 void Entity::ProcessKeyboard(POSITION position, GLfloat deltaTime)

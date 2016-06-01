@@ -34,8 +34,12 @@ public:
 	glm::vec3 color;
 	static GLfloat deltaTime;
 	static GLfloat lastFrame;
-	void Draw() const override;
-	void Update(float deltaTime) override;
-	void SetColor(glm::vec3 color);
+
+    // Inherited via Entity
+    void Draw() const override;
+    void Update(float deltaTime) override {}
+    virtual void SetShaderUniforms() const override;
+
+    void SetColor(glm::vec3 color);
 };
 

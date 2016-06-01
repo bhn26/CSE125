@@ -22,7 +22,7 @@
 
 #include "../Camera.h"
 #include "../Scene.h"
-#include "../PointLight.h"
+#include "../Lights.h"
 #include "Client/Player.h"
 
 ChickenAnim::ChickenAnim() : m_toWorld(glm::scale(glm::mat4(1.0f), glm::vec3(0.01f)))
@@ -45,7 +45,7 @@ ChickenAnim::ChickenAnim() : m_toWorld(glm::scale(glm::mat4(1.0f), glm::vec3(0.0
     m_directionalLight.diffuseIntensity = 0.9f;
     m_directionalLight.direction = glm::vec3(1.0f, 0.0, 0.0);
 
-    SkinningTechnique* skinTechnique = m_model.GetMesh().GetSkinningTechnique();
+    Animation::SkinningTechnique* skinTechnique = m_model.GetMesh().GetSkinningTechnique();
 
     skinTechnique->Enable();
 
@@ -59,12 +59,9 @@ ChickenAnim::ChickenAnim() : m_toWorld(glm::scale(glm::mat4(1.0f), glm::vec3(0.0
 
 void ChickenAnim::Draw() const
 {
-    SkinningTechnique* skinTechnique = m_model.GetMesh().GetSkinningTechnique();
-    skinTechnique->Enable(); // use shader
-
-    skinTechnique->SetEyeWorldPos(Scene::Instance()->GetCameraPosition());
-    skinTechnique->SetWVP(Scene::Instance()->GetPerspectiveMatrix() * Scene::Instance()->GetViewMatrix() * m_toWorld);
-    skinTechnique->SetWorldMatrix(m_toWorld);
+    // Use the appropriate shader (shadow or model)
+    UseShader();
+    // Draw the loaded model
     m_model.Draw();
 }
 
@@ -96,4 +93,14 @@ void ChickenAnim::Jump()
 void ChickenAnim::Dance()
 {
     m_model.PlayAnimation(m_dance);
+}
+
+void ChickenAnim::SetShaderUniforms() const
+{
+    Animation::SkinningTechnique* skinTechnique = m_model.GetMesh().GetSkinningTechnique();
+    skinTechnique->Enable(); // use shader
+
+    skinTechnique->SetEyeWorldPos(Scene::Instance()->GetCameraPosition());
+    skinTechnique->SetWVP(Scene::Instance()->GetPerspectiveMatrix() * Scene::Instance()->GetViewMatrix() * m_toWorld);
+    skinTechnique->SetWorldMatrix(m_toWorld);
 }

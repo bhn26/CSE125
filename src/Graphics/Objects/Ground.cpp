@@ -5,7 +5,7 @@
 
 #include "client/Window.h"
 #include "Graphics/Scene.h"
-#include "Graphics/PointLight.h"
+#include "Graphics/Lights.h"
 #include "Graphics/Camera.h"
 #include "client/Player.h"
 
@@ -65,30 +65,26 @@ void Ground::Update(float deltaTime)
 {
 }
 
+void Ground::SetShaderUniforms() const
+{
+    glUniformMatrix4fv(shader->GetUniform("view"), 1, false, glm::value_ptr(Scene::Instance()->GetViewMatrix()));
+    glUniformMatrix4fv(shader->GetUniform("model"), 1, false, glm::value_ptr(this->toWorld));
+    glUniformMatrix3fv(shader->GetUniform("normalMatrix"), 1, false, glm::value_ptr(this->normalMatrix));
+    glUniformMatrix4fv(shader->GetUniform("projection"), 1, false, glm::value_ptr(Scene::Instance()->GetPerspectiveMatrix()));
+
+    glUniform3fv(shader->GetUniform("objectColor"), 1, glm::value_ptr(this->color));
+    glUniform3fv(shader->GetUniform("lightColor"), 1, glm::value_ptr(Scene::Instance()->GetPointLight()->_color));
+    glUniform3fv(shader->GetUniform("lightPos"), 1, glm::value_ptr(Scene::Instance()->GetPointLight()->_position));
+    glUniform3fv(shader->GetUniform("viewPos"), 1, glm::value_ptr(Scene::Instance()->GetCameraPosition()));
+
+}
+
 void Ground::Draw() const
 {
-    shader->Use();
+    // Use the appropriate shader (depth or model)
+    UseShader();
 
-    GLint viewLoc = shader->GetUniform("view");
-    GLint modelLocation = shader->GetUniform("model");
-    GLint normalMatrixLoc = shader->GetUniform("normalMatrix");
-    GLint projectionLocation = shader->GetUniform("projection");
-    GLint objectColorLoc = shader->GetUniform("objectColor");
-    GLint lightColorLoc = shader->GetUniform("lightColor");
-    GLint lightPosLoc = shader->GetUniform("lightPos");
-    GLint viewPosLoc = shader->GetUniform("viewPos");
-
-    glUniformMatrix4fv(viewLoc, 1, false, glm::value_ptr(Scene::Instance()->GetViewMatrix()));
-    glUniformMatrix4fv(modelLocation, 1, false, glm::value_ptr(this->toWorld));
-    glUniformMatrix3fv(normalMatrixLoc, 1, false, glm::value_ptr(this->normalMatrix));
-    glUniformMatrix4fv(projectionLocation, 1, false, glm::value_ptr(Scene::Instance()->GetPerspectiveMatrix()));
-
-    glUniform3fv(objectColorLoc, 1, glm::value_ptr(this->color));
-    glUniform3fv(lightColorLoc, 1, glm::value_ptr(Scene::Instance()->GetPointLight()->color));
-    glUniform3fv(lightPosLoc, 1, glm::value_ptr(Scene::Instance()->GetPointLight()->position));
-    glUniform3fv(viewPosLoc, 1, glm::value_ptr(Scene::Instance()->GetCameraPosition()));
-
-
+    // Draw the loaded model
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);

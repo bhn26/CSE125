@@ -16,9 +16,13 @@ public:
 
     glm::vec3 color;
 
+    // Inherited via Entity
     void Draw() const override;
     void Update(float deltaTime) override;
+    virtual void SetShaderUniforms() const override;
+
     void Spin(float);
+
 };
 
 #endif

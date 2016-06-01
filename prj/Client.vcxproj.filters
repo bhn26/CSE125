@@ -28,6 +28,9 @@
     <Filter Include="Source Files\Graphics\UI">
       <UniqueIdentifier>{1adf384d-7920-4519-829d-d35a639b6aa1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\GameState">
+      <UniqueIdentifier>{8c017488-fc19-43c4-802b-53fa3478caed}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\src\Graphics\Shaders\basic_shader.frag">
@@ -59,6 +62,18 @@
       <Filter>Source Files\Graphics\Shaders</Filter>
     </None>
     <None Include="..\eggs.cfg" />
+    <None Include="..\src\Graphics\Shaders\depthMap.frag">
+      <Filter>Source Files\Graphics\Shaders</Filter>
+    </None>
+    <None Include="..\src\Graphics\Shaders\depthMap.vert">
+      <Filter>Source Files\Graphics\Shaders</Filter>
+    </None>
+    <None Include="..\src\Graphics\Shaders\depthMapDraw.frag">
+      <Filter>Source Files\Graphics\Shaders</Filter>
+    </None>
+    <None Include="..\src\Graphics\Shaders\depthMapDraw.vert">
+      <Filter>Source Files\Graphics\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Graphics\Objects\Cube.cpp">
@@ -109,18 +124,6 @@
     <ClCompile Include="..\src\client\Window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\client\StateManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\client\GameState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\client\MenuState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\client\PlayState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\Graphics\Animation\skinning_technique.cpp">
       <Filter>Source Files\Graphics\Animation</Filter>
     </ClCompile>
@@ -163,9 +166,6 @@
     <ClCompile Include="..\src\ConfigManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\client\LobbyState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\client\SpriteRenderer.cpp">
       <Filter>Source Files\Graphics\UI</Filter>
     </ClCompile>
@@ -187,6 +187,21 @@
     <ClCompile Include="..\src\Graphics\ModelManager.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\client\GameState.cpp">
+      <Filter>Source Files\GameState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\client\LobbyState.cpp">
+      <Filter>Source Files\GameState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\client\MenuState.cpp">
+      <Filter>Source Files\GameState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\client\PlayState.cpp">
+      <Filter>Source Files\GameState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\client\StateManager.cpp">
+      <Filter>Source Files\GameState</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Graphics\Camera.h">
@@ -199,9 +214,6 @@
       <Filter>Source Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Graphics\Nodes.h">
-      <Filter>Source Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Graphics\PointLight.h">
       <Filter>Source Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Graphics\Scene.h">
@@ -243,18 +255,6 @@
     <ClInclude Include="..\src\client\Window.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\client\StateManager.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\client\GameState.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\client\MenuState.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\client\PlayState.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Graphics\Animation\skinning_technique.h">
       <Filter>Source Files\Graphics\Animation</Filter>
     </ClInclude>
@@ -291,9 +291,6 @@
     <ClInclude Include="..\src\ConfigManager.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\client\LobbyState.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\client\SpriteRenderer.h">
       <Filter>Source Files\Graphics\UI</Filter>
     </ClInclude>
@@ -322,6 +319,24 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Graphics\ModelManager.h">
+      <Filter>Source Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\client\GameState.h">
+      <Filter>Source Files\GameState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\client\LobbyState.h">
+      <Filter>Source Files\GameState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\client\MenuState.h">
+      <Filter>Source Files\GameState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\client\PlayState.h">
+      <Filter>Source Files\GameState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\client\StateManager.h">
+      <Filter>Source Files\GameState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Graphics\Lights.h">
       <Filter>Source Files\Graphics</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,4 +1,4 @@
-#include "Grass.h"
+#include "InstanceObject.h"
 
 #include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale, glm::perspective
 #include <glm/gtc/type_ptr.hpp>
@@ -6,7 +6,7 @@
 #include "client/Window.h"
 #include "client/Player.h"
 #include "../Scene.h"
-#include "../PointLight.h"
+#include "../Lights.h"
 #include "../Camera.h"
 #include "../Model.h"
 
@@ -75,15 +75,8 @@ InstanceObject::~InstanceObject()
 void InstanceObject::Draw() const
 {
 	// Draw the loaded model
-	shader->Use();
-	GLint viewLoc = shader->GetUniform("view");
-	glUniformMatrix4fv(viewLoc, 1, false, glm::value_ptr(Scene::Instance()->GetViewMatrix()));
-	GLint modelLocation = shader->GetUniform("model");
-	GLint projectionLocation = shader->GetUniform("projection");
-
-	shader->Use();
-	glUniformMatrix4fv(modelLocation, 1, false, glm::value_ptr(this->toWorld));
-	glUniformMatrix4fv(projectionLocation, 1, false, glm::value_ptr(Scene::Instance()->GetPerspectiveMatrix()));
+	//shader->Use();
+    UseShader();
 
 	for (GLuint i = 0; i < instance->Meshes().size(); i++) {
 		glBindTexture(GL_TEXTURE_2D, instance->Textures()[i].id);
@@ -93,6 +86,11 @@ void InstanceObject::Draw() const
 	}
 }
 
-void InstanceObject::Update(float deltaTime)
+void InstanceObject::SetShaderUniforms() const
 {
+    glUniformMatrix4fv(shader->GetUniform("view"), 1, false, glm::value_ptr(Scene::Instance()->GetViewMatrix()));
+    glUniformMatrix4fv(shader->GetUniform("model"), 1, false, glm::value_ptr(this->toWorld));
+    glUniformMatrix4fv(shader->GetUniform("projection"), 1, false, glm::value_ptr(Scene::Instance()->GetPerspectiveMatrix()));
+
+    LoadDirectionalLight(Scene::Instance()->GetDirectionalLight());
 }
