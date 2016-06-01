@@ -1,11 +1,12 @@
 #include "Bullet.h"
 #include "EntitySpawner.h"
 
-Bullet::Bullet(unsigned int objectid, int playerid, int teamid, int damage, btRigidBody* bullet_body, btDiscreteDynamicsWorld* physicsWorld) : Entity(ClassId::BULLET, objectid, physicsWorld)
+Bullet::Bullet(unsigned int objectid, int playerid, int teamid, int damage, BulletCollisionHandler* handler, btRigidBody* bullet_body, btDiscreteDynamicsWorld* physicsWorld) : Entity(ClassId::BULLET, objectid, physicsWorld)
 {
 	physicsWorld->addRigidBody(bullet_body);
 
 	// Set Bullet's protected fields
+	this->c_handler = handler;
 	this->playerId = playerid;
 	this->teamId = teamid;
 	this->damage = damage;
@@ -21,6 +22,7 @@ Bullet::~Bullet()
 	delete entityRigidBody->getMotionState();
 	delete entityRigidBody->getCollisionShape();
 	delete entityRigidBody;
+	delete c_handler;
 	EntitySpawner::instance()->RemoveEntity(ClassId::BULLET,objectId);
 
 }

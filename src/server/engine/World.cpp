@@ -234,7 +234,7 @@ void World::UpdateWorld()
 		{
 			// Grab Bullet Object
 			Bullet * collideBullet = (Bullet *)obA->getUserPointer();
-			if (collideBullet->MarkStatus())
+			if (collideBullet->GetMarked())
 			{
 				continue;
 			}
@@ -248,8 +248,11 @@ void World::UpdateWorld()
 					continue;
 				}
 				//printf("Pushed to delete!, hit playerB");
-				deleteList.push_back(collideBullet);
-				collideBullet->SetToMarked();
+				if (collideBullet->handleBulletCollision(world_tick))
+				{
+					deleteList.push_back(collideBullet);
+					collideBullet->SetToMarked();
+				}
 				//TODO send "you got hit"
 				if (collidePlayer->takeDamage(collideBullet->GetDamage(),world_tick))
 				{
@@ -263,11 +266,14 @@ void World::UpdateWorld()
 			{
 				Bullet * collideBullet2 = (Bullet *)obB->getUserPointer();
 				//printf("Pushed to delete!, hit bullet B");
-				deleteList.push_back(collideBullet);
-				collideBullet->SetToMarked();
+				if (collideBullet->handleBulletCollision(world_tick))
+				{
+					deleteList.push_back(collideBullet);
+					collideBullet->SetToMarked();
+				}
 				//delete collideBullet2;
 			}
-			else if (obB->getUserIndex() < 15)
+			else
 			{
 				// deletes bulletA regardless
 				//printf("Pushed to delete!, hit ground B,  %d", obB->getUserIndex());
@@ -275,9 +281,11 @@ void World::UpdateWorld()
 				//printf("Current position:  x: %f, y: %f, z: %f  \n", bulPos.getX(), bulPos.getY(), bulPos.getZ());
 				bulPos = collideBullet->GetRigidBody()->getLinearVelocity();
 				//printf("Current velocity:  x: %f, y: %f, z: %f  \n", bulPos.getX(), bulPos.getY(), bulPos.getZ());
-
-				deleteList.push_back(collideBullet);
-				collideBullet->SetToMarked();
+				if (collideBullet->handleBulletCollision(world_tick))
+				{
+					deleteList.push_back(collideBullet);
+					collideBullet->SetToMarked();
+				}
 			}
 		}
 
@@ -286,7 +294,7 @@ void World::UpdateWorld()
 		{
 			// Grab Bullet Object
 			Bullet * collideBullet = (Bullet *)obB->getUserPointer();
-			if (collideBullet->MarkStatus())
+			if (collideBullet->GetMarked())
 			{
 				continue;
 			}
@@ -302,8 +310,11 @@ void World::UpdateWorld()
 				}
 
 				//printf("Pushed to delete! hit player A");
-				deleteList.push_back(collideBullet);
-				collideBullet->SetToMarked();
+				if (collideBullet->handleBulletCollision(world_tick))
+				{
+					deleteList.push_back(collideBullet);
+					collideBullet->SetToMarked();
+				}
 				if (collidePlayer->takeDamage(collideBullet->GetDamage(),world_tick))
 				{
 					//printf("Player is dead!");
@@ -316,10 +327,13 @@ void World::UpdateWorld()
 			{
 				Bullet * collideBullet2 = (Bullet *)obA->getUserPointer();
 				//printf("Pushed to delete! hit bullet A");
-				deleteList.push_back(collideBullet);
-				collideBullet->SetToMarked();
+				if (collideBullet->handleBulletCollision(world_tick))
+				{
+					deleteList.push_back(collideBullet);
+					collideBullet->SetToMarked();
+				}
 			}
-			else if (obA->getUserIndex() < 15)
+			else
 			{
 				// deletes bulletB regardless
 				//printf("Pushed to delete!, hit ground A,  %d", obA->getUserIndex());
@@ -328,8 +342,11 @@ void World::UpdateWorld()
 				bulPos = collideBullet->GetRigidBody()->getLinearVelocity();
 				//printf("Current velocity:  x: %f, y: %f, z: %f  \n", bulPos.getX(), bulPos.getY(), bulPos.getZ());
 
-				deleteList.push_back(collideBullet);
-				collideBullet->SetToMarked();
+				if (collideBullet->handleBulletCollision(world_tick))
+				{
+					deleteList.push_back(collideBullet);
+					collideBullet->SetToMarked();
+				}
 			}
 		}
 
@@ -364,7 +381,7 @@ void World::UpdateWorld()
 
 				// Handle Flag Collection
 				Flag * collideFlag = (Flag *)obB->getUserPointer();
-				if (collideFlag->MarkStatus())
+				if (collideFlag->GetMarked())
 				{
 					continue;
 				}
@@ -437,7 +454,7 @@ void World::UpdateWorld()
 
 				// Handle Flag Collection
 				Flag * collideFlag = (Flag *)obA->getUserPointer();
-				if (collideFlag->MarkStatus())
+				if (collideFlag->GetMarked())
 				{
 					continue;
 				}

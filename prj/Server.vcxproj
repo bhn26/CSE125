@@ -161,6 +161,7 @@
     <ClInclude Include="..\src\network\NetworkData.h" />
     <ClInclude Include="..\src\network\NetworkServices.h" />
     <ClInclude Include="..\src\server\engine\Bullet.h" />
+    <ClInclude Include="..\src\server\engine\BulletCollisionHandler.h" />
     <ClInclude Include="..\src\server\engine\Collectable.h" />
     <ClInclude Include="..\src\server\engine\CollectableSpawner.h" />
     <ClInclude Include="..\src\server\engine\DamageField.h" />
@@ -175,6 +176,7 @@
     <ClInclude Include="..\src\server\engine\Player.h" />
     <ClInclude Include="..\src\server\engine\RespawnHandler.h" />
     <ClInclude Include="..\src\server\engine\SeedGun.h" />
+    <ClInclude Include="..\src\server\engine\SimpleBulletCollision.h" />
     <ClInclude Include="..\src\server\engine\Weapon.h" />
     <ClInclude Include="..\src\server\engine\World.h" />
     <ClInclude Include="..\src\server\engine\WorldObstacle.h" />

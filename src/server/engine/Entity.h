@@ -48,6 +48,6 @@ public:
 	void ResetMark();
 
 	// Checks if this entity is set to be deleted, sets collision detection to ignore
-	int MarkStatus();
+	int GetMarked();
 
 };

@@ -1,4 +1,5 @@
 #include "SeedGun.h"
+#include "SimpleBulletCollision.h"
 
 SeedGun::SeedGun(btDiscreteDynamicsWorld* curworld): Weapon(fireRate, damage, curworld)
 {
@@ -42,8 +43,11 @@ int SeedGun::UseWeapon(btVector3* position, btMatrix3x3* rotation, int playerid,
 		bRigidBody->setLinearVelocity(newVelocity);
 		bRigidBody->forceActivationState(DISABLE_DEACTIVATION);
 
+		// use the simple handler for the seedgun
+		SimpleBulletCollision* handler = new SimpleBulletCollision();
+
 		// Spawns bullet with this gun's damage, speed, and necessary ids into world
-		Bullet* fireProjectile = EntitySpawner::instance()->spawnBullet(playerid, teamid, this->damage, bRigidBody, curWorld);
+		Bullet* fireProjectile = EntitySpawner::instance()->spawnBullet(playerid, teamid, this->damage, handler, bRigidBody, curWorld);
 
 		this->fireFlag = 0;
 		this->nextFireTick = FireRateReset::instance()->currentWorldTick + fireRate;

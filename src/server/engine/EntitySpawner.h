@@ -4,6 +4,7 @@
 #include <map>
 #include "Entity.h"
 #include "Weapon.h"
+#include "BulletCollisionHandler.h"
 #include "../../network/GameData.h"
 //class Entity;
 class Player;
@@ -32,7 +33,7 @@ public:
 
 	Flag*  spawnFlag(PosInfo pos, btDiscreteDynamicsWorld* physicsWorld);
 
-	Bullet* spawnBullet(int playerid, int teamid, int damage, btRigidBody* bullet_body, btDiscreteDynamicsWorld* physicsWorld);
+	Bullet* spawnBullet(int playerid, int teamid, int damage, BulletCollisionHandler* handler, btRigidBody* bullet_body, btDiscreteDynamicsWorld* physicsWorld);
 
 	void spawnCollectable(btDiscreteDynamicsWorld* curworld, WeaponType w_type);
 
