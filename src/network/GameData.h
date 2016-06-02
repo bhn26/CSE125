@@ -22,7 +22,8 @@ enum MoveType {
 
 enum WeaponType {
 	SEEDGUN,
-	BOUNCEGUN
+	BOUNCEGUN,
+	GRENADELAUNCHER
 };
 
 enum AttackType {

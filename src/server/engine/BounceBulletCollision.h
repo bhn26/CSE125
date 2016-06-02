@@ -7,7 +7,7 @@ class BounceBulletCollision : public BulletCollisionHandler
 {
 public:
 	// the number of bounces the bullet should have
-	BounceBulletCollision(int b, btVector3* initial_speed, btMatrix3x3* rot) {
+	BounceBulletCollision(int b, btVector3* initial_speed) {
 		bounces = b;  
 		bullet = nullptr;
 		speed = initial_speed;
@@ -15,7 +15,6 @@ public:
 	~BounceBulletCollision() { delete speed; };
 
 	bool HandleBulletCollision(unsigned int world_tick) {
-		printf("collide %d\n", bounces);
 		if (bullet == nullptr)
 			return false;
 

@@ -77,8 +77,6 @@ public:
 
 	void Move(btVector3* changeVelocity);
 
-	//void SetEntityRotation(float x, float y, float z, float w);
-
 	void SetCamAngle(float yos);
 
 	unsigned int GetDeathTime() { return death_time; }

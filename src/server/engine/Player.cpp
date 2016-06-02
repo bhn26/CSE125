@@ -7,6 +7,7 @@
 #include "Flag.h"
 #include "Peck.h"
 #include "SeedGun.h"
+#include "GrenadeLauncher.h"
 #include "RespawnHandler.h"
 #include <time.h>
 #include "../ServerGame.h"
@@ -140,15 +141,13 @@ int Player::GetTeamId()
 	// passes player position when using weapon
 	btVector3 temp = this->GetEntityPosition();
 
-	//btQuaternion * playerRotation = &(this->GetEntityRotation());
 	btQuaternion * playerRotation = &(this->cameraAngle);
 
 	btVector3* position = new btVector3(temp.getX(), temp.getY(), temp.getZ());
 
-	//btTransform currentTrans;
-	//entityRigidBody->getMotionState()->getWorldTransform(currentTrans);
 	btMatrix3x3 * currentOrientation = new btMatrix3x3(*playerRotation);
 
+	//ServerGame::instance()->sendShootPacket(objectId);
 	if (playerWeapon->UseWeapon(position, currentOrientation, this->objectId, this->teamId, this) == 0)
 	{
 		delete playerWeapon;

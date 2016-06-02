@@ -35,7 +35,7 @@ btQuaternion Entity::GetEntityRotation()
 	return currentOrientation;
 }
 
-void Entity::SetEntityRotation(float x, float y, float z, float w, float yos) 
+void Entity::SetEntityRotation(float x, float y, float z, float w) 
 {
 	btQuaternion* playerRotation = new btQuaternion(x, y, z, w);
 	btTransform currentTrans;

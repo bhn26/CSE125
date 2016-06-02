@@ -554,7 +554,7 @@ void ServerGame::receiveRotationPacket(int offset) {
 	// All rotation packets will be player type, since it's from client
 	Entity* ent = (Entity*)(EntitySpawner::instance()->GetEntity(ClassId::PLAYER, hdr->sender_id));
 
-	ent->SetEntityRotation(0, pi->roty, 0, pi->rotw, pi->yos);
+	ent->SetEntityRotation(0, pi->roty, 0, pi->rotw);
 	sendRotationPacket(ClassId::PLAYER, hdr->sender_id);
 }
 

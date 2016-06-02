@@ -33,7 +33,7 @@ public:
 	// Return current rotation quaternion of Player
 	btQuaternion GetEntityRotation();
 
-	void SetEntityRotation(float x, float y, float z, float w, float yos);
+	void SetEntityRotation(float x, float y, float z, float w);
 
 	// Returns object id
 	int GetObjectId();
