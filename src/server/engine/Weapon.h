@@ -12,9 +12,7 @@
 #endif
 class Entity;
 
-enum WeaponType {
-	SEEDGUN
-};
+static const int NUM_WEAPON_TYPES = 2; // number of types of weapons there are
 
 class Weapon
 {
@@ -24,6 +22,7 @@ protected:
 	int damage;
 	int currentAmmo; // Current ammo of this weapon
 	int maxAmmo;   // Capacity of this weapon
+	btVector3* gunSpeed;
 
 	WeaponType wt;
 
@@ -41,6 +40,8 @@ public:
 	int virtual UseWeapon(btVector3 * position, btMatrix3x3* rotation, int playerid, int teamid, Entity* owner);
 
 	WeaponType virtual GetWeaponType() { return wt; }
+
+	btVector3* GetGunSpeed() { return gunSpeed; }
 
 	void virtual ReloadWeapon();
 };

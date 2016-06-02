@@ -23,6 +23,8 @@ private:
 	std::vector<Entity*> deleteList;  
 	// Marked list to protect multi-handling, for flags
 	std::vector<Entity*> markedList;
+	// List of entities to unmark at the end
+	std::vector<Entity*> unmarkList;
 
 	// Physics World attributes
 	btDiscreteDynamicsWorld* curWorld;

@@ -1,5 +1,6 @@
 #pragma once
 #include "EntitySpawner.h"
+#include "Weapon.h"
 
 class CollectableSpawner {
 
@@ -11,7 +12,6 @@ private:
 	unsigned int collectables; // number of collectables that currently exist
 
 public:
-	static const int NUM_WEAPON_TYPES = 1; // number of types of weapons there are
 	static const int STARTING_TICK = 25;  // the tick to start spawning collectables on
 	static const int MIN_NUM_SPAWNS = 2;   // Minumum number of collectables spawned for this spawn period
 	static const int MAX_NUM_SPAWNS = 4;   // Maximum number of collectables spawned for this spawn period

@@ -60,6 +60,7 @@ void Collectable::HandleCollect(Player* collidedPlayer)
 //	{
 //	}
 
+	printf("acquired weapon of type %d\n", weapon->GetWeaponType());
 	collidedPlayer->EquipWeapon(weapon);
 }
 

@@ -5,13 +5,6 @@
 
 class SeedGun : public Weapon
 {
-protected:
-	int gunfireRate;
-	int gunDamage;
-	btVector3* gunSpeed;
-
-	// resets the reloaded flag when tick reaches nextFireTick
-
 public:
 	SeedGun(btDiscreteDynamicsWorld* curworld);
 	~SeedGun();
