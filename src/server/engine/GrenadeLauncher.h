@@ -6,17 +6,16 @@
 class GrenadeLauncher : public Weapon
 {
 protected:
-	int gunfireRate = 1;
-	int gunDamage = 100;
-	btVector3* gunSpeed = new btVector3(0, 15, 20);
-
 	// resets the reloaded flag when tick reaches nextFireTick
 
 public:
 	GrenadeLauncher(btDiscreteDynamicsWorld* curworld);
 	~GrenadeLauncher();
 
-	void virtual UseWeapon(btVector3 * position, btMatrix3x3* rotation, int playerid, int teamid, Entity* owner);
+	int UseWeapon(btVector3 * position, btMatrix3x3* rotation, int playerid, int teamid, Entity* owner);
+
+	static const int EXPLOSION_SIZE = 17;
+	static const int EXPLOSION_DUR = 10;
 
 	void ReloadWeapon();
 };

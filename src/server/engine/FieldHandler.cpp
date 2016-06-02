@@ -29,7 +29,6 @@ void FieldHandler::HandleFields()
 	// Check through list of active fields
 	while (it != activeFields->end())
 	{
-		printf("checking some field\n");
 		// if field is done, remove from queue
 		if (!(*it)->handleField())
 		{
@@ -44,6 +43,5 @@ void FieldHandler::HandleFields()
 
 void FieldHandler::AddField(FieldObject* newField)
 {
-	printf("added new field into FieldHandler\n");
 	activeFields->push_back(newField);
 }

@@ -11,19 +11,20 @@
 #include "../PointLight.h"
 #include "../Camera.h"
 #include "../Model.h"
+#include "../ModelManager.h"
 
 #include <stdio.h>
 #include <string>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-Egg::Egg() : Egg(0.0f, 0.0f, 0.0f)
+/*Egg::Egg() : Egg(0.0f, 0.0f, 0.0f)
 {
-}
+}*/
 
 Egg::Egg(float x, float y, float z) : Entity(glm::vec3(x, y, z))
 {
-	model = new Model("assets/eggs/objects/dino_egg.obj");
+    model = ModelManager::GetModel("Egg");
 }
 
 void Egg::SetColor(glm::vec3 color)
@@ -33,7 +34,6 @@ void Egg::SetColor(glm::vec3 color)
 
 Egg::~Egg()
 {
-    delete model;
 }
 
 void Egg::Draw() const

@@ -181,6 +181,12 @@
     <ClCompile Include="..\src\Graphics\Objects\InstanceObject.cpp">
       <Filter>Source Files\Graphics\Objects</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\client\GameOverState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Graphics\ModelManager.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Graphics\Camera.h">
@@ -199,9 +205,6 @@
       <Filter>Source Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Graphics\Scene.h">
-      <Filter>Source Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Graphics\Scenegraph.h">
       <Filter>Source Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Graphics\Shader.h">
@@ -314,6 +317,12 @@
     </ClInclude>
     <ClInclude Include="..\src\Graphics\Objects\Grass.h">
       <Filter>Source Files\Graphics\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\client\GameOverState.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Graphics\ModelManager.h">
+      <Filter>Source Files\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

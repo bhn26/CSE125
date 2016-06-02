@@ -12,8 +12,8 @@ public:
 	Peck(btDiscreteDynamicsWorld* curWorld);
 	~Peck();
 
-	void virtual UseWeapon(btVector3* position, btMatrix3x3* rotation, int playerid, int teamid, Entity* owner);
-
 	void ReloadWeapon();
 
+	// always returns 1 because infinite ammo
+	int UseWeapon(const btVector3* position, btMatrix3x3* rotation, int playerid, int teamid, Entity* user);
 };

@@ -17,6 +17,7 @@ protected:
 	int objectId;
 	int classId;
 	int toDelete;
+	unsigned int markTick; // world tick that this thing was marked on
 
 public:
 
@@ -38,14 +39,18 @@ public:
 
 	int GetClassId();
 
+	btDiscreteDynamicsWorld* GetPhysicsWorld() { return curWorld; }
+
 	btRigidBody* GetRigidBody();
 
 	// Marks this entity to be ignored
-	void SetToMarked();
+	void SetToMarked(unsigned int markTick);
+
+	unsigned int GetMarkTick() { return markTick; }
 
 	void ResetMark();
 
 	// Checks if this entity is set to be deleted, sets collision detection to ignore
-	int MarkStatus();
+	int GetMarked();
 
 };

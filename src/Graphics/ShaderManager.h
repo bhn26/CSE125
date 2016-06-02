@@ -4,8 +4,6 @@
 #include <map>
 #include <vector>
 
-#include "ConfigManager.h"
-
 class Shader;
 
 class ShaderManager

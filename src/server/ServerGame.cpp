@@ -49,9 +49,14 @@ void ServerGame::update()
 
 	int diff = fp_stamp.count();
 
-	if (eggs_spawned && diff >= 300000)
+	if (game_over == false && eggs_spawned && diff >= 300000)
 	{
-		if(scores[0] > scores[1])
+		game_over = true;
+		if (scores[0] == scores[1])
+		{
+			sendGameOverPacket(-1);
+		}
+		else if(scores[0] > scores[1])
 		{
 			sendGameOverPacket(0);
 		}
@@ -195,12 +200,14 @@ void ServerGame::receiveFromClients()
 
                 case V_ROTATION_EVENT:
                     receiveRotationPacket(i + sizeof(PacketHeader));
-                
                     break;
 
-				case SHOOT_EVENT:
-					receiveShootPacket(i);
+				case ATTACK_EVENT:
+					receiveAttackPacket(i);
+					break;
 
+				case DISCARD_EVENT:
+					receiveDiscardPacket(i);
 					break;
 
                 default:
@@ -385,7 +392,7 @@ void ServerGame::sendSpawnPacket(PosInfo pi)
 
 }
 
-void ServerGame::sendRemovePacket(ClassId cid, int oid)
+void ServerGame::sendRemovePacket(ClassId rem_cid, int rem_oid)
 {
 	Packet packet;
 	packet.hdr.packet_type = REMOVE_EVENT;
@@ -397,10 +404,32 @@ void ServerGame::sendRemovePacket(ClassId cid, int oid)
 	packet.dat.game_data_id = REM_OBJ;
 
 	RemInfo r;
-	r.rem_cid = cid;
-	r.rem_oid = oid;
+	r.rem_cid = rem_cid;
+	r.rem_oid = rem_oid;
 
-	printf("sending a remove packet for type %d object %d\n", r.rem_cid, r.rem_oid);
+	r.serialize(packet.dat.buf);
+
+	packet.serialize(packet_data);
+
+	network->sendToAll(packet_data, packet_size);
+}
+
+void ServerGame::sendRemovePacket(ClassId rem_cid, int rem_oid, ClassId rec_cid, int rec_oid)
+{
+	Packet packet;
+	packet.hdr.packet_type = REMOVE_EVENT;
+
+	const unsigned int packet_size = sizeof(Packet);
+
+	char packet_data[packet_size];
+
+	packet.dat.game_data_id = REM_OBJ;
+
+	RemInfo r;
+	r.rem_cid = rem_cid;
+	r.rem_oid = rem_oid;
+	r.rec_cid = rec_cid;
+	r.rec_oid = rec_oid;
 
 	r.serialize(packet.dat.buf);
 
@@ -523,7 +552,8 @@ void ServerGame::receiveRotationPacket(int offset) {
 	// All rotation packets will be player type, since it's from client
 	Entity* ent = (Entity*)(EntitySpawner::instance()->GetEntity(ClassId::PLAYER, hdr->sender_id));
 
-	ent->SetEntityRotation(pi->rotx, pi->roty, pi->rotz, pi->rotw);
+	ent->SetEntityRotation(0, pi->roty, 0, pi->rotw);
+	((Player *)ent)->SetCam(pi->camx, pi->camz);
 	sendRotationPacket(ClassId::PLAYER, hdr->sender_id);
 }
 
@@ -622,27 +652,30 @@ void ServerGame::sendGameOverPacket(int winner) {
 	network->sendToAll(packet_data, packet_size);
 }
 
-void ServerGame::receiveShootPacket(int offset) {
-	//struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset]);
-
-	//shared_ptr<Player> player = engine->GetWorld()->GetPlayer(hdr->sender_id);
+void ServerGame::receiveAttackPacket(int offset) {
 	struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset]);
+	struct PacketData* dat = (struct PacketData *) &(network_data[offset + sizeof(PacketHeader)]);
+	struct MiscInfo* m = (struct MiscInfo *) &(dat->buf);
 	Player* player = (Player*)(EntitySpawner::instance()->GetEntity(ClassId::PLAYER, hdr->sender_id));
-	player->UseWeapon();
+	
+	if (m->misc1 == AttackType::WEAPON_ATTACK)
+		player->UseWeapon();
+	else if (m->misc1 == AttackType::PECK)
+		player->UsePeck();
 }
 
 void ServerGame::sendTimeStampPacket()
 {
-	printf("SENDING TIMESTAMP PACKET\n");
+	//printf("SENDING TIMESTAMP PACKET\n");
 }
 
-void ServerGame::sendShootPacket(int id) {
+void ServerGame::sendAttackPacket(int id) {
 	const unsigned int packet_size = sizeof(Packet);
 	char packet_data[packet_size];
 
 	Packet packet;
 	packet.hdr.sender_id = SERVER_ID;
-	packet.hdr.packet_type = SHOOT_EVENT;
+	packet.hdr.packet_type = ATTACK_EVENT;
 
 	packet.dat.game_data_id = EMOTE_OBJ;
 
@@ -652,6 +685,15 @@ void ServerGame::sendShootPacket(int id) {
 
 	packet.serialize(packet_data);
 	network->sendToAll(packet_data, packet_size);
+}
+
+void ServerGame::receiveDiscardPacket(int offset) {
+	//struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset]);
+
+	//shared_ptr<Player> player = engine->GetWorld()->GetPlayer(hdr->sender_id);
+	struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset]);
+	Player* player = (Player*)(EntitySpawner::instance()->GetEntity(ClassId::PLAYER, hdr->sender_id));
+	player->DiscardWeapon();
 }
 
 void ServerGame::receiveDancePacket(int offset) {

@@ -9,7 +9,6 @@ enum ClassId {
 
 	COLLECTABLE = 3,
 
-	OBSTACLE = 4,
+	OBSTACLE = 4
 
-	GRENADE = 5
 };

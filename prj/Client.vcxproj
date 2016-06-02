@@ -196,6 +196,8 @@
     <None Include="..\src\Graphics\Shaders\text.vert" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\client\GameOverState.cpp" />
+    <ClCompile Include="..\src\Graphics\ModelManager.cpp" />
     <ClCompile Include="..\src\Graphics\Objects\InstanceObject.cpp" />
     <ClCompile Include="..\src\Graphics\ShaderManager.cpp" />
     <ClCompile Include="..\src\Graphics\Objects\ModelEntity.cpp" />
@@ -237,6 +239,8 @@
     <ClCompile Include="..\src\Graphics\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\src\client\GameOverState.h" />
+    <ClInclude Include="..\src\Graphics\ModelManager.h" />
     <ClInclude Include="..\src\Graphics\Objects\InstanceObject.h" />
     <ClInclude Include="..\src\Graphics\ShaderManager.h" />
     <ClInclude Include="..\src\Graphics\Objects\ModelEntity.h" />
@@ -275,7 +279,6 @@
     <ClInclude Include="..\src\Graphics\Camera.h" />
     <ClInclude Include="..\src\Graphics\Objects\Cube.h" />
     <ClInclude Include="..\src\Graphics\Scene.h" />
-    <ClInclude Include="..\src\Graphics\Scenegraph.h" />
     <ClInclude Include="..\src\Graphics\Nodes.h" />
     <ClInclude Include="..\src\Graphics\Shader.h" />
     <ClInclude Include="..\src\Graphics\Texture.h" />
