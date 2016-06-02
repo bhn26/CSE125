@@ -72,6 +72,8 @@ struct PosInfo : GameInfo
 	float y;
 	float z;
 
+	int hp;
+
     int direction; // client -> server move data
 
 	//rotation coords

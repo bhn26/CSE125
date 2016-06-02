@@ -358,8 +358,6 @@ void ClientGame::sendRotationPacket() {
 		pi.camz = 0;
 	}
 
-	printf("VALUES: %f, %f, %f\n", camrot.x, camrot.y, camrot.z);
-
 	//pi.h_rotation = h_rot;
     pi.serialize(packet.dat.buf);
 
@@ -413,6 +411,14 @@ void ClientGame::receiveGameOverPacket(int offset) {
 		printf("Team %d won!\n", winner);
 	// change state to game over screen
 	Window::m_pStateManager->ChangeState(GOState::GetInstance(Window::m_pStateManager));
+}
+
+void ClientGame::receiveTimeStampPacket(int offset) 
+{
+	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
+	struct MiscInfo* m = (struct MiscInfo *) &(dat->buf);
+
+	printf("TIME ATM in SECONDS: %d\n", m->misc1);
 }
 
 void ClientGame::sendAttackPacket(AttackType t) {
@@ -543,6 +549,10 @@ void ClientGame::update()
 				if(game_started) // the game needs to start for the client before this can happen
 					receiveMovePacket(i + sizeof(PacketHeader));
                 break;
+
+			case TIME_EVENT:
+				receiveTimeStampPacket(i + sizeof(PacketHeader));
+				break;
 
 			case DANCE_EVENT:
 				receiveDancePacket(i + sizeof(PacketHeader));

@@ -607,8 +607,10 @@ void World::UpdateWorld()
 			btVector3 vec = it->second->GetRigidBody()->getLinearVelocity();
 			float thresh = .0005;
 			// don't send packets if the object is stationary?
-			if (abs(vec.getX()) < thresh && abs(vec.getY()) < thresh && abs(vec.getZ()) < thresh)
+			if ((abs(vec.getX()) < thresh && abs(vec.getY()) < thresh && abs(vec.getZ()) < thresh))
 			{
+				if (it->second->GetClassId() == ClassId::PLAYER)
+					ServerGame::instance()->sendMovePacket((ClassId)it->second->GetClassId(), it->second->GetObjectId());
 				//printf(" Dynamic object classid: %d, objid: %d, velocity (%f,%f,%f)\n", it->second->GetClassId(), it->second->GetObjectId(), vec.getX(), vec.getY(), vec.getZ());
 				continue;
 			}

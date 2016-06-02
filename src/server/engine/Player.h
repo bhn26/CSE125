@@ -65,6 +65,8 @@ public:
 
 	int GetScore() { return flags->size(); };
 
+	int GetHP() { return hitPoints; };
+
 	void SetCam(float trotx, float trotz);
 
 	// How much damage did they take, what is the world tick when they took this damage?
