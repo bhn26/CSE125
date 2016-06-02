@@ -38,7 +38,8 @@ void ConfigManager::LoadConfigs(const std::string& file_name)
         else if (field.substr(0, modelPrefix.length()) == modelPrefix)
         {
             std::string name = field.substr(modelPrefix.length(), field.length());
-            if (name == std::string("Pumpkin")) continue;
+			if (name == std::string("Pumpkin")) continue;
+			if (name == std::string("Pumpkin_Patch")) continue;
             ModelManager::Instance()->AddModelToLoad(name);
         }
 #endif

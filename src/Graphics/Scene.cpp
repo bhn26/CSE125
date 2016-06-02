@@ -91,11 +91,16 @@ void Scene::Setup()
 	// Bench
     std::unique_ptr<StaticObject> bench = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Bench")));
 
+
+
 	// Pumpkin
     // TODO NO IDEA WHY PUMPKIN HACK WORKS HERE
     ModelManager::Instance()->AddModelToLoad("Pumpkin");
-    ModelManager::Instance()->LoadModels();
-    std::unique_ptr<StaticObject> pumpkinObj = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Pumpkin")));
+	ModelManager::Instance()->AddModelToLoad("Pumpkin_Patch");
+	ModelManager::Instance()->LoadModels();
+//    std::unique_ptr<StaticObject> pumpkinObj = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Pumpkin")));
+	// Pumpkin Patch
+	std::unique_ptr<StaticObject> pumpkin_patch = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Pumpkin_Patch")));
 
 	// Rocks
     std::unique_ptr<StaticObject> rocks = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Rocks")));
@@ -139,6 +144,7 @@ void Scene::Setup()
 	static_objects.push_back(std::move(hot_tub));
 	static_objects.push_back(std::move(barn));
 	static_objects.push_back(std::move(ground));
+	static_objects.push_back(std::move(pumpkin_patch));
 	static_objects.push_back(std::move(house));
 	static_objects.push_back(std::move(red_tractor));
 	static_objects.push_back(std::move(green_tractor));
@@ -406,25 +412,25 @@ void Scene::AddEntity(PosInfo p)
 			switch (p.sub_id)
 			{
 				case(SEEDGUN):
-					bullet = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Pumpkin_Seed")));
+					bullet = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Tomato")));
 					bullet->Translate(glm::vec3(p.x, p.y, p.z));
 					//bullet->GetShader() = modelShader;        // Set in ModelEntity
 					AddEntity(p.cid, p.oid, std::move(bullet));
 					break;
 				case(BOUNCEGUN):
-					bullet = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Stump")));
+					bullet = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Tomato")));
 					bullet->Translate(glm::vec3(p.x, p.y, p.z));
 					//bullet->GetShader() = modelShader;        // Set in ModelEntity
 					AddEntity(p.cid, p.oid, std::move(bullet));
 					break;
 				case(GRENADELAUNCHER):
-					bullet = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Rocks")));
+					bullet = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Tomato")));
 					bullet->Translate(glm::vec3(p.x, p.y, p.z));
 					//bullet->GetShader() = modelShader;        // Set in ModelEntity
 					AddEntity(p.cid, p.oid, std::move(bullet));
 					break;
 				default:
-					std::unique_ptr<StaticObject> bullet = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Pumpkin_Seed")));
+					std::unique_ptr<StaticObject> bullet = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Tomato")));
 					bullet->Translate(glm::vec3(p.x, p.y, p.z));
 					//bullet->GetShader() = modelShader;        // Set in ModelEntity
 					AddEntity(p.cid, p.oid, std::move(bullet));

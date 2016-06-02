@@ -15,7 +15,7 @@ public:
 	int UseWeapon(btVector3 * position, btMatrix3x3* rotation, int playerid, int teamid, Entity* owner);
 
 	static const int EXPLOSION_SIZE = 17;
-	static const int EXPLOSION_DUR = 10;
+	static const int EXPLOSION_DUR = 90;
 
 	void ReloadWeapon();
 };

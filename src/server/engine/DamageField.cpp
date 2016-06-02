@@ -21,25 +21,25 @@ DamageField::~DamageField()
 int DamageField::handleField()
 {
 	fieldTtl--;
-	if (fieldTtl < 1)
+	int numOverlap = FieldGhostObject->getNumOverlappingObjects();
+	for (int i = 0; i < numOverlap; i++)
 	{
-		int numOverlap = FieldGhostObject->getNumOverlappingObjects();
-		for (int i = 0; i < numOverlap; i++)
+		btRigidBody *pRigidBody = dynamic_cast<btRigidBody *>(FieldGhostObject->getOverlappingObject(i));
+		if (pRigidBody && pRigidBody->getUserIndex() == ClassId::PLAYER)
 		{
-			btRigidBody *pRigidBody = dynamic_cast<btRigidBody *>(FieldGhostObject->getOverlappingObject(i));
-			if (pRigidBody && pRigidBody->getUserIndex() == ClassId::PLAYER)
+			Player * collidedPlayer = (Player *)pRigidBody->getUserPointer();
+			if (collidedPlayer->GetTeamId() != team_id)
 			{
-				Player * collidedPlayer = (Player *)pRigidBody->getUserPointer();
-				if (collidedPlayer->GetTeamId() != team_id)
+				if (collidedPlayer->takeDamage(this->fieldDamage, FireRateReset::instance()->currentWorldTick))
 				{
-					if (collidedPlayer->takeDamage(this->fieldDamage, FireRateReset::instance()->currentWorldTick))
-					{
-						//TODO Handle Player Death: send player death to client...  Maybe handle this on player
-						return 1;
-					}
+					//TODO Handle Player Death: send player death to client...  Maybe handle this on player
 				}
 			}
 		}
 	}
-	return 0;
+	
+	if(fieldTtl > 0)
+		return 0;
+	else
+		return 1;
 }

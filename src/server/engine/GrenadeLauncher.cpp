@@ -6,7 +6,7 @@ GrenadeLauncher::GrenadeLauncher(btDiscreteDynamicsWorld* curworld) : Weapon(fir
 	wt = WeaponType::GRENADELAUNCHER;
 	nextFireTick = 0;
 	fireRate = 100;
-	damage = 40;
+	damage = 1;
 	currentAmmo = 3;
 	maxAmmo = 3;
 	gunSpeed = new btVector3(0, 15, 20);

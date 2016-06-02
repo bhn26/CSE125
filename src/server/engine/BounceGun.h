@@ -6,7 +6,7 @@ class BounceGun : public Weapon
 {
 private:
 	// this is more like bounceframes, it seems to be colliding again and again
-	static const int NUM_BOUNCES = 20;
+	static const int NUM_BOUNCES = 5;
 
 public:
 	BounceGun(btDiscreteDynamicsWorld* curworld);
