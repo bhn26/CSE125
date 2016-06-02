@@ -32,7 +32,6 @@ Player::Player(int objectid, int teamid, PosInfo pos, btDiscreteDynamicsWorld* p
 	playerMotionState->getWorldTransform(currentTrans);
 	btQuaternion currentOrientation = currentTrans.getRotation();
 	this->cameraAngle = currentOrientation;
-	this->cameraDelta = 0;
 
 	// Set Player protected fields
 	this->entityRigidBody = pRigidBody;
