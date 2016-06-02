@@ -52,7 +52,7 @@ void Scene::Setup()
 
     depthShader = ShaderManager::GetShader("Depth_Map");
 
-	std::unique_ptr<StaticObject> map = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Map")));
+	//std::unique_ptr<StaticObject> map = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Map")));
 
 	// Barn
     std::unique_ptr<StaticObject> barn = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Barn")));
@@ -84,6 +84,9 @@ void Scene::Setup()
 
 	// Maze
 	std::unique_ptr<StaticObject> maze = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Maze")));
+
+	// Fence
+	std::unique_ptr<StaticObject> fence = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Fence")));
 
 	// Bench
     std::unique_ptr<StaticObject> bench = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Bench")));
@@ -145,6 +148,7 @@ void Scene::Setup()
 	//static_objects.push_back(std::move(maze));
 	static_objects.push_back(std::move(silo));
 	static_objects.push_back(std::move(rocks));
+	static_objects.push_back(std::move(fence));
 	static_objects.push_back(std::move(bench));
 	//static_objects.push_back(std::move(pumpkinObj));
 	static_objects.push_back(std::move(seed));
