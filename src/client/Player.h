@@ -91,7 +91,7 @@ public:
     int GetScore() const override { return num_eggs; };
     void SetScore(int n) override { num_eggs = n; };
 
-    void SetTeam(int team) { team_id = team; }
+	void SetTeam(int team);
     int GetTeam() const { return team_id; }
 
 	bool IsAlive() { return alive; }
