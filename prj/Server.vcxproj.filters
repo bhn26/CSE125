@@ -93,6 +93,21 @@
     <ClInclude Include="..\src\server\engine\RespawnHandler.h">
       <Filter>Source Files\engine</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\server\engine\CollectableSpawner.h">
+      <Filter>Source Files\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\server\engine\BulletCollisionHandler.h">
+      <Filter>Source Files\engine\Weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\server\engine\SimpleBulletCollision.h">
+      <Filter>Source Files\engine\Weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\server\engine\BounceGun.h">
+      <Filter>Source Files\engine\Weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\server\engine\BounceBulletCollision.h">
+      <Filter>Source Files\engine\Weapons</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\network\NetworkServices.cpp">
@@ -157,6 +172,12 @@
     </ClCompile>
     <ClCompile Include="..\src\server\engine\RespawnHandler.cpp">
       <Filter>Source Files\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\server\engine\CollectableSpawner.cpp">
+      <Filter>Source Files\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\server\engine\BounceGun.cpp">
+      <Filter>Source Files\engine\Weapons</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

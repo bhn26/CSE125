@@ -2,11 +2,11 @@
 #include <memory>
 #include <vector>
 #include "Entity.h"
+#include "Weapon.h"
 
 #include "../../network/GameData.h"
 
 class Flag;
-class Weapon;
 
 class Player : public Entity
 {
@@ -55,7 +55,11 @@ public:
 
 	void EquipWeapon(Weapon* newWeapon);
 
+	void DiscardWeapon();
+
 	bool HasWeapon();
+	WeaponType GetPlayerWeaponType() { return playerWeapon->GetWeaponType(); };
+	Weapon* GetWeapon() { return playerWeapon; };
 
 	int GetTeamId();
 
