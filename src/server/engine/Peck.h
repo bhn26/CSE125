@@ -16,4 +16,5 @@ public:
 
 	// always returns 1 because infinite ammo
 	int UseWeapon(btVector3* position, btMatrix3x3* rotation, int playerid, int teamid, Entity* owner);
+
 };

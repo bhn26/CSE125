@@ -227,6 +227,8 @@ void Player::UsePeck()
 
 	peckWeapon->UseWeapon(position, currentOrientation, this->objectId, this->teamId, this);
 	ServerGame::instance()->sendAttackPacket(objectId);
+	//	peckWeapon->UseWeapon(&(entityRigidBody->getCenterOfMassPosition()), &currentOrientation, this->objectId, this->teamId, this);
+	//printf("player with objId: %d used peck! \n", objectId);
 }
 
 void Player::HandleDeath(unsigned int death_tick)
