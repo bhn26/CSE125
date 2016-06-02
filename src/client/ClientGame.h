@@ -84,7 +84,7 @@ public:
 	void receiveTimeStampPacket(int offset);
 
     void receiveRotationPacket(int offset);
-    void sendRotationPacket(float yos); 
+    void sendRotationPacket(); 
 
 	void sendJumpPacket();
 

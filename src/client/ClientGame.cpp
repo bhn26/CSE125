@@ -313,7 +313,7 @@ void ClientGame::receiveRotationPacket(int offset) {
 
 }
 
-void ClientGame::sendRotationPacket(float yos) {
+void ClientGame::sendRotationPacket() {
     const unsigned int packet_size = sizeof(Packet);
     char packet_data[packet_size];
 
@@ -329,36 +329,6 @@ void ClientGame::sendRotationPacket(float yos) {
 	pi.rotx = rot.x;
 	pi.roty = rot.y;
 	pi.rotz = rot.z;
-
-	glm::vec3 camrot = Scene::Instance()->GetPlayer()->GetFront();
-
-	if (camrot.x > 0 && camrot.z > 0)
-	{
-		pi.camx = (-(camrot.y + 0.203336));
-		pi.camz = 0;
-	}
-	else if (camrot.x > 0 && camrot.z < 0)
-	{
-		pi.camx = 0;
-		pi.camz = ((camrot.y + 0.203336));
-	}
-	else if (camrot.x < 0 && camrot.z > 0)
-	{
-		pi.camx = (-(camrot.y + 0.203336));
-		pi.camz = 0;
-	}
-	else if (camrot.x < 0 && camrot.z < 0)
-	{
-		pi.camx = 0;
-		pi.camz = ((camrot.y + 0.203336));
-	}
-	else
-	{
-		pi.camx = 0;
-		pi.camz = 0;
-	}
-
-	pi.yos = yos;
 
 	//pi.h_rotation = h_rot;
     pi.serialize(packet.dat.buf);
@@ -434,6 +404,7 @@ void ClientGame::sendAttackPacket(AttackType t) {
 
 	MiscInfo m;
 	m.misc1 = t;
+	m.misc3 = Scene::Instance()->GetPlayer()->GetCamAngle();
 	m.serialize(packet.dat.buf);
 
 	packet.serialize(packet_data);
@@ -647,7 +618,7 @@ void ClientGame::GameLoop()
 
 		if (++tick % 15 == 0 && iSpawned)
 		{
-			ClientGame::instance()->sendRotationPacket(-9999);
+			ClientGame::instance()->sendRotationPacket();
 			tick = 0;
 		}
     }

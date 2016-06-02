@@ -143,12 +143,10 @@ int Player::GetTeamId()
 	//btQuaternion * playerRotation = &(this->GetEntityRotation());
 	btQuaternion * playerRotation = &(this->cameraAngle);
 
-	printf("VALS OF ROT QUAT: %f, %f, %f, %f\n", position.camx, playerRotation->getY(), position.camz, playerRotation->getW());
-
 	btVector3* position = new btVector3(temp.getX(), temp.getY(), temp.getZ());
 
-	btTransform currentTrans;
-	entityRigidBody->getMotionState()->getWorldTransform(currentTrans);
+	//btTransform currentTrans;
+	//entityRigidBody->getMotionState()->getWorldTransform(currentTrans);
 	btMatrix3x3 * currentOrientation = new btMatrix3x3(*playerRotation);
 
 	if (playerWeapon->UseWeapon(position, currentOrientation, this->objectId, this->teamId, this) == 0)
@@ -157,8 +155,18 @@ int Player::GetTeamId()
 		playerWeapon = nullptr;
 	}
 	ServerGame::instance()->sendAttackPacket(objectId);
-	//printf("player with objId: %d used weapon\n", objectId);
 }
+
+ void Player::SetCamAngle(float yos)
+ {
+	 btQuaternion playerRotation = this->GetEntityRotation();
+	 if (yos > -9990)
+	 {
+		 yos += .2;
+		 printf("Camera Vertical Angle is: %f\n", yos);
+		 this->cameraAngle = (playerRotation) * (btQuaternion(btVector3(-1, 0, 0), yos));
+	 }
+ }
 
 void Player::EquipWeapon(Weapon* newWeapon)
 {
@@ -201,12 +209,6 @@ int Player::takeDamage(int damage, unsigned int world_tick)
 	{
 		return 0;
 	}
-}
-
-void Player::SetCam(float trotx, float trotz)
-{
-	position.camx = trotx;
-	position.camz = trotz;
 }
 
 void Player::UsePeck()

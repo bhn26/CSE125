@@ -67,8 +67,6 @@ public:
 
 	int GetHP() { return hitPoints; };
 
-	void SetCam(float trotx, float trotz);
-
 	// How much damage did they take, what is the world tick when they took this damage?
 	int takeDamage(int damage, unsigned int world_tick);
 
@@ -80,6 +78,8 @@ public:
 	void Move(btVector3* changeVelocity);
 
 	//void SetEntityRotation(float x, float y, float z, float w);
+
+	void SetCamAngle(float yos);
 
 	unsigned int GetDeathTime() { return death_time; }
 	void SetDeathTime(unsigned int dt) { death_time = dt; }

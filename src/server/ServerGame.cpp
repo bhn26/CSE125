@@ -555,7 +555,6 @@ void ServerGame::receiveRotationPacket(int offset) {
 	Entity* ent = (Entity*)(EntitySpawner::instance()->GetEntity(ClassId::PLAYER, hdr->sender_id));
 
 	ent->SetEntityRotation(0, pi->roty, 0, pi->rotw, pi->yos);
-	((Player *)ent)->SetCam(pi->camx, pi->camz);
 	sendRotationPacket(ClassId::PLAYER, hdr->sender_id);
 }
 
@@ -660,6 +659,8 @@ void ServerGame::receiveAttackPacket(int offset) {
 	struct MiscInfo* m = (struct MiscInfo *) &(dat->buf);
 	Player* player = (Player*)(EntitySpawner::instance()->GetEntity(ClassId::PLAYER, hdr->sender_id));
 	
+	player->SetCamAngle(m->misc3);
+
 	if (m->misc1 == AttackType::WEAPON_ATTACK)
 		player->UseWeapon();
 	else if (m->misc1 == AttackType::PECK)

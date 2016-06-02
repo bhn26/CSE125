@@ -159,7 +159,7 @@ void Player::ProcessMouseMovement(GLfloat xoffset, GLfloat yoffset, GLboolean co
 	// Don't send me stuff unless you're alive
 	if (++tick % 10 == 0 && alive == true)
     {
-        ClientGame::instance()->sendRotationPacket(camAngle);
+        ClientGame::instance()->sendRotationPacket();
         tick = 0;
     }
 }
@@ -188,7 +188,7 @@ void Player::ProcessViewMovement(GLfloat xoffset, GLfloat yoffset, GLboolean con
 
     if (++tick % 10 == 0)
     {
-        ClientGame::instance()->sendRotationPacket(camAngle);
+        ClientGame::instance()->sendRotationPacket();
         tick = 0;
     }
 }
@@ -224,6 +224,11 @@ glm::mat4 Player::GetPerspectiveMatrix() const
 glm::mat3 Player::GetNormalMatrix() const
 {
     return this->normalMatrix;
+}
+
+float Player::GetCamAngle() const
+{
+	return this->camAngle;
 }
 
 void Player::ChangeState(State state)
