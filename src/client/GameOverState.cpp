@@ -77,7 +77,10 @@ void GOState::Draw()
 	glClear(GL_DEPTH_BUFFER_BIT); // remove depth info so text and buttons go on top
 
 	//////////////// DISPLAY WINNER ////////////////////////////////
-	if (ClientGame::instance()->GetWinner() == ClientGame::instance()->GetClientTeam()) {
+	if (ClientGame::instance()->GetWinner() == -1) {
+		TextRenderer::RenderText("You Tied!!", x + 275, y + 350, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+	}
+	else if (ClientGame::instance()->GetWinner() == ClientGame::instance()->GetClientTeam()) {
 		TextRenderer::RenderText("You Win!", x + 275, y + 350, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 	}
 	else {

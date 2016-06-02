@@ -2,11 +2,11 @@
 #include <memory>
 #include <vector>
 #include "Entity.h"
+#include "Weapon.h"
 
 #include "../../network/GameData.h"
 
 class Flag;
-class Weapon;
 
 class Player : public Entity
 {
@@ -55,11 +55,17 @@ public:
 
 	void EquipWeapon(Weapon* newWeapon);
 
+	void DiscardWeapon();
+
 	bool HasWeapon();
+	WeaponType GetPlayerWeaponType() { return playerWeapon->GetWeaponType(); };
+	Weapon* GetWeapon() { return playerWeapon; };
 
 	int GetTeamId();
 
 	int GetScore() { return flags->size(); };
+
+	void SetCam(float trotx, float trotz);
 
 	// How much damage did they take, what is the world tick when they took this damage?
 	int takeDamage(int damage, unsigned int world_tick);

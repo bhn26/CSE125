@@ -7,6 +7,7 @@
 #include "Flag.h"
 #include "Peck.h"
 #include "SeedGun.h"
+#include "GrenadeLauncher.h"
 #include "RespawnHandler.h"
 #include <time.h>
 #include "../ServerGame.h"
@@ -37,7 +38,6 @@ Player::Player(int objectid, int teamid, PosInfo pos, btDiscreteDynamicsWorld* p
 	this->position = pos;
 	this->playerWeapon = nullptr;
 	this->peckWeapon = new Peck(curWorld);
-	this->playerWeapon = new SeedGun(curWorld);
 	this->alive = true;
 	this->death_time = 0;
 
@@ -96,7 +96,7 @@ void Player::AcquireFlag(Flag* flag)
 
 	// note - individual scores are updated with move packets
 	ServerGame::instance()->IncScore(teamId, 1);
-	ServerGame::instance()->sendScorePacket();
+	//ServerGame::instance()->sendScorePacket();
 
 	// check if your team won
 	int * scores = ServerGame::instance()->GetScores();
@@ -113,7 +113,7 @@ void Player::LoseFlags()
 
 	// Change this, we need the flags to come out of the player back into the world
 	flags->clear();
-	ServerGame::instance()->sendScorePacket();
+	//ServerGame::instance()->sendScorePacket();
 }
 
 int Player::GetTeamId()
@@ -135,17 +135,27 @@ int Player::GetTeamId()
 
 	// passes player position when using weapon
 	btVector3 temp = this->GetEntityPosition();
+
+	btQuaternion * playerRotation = &(this->GetEntityRotation());
+	playerRotation->setX(position.camx);
+	playerRotation->setZ(position.camz);
+
 	//printf("TEMP Position:  x: %f, y: %f, z: %f  \n", temp.getX(), temp.getY(), temp.getZ());
 
 	btVector3* position = new btVector3(temp.getX(), temp.getY(), temp.getZ());
+
 	btTransform currentTrans;
 	entityRigidBody->getMotionState()->getWorldTransform(currentTrans);
-	btMatrix3x3 currentOrientation = currentTrans.getBasis();
+	btMatrix3x3 * currentOrientation = new btMatrix3x3(*playerRotation);
 	//btQuaternion* playerRotation = new btQuaternion(currentOrientation.getX(), currentOrientation.getY(), currentOrientation.getX(), currentOrientation.getW());
 
-	playerWeapon->UseWeapon(position, &currentOrientation, this->objectId, this->teamId, this);
-	ServerGame::instance()->sendShootPacket(objectId);
-	//printf("player with objId: %d used weapon\n", objectId);
+	//ServerGame::instance()->sendShootPacket(objectId);
+	if (playerWeapon->UseWeapon(position, currentOrientation, this->objectId, this->teamId, this) == 0)
+	{
+		delete playerWeapon;
+		playerWeapon = nullptr;
+	}
+	ServerGame::instance()->sendAttackPacket(objectId);
 }
 
 void Player::EquipWeapon(Weapon* newWeapon)
@@ -153,6 +163,17 @@ void Player::EquipWeapon(Weapon* newWeapon)
 	if (!alive)
 		return;
 	this->playerWeapon = newWeapon;
+}
+
+void Player::DiscardWeapon()
+{
+	if (playerWeapon)
+	{
+		delete playerWeapon;
+		playerWeapon = nullptr;
+	}
+
+	//if(alive) send packet for discard animation
 }
 
 bool Player::HasWeapon()
@@ -180,6 +201,12 @@ int Player::takeDamage(int damage, unsigned int world_tick)
 	}
 }
 
+void Player::SetCam(float trotx, float trotz)
+{
+	position.camx = trotx;
+	position.camz = trotz;
+}
+
 void Player::UsePeck()
 {
 	if (!alive)
@@ -189,14 +216,16 @@ void Player::UsePeck()
 	btTransform currentTrans;
 	entityRigidBody->getMotionState()->getWorldTransform(currentTrans);
 	btMatrix3x3 currentOrientation = currentTrans.getBasis();
+	ServerGame::instance()->sendAttackPacket(objectId);
 //	peckWeapon->UseWeapon(&(entityRigidBody->getCenterOfMassPosition()), &currentOrientation, this->objectId, this->teamId, this);
-	printf("player with objId: %d used peck! \n", objectId);
+	//printf("player with objId: %d used peck! \n", objectId);
 }
 
 void Player::HandleDeath(unsigned int death_tick)
 {
-	printf("Player %u has died!", objectId);
+	//printf("Player %u has died!", objectId);
 	this->alive = false;
+	DiscardWeapon();
 	death_time = death_tick;
 	ServerGame::instance()->sendDeathPacket(objectId);
 	//EntitySpawner::instance()->RemoveEntity(classId, objectId);
@@ -248,7 +277,7 @@ void Player::HandleDeath(unsigned int death_tick)
 	}
 	//flags->clear(); //Actually calls delete on flags... didn't seem to correctly work for bullet deletion anways... maybe cause of void pointer
 	//LoseFlags();
-	ServerGame::instance()->sendScorePacket();
+	//ServerGame::instance()->sendScorePacket();
 }
 
 void Player::Move(btVector3* changeVelocity)

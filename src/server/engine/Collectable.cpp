@@ -1,4 +1,5 @@
 #include "Collectable.h"
+#include "CollectableSpawner.h"
 //#include "EntitySpawner.h"
 #include "Player.h"
 #include <time.h>
@@ -6,10 +7,10 @@
 //List of weapons
 #include "SeedGun.h"
 
-Collectable::Collectable(int objectid, PosInfo pos, btDiscreteDynamicsWorld* curworld) : Entity(ClassId::COLLECTABLE, objectid, curworld)
+Collectable::Collectable(int objectid, PosInfo pos, btDiscreteDynamicsWorld* curworld, Weapon* wp) : Entity(ClassId::COLLECTABLE, objectid, curworld)
 {
-	srand(time(NULL));
 	this->curWorld = curworld;
+	this->weapon = wp;
 	btCollisionShape* collectableShape = new btBoxShape(btVector3(1, 1, 1));
 
 	// Create Collectable physics object
@@ -40,22 +41,27 @@ void Collectable::HandleCollect(Player* collidedPlayer)
 
 	//Remove collectable object from EntitySpawner Map
 	EntitySpawner::instance()->RemoveEntity(ClassId::COLLECTABLE, objectId);
+	CollectableSpawner::instance()->DecCollectables();
 
 	// If player already has usable
 	if (collidedPlayer->HasWeapon())
 	{
+		if (this->weapon->GetWeaponType() == collidedPlayer->GetPlayerWeaponType())
+		{
+			collidedPlayer->GetWeapon()->ReloadWeapon();
+		}
+
 		return;
 	}
 
 	// Otherwise, give random useable
 	// Randomize what type of weapon or powerup that player would get
-	int ranPower = rand() % 2;
 //	switch (ranPower)
 //	{
 //	}
 
-	Weapon* seedGun = new SeedGun(curWorld);
-	collidedPlayer->EquipWeapon(seedGun);
+	printf("acquired weapon of type %d\n", weapon->GetWeaponType());
+	collidedPlayer->EquipWeapon(weapon);
 }
 
 Collectable::~Collectable()
