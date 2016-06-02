@@ -43,22 +43,22 @@ void Scene::Setup()
     InitializeUBOs();
     InitializeFBO();
 
-    //camera = std::unique_ptr<Camera>(new Camera(glm::vec3(0.0f, 9.0f, -15.0f), glm::vec3(0.0f, 1.0f, 0.0f), 90.0f, -25.0f));
-    camera = std::unique_ptr<Camera>(new Camera(glm::vec3(0.0f, 9.0f, -15.0f)));
+    glm::vec3 pos = glm::vec3(std::stof(ConfigManager::instance()->GetConfigValue("Light_Pos_X")),
+        std::stof(ConfigManager::instance()->GetConfigValue("Light_Pos_Y")),
+        std::stof(ConfigManager::instance()->GetConfigValue("Light_Pos_Z")));
+
     pLight = std::unique_ptr<PointLight>(new PointLight(glm::vec3(0.0f, 20.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)));
     dLight = std::unique_ptr<DirectionalLight>(new DirectionalLight(glm::vec3(0.5, -sqrt(3)/2.0f, 0.0f)));
     dLight->_ambientIntensity = 0.3f;
+    camera = std::unique_ptr<Camera>(new Camera(pos, glm::vec3(0.0f, 1.0f, 0.0f), dLight->_direction));
 
     //glm::vec3 pos = glm::vec3(0.0f, 250.0f, 0.0f);
     //lightSpaceMatrix = glm::ortho(-425.0f, 350.0f, -500.0f, 300.0f, 10.0f, 500.0f) *
     //    glm::lookAt(pos, pos + dLight->_direction, glm::vec3(0.0f, 1.0f, 0.0));
-    glm::vec3 pos = glm::vec3(std::stof(ConfigManager::instance()->GetConfigValue("Light_Pos_X")),
-                            std::stof(ConfigManager::instance()->GetConfigValue("Light_Pos_Y")),
-                            std::stof(ConfigManager::instance()->GetConfigValue("Light_Pos_Z")));
     lightSpaceMatrix = glm::ortho(std::stof(ConfigManager::instance()->GetConfigValue("Light_Ortho_Left")),
                                 std::stof(ConfigManager::instance()->GetConfigValue("Light_Ortho_Right")),
-                                std::stof(ConfigManager::instance()->GetConfigValue("Light_Ortho_Top")),
                                 std::stof(ConfigManager::instance()->GetConfigValue("Light_Ortho_Bottom")),
+                                std::stof(ConfigManager::instance()->GetConfigValue("Light_Ortho_Top")),
                                 std::stof(ConfigManager::instance()->GetConfigValue("Light_Ortho_Near")),
                                 std::stof(ConfigManager::instance()->GetConfigValue("Light_Ortho_Far"))) *
         glm::lookAt(pos, pos + dLight->_direction, glm::vec3(0.0f, 1.0f, 0.0));
@@ -193,8 +193,8 @@ void Scene::InitializeFBO()
     glBindTexture(GL_TEXTURE_2D, this->depthMap);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_DEPTH_WIDTH, SHADOW_DEPTH_HEIGHT,
         0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
     float borderColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
@@ -342,7 +342,7 @@ void Scene::Update()
 void Scene::Draw()
 {
     RenderDepthMap();
-    //DrawDepthMap();
+    DrawDepthMap();
     RenderScene();
 }
 

@@ -49,9 +49,6 @@ void Egg::Draw() const
     // Use the appropriate shader (depth or model)
     UseShader();
 
-    if (Scene::Instance()->IsRenderingDepth())
-        ShaderManager::GetShader("Model")->Use();
-
     // Draw the loaded model
     model->Draw(Scene::Instance()->IsRenderingDepth() ? nullptr : shader.get());
 }
