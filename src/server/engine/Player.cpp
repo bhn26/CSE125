@@ -137,8 +137,8 @@ int Player::GetTeamId()
 	btVector3 temp = this->GetEntityPosition();
 
 	btQuaternion * playerRotation = &(this->GetEntityRotation());
-	playerRotation->setX(position.camx);
-	playerRotation->setZ(position.camz);
+	//playerRotation->setX(position.camx);
+	//playerRotation->setZ(position.camz);
 
 	//printf("TEMP Position:  x: %f, y: %f, z: %f  \n", temp.getX(), temp.getY(), temp.getZ());
 
@@ -209,16 +209,24 @@ void Player::SetCam(float trotx, float trotz)
 
 void Player::UsePeck()
 {
+
 	if (!alive)
 		return;
 
-	// passes player position when using weapon
+	btVector3 temp = this->GetEntityPosition();
+
+	btQuaternion * playerRotation = &(this->GetEntityRotation());
+	//playerRotation->setX(position.camx);
+	//playerRotation->setZ(position.camz);
+
+	btVector3* position = new btVector3(temp.getX(), temp.getY(), temp.getZ());
+
 	btTransform currentTrans;
 	entityRigidBody->getMotionState()->getWorldTransform(currentTrans);
-	btMatrix3x3 currentOrientation = currentTrans.getBasis();
+	btMatrix3x3 * currentOrientation = new btMatrix3x3(*playerRotation);
+
+	peckWeapon->UseWeapon(position, currentOrientation, this->objectId, this->teamId, this);
 	ServerGame::instance()->sendAttackPacket(objectId);
-//	peckWeapon->UseWeapon(&(entityRigidBody->getCenterOfMassPosition()), &currentOrientation, this->objectId, this->teamId, this);
-	//printf("player with objId: %d used peck! \n", objectId);
 }
 
 void Player::HandleDeath(unsigned int death_tick)

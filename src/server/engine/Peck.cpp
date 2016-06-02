@@ -16,7 +16,7 @@ Peck::Peck(btDiscreteDynamicsWorld* curworld): Weapon(meleefireRate, meleeDamage
 
 Peck::~Peck(){}
 
-int Peck::UseWeapon(const btVector3* position, btMatrix3x3* rotation, int playerid, int teamid, Entity* user)
+int Peck::UseWeapon(btVector3* position, btMatrix3x3* rotation, int playerid, int teamid, Entity* owner)
 {
 	if (this->fireFlag)
 	{

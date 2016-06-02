@@ -12,8 +12,6 @@
 #endif
 class Entity;
 
-static const int NUM_WEAPON_TYPES = 2; // number of types of weapons there are
-
 class Weapon
 {
 
