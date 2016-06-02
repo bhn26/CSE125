@@ -14,11 +14,11 @@ class FieldObject
 {
 protected:
 	btPairCachingGhostObject* FieldGhostObject;
-	Entity * fieldOwner;
+	int team_id;
 	btDiscreteDynamicsWorld* curWorld;
 
 public:
-	FieldObject(btVector3* origin, btCollisionShape* fieldshape, Entity* fieldowner, btDiscreteDynamicsWorld* curworld);
+	FieldObject(btVector3* origin, btCollisionShape* fieldshape, int team_id, btDiscreteDynamicsWorld* curworld);
 	virtual ~FieldObject();
 
 	// handles field detection. Returns 1 when field is done, 0 if not

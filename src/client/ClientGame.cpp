@@ -358,8 +358,6 @@ void ClientGame::sendRotationPacket() {
 		pi.camz = 0;
 	}
 
-	printf("VALUES: %f, %f, %f\n", camrot.x, camrot.y, camrot.z);
-
 	//pi.h_rotation = h_rot;
     pi.serialize(packet.dat.buf);
 

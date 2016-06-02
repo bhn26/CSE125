@@ -10,6 +10,7 @@
 #include "CollectableSpawner.h"
 #include "SeedGun.h"
 #include "BounceGun.h"
+#include "GrenadeLauncher.h"
 
 EntitySpawner* EntitySpawner::spawnInstance = nullptr;
 
@@ -116,11 +117,11 @@ Bullet* EntitySpawner::spawnBullet(int playerid, int teamid, int damage, WeaponT
 	return fireProjectile;
 }
 
-
 void EntitySpawner::spawnCollectable(btDiscreteDynamicsWorld* curWorld, WeaponType w_type)
 {
 	Weapon* wp;
-	switch (w_type)
+	//switch (w_type)
+	switch (GRENADELAUNCHER)
 	{
 		case WeaponType::SEEDGUN:
 		{
@@ -132,6 +133,12 @@ void EntitySpawner::spawnCollectable(btDiscreteDynamicsWorld* curWorld, WeaponTy
 		{
 			printf("spawned bouncegun\n");
 			wp = new BounceGun(curWorld);
+			break;
+		}
+		case WeaponType::GRENADELAUNCHER:
+		{
+			printf("spawned grenadelauncher\n");
+			wp = new GrenadeLauncher(curWorld);
 			break;
 		}
 		default:

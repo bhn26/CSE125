@@ -5,6 +5,7 @@
 
 class SeedGun : public Weapon
 {
+
 public:
 	SeedGun(btDiscreteDynamicsWorld* curworld);
 	~SeedGun();

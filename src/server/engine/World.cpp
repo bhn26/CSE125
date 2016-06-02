@@ -2,6 +2,7 @@
 #include "ObjectId.h"
 #include "../ServerGame.h"
 #include "FireRateReset.h"
+#include "FieldHandler.h"
 #include "RespawnHandler.h"
 #include "CollectableSpawner.h"
 #include "Player.h"
@@ -23,6 +24,7 @@ void World::Init() {
 
 	// Init Fire Rate Reseter and World Tick Counter
 	FireRateReset::instance();
+	FieldHandler::instance();
 
 	int z = 1000; // this is a random number for the walls right now, we need to change this
 
@@ -216,8 +218,9 @@ void World::UpdateWorld()
 
 	FireRateReset::instance()->currentWorldTick++;
 
-	// Process Weapon Fire Rate Reset
+	// Process Weapon Fire Rate Reset and field collisions
 	FireRateReset::instance()->ResetWeapons();
+	FieldHandler::instance()->HandleFields();
 
 	// Process all collisions
 	int numManifolds = curWorld->getDispatcher()->getNumManifolds();

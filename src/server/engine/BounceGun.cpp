@@ -45,7 +45,7 @@ int BounceGun::UseWeapon(btVector3 * position, btMatrix3x3* rotation, int player
 
 		// use the simple handler for the seedgun
 		btVector3* initial_speed = new btVector3(newVelocity.getX(), newVelocity.getY(), newVelocity.getZ());
-		BounceBulletCollision* handler = new BounceBulletCollision(NUM_BOUNCES, initial_speed, rotation);
+		BounceBulletCollision* handler = new BounceBulletCollision(NUM_BOUNCES, initial_speed);
 
 		// Spawns bullet with this gun's damage, speed, and necessary ids into world
 		Bullet* fireProjectile = EntitySpawner::instance()->spawnBullet(playerid, teamid, this->damage, wt, handler, bRigidBody, curWorld);
