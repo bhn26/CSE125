@@ -95,6 +95,9 @@ public:
 	bool IsAlive() { return alive; }
 	void SetAlive(bool a) { alive = a; health = 100; }
 
+	void SetHealth(int h) override { health = h; }
+	int GetHealth() const override { return health; };
+
 private:
     // AnimationPlayer::Listener
     virtual void OnFinish() override;

@@ -315,16 +315,21 @@ void CPlayState::Draw()
 			x = x + hud_egg->Width() + 5;
 		}
 
-		////////////////////// HEALTH BAR /////////////////////////////////
-		x = Texture::GetWindowCenter(hud_health->Width());
-		y = 20;
-
-		sprite_renderer->DrawSprite(*hud_health, glm::vec2(x, y), glm::vec2(hud_health->Width(), hud_health->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
-
 		////////////// WEAPON & TIMER ///////////////////////////////////
 		x = Window::width - hud_weapon_and_timer->Width() - 20;
 		y = Window::height - hud_weapon_and_timer->Height() - 20;
 		sprite_renderer->DrawSprite(*hud_weapon_and_timer, glm::vec2(x, y), glm::vec2(hud_weapon_and_timer->Width(), hud_weapon_and_timer->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+
+		////////////////////// HEALTH BAR /////////////////////////////////
+		x = Texture::GetWindowCenter(hud_health->Width());
+		y = 20;
+
+		float health = Scene::Instance()->GetPlayer()->GetHealth();
+		Shader * shader = sprite_renderer->GetShader();
+		GLint health_pos = shader->GetUniform("health_x_pos");
+		glUniform1i(health_pos, x + (hud_health->Width()*(health/100.0f)));
+		sprite_renderer->DrawSprite(*hud_health, glm::vec2(x, y), glm::vec2(hud_health->Width(), hud_health->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+		glUniform1i(health_pos, 0);
 
 		/////////// DEATH OVERLAY ////////////////////////////////////
 		if (dead) { // play loud sound

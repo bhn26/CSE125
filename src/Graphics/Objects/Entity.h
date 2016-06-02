@@ -84,6 +84,9 @@ public:
     virtual void SetScore(int n) {}
     virtual int GetScore() const { return 0; }
 
+	virtual void SetHealth(int h) { }
+	virtual int GetHealth() const { return 0; }
+
 private:
     void ApplyScale();
     void CalculateNormalMatrix();
