@@ -17,6 +17,7 @@
 #include "client/Window.h"
 #include "client/TextRenderer.h"
 
+////////////////////////////////////////////////////////////////////////////////
 Player::Player(float x, float y, float z, float rotW, float rotX, float rotY, float rotZ) :
     Entity(glm::vec3(x,y,z), glm::vec3(0.01f)), camAngle(0.0f), modelFile("assets/chickens/objects/chicken.obj"),
     defaultCamFront(glm::normalize(glm::vec3(0.05f, -0.20f, 0.97f))), m_distanceThreshhold_t(1.0f)
@@ -24,11 +25,10 @@ Player::Player(float x, float y, float z, float rotW, float rotX, float rotY, fl
     info_panel = new Texture(GL_TEXTURE_2D, "assets/ui/player_info_panel.png");
 
     SetRelativeCamPosition(glm::vec3(-2.5f, 4.5f, -7.0f));
-    //model = std::unique_ptr<Model>(new Model(modelFile.c_str()));
-    //camera = std::unique_ptr<Camera>(new Camera(Position() + relativeCamPosition, glm::vec3(0.0f, 1.0f, 0.0f), 90.0f, -15.0f));
     camera = std::unique_ptr<Camera>(new Camera(Position() + relativeCamPosition));
     Entity::RotateTo(rotW, rotX, rotY, rotZ);
 
+    // Setup the animated model
     m_model = std::unique_ptr<Animation::AnimatedModel>(new Animation::AnimatedModel);
     m_model->FBXLoadClean("assets/chickens/chicken_dance.fbx", true, "dance");
     m_model->AddAnimation("assets/chickens/chicken_walk.fbx", true, "walk");
@@ -260,6 +260,17 @@ void Player::ChangeState(State state)
         case State::PECK:
             m_model->PlayAnimation("peck");
             break;
+    }
+}
+
+void Player::SetTeam(int team)
+{
+    team_id = team;
+    if (team == 1)
+    {
+        Material material = Material();
+        material._diffuse = glm::vec3(0.545f, 0.396f, 0.227f);
+        m_model->ChangeMaterial(1, material);
     }
 }
 
