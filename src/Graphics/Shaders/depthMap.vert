@@ -16,8 +16,8 @@ uniform bool instancing;
 void main()
 {
     if (instancing)
-        gl_Position = lightSpaceMatrix2 * instanceMatrix * vec4(position, 1.0f);
+        gl_Position = lightSpaceMatrix * instanceMatrix * vec4(position, 1.0f);
     else
-        gl_Position = lightSpaceMatrix2 * model * vec4(position, 1.0f);
+        gl_Position = lightSpaceMatrix * model * vec4(position, 1.0f);
         //gl_Position = model * vec4(position, 1.0f);
 }  

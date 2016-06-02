@@ -115,9 +115,9 @@ void InstanceObject::SetShaderUniforms() const
     glActiveTexture(GL_TEXTURE0 + Scene::Instance()->ShadowMapIndex());
     glBindTexture(GL_TEXTURE_2D, Scene::Instance()->DepthMap());
 
-    //glUniformMatrix4fv(shader->GetUniform("view"), 1, false, glm::value_ptr(Scene::Instance()->GetViewMatrix()));
+    glUniformMatrix4fv(shader->GetUniform("view"), 1, false, glm::value_ptr(Scene::Instance()->GetViewMatrix()));
     glUniformMatrix4fv(shader->GetUniform("model"), 1, false, glm::value_ptr(this->toWorld));
-    //glUniformMatrix4fv(shader->GetUniform("projection"), 1, false, glm::value_ptr(Scene::Instance()->GetPerspectiveMatrix()));
+    glUniformMatrix4fv(shader->GetUniform("projection"), 1, false, glm::value_ptr(Scene::Instance()->GetPerspectiveMatrix()));
     glUniformMatrix4fv(shader->GetUniform("lightSpaceMatrix"), 1, false, glm::value_ptr(Scene::Instance()->LightSpaceMatrix()));
 
     LoadDirectionalLight(Scene::Instance()->GetDirectionalLight());

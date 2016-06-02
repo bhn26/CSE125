@@ -16,9 +16,9 @@ out vec3 TexCoords;
 
 void main()
 {
-    mat4 view3 = view2;
-    view3[3] = vec4(0.0f, 0.0f, 0.0f, 1.0f);
-    gl_Position =   projection2 * view3 * model * vec4(position, 1.0);
+    //mat4 view3 = view2;
+    //view3[3] = vec4(0.0f, 0.0f, 0.0f, 1.0f);
+    gl_Position =   projection * view * model * vec4(position, 1.0);
     gl_Position = gl_Position.xyww;
     TexCoords = position;
 }
