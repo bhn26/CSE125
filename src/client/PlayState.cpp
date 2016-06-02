@@ -20,6 +20,7 @@ CPlayState::CPlayState(CStateManager* pManager)
 {
 	sprite_renderer = new SpriteRenderer();
 	initialized = false;
+	dead = false;
 }
 
 CPlayState::~CPlayState()
@@ -33,6 +34,8 @@ CPlayState::~CPlayState()
 	delete hud_egg;
 	delete hud_health;
 	delete hud_weapon_and_timer;
+
+	delete death_overlay;
 }
 
 CPlayState* CPlayState::GetInstance(CStateManager* pManager)
@@ -43,6 +46,7 @@ CPlayState* CPlayState::GetInstance(CStateManager* pManager)
 
 void CPlayState::Reset()
 {
+	dead = false;
 	show_scoreboard = false;
 }
 
@@ -319,6 +323,16 @@ void CPlayState::Draw()
 		x = Window::width - hud_weapon_and_timer->Width() - 20;
 		y = Window::height - hud_weapon_and_timer->Height() - 20;
 		sprite_renderer->DrawSprite(*hud_weapon_and_timer, glm::vec2(x, y), glm::vec2(hud_weapon_and_timer->Width(), hud_weapon_and_timer->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+
+		/////////// DEATH OVERLAY ////////////////////////////////////
+		if (dead) { // play loud sound
+			glClear(GL_DEPTH_BUFFER_BIT);
+
+			x = Texture::GetWindowCenter(death_overlay->Width());
+			y = Window::height / 2 - death_overlay->Height() / 2;
+
+			sprite_renderer->DrawSprite(*death_overlay, glm::vec2(x, y), glm::vec2(death_overlay->Width(), death_overlay->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+		}
 	}
 }
 
@@ -332,6 +346,8 @@ void CPlayState::InitTextures() {
 		hud_egg = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/hud_egg.png");
 		hud_health = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/hud_health.png");
 		hud_weapon_and_timer = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/hud_weapon&timer.png");
+
+		death_overlay = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/death.png");
 
 		initialized = true;
 	}

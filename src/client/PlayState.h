@@ -20,6 +20,9 @@ public:
 	void Update(DWORD dwCurrentTime) override;
 	void Draw() override;
 
+	void Die() { dead = true; };
+	void Respawn() { dead = false; };
+
 	void Reset();
 
 	// Returns the single instance
@@ -32,6 +35,7 @@ private:
 	// The current score
 	int scores[2];
 
+	bool dead;
 	bool show_scoreboard;
 
 	////// HUD ////////////
@@ -47,6 +51,8 @@ private:
 	Texture * hud_egg;
 	Texture * hud_health;
 	Texture * hud_weapon_and_timer;
+
+	Texture * death_overlay;
 };
 
 #endif  // _PLAYSTATE_H_

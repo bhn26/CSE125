@@ -414,6 +414,11 @@ void ClientGame::receiveDeathPacket(int offset)
 	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
 	struct EmoteInfo* e = (struct EmoteInfo *) &(dat->buf);
 	((Player *)(Scene::Instance()->GetEntity(ClassId::PLAYER, e->id).get()))->Die();
+
+	// update state
+	if (e->id == client_id) {
+		CPlayState::GetInstance(Window::m_pStateManager)->Die();
+	}
 }
 
 void ClientGame::receiveShootPacket(int offset)
@@ -428,6 +433,11 @@ void ClientGame::receiveRespawnPacket(int offset)
 	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
 	struct EmoteInfo* e = (struct EmoteInfo *) &(dat->buf);
 	((Player *)(Scene::Instance()->GetEntity(ClassId::PLAYER, e->id).get()))->SetAlive(true);
+
+	// update state
+	if (e->id == client_id) {
+		CPlayState::GetInstance(Window::m_pStateManager)->Respawn();
+	}
 }
 
 void ClientGame::update()
