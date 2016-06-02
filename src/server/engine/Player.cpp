@@ -7,6 +7,7 @@
 #include "Flag.h"
 #include "Peck.h"
 #include "SeedGun.h"
+#include "Shotgun.h"
 #include "RespawnHandler.h"
 #include <time.h>
 #include "../ServerGame.h"
@@ -35,7 +36,7 @@ Player::Player(int objectid, int teamid, PosInfo pos, btDiscreteDynamicsWorld* p
 	this->hitPoints = 100;
 	this->flags = new std::vector<Flag*>;
 	this->position = pos;
-	this->playerWeapon = nullptr;
+	this->playerWeapon = new Shotgun(curWorld);
 	this->peckWeapon = new Peck(curWorld);
 	//this->playerWeapon = new SeedGun(curWorld);
 	this->alive = true;

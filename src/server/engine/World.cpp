@@ -268,7 +268,8 @@ void World::UpdateWorld()
 			// If it hit a bullet
 			else if (obB->getUserIndex() == BULLET)
 			{
-
+				continue;
+				/*
 				if (collideBullet->GetMarked())
 				{
 					continue;
@@ -285,6 +286,7 @@ void World::UpdateWorld()
 					unmarkList.push_back(collideBullet);
 				}
 				//delete collideBullet2;
+				*/
 			}
 			else
 			{
@@ -347,8 +349,11 @@ void World::UpdateWorld()
 			}
 
 			// If it hit a bullet
+			
 			else if (obA->getUserIndex() == BULLET)
 			{
+				continue;
+			/*
 				if (collideBullet->GetMarked())
 				{
 					continue;
@@ -364,6 +369,7 @@ void World::UpdateWorld()
 				{
 					unmarkList.push_back(collideBullet);
 				}
+				*/
 			}
 			else
 			{

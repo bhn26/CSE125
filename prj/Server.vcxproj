@@ -178,6 +178,7 @@
     <ClInclude Include="..\src\server\engine\Player.h" />
     <ClInclude Include="..\src\server\engine\RespawnHandler.h" />
     <ClInclude Include="..\src\server\engine\SeedGun.h" />
+    <ClInclude Include="..\src\server\engine\Shotgun.h" />
     <ClInclude Include="..\src\server\engine\SimpleBulletCollision.h" />
     <ClInclude Include="..\src\server\engine\Weapon.h" />
     <ClInclude Include="..\src\server\engine\World.h" />
@@ -203,6 +204,7 @@
     <ClCompile Include="..\src\server\engine\Player.cpp" />
     <ClCompile Include="..\src\server\engine\RespawnHandler.cpp" />
     <ClCompile Include="..\src\server\engine\SeedGun.cpp" />
+    <ClCompile Include="..\src\server\engine\Shotgun.cpp" />
     <ClCompile Include="..\src\server\engine\Weapon.cpp" />
     <ClCompile Include="..\src\server\engine\World.cpp" />
     <ClCompile Include="..\src\server\engine\WorldObstacle.cpp" />
