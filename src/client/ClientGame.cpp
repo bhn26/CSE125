@@ -627,6 +627,7 @@ void ClientGame::Setup_callbacks()
 
     glfwSetCursorPosCallback(window, Window::Mouse_callback);
     glfwSetMouseButtonCallback(window, Window::Mouse_button_callback);
+	glfwSetCharCallback(window, Window::Char_callback);
     // Set the window resize callback
     glfwSetWindowSizeCallback(window, Window::Resize_callback);
 }

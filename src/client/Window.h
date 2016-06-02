@@ -28,5 +28,6 @@ public:
     static void Key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
     static void Mouse_callback(GLFWwindow* window, double xpos, double ypos);
     static void Mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
+	static void Char_callback(GLFWwindow *window, unsigned int codepoint);
 };
 

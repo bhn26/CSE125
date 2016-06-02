@@ -13,6 +13,7 @@ CMenuState::CMenuState(CStateManager* pManager)
 {
 	// Create the text controls of the menu.
 	sprite_renderer = new SpriteRenderer();
+	typing = false;
 	initialized = false;
 }
 
@@ -48,14 +49,27 @@ void CMenuState::OnClick(int button, int action, double x, double y) {
 	if (action == GLFW_PRESS)
 	{
 		switch (res[0]) {
-			case 0: printf("None clicked\n"); break;
-			case 1: printf("Textbox clicked\n"); break;
+			case 0: printf("None clicked\n"); 
+				typing = false;
+				break;
+			case 1: printf("Textbox clicked\n"); 
+				typing = true;
+				break;
 			case 2: printf("Button clicked\n");
+				typing = false;
 				// change state
 				m_pStateManager->ChangeState(LobbyState::GetInstance(m_pStateManager));
 				break;
 			default: printf("%d clicked%s\n", res[0]);
+				typing = false;
 		}
+	}
+}
+
+void CMenuState::OnChar(unsigned int codepoint) {
+	if (typing) {
+		std::cout << codepoint << std::endl;
+
 	}
 }
 
@@ -78,6 +92,9 @@ void CMenuState::RenderSelection() {
 	glClearColor(0.28f, 0.65f, 0.89f, 1.0f); // reset color
 }
 
+void CMenuState::Update(DWORD) {
+
+}
 
 void CMenuState::Draw()
 {

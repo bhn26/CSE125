@@ -176,3 +176,8 @@ void Window::Mouse_button_callback(GLFWwindow* window, int button, int action, i
 
 	m_pStateManager->GetActiveState()->OnClick(button, action, x, y);
 }
+
+void Window::Char_callback(GLFWwindow *window, unsigned int codepoint)
+{
+	m_pStateManager->GetActiveState()->OnChar(codepoint);
+}
