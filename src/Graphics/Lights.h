@@ -9,7 +9,7 @@ struct BaseLight
     float _ambientIntensity;
     float _diffuseIntensity;
 
-    BaseLight(glm::vec3 color = glm::vec3(1.0f), float ambient = 0.1f, float diffuse = 1.5f) :
+    BaseLight(glm::vec3 color = glm::vec3(1.0f), float ambient = 0.1f, float diffuse = 1.0f) :
         _color(color), _ambientIntensity(ambient), _diffuseIntensity(diffuse)
     {}
 };

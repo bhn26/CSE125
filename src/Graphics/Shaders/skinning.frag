@@ -102,8 +102,8 @@ float ShadowCalculation(vec4 fragPosLightSpace)
     float currentDepth = projCoords.z;
 
     // Check whether current frag pos is in shadow
-    float bias = 0.005;
-    float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0;
+    float bias = 0.003;
+    float shadow = currentDepth - bias > closestDepth  ? 0.9 : 0.0;
 
     return shadow;
 }
@@ -131,9 +131,10 @@ vec4 CalcLightInternal(BaseLight Light, vec3 LightDirection, VSOutput In)
     
     vec4 red = vec4(1.0f, 0.0f, 0.0f, 1.0f);
     float shadow = ShadowCalculation(fs_in._fragPosLightSpace);
-    if (shadow > 0.0f)
-        return (AmbientColor + DiffuseColor + SpecularColor) * (shadow) * red;
-    return (AmbientColor + DiffuseColor + SpecularColor);
+    //if (shadow > 0.0f)
+    //    return (AmbientColor + DiffuseColor + SpecularColor) * (shadow) * red;
+    //return (AmbientColor + DiffuseColor + SpecularColor);
+    return (AmbientColor + (1.0 - shadow) * (DiffuseColor + SpecularColor));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -180,27 +181,28 @@ void main()
 {
     if (renderingDepth)
     {
-        return;
+        // Don't do anything
     }
-
-    VSOutput In;
-    In.TexCoord = TexCoord0;
-    In.Normal   = normalize(Normal0);
-    In.WorldPos = WorldPos0;
-    
-    vec4 TotalLight = CalcDirectionalLight(In);
-
-    for (int i = 0 ; i < gNumPointLights ; i++) {
-        TotalLight += CalcPointLight(gPointLights[i], In);
-    }
-    
-    for (int i = 0 ; i < gNumSpotLights ; i++) {
-        TotalLight += CalcSpotLight(gSpotLights[i], In);
-    }
-    
-    if (useTexture)
-        FragColor = texture(gColorMap, In.TexCoord.xy) * TotalLight;
     else
-        FragColor = vec4(material._diffuse, 1.0f) * TotalLight;
+    {
+        VSOutput In;
+        In.TexCoord = TexCoord0;
+        In.Normal   = normalize(Normal0);
+        In.WorldPos = WorldPos0;
+    
+        vec4 TotalLight = CalcDirectionalLight(In);
 
+        for (int i = 0 ; i < gNumPointLights ; i++) {
+            TotalLight += CalcPointLight(gPointLights[i], In);
+        }
+    
+        for (int i = 0 ; i < gNumSpotLights ; i++) {
+            TotalLight += CalcSpotLight(gSpotLights[i], In);
+        }
+    
+        if (useTexture)
+            FragColor = texture(gColorMap, In.TexCoord.xy) * TotalLight;
+        else
+            FragColor = vec4(material._diffuse, 1.0f) * TotalLight;
+    }
 }

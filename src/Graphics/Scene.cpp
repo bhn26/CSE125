@@ -15,6 +15,8 @@
 #include "client/Player.h"
 #include "client/ClientGame.h"
 
+#include "ConfigManager.h"
+
 #include "server/engine/ObjectId.h"
 
 #include <algorithm>
@@ -45,11 +47,20 @@ void Scene::Setup()
     camera = std::unique_ptr<Camera>(new Camera(glm::vec3(0.0f, 9.0f, -15.0f)));
     pLight = std::unique_ptr<PointLight>(new PointLight(glm::vec3(0.0f, 20.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)));
     dLight = std::unique_ptr<DirectionalLight>(new DirectionalLight(glm::vec3(0.5, -sqrt(3)/2.0f, 0.0f)));
+    dLight->_ambientIntensity = 0.3f;
 
-    glm::vec3 pos = glm::vec3(0.0f, 250.0f, 0.0f);
-    //lightSpaceMatrix = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.1f, 1000.0f) *
+    //glm::vec3 pos = glm::vec3(0.0f, 250.0f, 0.0f);
+    //lightSpaceMatrix = glm::ortho(-425.0f, 350.0f, -500.0f, 300.0f, 10.0f, 500.0f) *
     //    glm::lookAt(pos, pos + dLight->_direction, glm::vec3(0.0f, 1.0f, 0.0));
-    lightSpaceMatrix = glm::ortho(-425.0f, 350.0f, -500.0f, 300.0f, 10.0f, 500.0f) *
+    glm::vec3 pos = glm::vec3(std::stof(ConfigManager::instance()->GetConfigValue("Light_Pos_X")),
+                            std::stof(ConfigManager::instance()->GetConfigValue("Light_Pos_Y")),
+                            std::stof(ConfigManager::instance()->GetConfigValue("Light_Pos_Z")));
+    lightSpaceMatrix = glm::ortho(std::stof(ConfigManager::instance()->GetConfigValue("Light_Ortho_Left")),
+                                std::stof(ConfigManager::instance()->GetConfigValue("Light_Ortho_Right")),
+                                std::stof(ConfigManager::instance()->GetConfigValue("Light_Ortho_Top")),
+                                std::stof(ConfigManager::instance()->GetConfigValue("Light_Ortho_Bottom")),
+                                std::stof(ConfigManager::instance()->GetConfigValue("Light_Ortho_Near")),
+                                std::stof(ConfigManager::instance()->GetConfigValue("Light_Ortho_Far"))) *
         glm::lookAt(pos, pos + dLight->_direction, glm::vec3(0.0f, 1.0f, 0.0));
 
     depthShader = ShaderManager::GetShader("Depth_Map");

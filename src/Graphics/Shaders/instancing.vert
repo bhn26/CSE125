@@ -12,12 +12,14 @@ layout (std140) uniform Matrices
 
 uniform mat4 projection;
 uniform mat4 view;
+uniform mat4 lightSpaceMatrix;
 
 out VS_OUT
 {
     vec3 _fragPos;
     vec3 _normal;
     vec2 _texCoords;
+    vec4 _fragPosLightSpace;
 } vs_out;
 
 void main()
@@ -28,4 +30,5 @@ void main()
     //vs_out._normal = normal;
     //vs_out._normal = vec3(0.0f, 1.0f, 0.0f);
     vs_out._texCoords = texCoords;
+    vs_out._fragPosLightSpace = lightSpaceMatrix * vec4(vs_out._fragPos, 1.0f);
 }

@@ -8,10 +8,6 @@ void ModelManager::LoadModels()
 {
     for (std::string& shaderName : _modelNames)
     {
-        if (shaderName == std::string("Pumpkin"))
-        {
-            printf("Pumpkin!\n");
-        }
         LoadModel(shaderName);
     }
     _modelNames.clear();

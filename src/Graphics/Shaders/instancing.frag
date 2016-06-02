@@ -18,14 +18,38 @@ in VS_OUT
     vec3 _fragPos;
     vec3 _normal;
     vec2 _texCoords;
+    vec4 _fragPosLightSpace;
 } fs_in;
 
 out vec4 color;
 
 uniform vec3 cameraEye;
 uniform sampler2D texture_diffuse1;
+uniform sampler2D shadowMap;
 
 uniform DirectionalLight dLight;
+
+////////////////////////////////////////////////////////////////////////////////
+float ShadowCalculation(vec4 fragPosLightSpace)
+{
+    // perform perspective divide
+    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+
+    // Transform to [0,1] range
+    projCoords = projCoords * 0.5 + 0.5;
+
+    // Get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
+    float closestDepth = texture(shadowMap, projCoords.xy).r; 
+
+    // Get depth of current fragment from light's perspective
+    float currentDepth = projCoords.z;
+
+    // Check whether current frag pos is in shadow
+    float bias = 0.002;
+    float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0;
+
+    return shadow;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 vec4 CalcLight(BaseLight light, vec3 lightDirection)
@@ -34,7 +58,6 @@ vec4 CalcLight(BaseLight light, vec3 lightDirection)
     float specularPower = 1.0f;
 
     vec4 ambientColor = vec4(light._color * light._ambientIntensity, 1.0);
-    vec3 normal = vec3(0.0f, 1.0f, 0.0f);
     float diffuseFactor = dot(fs_in._normal, -lightDirection);
 
     vec4 diffuseColor  = vec4(0, 0, 0, 0);
@@ -54,12 +77,12 @@ vec4 CalcLight(BaseLight light, vec3 lightDirection)
             specularColor = vec4(light._color * specularIntensity * specularFactor, 1.0);
         }
     }
-    else
-    {
-        //diffuseColor = vec4(1.0f, 0.0f, 0.0f, 1.0f);
-    }
-
-    return (ambientColor + diffuseColor + specularColor);
+    
+    float shadow = ShadowCalculation(fs_in._fragPosLightSpace);
+    //if (shadow > 0.0f)
+    //    return (ambientColor + diffuseColor + specularColor) * (shadow) * red;
+    //return (ambientColor + diffuseColor + specularColor);
+    return (ambientColor + (1.0 - shadow) * (diffuseColor + specularColor));
 }
 
 ////////////////////////////////////////////////////////////////////////////////

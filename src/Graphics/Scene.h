@@ -34,7 +34,8 @@ class Scene
         Lights = 1,
     };
 
-    const GLuint SHADOW_DEPTH_WIDTH = 1024, SHADOW_DEPTH_HEIGHT = 1024;
+    const GLuint SHADOW_DEPTH_WIDTH = 2048, SHADOW_DEPTH_HEIGHT = 2048;
+    //const GLuint SHADOW_DEPTH_WIDTH = 1024, SHADOW_DEPTH_HEIGHT = 1024;
     unsigned int shadowMapIndex = 7;
     float lastTime;
     GLuint uboMatricesBuffer;

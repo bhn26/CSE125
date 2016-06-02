@@ -79,7 +79,8 @@ void InstanceObject::Draw() const
     UseShader();
 
 	for (GLuint i = 0; i < instance->Meshes().size(); i++) {
-		glBindTexture(GL_TEXTURE_2D, instance->Textures()[i].id);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, instance->Textures()[i].id);
 		glBindVertexArray(instance->Meshes()[i].VAO());
 		glDrawElementsInstanced(GL_TRIANGLES, instance->Meshes()[i].indices.size(), GL_UNSIGNED_INT, 0, amount);
 		glBindVertexArray(0);
@@ -110,9 +111,14 @@ void InstanceObject::UseShader() const
 
 void InstanceObject::SetShaderUniforms() const
 {
+    glUniform1i(shader->GetUniform("shadowMap"), Scene::Instance()->ShadowMapIndex());
+    glActiveTexture(GL_TEXTURE0 + Scene::Instance()->ShadowMapIndex());
+    glBindTexture(GL_TEXTURE_2D, Scene::Instance()->DepthMap());
+
     glUniformMatrix4fv(shader->GetUniform("view"), 1, false, glm::value_ptr(Scene::Instance()->GetViewMatrix()));
     glUniformMatrix4fv(shader->GetUniform("model"), 1, false, glm::value_ptr(this->toWorld));
     glUniformMatrix4fv(shader->GetUniform("projection"), 1, false, glm::value_ptr(Scene::Instance()->GetPerspectiveMatrix()));
+    glUniformMatrix4fv(shader->GetUniform("lightSpaceMatrix"), 1, false, glm::value_ptr(Scene::Instance()->LightSpaceMatrix()));
 
     LoadDirectionalLight(Scene::Instance()->GetDirectionalLight());
 }

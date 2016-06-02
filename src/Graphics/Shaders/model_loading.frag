@@ -57,8 +57,8 @@ float ShadowCalculation(vec4 fragPosLightSpace)
     float currentDepth = projCoords.z;
 
     // Check whether current frag pos is in shadow
-    float bias = 0.005;
-    float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0;
+    float bias = 0.004;
+    float shadow = currentDepth - bias > closestDepth  ? 0.9 : 0.0;
 
     return shadow;
 }
@@ -90,9 +90,10 @@ vec4 CalcLight(BaseLight light, vec3 lightDirection)
     }
     vec4 red = vec4(1.0f, 0.0f, 0.0f, 1.0f);
     float shadow = ShadowCalculation(fs_in._fragPosLightSpace);
-    if (shadow > 0.0f)
-        return (ambientColor + diffuseColor + specularColor) * (shadow) * red;
-    return (ambientColor + diffuseColor + specularColor);
+    //if (shadow > 0.0f)
+    //    return (ambientColor + diffuseColor + specularColor) * (shadow) * red;
+    //return (ambientColor + diffuseColor + specularColor);
+    return (ambientColor + (1.0 - shadow) * (diffuseColor + specularColor));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
