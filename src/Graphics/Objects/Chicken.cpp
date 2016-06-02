@@ -37,7 +37,7 @@ void Chicken::Draw() const
     UseShader();
 
     // Draw the loaded model
-    model->Draw(shader.get());
+    model->Draw(Scene::Instance()->IsRenderingDepth() ? nullptr : shader.get());
 }
 
 void Chicken::SetShaderUniforms() const

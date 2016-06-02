@@ -110,8 +110,7 @@ public:
     GLuint DepthMap() const { return depthMap; }
     const glm::mat4& LightSpaceMatrix()
     {
-        //lightSpaceMatrix = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 1.0f, 100.0f) * GetViewMatrix();
-        lightSpaceMatrix = glm::ortho(-50.0f, 50.0f, -50.0f, 50.0f, 1.0f, 500.0f) * GetViewMatrix();
+        //lightSpaceMatrix = glm::ortho(-100.0f, 100.0f, -100.0f, 100.0f, 1.0f, 500.0f) * GetViewMatrix();
         return lightSpaceMatrix;
     }
 

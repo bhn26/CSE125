@@ -46,11 +46,11 @@ void Scene::Setup()
     pLight = std::unique_ptr<PointLight>(new PointLight(glm::vec3(0.0f, 20.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)));
     dLight = std::unique_ptr<DirectionalLight>(new DirectionalLight(glm::vec3(0.5, -sqrt(3)/2.0f, 0.0f)));
 
-    glm::vec3 pos = glm::vec3(50.0f, 100.0f, 0.0f);
+    glm::vec3 pos = glm::vec3(0.0f, 250.0f, 0.0f);
     //lightSpaceMatrix = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.1f, 1000.0f) *
     //    glm::lookAt(pos, pos + dLight->_direction, glm::vec3(0.0f, 1.0f, 0.0));
-    lightSpaceMatrix = glm::ortho(-100.0f, 100.0f, -100.0f, 100.0f, 1.0f, 100.0f) *
-        glm::lookAt(glm::vec3(0.0f, 2.0f, 2.0f), glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0));
+    lightSpaceMatrix = glm::ortho(-425.0f, 350.0f, -500.0f, 300.0f, 10.0f, 500.0f) *
+        glm::lookAt(pos, pos + dLight->_direction, glm::vec3(0.0f, 1.0f, 0.0));
 
     depthShader = ShaderManager::GetShader("Depth_Map");
 
@@ -262,12 +262,6 @@ void Scene::RenderScene()
     cubeMap->Draw();
     grass->Draw();
     //pumpkin->Draw();
-
-    //if (renderingDepthMap)
-    //{
-    //    glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
-    //    ConfigureShaderAndMatrices();
-    //}
 
     for (auto& const obj : static_objects)
         obj->Draw();

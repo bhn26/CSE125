@@ -36,6 +36,7 @@ void Egg::SetShaderUniforms() const
 {
     glUniformMatrix4fv(shader->GetUniform("view"), 1, false, glm::value_ptr(Scene::Instance()->GetViewMatrix()));
     glUniformMatrix4fv(shader->GetUniform("model"), 1, false, glm::value_ptr(this->toWorld));
+    glUniformMatrix4fv(shader->GetUniform("normalMatrix"), 1, false, glm::value_ptr(this->normalMatrix));
     glUniformMatrix4fv(shader->GetUniform("projection"), 1, false, glm::value_ptr(Scene::Instance()->GetPerspectiveMatrix()));
 }
 
@@ -48,8 +49,11 @@ void Egg::Draw() const
     // Use the appropriate shader (depth or model)
     UseShader();
 
+    if (Scene::Instance()->IsRenderingDepth())
+        ShaderManager::GetShader("Model")->Use();
+
     // Draw the loaded model
-    model->Draw(shader.get());
+    model->Draw(Scene::Instance()->IsRenderingDepth() ? nullptr : shader.get());
 }
 
 void Egg::Update(float deltaTime)
@@ -61,5 +65,5 @@ void Egg::Spin(float deg)
 {
 	// This creates the matrix to rotate the cube
 	this->toWorld = toWorld * glm::rotate(glm::mat4(1.0f), glm::radians(deg), glm::vec3(0.0f, 1.0f, 0.0f));
-	this->normalMatrix = glm::mat3(glm::transpose(glm::inverse(toWorld)));
+    CalculateNormalMatrix();
 }

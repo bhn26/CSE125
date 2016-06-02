@@ -16,7 +16,7 @@ void ModelEntity::Draw() const
     UseShader();
 
     // Draw the loaded model
-    m_model->Draw(this->shader.get());
+    m_model->Draw(Scene::Instance()->IsRenderingDepth() ? nullptr : shader.get());
 }
 
 void ModelEntity::SetShaderUniforms() const
