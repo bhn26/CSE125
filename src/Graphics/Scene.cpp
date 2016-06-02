@@ -221,7 +221,7 @@ void Scene::SetProjectionUBO()
 void Scene::ConfigureShaderAndMatrices()
 {
     depthShader->Use();
-    glUniformMatrix4fv(depthShader->GetUniform("lightSpaceMatrix"), 1, GL_FALSE, glm::value_ptr(lightSpaceMatrix));
+    glUniformMatrix4fv(depthShader->GetUniform("lightSpaceMatrix"), 1, GL_FALSE, glm::value_ptr(LightSpaceMatrix()));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -262,6 +262,12 @@ void Scene::RenderScene()
     cubeMap->Draw();
     grass->Draw();
     //pumpkin->Draw();
+
+    //if (renderingDepthMap)
+    //{
+    //    glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+    //    ConfigureShaderAndMatrices();
+    //}
 
     for (auto& const obj : static_objects)
         obj->Draw();
