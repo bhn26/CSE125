@@ -171,6 +171,12 @@ void Player::ProcessViewMovement(GLfloat xoffset, GLfloat yoffset, GLboolean con
     yoffset *= m_VViewSensitivity;
 
     // Update Front, Right and Up Vectors using the updated Eular angles
+	glm::mat4 temp = this->toWorld * glm::rotate(glm::mat4(1.0f), glm::radians(-xoffset), glm::vec3(1.0f, 1.0f, 1.0f));
+	for (int col = 0; col < 3; col++)
+		for (int row = 0; row < 3; row++)
+			temp[col][row] /= scale[col];
+	glm::quat trot = static_cast<glm::quat>(temp);
+
     this->toWorld = this->toWorld * glm::rotate(glm::mat4(1.0f), glm::radians(-xoffset), glm::vec3(0.0f, 1.0f, 0.0f));
 
     camAngle += glm::radians(yoffset);
@@ -203,6 +209,11 @@ glm::mat4 Player::GetViewMatrix() const
 {
     //return camera->GetViewMatrix() * glm::rotate(glm::mat4(1.0f), camAngle, glm::vec3(1.0f, 0.0f, 0.0f)) * glm::inverse(toWorld);
     return camera->GetViewMatrix();
+}
+
+glm::vec3 Player::GetFront() const
+{
+	return camera->Front();
 }
 
 glm::mat4 Player::GetPerspectiveMatrix() const

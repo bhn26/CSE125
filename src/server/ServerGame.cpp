@@ -49,9 +49,14 @@ void ServerGame::update()
 
 	int diff = fp_stamp.count();
 
-	if (eggs_spawned && diff >= 300000)
+	if (game_over == false && eggs_spawned && diff >= 300000)
 	{
-		if(scores[0] > scores[1])
+		game_over = true;
+		if (scores[0] == scores[1])
+		{
+			sendGameOverPacket(-1);
+		}
+		else if(scores[0] > scores[1])
 		{
 			sendGameOverPacket(0);
 		}
@@ -547,7 +552,8 @@ void ServerGame::receiveRotationPacket(int offset) {
 	// All rotation packets will be player type, since it's from client
 	Entity* ent = (Entity*)(EntitySpawner::instance()->GetEntity(ClassId::PLAYER, hdr->sender_id));
 
-	ent->SetEntityRotation(pi->rotx, pi->roty, pi->rotz, pi->rotw);
+	ent->SetEntityRotation(0, pi->roty, 0, pi->rotw);
+	((Player *)ent)->SetCam(pi->camx, pi->camz);
 	sendRotationPacket(ClassId::PLAYER, hdr->sender_id);
 }
 

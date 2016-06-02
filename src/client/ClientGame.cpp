@@ -330,6 +330,36 @@ void ClientGame::sendRotationPacket() {
 	pi.roty = rot.y;
 	pi.rotz = rot.z;
 
+	glm::vec3 camrot = Scene::Instance()->GetPlayer()->GetFront();
+
+	if (camrot.x > 0 && camrot.z > 0)
+	{
+		pi.camx = (-(camrot.y + 0.203336));
+		pi.camz = 0;
+	}
+	else if (camrot.x > 0 && camrot.z < 0)
+	{
+		pi.camx = 0;
+		pi.camz = ((camrot.y + 0.203336));
+	}
+	else if (camrot.x < 0 && camrot.z > 0)
+	{
+		pi.camx = (-(camrot.y + 0.203336));
+		pi.camz = 0;
+	}
+	else if (camrot.x < 0 && camrot.z < 0)
+	{
+		pi.camx = 0;
+		pi.camz = ((camrot.y + 0.203336));
+	}
+	else
+	{
+		pi.camx = 0;
+		pi.camz = 0;
+	}
+
+	printf("VALUES: %f, %f, %f\n", camrot.x, camrot.y, camrot.z);
+
 	//pi.h_rotation = h_rot;
     pi.serialize(packet.dat.buf);
 
@@ -367,14 +397,20 @@ void ClientGame::receiveGameOverPacket(int offset) {
 	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
 	struct ScoreInfo* s = (struct ScoreInfo *) &(dat->buf);
 
-	if (s->t0_score != 0) { // t0 win
+	if (s->t0_score == s->t1_score) {
+		winner = -1;
+	}
+	else if (s->t0_score > s->t1_score) { // t0 win
 		winner = 0;
 	}
 	else { // t1 win
 		winner = 1;
 	}
 
-	printf("Team %d won!\n", winner);
+	if (winner == -1)
+		printf("Game was a tie!\n");
+	else
+		printf("Team %d won!\n", winner);
 	// change state to game over screen
 	Window::m_pStateManager->ChangeState(GOState::GetInstance(Window::m_pStateManager));
 }

@@ -135,15 +135,23 @@ int Player::GetTeamId()
 
 	// passes player position when using weapon
 	btVector3 temp = this->GetEntityPosition();
+
+	btQuaternion * playerRotation = &(this->GetEntityRotation());
+	playerRotation->setX(position.camx);
+	playerRotation->setZ(position.camz);
+
+	printf("VALS OF ROT QUAT: %f, %f, %f, %f\n", position.camx, playerRotation->getY(), position.camz, playerRotation->getW());
+
 	//printf("TEMP Position:  x: %f, y: %f, z: %f  \n", temp.getX(), temp.getY(), temp.getZ());
 
 	btVector3* position = new btVector3(temp.getX(), temp.getY(), temp.getZ());
+
 	btTransform currentTrans;
 	entityRigidBody->getMotionState()->getWorldTransform(currentTrans);
-	btMatrix3x3 currentOrientation = currentTrans.getBasis();
+	btMatrix3x3 * currentOrientation = new btMatrix3x3(*playerRotation);
 	//btQuaternion* playerRotation = new btQuaternion(currentOrientation.getX(), currentOrientation.getY(), currentOrientation.getX(), currentOrientation.getW());
 
-	if (playerWeapon->UseWeapon(position, &currentOrientation, this->objectId, this->teamId, this) == 0)
+	if (playerWeapon->UseWeapon(position, currentOrientation, this->objectId, this->teamId, this) == 0)
 	{
 		delete playerWeapon;
 		playerWeapon = nullptr;
@@ -193,6 +201,12 @@ int Player::takeDamage(int damage, unsigned int world_tick)
 	{
 		return 0;
 	}
+}
+
+void Player::SetCam(float trotx, float trotz)
+{
+	position.camx = trotx;
+	position.camz = trotz;
 }
 
 void Player::UsePeck()

@@ -80,6 +80,9 @@ struct PosInfo : GameInfo
 	float roty;
 	float rotz;
 
+	float camx;
+	float camz;
+
 	int num_eggs; // num eggs this player has 
 	int jump;     // jumping semaphore of the player
 
