@@ -313,7 +313,7 @@ void ClientGame::receiveRotationPacket(int offset) {
 
 }
 
-void ClientGame::sendRotationPacket() {
+void ClientGame::sendRotationPacket(float yos) {
     const unsigned int packet_size = sizeof(Packet);
     char packet_data[packet_size];
 
@@ -357,6 +357,8 @@ void ClientGame::sendRotationPacket() {
 		pi.camx = 0;
 		pi.camz = 0;
 	}
+
+	pi.yos = yos;
 
 	//pi.h_rotation = h_rot;
     pi.serialize(packet.dat.buf);
@@ -645,7 +647,7 @@ void ClientGame::GameLoop()
 
 		if (++tick % 15 == 0 && iSpawned)
 		{
-			ClientGame::instance()->sendRotationPacket();
+			ClientGame::instance()->sendRotationPacket(0.0);
 			tick = 0;
 		}
     }

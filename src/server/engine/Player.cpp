@@ -28,6 +28,12 @@ Player::Player(int objectid, int teamid, PosInfo pos, btDiscreteDynamicsWorld* p
 	pRigidBody->setFriction((btScalar) 10);
 	physicsWorld->addRigidBody(pRigidBody);
 
+	btTransform currentTrans;
+	playerMotionState->getWorldTransform(currentTrans);
+	btQuaternion currentOrientation = currentTrans.getRotation();
+	this->cameraAngle = currentOrientation;
+	this->cameraDelta = 0;
+
 	// Set Player protected fields
 	this->entityRigidBody = pRigidBody;
 	this->teamId = teamid;
@@ -136,9 +142,11 @@ int Player::GetTeamId()
 	// passes player position when using weapon
 	btVector3 temp = this->GetEntityPosition();
 
-	btQuaternion * playerRotation = &(this->GetEntityRotation());
-	playerRotation->setX(position.camx);
-	playerRotation->setZ(position.camz);
+	//btQuaternion * playerRotation = &(this->GetEntityRotation());
+	btQuaternion * playerRotation = &(this->cameraAngle);
+
+	//playerRotation->setX(position.camx);
+	//playerRotation->setZ(position.camz);
 
 	printf("VALS OF ROT QUAT: %f, %f, %f, %f\n", position.camx, playerRotation->getY(), position.camz, playerRotation->getW());
 
@@ -288,11 +296,11 @@ void Player::Move(btVector3* changeVelocity)
 		return;
 	Entity::Move(changeVelocity);
 }
-
+/*
 void Player::SetEntityRotation(float x, float y, float z, float w)
 {
 	if (!alive)
 		return;
 	Entity::SetEntityRotation(x, y, z, w);
-}
+}*/
 

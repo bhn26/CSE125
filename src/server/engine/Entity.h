@@ -18,6 +18,8 @@ protected:
 	int classId;
 	int toDelete;
 	unsigned int markTick; // world tick that this thing was marked on
+	float cameraDelta;
+	btQuaternion cameraAngle;
 
 public:
 
@@ -32,7 +34,7 @@ public:
 	// Return current rotation quaternion of Player
 	btQuaternion GetEntityRotation();
 
-	void SetEntityRotation(float x, float y, float z, float w);
+	void SetEntityRotation(float x, float y, float z, float w, float yos);
 
 	// Returns object id
 	int GetObjectId();

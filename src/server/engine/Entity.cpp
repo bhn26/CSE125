@@ -35,7 +35,7 @@ btQuaternion Entity::GetEntityRotation()
 	return currentOrientation;
 }
 
-void Entity::SetEntityRotation(float x, float y, float z, float w) 
+void Entity::SetEntityRotation(float x, float y, float z, float w, float yos) 
 {
 	btQuaternion* playerRotation = new btQuaternion(x, y, z, w);
 	btTransform currentTrans;
@@ -43,6 +43,9 @@ void Entity::SetEntityRotation(float x, float y, float z, float w)
 	currentTrans.setRotation((*playerRotation));
 	entityRigidBody->getMotionState()->setWorldTransform(currentTrans);
 	entityRigidBody->setCenterOfMassTransform(currentTrans);
+
+	//this->cameraDelta = (yos);
+	this->cameraAngle = (*playerRotation) * (btQuaternion(btVector3(-1, 0, 0), yos));
 }
 
 

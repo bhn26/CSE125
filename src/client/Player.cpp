@@ -159,7 +159,7 @@ void Player::ProcessMouseMovement(GLfloat xoffset, GLfloat yoffset, GLboolean co
 	// Don't send me stuff unless you're alive
 	if (++tick % 10 == 0 && alive == true)
     {
-        ClientGame::instance()->sendRotationPacket();
+        ClientGame::instance()->sendRotationPacket(camAngle);
         tick = 0;
     }
 }
@@ -188,7 +188,7 @@ void Player::ProcessViewMovement(GLfloat xoffset, GLfloat yoffset, GLboolean con
 
     if (++tick % 10 == 0)
     {
-        ClientGame::instance()->sendRotationPacket();
+        ClientGame::instance()->sendRotationPacket(camAngle);
         tick = 0;
     }
 }

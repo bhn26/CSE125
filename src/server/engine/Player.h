@@ -79,7 +79,7 @@ public:
 
 	void Move(btVector3* changeVelocity);
 
-	void SetEntityRotation(float x, float y, float z, float w);
+	//void SetEntityRotation(float x, float y, float z, float w);
 
 	unsigned int GetDeathTime() { return death_time; }
 	void SetDeathTime(unsigned int dt) { death_time = dt; }
