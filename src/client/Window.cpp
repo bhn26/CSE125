@@ -11,6 +11,7 @@
 #include "Player.h"
 #include "../Graphics/Objects/Entity.h"
 #include "MenuState.h"
+#include "LoadState.h"
 #include "ConfigManager.h"
 
 const char* window_title = "Egg Scramble!";
@@ -69,7 +70,7 @@ GLFWwindow* Window::Create_window(int width, int height)
 	glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
 	glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
 	GLFWwindow* window = glfwCreateWindow(mode->width, mode->height, window_title, monitor, NULL); // for full screen mode
-
+	
 	//GLFWwindow* window = glfwCreateWindow(width, height, window_title, NULL, NULL);
 
     // Check if the window could not be created
@@ -92,8 +93,6 @@ GLFWwindow* Window::Create_window(int width, int height)
     // Call the resize callback to make sure things get drawn immediately
     glfwGetFramebufferSize(window, &width, &height);
     Window::Resize_callback(window, width, height);
-
-	m_pStateManager->ChangeState(CMenuState::GetInstance(m_pStateManager));
 
     return window;
 }

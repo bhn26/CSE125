@@ -190,6 +190,9 @@
     <ClCompile Include="..\src\client\StateManager.cpp">
       <Filter>Source Files\Game State</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\client\LoadState.cpp">
+      <Filter>Source Files\Game State</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Graphics\Camera.h">
@@ -325,6 +328,9 @@
       <Filter>Source Files\Game State</Filter>
     </ClInclude>
     <ClInclude Include="..\src\client\StateManager.h">
+      <Filter>Source Files\Game State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\client\LoadState.h">
       <Filter>Source Files\Game State</Filter>
     </ClInclude>
   </ItemGroup>

@@ -12,6 +12,7 @@
 #include "network/GameData.h"
 #include "network/NetworkData.h"
 #include "TextRenderer.h"
+#include "client/LoadState.h"
 #include "client/PlayState.h"
 #include "client/GameOverState.h"
 #include "ConfigManager.h"
@@ -519,14 +520,20 @@ void ClientGame::Initialize()
 {
     // Create the GLFW window
     window = Window::Create_window(1366, 768);
+
     // Print OpenGL and GLSL versions
     Print_versions();
     // Setup callbacks
     Setup_callbacks();
     // Setup OpenGL settings, including lighting, materials, etc.
     Setup_opengl_settings();
+
     // Initialize the shaders
     ShaderManager::Instance()->LoadShaders();
+
+	// show loading screen
+	ShowLoadingScreen();
+
     ModelManager::Instance()->LoadModels();
     // Initialize objects/pointers for rendering
     Window::Initialize_objects();
@@ -534,9 +541,28 @@ void ClientGame::Initialize()
 	TextRenderer::Initialize();
     Scene::Initialize();
 
+	// go to login menu
+	Window::m_pStateManager->ChangeState(CMenuState::GetInstance(Window::m_pStateManager));
+
     double lastTime = glfwGetTime();
     int nbFrames = 0;
 	srand(time(NULL));
+}
+
+void ClientGame::ShowLoadingScreen() {
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClearColor(0.28f, 0.65f, 0.89f, 1.0f); // reset color
+	SpriteRenderer * sprite_renderer = new SpriteRenderer();
+	Texture * bg = new Texture(GL_TEXTURE_2D, "assets/ui/loading/loading.png");
+	int x = Texture::GetWindowCenter(bg->Width());
+	int y = Window::height / 2 - bg->Height() / 2;
+
+	sprite_renderer->DrawSprite(*bg, glm::vec2(x, y), glm::vec2(bg->Width(), bg->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+
+	glfwSwapBuffers(window);
+
+	delete sprite_renderer;
+	delete bg;
 }
 
 void ClientGame::Destroy()
