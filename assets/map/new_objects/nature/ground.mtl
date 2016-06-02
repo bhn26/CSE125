@@ -1,7 +1,0 @@
-newmtl lambert2SG
-illum 4
-Kd 0.00 0.00 0.00
-Ka 0.14 0.14 0.14
-Tf 1.00 1.00 1.00
-map_Kd veg_grass_ground_d.png
-Ni 1.00
