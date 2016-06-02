@@ -239,6 +239,8 @@ void CPlayState::Draw()
 		int side_y = Window::height / 2 - sb_side->Height() / 2;
 		sprite_renderer->DrawSprite(*sb_side, glm::vec2(side_x, side_y), glm::vec2(sb_side->Width(), sb_side->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 
+		glClear(GL_DEPTH_BUFFER_BIT);
+
 		///////////////// TABLES ////////////////////////////////////////
 		x = Texture::GetWindowCenter(sb_table->Width());
 		y = Window::height / 2 - sb_table->Height() / 2;
