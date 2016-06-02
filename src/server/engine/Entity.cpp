@@ -44,8 +44,12 @@ void Entity::SetEntityRotation(float x, float y, float z, float w, float yos)
 	entityRigidBody->getMotionState()->setWorldTransform(currentTrans);
 	entityRigidBody->setCenterOfMassTransform(currentTrans);
 
-	//this->cameraDelta = (yos);
-	this->cameraAngle = (*playerRotation) * (btQuaternion(btVector3(-1, 0, 0), yos));
+	if (yos > -9990)
+	{
+		yos += .2;
+		printf("Camera Vertical Angle is: %f\n", yos);
+		this->cameraAngle = (*playerRotation) * (btQuaternion(btVector3(-1, 0, 0), yos));
+	}
 }
 
 

@@ -18,7 +18,6 @@ protected:
 	int classId;
 	int toDelete;
 	unsigned int markTick; // world tick that this thing was marked on
-	float cameraDelta;
 	btQuaternion cameraAngle;
 
 public:

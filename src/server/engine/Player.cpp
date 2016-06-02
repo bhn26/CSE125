@@ -43,7 +43,6 @@ Player::Player(int objectid, int teamid, PosInfo pos, btDiscreteDynamicsWorld* p
 	this->position = pos;
 	this->playerWeapon = nullptr;
 	this->peckWeapon = new Peck(curWorld);
-	//this->playerWeapon = new SeedGun(curWorld);
 	this->alive = true;
 	this->death_time = 0;
 
@@ -145,19 +144,13 @@ int Player::GetTeamId()
 	//btQuaternion * playerRotation = &(this->GetEntityRotation());
 	btQuaternion * playerRotation = &(this->cameraAngle);
 
-	//playerRotation->setX(position.camx);
-	//playerRotation->setZ(position.camz);
-
 	printf("VALS OF ROT QUAT: %f, %f, %f, %f\n", position.camx, playerRotation->getY(), position.camz, playerRotation->getW());
-
-	//printf("TEMP Position:  x: %f, y: %f, z: %f  \n", temp.getX(), temp.getY(), temp.getZ());
 
 	btVector3* position = new btVector3(temp.getX(), temp.getY(), temp.getZ());
 
 	btTransform currentTrans;
 	entityRigidBody->getMotionState()->getWorldTransform(currentTrans);
 	btMatrix3x3 * currentOrientation = new btMatrix3x3(*playerRotation);
-	//btQuaternion* playerRotation = new btQuaternion(currentOrientation.getX(), currentOrientation.getY(), currentOrientation.getX(), currentOrientation.getW());
 
 	if (playerWeapon->UseWeapon(position, currentOrientation, this->objectId, this->teamId, this) == 0)
 	{

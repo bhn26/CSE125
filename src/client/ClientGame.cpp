@@ -647,7 +647,7 @@ void ClientGame::GameLoop()
 
 		if (++tick % 15 == 0 && iSpawned)
 		{
-			ClientGame::instance()->sendRotationPacket(0.0);
+			ClientGame::instance()->sendRotationPacket(-9999);
 			tick = 0;
 		}
     }
