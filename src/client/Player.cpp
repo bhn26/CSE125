@@ -121,11 +121,31 @@ void Player::Draw() const
 	TextRenderer::RenderText(score, screen_coords.x, screen_coords.y - 400, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));*/
 }
 
+void Player::UseShader() const
+{
+    Animation::SkinningTechnique* skinTechnique = m_model->GetMesh().GetSkinningTechnique();
+    skinTechnique->Enable(); // use shader
+    // For rendering Depth, only need model
+    if (Scene::Instance()->IsRenderingDepth())
+    {
+        skinTechnique->SetWorldMatrix(toWorld);
+        skinTechnique->SetRenderingDepth(true);
+        skinTechnique->SetLightSpaceMatrix(Scene::Instance()->LightSpaceMatrix());
+    }
+    else
+    {
+        this->SetShaderUniforms();
+    }
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 void Player::SetShaderUniforms() const
 {
     Animation::SkinningTechnique* skinTechnique = m_model->GetMesh().GetSkinningTechnique();
     skinTechnique->Enable(); // use shader
+
+    skinTechnique->SetDepthMap("shadowMap", Scene::Instance()->ShadowMapIndex(), Scene::Instance()->DepthMap());
+    skinTechnique->SetRenderingDepth(false);
 
     skinTechnique->SetEyeWorldPos(Scene::Instance()->GetCameraPosition());
     skinTechnique->SetWVP(Scene::Instance()->GetPerspectiveMatrix() * Scene::Instance()->GetViewMatrix() * toWorld);

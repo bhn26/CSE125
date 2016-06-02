@@ -93,27 +93,31 @@ namespace Animation
         virtual bool Init();
 
         void SetWVP(const glm::mat4& WVP);
-        //void SeViewMatrix(const glm::mat4& view);
-        //void SetPerspectiveMatrix(const glm::mat4& perspective);
         void SetWorldMatrix(const glm::mat4& WVP);
+        void SetLightSpaceMatrix(const glm::mat4& lightSpaceMatrix);
+        void SetRenderingDepth(bool renderingDepth = false);
+        void SetDepthMap(std::string depthMapName, GLuint ShadowMapIndex, GLuint textureID);
+
         void SetColorTextureUnit(unsigned int textureUnit);
+
         void SetDirectionalLight(const DirectionalLight& light);
         void SetDirectionalLight(const ::DirectionalLight& light);
         void SetPointLights(unsigned int numLights, const PointLight2* lights);
         void SetSpotLights(unsigned int numLights, const SpotLight* lights);
+
         void SetEyeWorldPos(const glm::vec3& eyeWorldPos);
         void SetMatSpecularIntensity(float intensity);
         void SetMatSpecularPower(float power);
-        void SetBoneTransform(unsigned int index, const glm::mat4& transform);
         void SetMaterial(const Material& material);
         void SetUseTexture(bool useTexture);
+
+        void SetBoneTransform(unsigned int index, const glm::mat4& transform);
 
     private:
     
         GLuint m_WVPLocation;
-        //GLuint m_ViewLocation;
-        //GLuint m_PerspectiveLocation;
         GLuint m_WorldMatrixLocation;
+        GLuint m_lightSpaceMatrix;
         GLuint m_colorTextureLocation;
         GLuint m_eyeWorldPosLocation;
         GLuint m_matSpecularIntensityLocation;

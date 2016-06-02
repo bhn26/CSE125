@@ -319,7 +319,7 @@ bool Animation::Mesh::InitMaterials(const aiScene* scene, const std::string& fil
 }
 
 ///////////////////////////////////////////////////////////////////////
-void Animation::Mesh::Draw() const
+void Animation::Mesh::Draw(bool useShader) const
 {
     glBindVertexArray(m_VAO);
 

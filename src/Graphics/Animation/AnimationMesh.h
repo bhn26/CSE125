@@ -34,7 +34,7 @@ namespace Animation
 
         bool GenBuffers();
         bool InitFromScene(const aiScene* scene, const std::string& filename);
-        void Draw() const;
+        void Draw(bool useShader = true) const;
 
         bool SameMesh(const aiScene* scene) const;
         unsigned int NumBones() const { return m_numBones; }

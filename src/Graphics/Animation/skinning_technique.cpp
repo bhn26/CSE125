@@ -56,9 +56,8 @@ namespace Animation
         }
     
         m_WVPLocation = GetUniformLocation("gWVP");
-        //m_ViewLocation = GetUniformLocation("view");
-        //m_PerspectiveLocation = GetUniformLocation("perspective");
         m_WorldMatrixLocation = GetUniformLocation("gWorld");
+        m_lightSpaceMatrix = GetUniformLocation("lightSpaceMatrix");
         m_colorTextureLocation = GetUniformLocation("gColorMap");
         m_eyeWorldPosLocation = GetUniformLocation("gEyeWorldPos");
         m_dirLightLocation.color = GetUniformLocation("gDirectionalLight.Base.Color");
@@ -182,22 +181,30 @@ namespace Animation
 
     void SkinningTechnique::SetWVP(const glm::mat4& WVP)
     {
+        glUniform1i(GetUniformLocation("renderingDepth"), GL_FALSE);            // HACK
         glUniformMatrix4fv(m_WVPLocation, 1, GL_FALSE, glm::value_ptr(WVP));
     }
-
-    //void SkinningTechnique::SeViewMatrix(const glm::mat4 & view)
-    //{
-    //    glUniformMatrix4fv(m_ViewLocation, 1, GL_FALSE, glm::value_ptr(view));
-    //}
-    //
-    //void SkinningTechnique::SetPerspectiveMatrix(const glm::mat4 & perspective)
-    //{
-    //    glUniformMatrix4fv(m_PerspectiveLocation, 1, GL_FALSE, glm::value_ptr(perspective));
-    //}
 
     void SkinningTechnique::SetWorldMatrix(const glm::mat4& world)
     {
         glUniformMatrix4fv(m_WorldMatrixLocation, 1, GL_FALSE, glm::value_ptr(world));
+    }
+
+    void SkinningTechnique::SetLightSpaceMatrix(const glm::mat4 & lightSpaceMatrix)
+    {
+        glUniformMatrix4fv(m_WorldMatrixLocation, 1, GL_FALSE, glm::value_ptr(lightSpaceMatrix));
+    }
+
+    void SkinningTechnique::SetRenderingDepth(bool renderingDepth)
+    {
+        glUniform1i(GetUniformLocation("renderingDepth"), renderingDepth);
+    }
+
+    void SkinningTechnique::SetDepthMap(std::string depthMapName, GLuint shadowMapIndex, GLuint textureID)
+    {
+        glUniform1i(GetUniformLocation(depthMapName.c_str()), shadowMapIndex);
+        glActiveTexture(GL_TEXTURE0 + shadowMapIndex);
+        glBindTexture(GL_TEXTURE_2D, textureID);
     }
 
     void SkinningTechnique::SetColorTextureUnit(unsigned int textureUnit)

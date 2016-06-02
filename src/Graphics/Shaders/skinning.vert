@@ -22,10 +22,21 @@ const int MAX_BONES = 100;
 
 uniform mat4 gWVP;
 uniform mat4 perspective;
+uniform mat4 lightSpaceMatrix;
 uniform mat4 view2;
 uniform mat4 gWorld;
 uniform mat4 model;
 uniform mat4 gBones[MAX_BONES];
+
+uniform bool renderingDepth;
+
+out VS_OUT
+{
+    vec3 _fragPos;
+    vec3 _normal;
+    vec2 _texCoords;
+    vec4 _fragPosLightSpace;
+} vs_out;
 
 void main()
 {       
@@ -36,10 +47,21 @@ void main()
     //BoneTransform     += gBones[BoneIDs[4]] * Weights[4];   // Need a 5th bone
 
     vec4 PosL    = BoneTransform * vec4(Position, 1.0);
+    if (renderingDepth)
+    {
+        gl_Position = lightSpaceMatrix * gWorld * PosL;
+        return;
+    }
+
     gl_Position  = gWVP * PosL;
     TexCoord0    = TexCoord;
     vec4 NormalL = BoneTransform * vec4(Normal, 0.0);
     Normal0      = (gWorld * NormalL).xyz;
-    //WorldPos0    = (gWorld * PosL).xyz;
-    WorldPos0 = vec3(gWorld * vec4(Position, 1.0));
+    WorldPos0    = (gWorld * PosL).xyz;
+    //WorldPos0 = vec3(gWorld * vec4(Position, 1.0));
+
+    vs_out._fragPos = WorldPos0;
+    vs_out._normal = Normal0;
+    vs_out._texCoords = TexCoord0;
+    vs_out._fragPosLightSpace = lightSpaceMatrix * gWorld * PosL;
 }

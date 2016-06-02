@@ -53,6 +53,7 @@ public:
     // Inherited via Entity
     virtual void Update(float deltaTime) override;
     virtual void Draw() const override;
+    virtual void UseShader() const override;
     virtual void SetShaderUniforms() const override;
 
     virtual void MoveTo(float x, float y, float z) override;
@@ -60,7 +61,7 @@ public:
     void Jump() { ChangeState(State::JUMP); }
     void Dance() { ChangeState(State::DANCE); }
     void Attack() { ChangeState(State::ATTACK); }
-	void Die() { ChangeState(State::DEATH); alive = false; }
+    void Die() { ChangeState(State::DEATH); alive = false; }
     void Peck() { ChangeState(State::PECK); }
 
 
