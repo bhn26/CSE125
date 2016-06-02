@@ -81,6 +81,8 @@ public:
     void receiveMovePacket(int offset);
     void sendMovePacket(int direction);
 
+	void receiveTimeStampPacket(int offset);
+
     void receiveRotationPacket(int offset);
     void sendRotationPacket(); 
 

@@ -330,34 +330,6 @@ void ClientGame::sendRotationPacket() {
 	pi.roty = rot.y;
 	pi.rotz = rot.z;
 
-	glm::vec3 camrot = Scene::Instance()->GetPlayer()->GetFront();
-
-	if (camrot.x > 0 && camrot.z > 0)
-	{
-		pi.camx = (-(camrot.y + 0.203336));
-		pi.camz = 0;
-	}
-	else if (camrot.x > 0 && camrot.z < 0)
-	{
-		pi.camx = 0;
-		pi.camz = ((camrot.y + 0.203336));
-	}
-	else if (camrot.x < 0 && camrot.z > 0)
-	{
-		pi.camx = (-(camrot.y + 0.203336));
-		pi.camz = 0;
-	}
-	else if (camrot.x < 0 && camrot.z < 0)
-	{
-		pi.camx = 0;
-		pi.camz = ((camrot.y + 0.203336));
-	}
-	else
-	{
-		pi.camx = 0;
-		pi.camz = 0;
-	}
-
 	//pi.h_rotation = h_rot;
     pi.serialize(packet.dat.buf);
 
@@ -413,6 +385,14 @@ void ClientGame::receiveGameOverPacket(int offset) {
 	Window::m_pStateManager->ChangeState(GOState::GetInstance(Window::m_pStateManager));
 }
 
+void ClientGame::receiveTimeStampPacket(int offset) 
+{
+	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
+	struct MiscInfo* m = (struct MiscInfo *) &(dat->buf);
+
+	printf("TIME ATM in SECONDS: %d\n", m->misc1);
+}
+
 void ClientGame::sendAttackPacket(AttackType t) {
 	const unsigned int packet_size = sizeof(Packet);
 	char packet_data[packet_size];
@@ -424,6 +404,7 @@ void ClientGame::sendAttackPacket(AttackType t) {
 
 	MiscInfo m;
 	m.misc1 = t;
+	m.misc3 = Scene::Instance()->GetPlayer()->GetCamAngle();
 	m.serialize(packet.dat.buf);
 
 	packet.serialize(packet_data);
@@ -541,6 +522,10 @@ void ClientGame::update()
 				if(game_started) // the game needs to start for the client before this can happen
 					receiveMovePacket(i + sizeof(PacketHeader));
                 break;
+
+			case TIME_EVENT:
+				receiveTimeStampPacket(i + sizeof(PacketHeader));
+				break;
 
 			case DANCE_EVENT:
 				receiveDancePacket(i + sizeof(PacketHeader));

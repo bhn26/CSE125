@@ -80,6 +80,7 @@ public:
     glm::mat4 GetPerspectiveMatrix() const;
 	glm::vec3 GetFront() const;
     glm::mat3 GetNormalMatrix() const;
+	float GetCamAngle() const;
 
     int GetID() const { return id; };
     int GetClassId() const { return class_id; }

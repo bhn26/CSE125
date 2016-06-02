@@ -67,9 +67,9 @@ void ServerGame::update()
 	}
 	else
 	{
-		if ((diff % 10000) <= 16)
+		if (game_over == false && eggs_spawned && ((diff % 10000) <= 16))
 		{
-			sendTimeStampPacket();
+			sendTimeStampPacket(diff);
 		}
 	}
 
@@ -527,6 +527,8 @@ void ServerGame::sendMovePacket(ClassId class_id, int obj_id)
 		p.y = vec.getY();
 		p.z = vec.getZ();
 
+		p.hp = ((Player*)ent)->GetHP();
+
 		if (class_id == PLAYER) {
 			p.num_eggs = ((Player*)ent)->GetScore();
 			p.jump = ((Player*)ent)->GetJump();
@@ -553,7 +555,6 @@ void ServerGame::receiveRotationPacket(int offset) {
 	Entity* ent = (Entity*)(EntitySpawner::instance()->GetEntity(ClassId::PLAYER, hdr->sender_id));
 
 	ent->SetEntityRotation(0, pi->roty, 0, pi->rotw);
-	((Player *)ent)->SetCam(pi->camx, pi->camz);
 	sendRotationPacket(ClassId::PLAYER, hdr->sender_id);
 }
 
@@ -658,15 +659,31 @@ void ServerGame::receiveAttackPacket(int offset) {
 	struct MiscInfo* m = (struct MiscInfo *) &(dat->buf);
 	Player* player = (Player*)(EntitySpawner::instance()->GetEntity(ClassId::PLAYER, hdr->sender_id));
 	
+	player->SetCamAngle(m->misc3);
+
 	if (m->misc1 == AttackType::WEAPON_ATTACK)
 		player->UseWeapon();
 	else if (m->misc1 == AttackType::PECK)
 		player->UsePeck();
 }
 
-void ServerGame::sendTimeStampPacket()
+void ServerGame::sendTimeStampPacket(int diff)
 {
-	//printf("SENDING TIMESTAMP PACKET\n");
+	Packet packet;
+	packet.hdr.sender_id = SERVER_ID;
+	packet.hdr.packet_type = TIME_EVENT;
+
+	MiscInfo m;
+	m.misc1 = (diff / 1000);
+
+	m.serialize(packet.dat.buf);
+
+	const unsigned int packet_size = sizeof(Packet);
+	char packet_data[packet_size];
+
+	packet.serialize(packet_data);
+
+	network->sendToAll(packet_data, packet_size);
 }
 
 void ServerGame::sendAttackPacket(int id) {

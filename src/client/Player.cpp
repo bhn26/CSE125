@@ -226,6 +226,11 @@ glm::mat3 Player::GetNormalMatrix() const
     return this->normalMatrix;
 }
 
+float Player::GetCamAngle() const
+{
+	return this->camAngle;
+}
+
 void Player::ChangeState(State state)
 {
     if (state == m_state && !(state == State::DANCE || state == State::DEATH || state == State::PECK))
