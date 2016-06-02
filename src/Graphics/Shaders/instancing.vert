@@ -8,6 +8,7 @@ layout (std140) uniform Matrices
 {
     mat4 projection2;
     mat4 view2;
+    mat4 lightSpaceMatrix2;
 };
 
 uniform mat4 projection;
@@ -24,11 +25,9 @@ out VS_OUT
 
 void main()
 {
-    gl_Position = projection * view * instanceMatrix * vec4(position, 1.0f); 
+    gl_Position = projection2 * view2 * instanceMatrix * vec4(position, 1.0f); 
     vs_out._fragPos = vec3(instanceMatrix * vec4(position, 1.0f));
     vs_out._normal = vec3(transpose(inverse(instanceMatrix)) * vec4(normal, 0.0f));
-    //vs_out._normal = normal;
-    //vs_out._normal = vec3(0.0f, 1.0f, 0.0f);
     vs_out._texCoords = texCoords;
-    vs_out._fragPosLightSpace = lightSpaceMatrix * vec4(vs_out._fragPos, 1.0f);
+    vs_out._fragPosLightSpace = lightSpaceMatrix2 * vec4(vs_out._fragPos, 1.0f);
 }

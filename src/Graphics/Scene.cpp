@@ -164,6 +164,7 @@ void Scene::Setup()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// Projection, View, Lightspace
 void Scene::InitializeUBOs()
 {
     ShaderManager::Instance()->ApplyUBOToAllShaders("Matrices", UBOIndex::Matrices);
@@ -171,9 +172,9 @@ void Scene::InitializeUBOs()
     glGenBuffers(1, &this->uboMatricesBuffer);
 
     glBindBuffer(GL_UNIFORM_BUFFER, uboMatricesBuffer);
-    glBufferData(GL_UNIFORM_BUFFER, 2*sizeof(glm::mat4), NULL, GL_STATIC_DRAW);
+    glBufferData(GL_UNIFORM_BUFFER, 3*sizeof(glm::mat4), NULL, GL_STATIC_DRAW);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
-    glBindBufferRange(GL_UNIFORM_BUFFER, UBOIndex::Matrices, uboMatricesBuffer, 0, 2*sizeof(glm::mat4));
+    glBindBufferRange(GL_UNIFORM_BUFFER, UBOIndex::Matrices, uboMatricesBuffer, 0, 3*sizeof(glm::mat4));
     //glBindBufferBase(GL_UNIFORM_BUFFER, UBOIndex::Matrices, uboMatricesBuffer);
 
     SetProjectionUBO();
@@ -217,6 +218,14 @@ void Scene::SetViewUBO()
         glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(view));
         glBindBuffer(GL_UNIFORM_BUFFER, 0);
     }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Scene::SetLightSpaceUBO()
+{
+    glBindBuffer(GL_UNIFORM_BUFFER, uboMatricesBuffer);
+    glBufferSubData(GL_UNIFORM_BUFFER, 2*sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(LightSpaceMatrix()));
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -270,6 +279,7 @@ void Scene::RenderScene()
     if (!IsRenderingDepth())
         glViewport(0, 0, Window::width, Window::height);
     SetViewUBO();
+    SetLightSpaceUBO();
     cubeMap->Draw();
     grass->Draw();
     //pumpkin->Draw();
@@ -332,7 +342,7 @@ void Scene::Update()
 void Scene::Draw()
 {
     RenderDepthMap();
-    DrawDepthMap();
+    //DrawDepthMap();
     RenderScene();
 }
 

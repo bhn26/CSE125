@@ -66,6 +66,7 @@ class Scene
     void InitializeUBOs();
     void InitializeFBO();
     void SetViewUBO();
+    void SetLightSpaceUBO();
     void SetProjectionUBO();
     void ConfigureShaderAndMatrices();
     void RenderDepthMap();

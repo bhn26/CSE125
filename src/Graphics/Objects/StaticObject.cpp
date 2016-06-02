@@ -62,8 +62,8 @@ void StaticObject::SetShaderUniforms() const
 
     glUniformMatrix4fv(shader->GetUniform("model"), 1, false, glm::value_ptr(this->toWorld));
     glUniformMatrix3fv(shader->GetUniform("normalMatrix"), 1, false, glm::value_ptr(this->normalMatrix));
-    glUniformMatrix4fv(shader->GetUniform("view"), 1, false, glm::value_ptr(Scene::Instance()->GetViewMatrix()));
-    glUniformMatrix4fv(shader->GetUniform("projection"), 1, false, glm::value_ptr(Scene::Instance()->GetPerspectiveMatrix()));
-    glUniformMatrix4fv(shader->GetUniform("lightSpaceMatrix"), 1, false, glm::value_ptr(Scene::Instance()->LightSpaceMatrix()));
+    //glUniformMatrix4fv(shader->GetUniform("view"), 1, false, glm::value_ptr(Scene::Instance()->GetViewMatrix()));
+    //glUniformMatrix4fv(shader->GetUniform("projection"), 1, false, glm::value_ptr(Scene::Instance()->GetPerspectiveMatrix()));
+    //glUniformMatrix4fv(shader->GetUniform("lightSpaceMatrix"), 1, false, glm::value_ptr(Scene::Instance()->LightSpaceMatrix()));
     LoadDirectionalLight(Scene::Instance()->GetDirectionalLight());
 }

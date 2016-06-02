@@ -7,6 +7,7 @@ layout (std140) uniform Matrices
 {
     mat4 projection2;
     mat4 view2;
+    mat4 lightSpaceMatrix2;
 };
 
 uniform mat4 model;

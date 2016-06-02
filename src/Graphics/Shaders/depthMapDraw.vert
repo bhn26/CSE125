@@ -2,9 +2,6 @@
 layout (location = 0) in vec3 position;
 layout (location = 1) in vec2 texCoords;
 
-uniform mat4 lightSpaceMatrix;
-uniform mat4 model;
-
 out vec2 TexCoords;
 
 void main()
