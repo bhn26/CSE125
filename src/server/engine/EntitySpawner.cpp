@@ -9,6 +9,7 @@
 #include "Collectable.h"
 #include "CollectableSpawner.h"
 #include "SeedGun.h"
+#include "BounceGun.h"
 
 EntitySpawner* EntitySpawner::spawnInstance = nullptr;
 
@@ -72,7 +73,6 @@ Flag*  EntitySpawner::spawnFlag(PosInfo pos, btDiscreteDynamicsWorld* physicsWor
 	// Send Flag Spawn packet
 	btVector3 vec = newFlag->GetEntityPosition();
 	btQuaternion quat = newFlag->GetEntityRotation();
-	printf("Created flag at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
 
 	PosInfo out;
 	out.cid = ClassId::FLAG;
@@ -88,7 +88,7 @@ Flag*  EntitySpawner::spawnFlag(PosInfo pos, btDiscreteDynamicsWorld* physicsWor
 	return newFlag;
 }
 
-Bullet* EntitySpawner::spawnBullet(int playerid, int teamid, int damage, BulletCollisionHandler* handler, btRigidBody* bullet_body, btDiscreteDynamicsWorld* physicsWorld)
+Bullet* EntitySpawner::spawnBullet(int playerid, int teamid, int damage, WeaponType shooter, BulletCollisionHandler* handler, btRigidBody* bullet_body, btDiscreteDynamicsWorld* physicsWorld)
 {
 	// Create Bullet and add to Entity Map
 	//Bullet* fireProjectile = new Bullet(oid_bullet, playerid, teamid, damage, pos, velocity, rotation, physicsWorld);
@@ -107,6 +107,7 @@ Bullet* EntitySpawner::spawnBullet(int playerid, int teamid, int damage, BulletC
 	out.x = vec.getX();
 	out.y = vec.getY();
 	out.z = vec.getZ();
+	out.sub_id = shooter;
 	out.rotw = quat.getW();
 	out.rotx = quat.getX();
 	out.roty = quat.getY();
@@ -120,16 +121,23 @@ void EntitySpawner::spawnCollectable(btDiscreteDynamicsWorld* curWorld, WeaponTy
 {
 	Weapon* wp;
 	switch (w_type)
-		{
+	{
 		case WeaponType::SEEDGUN:
 		{
+			printf("spawned seedgun\n");
 			wp = new SeedGun(curWorld);
+			break;
+		}
+		case WeaponType::BOUNCEGUN:
+		{
+			printf("spawned bouncegun\n");
+			wp = new BounceGun(curWorld);
 			break;
 		}
 		default:
 		{
-				wp = nullptr;
-				break;
+			wp = nullptr;
+			break;
 		}
 	}
 
@@ -149,7 +157,6 @@ void EntitySpawner::spawnCollectable(btDiscreteDynamicsWorld* curWorld, WeaponTy
 	// Send Collectable Spawn packet
 	btVector3 vec = ranCollectable->GetEntityPosition();
 	btQuaternion quat = ranCollectable->GetEntityRotation();
-	printf("Created Collectable at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
 
 	PosInfo out;
 	out.cid = ClassId::COLLECTABLE;

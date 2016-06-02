@@ -17,6 +17,7 @@ protected:
 	int objectId;
 	int classId;
 	int toDelete;
+	unsigned int markTick; // world tick that this thing was marked on
 
 public:
 
@@ -43,7 +44,9 @@ public:
 	btRigidBody* GetRigidBody();
 
 	// Marks this entity to be ignored
-	void SetToMarked();
+	void SetToMarked(unsigned int markTick);
+
+	unsigned int GetMarkTick() { return markTick; }
 
 	void ResetMark();
 

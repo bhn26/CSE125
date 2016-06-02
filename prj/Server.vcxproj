@@ -160,6 +160,8 @@
     <ClInclude Include="..\src\network\GameData.h" />
     <ClInclude Include="..\src\network\NetworkData.h" />
     <ClInclude Include="..\src\network\NetworkServices.h" />
+    <ClInclude Include="..\src\server\engine\BounceBulletCollision.h" />
+    <ClInclude Include="..\src\server\engine\BounceGun.h" />
     <ClInclude Include="..\src\server\engine\Bullet.h" />
     <ClInclude Include="..\src\server\engine\BulletCollisionHandler.h" />
     <ClInclude Include="..\src\server\engine\Collectable.h" />
@@ -186,6 +188,7 @@
   <ItemGroup>
     <ClCompile Include="..\src\ConfigManager.cpp" />
     <ClCompile Include="..\src\network\NetworkServices.cpp" />
+    <ClCompile Include="..\src\server\engine\BounceGun.cpp" />
     <ClCompile Include="..\src\server\engine\Bullet.cpp" />
     <ClCompile Include="..\src\server\engine\Collectable.cpp" />
     <ClCompile Include="..\src\server\engine\CollectableSpawner.cpp" />

@@ -20,6 +20,11 @@ enum MoveType {
     MOVE_RIGHT = 3
 };
 
+enum WeaponType {
+	SEEDGUN,
+	BOUNCEGUN
+};
+
 enum AttackType {
 	PECK,
 
@@ -60,6 +65,7 @@ struct PosInfo : GameInfo
 
 	int oid; // object id
 	ClassId cid; // class id
+	int sub_id; // this kind of id is used for subclasses, like different weapons spawning different bullets
 
 	// object coordinates
     float x;

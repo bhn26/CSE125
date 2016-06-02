@@ -1,8 +1,7 @@
 #pragma once
 #include "BulletCollisionHandler.h"
-#include <stdio.h>	
 
-// simple 
+// simple collision handler, always signals the bullet for deletion on collision
 class SimpleBulletCollision : public BulletCollisionHandler
 {
 public:
@@ -10,7 +9,6 @@ public:
 	~SimpleBulletCollision() {};
 
 	bool HandleBulletCollision(unsigned int world_tick) {
-		printf("simple bullet collider\n");
 		return true;
 	}
 };

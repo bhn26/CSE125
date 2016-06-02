@@ -102,6 +102,12 @@
     <ClInclude Include="..\src\server\engine\SimpleBulletCollision.h">
       <Filter>Source Files\engine\Weapons</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\server\engine\BounceGun.h">
+      <Filter>Source Files\engine\Weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\server\engine\BounceBulletCollision.h">
+      <Filter>Source Files\engine\Weapons</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\network\NetworkServices.cpp">
@@ -169,6 +175,9 @@
     </ClCompile>
     <ClCompile Include="..\src\server\engine\CollectableSpawner.cpp">
       <Filter>Source Files\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\server\engine\BounceGun.cpp">
+      <Filter>Source Files\engine\Weapons</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

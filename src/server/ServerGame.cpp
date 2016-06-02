@@ -652,8 +652,6 @@ void ServerGame::receiveAttackPacket(int offset) {
 	struct MiscInfo* m = (struct MiscInfo *) &(dat->buf);
 	Player* player = (Player*)(EntitySpawner::instance()->GetEntity(ClassId::PLAYER, hdr->sender_id));
 	
-	printf("attack packet of type %d was received\n", m->misc1);
-
 	if (m->misc1 == AttackType::WEAPON_ATTACK)
 		player->UseWeapon();
 	else if (m->misc1 == AttackType::PECK)

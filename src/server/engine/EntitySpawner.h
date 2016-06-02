@@ -33,7 +33,8 @@ public:
 
 	Flag*  spawnFlag(PosInfo pos, btDiscreteDynamicsWorld* physicsWorld);
 
-	Bullet* spawnBullet(int playerid, int teamid, int damage, BulletCollisionHandler* handler, btRigidBody* bullet_body, btDiscreteDynamicsWorld* physicsWorld);
+	// id of player spawning, team id of player spawning, dmg the bullet does, the type of weapon that shot the bullet, the collision handler for the bullet, the bullet physics body, the world
+	Bullet* spawnBullet(int playerid, int teamid, int damage, WeaponType shooter, BulletCollisionHandler* handler, btRigidBody* bullet_body, btDiscreteDynamicsWorld* physicsWorld);
 
 	void spawnCollectable(btDiscreteDynamicsWorld* curworld, WeaponType w_type);
 

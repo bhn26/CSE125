@@ -220,10 +220,29 @@ void Scene::AddEntity(PosInfo p)
     case ClassId::BULLET:
     {
         //std::unique_ptr<StaticObject> bullet = std::unique_ptr<StaticObject>(new StaticObject("assets/weapons/pumpkinseed.obj"));
-        std::unique_ptr<StaticObject> bullet = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Pumpkin_Seed")));
-		bullet->Translate(glm::vec3(p.x, p.y, p.z));
-        //bullet->GetShader() = modelShader;        // Set in ModelEntity
-        AddEntity(p.cid, p.oid, std::move(bullet));
+		std::unique_ptr<StaticObject> bullet;
+		switch (p.sub_id)
+		{
+			case(SEEDGUN):
+				bullet = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Pumpkin_Seed")));
+				bullet->Translate(glm::vec3(p.x, p.y, p.z));
+				//bullet->GetShader() = modelShader;        // Set in ModelEntity
+				AddEntity(p.cid, p.oid, std::move(bullet));
+				break;
+			case(BOUNCEGUN):
+				bullet = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Stump")));
+				bullet->Translate(glm::vec3(p.x, p.y, p.z));
+				//bullet->GetShader() = modelShader;        // Set in ModelEntity
+				AddEntity(p.cid, p.oid, std::move(bullet));
+				break;
+			default:
+				std::unique_ptr<StaticObject> bullet = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Pumpkin_Seed")));
+				bullet->Translate(glm::vec3(p.x, p.y, p.z));
+				//bullet->GetShader() = modelShader;        // Set in ModelEntity
+				AddEntity(p.cid, p.oid, std::move(bullet));
+				break;
+		}
+
         break;
     }
 	case ClassId::COLLECTABLE:
