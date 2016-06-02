@@ -38,6 +38,7 @@ public:
     // Inherited via Entity
     void Draw() const override;
     void Update(float deltaTime) override {}
+    virtual void UseShader() const override;
     virtual void SetShaderUniforms() const override;
 
     void SetColor(glm::vec3 color);

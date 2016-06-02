@@ -84,6 +84,28 @@ void InstanceObject::Draw() const
 		glDrawElementsInstanced(GL_TRIANGLES, instance->Meshes()[i].indices.size(), GL_UNSIGNED_INT, 0, amount);
 		glBindVertexArray(0);
 	}
+    if (Scene::Instance()->IsRenderingDepth())
+    {
+        std::shared_ptr<Shader>& shader = Scene::Instance()->GetDepthShader();
+        glUniform1i(shader->GetUniform("instancing"), GL_FALSE);
+    }
+}
+
+void InstanceObject::UseShader() const
+{
+    // For rendering Depth, only need model
+    if (Scene::Instance()->IsRenderingDepth())
+    {
+        std::shared_ptr<Shader>& shader = Scene::Instance()->GetDepthShader();
+        shader->Use();
+        glUniformMatrix4fv(shader->GetUniform("model"), 1, GL_FALSE, glm::value_ptr(toWorld));
+        glUniform1i(shader->GetUniform("instancing"), GL_TRUE);
+    }
+    else
+    {
+        shader->Use();
+        this->SetShaderUniforms();
+    }
 }
 
 void InstanceObject::SetShaderUniforms() const

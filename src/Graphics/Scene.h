@@ -4,6 +4,7 @@
 
 #include <GL/glew.h>
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include <vector>
 #include <map>
 
@@ -107,7 +108,12 @@ public:
 
     unsigned int ShadowMapIndex() const { return shadowMapIndex; }
     GLuint DepthMap() const { return depthMap; }
-    const glm::mat4& LightSpaceMatrix() const { return lightSpaceMatrix; }
+    const glm::mat4& LightSpaceMatrix()
+    {
+        //lightSpaceMatrix = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 1.0f, 100.0f) * GetViewMatrix();
+        lightSpaceMatrix = glm::ortho(-50.0f, 50.0f, -50.0f, 50.0f, 1.0f, 500.0f) * GetViewMatrix();
+        return lightSpaceMatrix;
+    }
 
 private:
     // helpers 

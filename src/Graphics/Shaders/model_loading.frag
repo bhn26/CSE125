@@ -88,9 +88,9 @@ vec4 CalcLight(BaseLight light, vec3 lightDirection)
         }
     }
     vec4 red = vec4(1.0f, 0.0f, 0.0f, 1.0f);
-    //float shadow = ShadowCalculation(fs_in._fragPosLightSpace);
-    //if (shadow > 0.0f)
-    //    return (ambientColor + diffuseColor + specularColor) * (shadow) * red;
+    float shadow = ShadowCalculation(fs_in._fragPosLightSpace);
+    if (shadow > 0.0f)
+        return (ambientColor + diffuseColor + specularColor) * (shadow) * red;
     return (ambientColor + diffuseColor + specularColor);
 }
 

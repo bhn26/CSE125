@@ -46,9 +46,11 @@ void Scene::Setup()
     pLight = std::unique_ptr<PointLight>(new PointLight(glm::vec3(0.0f, 20.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)));
     dLight = std::unique_ptr<DirectionalLight>(new DirectionalLight(glm::vec3(0.5, -sqrt(3)/2.0f, 0.0f)));
 
-    glm::vec3 pos = glm::vec3(0.0f, 30.0f, 0.0f);
-    lightSpaceMatrix = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.1f, 1000.0f) *
-        glm::lookAt(pos, pos + dLight->_direction, glm::vec3(0.0f, 1.0f, 0.0));
+    glm::vec3 pos = glm::vec3(50.0f, 100.0f, 0.0f);
+    //lightSpaceMatrix = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.1f, 1000.0f) *
+    //    glm::lookAt(pos, pos + dLight->_direction, glm::vec3(0.0f, 1.0f, 0.0));
+    lightSpaceMatrix = glm::ortho(-100.0f, 100.0f, -100.0f, 100.0f, 1.0f, 100.0f) *
+        glm::lookAt(glm::vec3(0.0f, 2.0f, 2.0f), glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0));
 
     depthShader = ShaderManager::GetShader("Depth_Map");
 
@@ -181,8 +183,10 @@ void Scene::InitializeFBO()
         0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+    float borderColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
+    glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
 
     // Bind depth map texture to frame buffer
     glBindFramebuffer(GL_FRAMEBUFFER, this->depthMapFBO);
@@ -236,7 +240,7 @@ void Scene::RenderDepthMap()
 ////////////////////////////////////////////////////////////////////////////////
 void Scene::DrawDepthMap()
 {
-    glViewport(0, 0, Window::width, Window::height);
+    glViewport(0, 0, Window::width/3, Window::height/3);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     std::shared_ptr<Shader>& shader = ShaderManager::Instance()->GetShader("Depth_Draw");
     shader->Use();
@@ -251,8 +255,9 @@ void Scene::DrawDepthMap()
 void Scene::RenderScene()
 {
     // Clear the color and depth buffers
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glViewport(0, 0, Window::width, Window::height);
+    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    if (!IsRenderingDepth())
+        glViewport(0, 0, Window::width, Window::height);
     SetViewUBO();
     cubeMap->Draw();
     grass->Draw();
@@ -274,7 +279,7 @@ void Scene::RenderQuad()
 {
     static GLuint quadVAO = 0;
     static GLuint quadVBO = 0;
-    if (quadVAO == 0)
+    if (quadVAO == 0)       // Initialize
     {
         GLfloat quadVertices[] = {
             // Positions        // Texture Coords
@@ -316,8 +321,8 @@ void Scene::Update()
 void Scene::Draw()
 {
 
-    //RenderDepthMap();
-    //DrawDepthMap();
+    RenderDepthMap();
+    DrawDepthMap();
     RenderScene();
 }
 
