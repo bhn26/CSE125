@@ -29,10 +29,10 @@ int Shotgun::UseWeapon(btVector3* position, btMatrix3x3* rotation, int playerid,
 		btVector3 globalPos3 = ((*rotation) * (btVector3(-2, 0, 2))) + (*position);
 		btVector3 globalPos4 = ((*rotation) * (btVector3(-3, 0, 3))) + (*position);
 
-		btDefaultMotionState*bulletMotionState1 = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), (globalPos1)));
-		btDefaultMotionState*bulletMotionState2 = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), (globalPos2)));
-		btDefaultMotionState*bulletMotionState3 = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), (globalPos3)));
-		btDefaultMotionState*bulletMotionState4 = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), (globalPos4)));
+		btDefaultMotionState*bulletMotionState1 = new btDefaultMotionState(btTransform(*(rotation), (globalPos1)));
+		btDefaultMotionState*bulletMotionState2 = new btDefaultMotionState(btTransform(*(rotation), (globalPos2)));
+		btDefaultMotionState*bulletMotionState3 = new btDefaultMotionState(btTransform(*(rotation), (globalPos3)));
+		btDefaultMotionState*bulletMotionState4 = new btDefaultMotionState(btTransform(*(rotation), (globalPos4)));
 
 		btScalar mass = 1;
 		btVector3 bulletInertia(0, 0, 0);
@@ -50,32 +50,15 @@ int Shotgun::UseWeapon(btVector3* position, btMatrix3x3* rotation, int playerid,
 		btVector3 newVelocity = (*rotation) * (*this->gunSpeed);
 
 		// set bullet rotation and velocity
-		btTransform currentTrans;
-		bRigidBody1->getMotionState()->getWorldTransform(currentTrans);
-		currentTrans.setBasis((*rotation));
-		bRigidBody1->getMotionState()->setWorldTransform(currentTrans);
-		bRigidBody1->setCenterOfMassTransform(currentTrans);
 		bRigidBody1->setLinearVelocity(newVelocity);
 		bRigidBody1->forceActivationState(DISABLE_DEACTIVATION);
 
-		bRigidBody2->getMotionState()->getWorldTransform(currentTrans);
-		currentTrans.setBasis((*rotation));
-		bRigidBody2->getMotionState()->setWorldTransform(currentTrans);
-		bRigidBody2->setCenterOfMassTransform(currentTrans);
 		bRigidBody2->setLinearVelocity(newVelocity);
 		bRigidBody2->forceActivationState(DISABLE_DEACTIVATION);
 
-		bRigidBody3->getMotionState()->getWorldTransform(currentTrans);
-		currentTrans.setBasis((*rotation));
-		bRigidBody3->getMotionState()->setWorldTransform(currentTrans);
-		bRigidBody3->setCenterOfMassTransform(currentTrans);
 		bRigidBody3->setLinearVelocity(newVelocity);
 		bRigidBody3->forceActivationState(DISABLE_DEACTIVATION);
 
-		bRigidBody4->getMotionState()->getWorldTransform(currentTrans);
-		currentTrans.setBasis((*rotation));
-		bRigidBody4->getMotionState()->setWorldTransform(currentTrans);
-		bRigidBody4->setCenterOfMassTransform(currentTrans);
 		bRigidBody4->setLinearVelocity(newVelocity);
 		bRigidBody4->forceActivationState(DISABLE_DEACTIVATION);
 
