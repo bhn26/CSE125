@@ -93,7 +93,7 @@ public:
     int GetTeam() const { return team_id; }
 
 	bool IsAlive() { return alive; }
-	void SetAlive(bool a) { alive = a; }
+	void SetAlive(bool a) { alive = a; health = 100; }
 
 private:
     // AnimationPlayer::Listener
@@ -128,6 +128,7 @@ private:
     int tick = 0;
 
 	bool alive;
+	int health;
 
     // Path name for chicken model texture
     std::string modelFile;

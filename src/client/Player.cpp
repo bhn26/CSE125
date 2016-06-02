@@ -56,6 +56,7 @@ Player::Player(float x, float y, float z, float rotW, float rotX, float rotY, fl
 
     m_model->InitBones0();  // Initialize bones to 0 time spot
 	alive = true;
+	health = 100;
 }
 
 Player::Player(int client_id) : Player()
