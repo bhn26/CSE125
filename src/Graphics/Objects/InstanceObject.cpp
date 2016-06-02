@@ -97,7 +97,7 @@ void InstanceObject::UseShader() const
     if (Scene::Instance()->IsRenderingDepth())
     {
         std::shared_ptr<Shader>& shader = Scene::Instance()->GetDepthShader();
-        //shader->Use();
+        shader->Use();
         glUniformMatrix4fv(shader->GetUniform("model"), 1, GL_FALSE, glm::value_ptr(toWorld));
         glUniform1i(shader->GetUniform("instancing"), GL_TRUE);
     }

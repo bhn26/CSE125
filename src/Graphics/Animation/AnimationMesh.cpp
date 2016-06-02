@@ -330,17 +330,20 @@ void Animation::Mesh::Draw(bool useShader) const
 
     for (unsigned int i = 0; i < m_meshes.size(); i++)
     {
-        const unsigned int materialIndex = m_meshes[i].materialIndex;
+        if (useShader)
+        {
+            const unsigned int materialIndex = m_meshes[i].materialIndex;
 
-        if (m_textures.find(materialIndex) != m_textures.end())
-        {
-            m_textures.at(materialIndex).Bind(GL_TEXTURE0);
-            m_skinningTechnique->SetUseTexture(true);
-        }
-        else if (m_materials.find(materialIndex) != m_materials.end())
-        {
-            m_skinningTechnique->SetMaterial(m_materials.at(materialIndex));
-            m_skinningTechnique->SetUseTexture(false);
+            if (m_textures.find(materialIndex) != m_textures.end())
+            {
+                m_textures.at(materialIndex).Bind(GL_TEXTURE0);
+                m_skinningTechnique->SetUseTexture(true);
+            }
+            else if (m_materials.find(materialIndex) != m_materials.end())
+            {
+                m_skinningTechnique->SetMaterial(m_materials.at(materialIndex));
+                m_skinningTechnique->SetUseTexture(false);
+            }
         }
 
         glDrawElementsBaseVertex(GL_TRIANGLES,

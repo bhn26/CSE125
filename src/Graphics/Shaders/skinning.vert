@@ -63,5 +63,5 @@ void main()
     vs_out._fragPos = WorldPos0;
     vs_out._normal = Normal0;
     vs_out._texCoords = TexCoord0;
-    vs_out._fragPosLightSpace = lightSpaceMatrix * gWorld * PosL;
+    vs_out._fragPosLightSpace = lightSpaceMatrix * vec4(vs_out._fragPos, 1.0f);
 }

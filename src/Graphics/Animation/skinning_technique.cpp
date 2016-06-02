@@ -181,7 +181,6 @@ namespace Animation
 
     void SkinningTechnique::SetWVP(const glm::mat4& WVP)
     {
-        glUniform1i(GetUniformLocation("renderingDepth"), GL_FALSE);            // HACK
         glUniformMatrix4fv(m_WVPLocation, 1, GL_FALSE, glm::value_ptr(WVP));
     }
 
@@ -192,7 +191,7 @@ namespace Animation
 
     void SkinningTechnique::SetLightSpaceMatrix(const glm::mat4 & lightSpaceMatrix)
     {
-        glUniformMatrix4fv(m_WorldMatrixLocation, 1, GL_FALSE, glm::value_ptr(lightSpaceMatrix));
+        glUniformMatrix4fv(m_lightSpaceMatrix, 1, GL_FALSE, glm::value_ptr(lightSpaceMatrix));
     }
 
     void SkinningTechnique::SetRenderingDepth(bool renderingDepth)

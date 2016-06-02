@@ -105,7 +105,7 @@ void Player::Draw() const
     // Use the appropriate shader (depth or model)
     UseShader();
     // Draw the loaded model
-    m_model->Draw();
+    m_model->Draw(!Scene::Instance()->IsRenderingDepth());
 
 	////////////// DRAW SCORE /////////////////////////
 	/*glm::vec2 screen_coords = Scene::Get2D(Position(),

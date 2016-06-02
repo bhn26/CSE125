@@ -320,7 +320,6 @@ void Scene::Update()
 ////////////////////////////////////////////////////////////////////////////////
 void Scene::Draw()
 {
-
     RenderDepthMap();
     DrawDepthMap();
     RenderScene();
