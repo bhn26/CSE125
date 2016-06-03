@@ -18,6 +18,7 @@
 #include "ConfigManager.h"
 #include "Graphics/ShaderManager.h"
 #include "Graphics/ModelManager.h"
+#include "Audio/SoundBufferManager.h"
 
 const std::string ClientGame::EVENT_QUIT = "Quit";
 const std::string ClientGame::EVENT_JUMP = "Jump";
@@ -34,7 +35,31 @@ const std::string ClientGame::EVENT_TAUNT_DANCE = "Taunt_Dance";
 const std::string ClientGame::EVENT_TAUNT_DEATH = "Taunt_Death";
 const std::string ClientGame::EVENT_TAUNT_PECK = "Taunt_Peck";
 
-ClientGame::ClientGame(void)
+////////////////////////////////////////////////////////////////////////////////
+void ClientGame::PlayMenuSound()
+{
+    std::shared_ptr<sf::SoundBuffer> soundBuffer = SoundBufferManager::GetSoundBuffer("Menu");
+    if (soundBuffer)
+    {
+        // loop and set to origin
+        SoundsHandler::SoundOptions options;
+        options._loops = true;
+        m_menuSound = m_soundsHandler.Play(*soundBuffer, options);
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ClientGame::StopMenuSound()
+{
+    if (m_menuSound != -1)
+    {
+        m_soundsHandler.StopSound(m_menuSound);
+        m_menuSound = -1;
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+ClientGame::ClientGame(void) : m_soundsHandler()
 {
 #ifdef _WIN32
     network = new ClientNetwork();
@@ -50,7 +75,7 @@ ClientGame::ClientGame(void)
 
 }
 
-
+////////////////////////////////////////////////////////////////////////////////
 ClientGame::~ClientGame(void)
 {
     Destroy();
@@ -58,6 +83,7 @@ ClientGame::~ClientGame(void)
 
 #ifdef _WIN32
 
+////////////////////////////////////////////////////////////////////////////////
 // Do we want to create a new world every time we get a new init packet
 void ClientGame::receiveInitPacket(int offset)
 {
@@ -72,6 +98,7 @@ void ClientGame::receiveInitPacket(int offset)
 	//Initialize();
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void ClientGame::sendInitPacket() {
 	const unsigned int packet_size = sizeof(Packet);
 	char packet_data[packet_size];
@@ -86,6 +113,7 @@ void ClientGame::sendInitPacket() {
 	NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void ClientGame::receiveJoinPacket(int offset) {
 	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
 	struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
@@ -113,6 +141,7 @@ void ClientGame::receiveJoinPacket(int offset) {
 	}
 };
 
+////////////////////////////////////////////////////////////////////////////////
 void ClientGame::sendJoinPacket(int team) {
 	const unsigned int packet_size = sizeof(Packet);
 	char packet_data[packet_size];
@@ -132,7 +161,7 @@ void ClientGame::sendJoinPacket(int team) {
 	NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
 };
 
-
+////////////////////////////////////////////////////////////////////////////////
 void ClientGame::sendReadyPacket()
 {
 	const unsigned int packet_size = sizeof(Packet);
@@ -150,6 +179,7 @@ void ClientGame::sendReadyPacket()
 	NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void ClientGame::receiveStartPacket(int offset) {
 	struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset]);
     struct PacketData* dat = (struct PacketData *) &(network_data[offset + sizeof(PacketHeader)]);
@@ -164,6 +194,7 @@ void ClientGame::receiveStartPacket(int offset) {
 	sendReadyPacket();
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void ClientGame::sendStartPacket() {
     if (start_sent)
         return;
@@ -182,6 +213,7 @@ void ClientGame::sendStartPacket() {
 	NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
 }
 
+////////////////////////////////////////////////////////////////////////////////
 // sendIndSpawnPacket
 void ClientGame::receiveReadyToSpawnPacket(int offset)
 {
@@ -205,6 +237,7 @@ void ClientGame::receiveReadyToSpawnPacket(int offset)
 	NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void ClientGame::receiveSpawnPacket(int offset)
 {
     struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
@@ -219,6 +252,7 @@ void ClientGame::receiveSpawnPacket(int offset)
 	}
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void ClientGame::receiveRemovePacket(int offset)
 {
 	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
@@ -237,6 +271,7 @@ void ClientGame::receiveRemovePacket(int offset)
 	}
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void ClientGame::receiveMovePacket(int offset)
 {
 
@@ -260,6 +295,7 @@ void ClientGame::receiveMovePacket(int offset)
 	((Player *)(Scene::Instance()->GetEntity(pi->cid, pi->oid).get()))->SetHealth(pi->hp);
 }
 
+////////////////////////////////////////////////////////////////////////////////
 // Need to know what direction to move in
 void ClientGame::sendMovePacket(int direction)
 {
@@ -284,6 +320,7 @@ void ClientGame::sendMovePacket(int direction)
     NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void ClientGame::receiveRotationPacket(int offset) {
     struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
     struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
@@ -316,6 +353,7 @@ void ClientGame::receiveRotationPacket(int offset) {
 
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void ClientGame::sendRotationPacket() {
     const unsigned int packet_size = sizeof(Packet);
     char packet_data[packet_size];
@@ -341,6 +379,7 @@ void ClientGame::sendRotationPacket() {
     NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void ClientGame::sendJumpPacket()
 {
     const unsigned int packet_size = sizeof(Packet);
@@ -356,6 +395,7 @@ void ClientGame::sendJumpPacket()
     NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void ClientGame::receiveScorePacket(int offset) {
 	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
 	struct ScoreInfo* s = (struct ScoreInfo *) &(dat->buf);
@@ -366,6 +406,7 @@ void ClientGame::receiveScorePacket(int offset) {
 	scores[1] = s->t1_score;
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void ClientGame::receiveGameOverPacket(int offset) {
 	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
 	struct ScoreInfo* s = (struct ScoreInfo *) &(dat->buf);
@@ -388,7 +429,8 @@ void ClientGame::receiveGameOverPacket(int offset) {
 	Window::m_pStateManager->ChangeState(GOState::GetInstance(Window::m_pStateManager));
 }
 
-void ClientGame::receiveTimeStampPacket(int offset) 
+////////////////////////////////////////////////////////////////////////////////
+void ClientGame::receiveTimeStampPacket(int offset)
 {
 	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
 	struct MiscInfo* m = (struct MiscInfo *) &(dat->buf);
@@ -396,6 +438,7 @@ void ClientGame::receiveTimeStampPacket(int offset)
 	printf("TIME ATM in SECONDS: %d\n", m->misc1);
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void ClientGame::sendAttackPacket(AttackType t) {
 	const unsigned int packet_size = sizeof(Packet);
 	char packet_data[packet_size];
@@ -415,6 +458,7 @@ void ClientGame::sendAttackPacket(AttackType t) {
 	NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void ClientGame::receiveAttackPacket(int offset)
 {
 	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
@@ -422,6 +466,7 @@ void ClientGame::receiveAttackPacket(int offset)
 	((Player *)(Scene::Instance()->GetEntity(ClassId::PLAYER, e->id).get()))->Attack();
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void ClientGame::sendDiscardPacket()
 {
 
@@ -437,6 +482,7 @@ void ClientGame::sendDiscardPacket()
 	NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
 }
 
+////////////////////////////////////////////////////////////////////////////////
 //	NOTE: We're going to use the sender id as the guy that's dancing instead of changing
 void ClientGame::receiveDancePacket(int offset)
 {
@@ -445,6 +491,7 @@ void ClientGame::receiveDancePacket(int offset)
 	((Player *)(Scene::Instance()->GetEntity(ClassId::PLAYER, e->id).get()))->Dance();
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void ClientGame::sendDancePacket()
 {
 
@@ -461,6 +508,7 @@ void ClientGame::sendDancePacket()
 	NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void ClientGame::receiveDeathPacket(int offset)
 {
 	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
@@ -479,7 +527,8 @@ void ClientGame::receiveDeathPacket(int offset)
 	}
 }
 
-void ClientGame::receiveRespawnPacket(int offset) 
+////////////////////////////////////////////////////////////////////////////////
+void ClientGame::receiveRespawnPacket(int offset)
 {
 	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
 	struct EmoteInfo* e = (struct EmoteInfo *) &(dat->buf);
@@ -491,6 +540,7 @@ void ClientGame::receiveRespawnPacket(int offset)
 	}
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void ClientGame::sendNamePacket() {
 	const unsigned int packet_size = sizeof(Packet);
 	char packet_data[packet_size];
@@ -514,6 +564,7 @@ void ClientGame::sendNamePacket() {
 	NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void ClientGame::receiveNamePacket(int offset) {
 	struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset]);
 	struct PacketData* dat = (struct PacketData *) &(network_data[offset + sizeof(PacketHeader)]);
@@ -524,6 +575,7 @@ void ClientGame::receiveNamePacket(int offset) {
 	//player->SetName(n->name);
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void ClientGame::update()
 {
     Packet packet;
@@ -618,6 +670,7 @@ void ClientGame::update()
 }
 #endif  // ifdef _WIN32
 
+////////////////////////////////////////////////////////////////////////////////
 void ClientGame::Initialize()
 {
     // Create the GLFW window
@@ -630,13 +683,14 @@ void ClientGame::Initialize()
     // Setup OpenGL settings, including lighting, materials, etc.
     Setup_opengl_settings();
 
-    // Initialize the shaders
+    // Initialize the shaders. Must be loaded before Loading screen to show the screen.
     ShaderManager::Instance()->LoadShaders();
 
 	// show loading screen
 	ShowLoadingScreen();
 
     ModelManager::Instance()->LoadModels();
+    SoundBufferManager::Instance()->LoadSoundBuffers();
     // Initialize objects/pointers for rendering
     Window::Initialize_objects();
 
@@ -645,12 +699,14 @@ void ClientGame::Initialize()
 
 	// go to login menu
 	Window::m_pStateManager->ChangeState(CMenuState::GetInstance(Window::m_pStateManager));
+    PlayMenuSound();
 
     double lastTime = glfwGetTime();
     int nbFrames = 0;
 	srand(time(NULL));
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void ClientGame::ShowLoadingScreen() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.28f, 0.65f, 0.89f, 1.0f); // reset color
@@ -667,6 +723,7 @@ void ClientGame::ShowLoadingScreen() {
 	delete bg;
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void ClientGame::Destroy()
 {
     Window::Clean_up();
@@ -677,6 +734,7 @@ void ClientGame::Destroy()
 }
 
 
+////////////////////////////////////////////////////////////////////////////////
 void ClientGame::GameLoop()
 {
     while (!glfwWindowShouldClose(window))
@@ -704,17 +762,20 @@ void ClientGame::GameLoop()
 }
 
 
+////////////////////////////////////////////////////////////////////////////////
 void ClientGame::Error_callback(int error, const char* description)
 {
     // Print error
     fputs(description, stderr);
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void ClientGame::LoadConfigs()
 {
     ConfigManager::instance()->LoadConfigs("eggs.cfg");
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void ClientGame::Setup_callbacks()
 {
     // Set the error callback
@@ -729,6 +790,7 @@ void ClientGame::Setup_callbacks()
     glfwSetWindowSizeCallback(window, Window::Resize_callback);
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void ClientGame::Setup_glew()
 {
     // Initialize GLEW
@@ -743,6 +805,7 @@ void ClientGame::Setup_glew()
     fprintf(stdout, "Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void ClientGame::Setup_opengl_settings()
 {
     // Setup GLEW
@@ -765,6 +828,7 @@ void ClientGame::Setup_opengl_settings()
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void ClientGame::Print_versions()
 {
     // Get info of GPU and supported OpenGL version
@@ -777,6 +841,7 @@ void ClientGame::Print_versions()
 #endif
 }
 
+////////////////////////////////////////////////////////////////////////////////
 // Prints once per 5 seconds
 void ClientGame::PrintFrameRate()
 {

@@ -10,12 +10,13 @@
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-
-#include "Player.h"
-#include "Graphics/Objects/Entity.h"
 #include <memory>
 #include <vector>
 #include <map>
+
+#include "Player.h"
+#include "Graphics/Objects/Entity.h"
+#include "Audio/SoundsHandler.h"
 
 class Window;
 
@@ -142,6 +143,11 @@ public:
 	std::string GetName(int id) { return name_map[id]; }
 	void SetName(std::string name) { name_map[client_id] = name; }
 
+    ////////////////////////////////////////////////////////////////////////////////
+    // Sounds
+    void PlayMenuSound();
+    void StopMenuSound();
+
 private:
     const static std::string EVENT_QUIT;
     const static std::string EVENT_JUMP;
@@ -161,6 +167,27 @@ private:
     ClientGame(void);
     ~ClientGame(void);
 
+    static void Error_callback(int error, const char* description);
+    void LoadConfigs();
+    void Setup_callbacks();
+    void Setup_glew();
+    void Setup_opengl_settings();
+    void Print_versions();
+    void PrintFrameRate();
+
+    void ShowLoadingScreen();
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // Controller handling
+    void CheckController();
+    void HandleTriggers(const float* axes);
+    void HandleLeftAnalog(const float* axes);
+    void HandleRightAnalog(const float* axes);
+    void HandleButtonPress(const unsigned char* buttons);
+    void HandleButtonEvent(const std::string& event, bool buttonDown = true);
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // Instance Variables
     double lastTime;
     int nbFrames;
 
@@ -183,23 +210,7 @@ private:
 	bool game_started = false;
 	bool iSpawned = false;
 
-    static void Error_callback(int error, const char* description);
-    void LoadConfigs();
-	void Setup_callbacks();
-    void Setup_glew();
-    void Setup_opengl_settings();
-    void Print_versions();
-    void PrintFrameRate();
-
-	void ShowLoadingScreen();
-
-    ////////////////////////////////////////////////////////////////////////////////
-    // Controller handling
-    void CheckController();
-	void HandleTriggers(const float* axes);
-	void HandleLeftAnalog(const float* axes);
-    void HandleRightAnalog(const float* axes);
-    void HandleButtonPress(const unsigned char* buttons);
-    void HandleButtonEvent(const std::string& event, bool buttonDown = true);
+    SoundsHandler m_soundsHandler;
+    int m_menuSound = -1;
 };
 

@@ -4,6 +4,7 @@
 #include <fstream>
 #include <sstream>
 #include <algorithm>
+#include <assert.h>
 
 #ifdef EGGS_CLIENT
 #include "Graphics/ShaderManager.h"

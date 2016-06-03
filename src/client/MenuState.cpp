@@ -36,9 +36,15 @@ CMenuState* CMenuState::GetInstance(CStateManager* pManager)
 void CMenuState::OnKeyDown(int action, int key)
 {
 	if (typing) {
+        static bool first = true;
+        if (first)
+        {
+            username.clear();
+            first = false;
+        }
 		if (action == GLFW_REPEAT && key == GLFW_KEY_BACKSPACE) { // erase name
 			username.clear();
-		} else if (key == GLFW_KEY_BACKSPACE) { 
+		} else if (key == GLFW_KEY_BACKSPACE && username.size()) { 
 			username.pop_back(); // remove last char
 		} else if (key == GLFW_KEY_ENTER) {
 			StartGame();
@@ -130,6 +136,8 @@ void CMenuState::EnterState()
 	default_name += "Enter your name";
 
 	username += default_name;
+    typing = true;
+    //ClientGame::instance()->PlayMenuSound();      // DO NOT CALL HERE. Loops
 }
 
 void::CMenuState::InitTextures() {

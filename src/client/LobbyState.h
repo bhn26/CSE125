@@ -21,6 +21,7 @@ public:
 	void OnClick(int button, int action, double x, double y) override;
 	void Draw() override;
 	void EnterState() override;
+    void LeaveState() override;
 
 	static LobbyState* GetInstance(CStateManager* pManager);
 

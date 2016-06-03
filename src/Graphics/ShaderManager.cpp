@@ -9,6 +9,7 @@ const std::string ShaderManager::shaderPath = "src/Graphics/Shaders/";
 ////////////////////////////////////////////////////////////////////////////////
 void ShaderManager::LoadShaders()
 {
+    printf("\n=== Loading Shaders ===\n");
     for (std::string& shaderName : _shaderNames)
     {
         LoadShader(shaderName);
@@ -19,9 +20,11 @@ void ShaderManager::LoadShaders()
 ////////////////////////////////////////////////////////////////////////////////
 bool ShaderManager::LoadShader(const std::string& shaderName)
 {
+    printf("Attempting to load %s...\t", shaderName.c_str());
     // Don't duplicate load
     if (_shaderMap.find(shaderName) != _shaderMap.end())
     {
+        printf("Duplicate found!\n");
         return false;
     }
 
@@ -32,11 +35,13 @@ bool ShaderManager::LoadShader(const std::string& shaderName)
     std::string fragShaderPath = ConfigManager::instance()->GetConfigValue(shaderPrefix + shaderName + fragSuffix);
     if (!vertShaderPath.length() || !fragShaderPath.length())   // Make sure we get the shader paths
     {
+        printf("Error: No vertex/fragment shader pair in config files!\n");
         return false;
     }
 
     //_shaderMap[shaderName] = std::make_shared<Shader>(shaderPath + vertShaderPath, shaderPath + fragShaderPath);
     _shaderMap[shaderName] = std::shared_ptr<Shader>(new Shader(shaderPath + vertShaderPath, shaderPath + fragShaderPath));
+    printf("Done!\n");
     return true;
 }
 

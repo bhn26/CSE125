@@ -16,7 +16,7 @@ class SoundBufferManager
     bool LoadSoundBuffer(const std::string& bufferName);
 
 public:
-    const static std::string soundPath;
+    const static std::string soundDirectory;
 
     void AddSoundBufferToLoad(std::string bufferName);
     void LoadSoundBuffers();

@@ -175,6 +175,11 @@ void LobbyState::EnterState()
 {
 }
 
+void LobbyState::LeaveState()
+{
+    ClientGame::instance()->StopMenuSound();
+}
+
 void::LobbyState::InitTextures() {
 	if (!initialized) {
 		// Create the different images

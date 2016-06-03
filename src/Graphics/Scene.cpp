@@ -38,6 +38,7 @@ Scene::Scene() : camera(std::unique_ptr<Camera>(nullptr)), pLight(nullptr),
 ////////////////////////////////////////////////////////////////////////////////
 void Scene::Setup()
 {
+    printf("\n=== Setting up Scene ===\n");
     entities.clear();
 
     InitializeUBOs();
@@ -171,6 +172,7 @@ void Scene::Setup()
 	static_objects.push_back(std::move(bench));
 	//static_objects.push_back(std::move(pumpkinObj));
 	static_objects.push_back(std::move(seed));
+    printf("=== Done setting up Scene! ===\n\n");
 }
 
 ////////////////////////////////////////////////////////////////////////////////

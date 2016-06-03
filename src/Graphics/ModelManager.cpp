@@ -7,11 +7,12 @@
 ////////////////////////////////////////////////////////////////////////////////
 void ModelManager::LoadModels()
 {
+    printf("\n=== Loading Models ===\n");
     for (std::string& modelName : _modelNames)
     {
         if (modelName == std::string("Pumpkin_Patch"))
         {
-            printf("Pumpkin_Patch!\n");
+            //printf("Pumpkin_Patch!\n");
         }
         LoadModel(modelName);
     }
@@ -21,9 +22,11 @@ void ModelManager::LoadModels()
 ////////////////////////////////////////////////////////////////////////////////
 bool ModelManager::LoadModel(const std::string& modelName)
 {
+    printf("Attempting to load %s...\t", modelName.c_str());
     // Don't duplicate load
     if (_modelMap.find(modelName) != _modelMap.end())
     {
+        printf("Duplicate found!\n");
         return false;
     }
 
@@ -31,11 +34,13 @@ bool ModelManager::LoadModel(const std::string& modelName)
     std::string modelPath = ConfigManager::instance()->GetConfigValue(modelPrefix + modelName);
     if (!modelPath.length())   // Make sure we get the model paths
     {
+        printf("Error: No model in config files!\n");
         return false;
     }
 
     Model* model = new Model(modelPath);
     _modelMap[modelName] = std::shared_ptr<Model>(model);
+    printf("Done!\n");
     return true;
 }
 
