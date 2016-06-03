@@ -27,6 +27,11 @@ void Entity::Move(btVector3* changeVelocity)
 	entityRigidBody->setLinearVelocity(newVelocity);
 }
 
+btVector3 Entity::GetEntityVelocity()
+{
+	return (entityRigidBody->getLinearVelocity());
+}
+
 btQuaternion Entity::GetEntityRotation()
 { 
 	btTransform currentTrans;

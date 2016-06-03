@@ -43,6 +43,9 @@ private:
 	// object ids
 	int oid;
 
+	// Map Loader object
+	MapLoader* worldMapLoader;
+
 	// list of fields to check.  Explosions and mounts.  Maybe decouple into a class of it's own.  Have a TTL
 
 

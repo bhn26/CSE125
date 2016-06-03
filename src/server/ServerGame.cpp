@@ -485,58 +485,44 @@ void ServerGame::receiveMovePacket(int offset)
     struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
 	Entity* ent = (Entity*)(EntitySpawner::instance()->GetEntity(ClassId::PLAYER, hdr->sender_id));
 
-	btVector3* vec;
 	Player* player = (Player*)(EntitySpawner::instance()->GetEntity(ClassId::PLAYER, hdr->sender_id));
-	if (player->GetJump())
+
+	switch (pi->direction) 
 	{
-		switch (pi->direction) {
 		case MOVE_FORWARD:
-			vec = new btVector3(0, 0, 25);
-			ent->Move(vec);
-			delete vec;
+		{
+			btVector3 curVec = player->GetEntityVelocity();
+			curVec.setZ(player->GetPlayerSpeed());
+			curVec.setX(0);
+			ent->Move((&curVec));
 			break;
+		}
 		case MOVE_BACKWARD:
-			vec = new btVector3(0, 0, -25);
-			ent->Move(vec);
-			delete vec;
+		{
+			btVector3 curVec = player->GetEntityVelocity();
+			curVec.setZ(-(player->GetPlayerSpeed()));
+			curVec.setX(0);
+			ent->Move((&curVec));
 			break;
+		}
 		case MOVE_LEFT:
-			vec = new btVector3(25, 0, 0);
-			ent->Move(vec);
-			delete vec;
+		{
+			btVector3 curVec = player->GetEntityVelocity();
+			curVec.setX(player->GetPlayerSpeed());
+			curVec.setZ(0);
+			ent->Move((&curVec));
 			break;
+		}
 		case MOVE_RIGHT:
-			vec = new btVector3(-25, 0, 0);
-			ent->Move(vec);
-			delete vec;
+		{
+			btVector3 curVec = player->GetEntityVelocity();
+			curVec.setX(-(player->GetPlayerSpeed()));
+			curVec.setZ(0);
+			ent->Move((&curVec));
 			break;
 		}
 	}
-	else
-	{
-		switch (pi->direction) {
-		case MOVE_FORWARD:
-			vec = new btVector3(0, -6, 25);
-			ent->Move(vec);
-			delete vec;
-			break;
-		case MOVE_BACKWARD:
-			vec = new btVector3(0, -6, -25);
-			ent->Move(vec);
-			delete vec;
-			break;
-		case MOVE_LEFT:
-			vec = new btVector3(25, -6, 0);
-			ent->Move(vec);
-			delete vec;
-			break;
-		case MOVE_RIGHT:
-			vec = new btVector3(-25, -6, 0);
-			ent->Move(vec);
-			delete vec;
-			break;
-		}
-	}
+	
 }
 
 void ServerGame::sendMovePacket(ClassId class_id, int obj_id)
@@ -570,7 +556,7 @@ void ServerGame::sendMovePacket(ClassId class_id, int obj_id)
 
 		if (class_id == PLAYER) {
 			p.num_eggs = ((Player*)ent)->GetScore();
-			p.jump = ((Player*)ent)->GetJump();
+			p.jump = ((Player*)ent)->GetJumpSem();
 		}
 
         p.serialize(packet.dat.buf);

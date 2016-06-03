@@ -25,6 +25,12 @@ private:
 	bool alive;   // am i alive?
 	unsigned int death_time; // when did i die?
 
+	// Base and Bonus movement
+	int baseJump;
+	int baseSpeed;
+	int bonusJump;
+	int bonusSpeed;
+
 public:
 
 	Player(int objectid, int teamid, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld);
@@ -33,8 +39,12 @@ public:
 
 	PosInfo GetPosition() { return position; };
 
-	int GetJump() { return jumpSem; }
-	void SetJump() { jumpSem = 0; }
+	int GetJumpSem() { return jumpSem; }
+	void SetJumpSem() { jumpSem = 0; }
+
+	// Return Player Base + Bonus
+	int GetPlayerSpeed() { return (baseSpeed + bonusSpeed); };
+	int GetPlayerJump() { return (baseJump + bonusJump); };
 
 	//TODO *********************************
 	void PrintPlayerVelocity();

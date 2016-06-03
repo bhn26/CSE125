@@ -10,6 +10,8 @@
 #include "Bullet.h"
 #include "WorldObstacle.h"
 #include "BulletCollision\CollisionDispatch\btGhostObject.h"
+#include "MapLoader.h"
+
 
 World::World() {
 	// initialize map objects 
@@ -43,10 +45,10 @@ void World::Init() {
 	btRigidBody::btRigidBodyConstructionInfo groundRigidBodyCI(0, groundMotionState, groundShape, btVector3(0, 0, 0));
 	groundRigidBodyCI.m_friction = .4;
 	btRigidBody* groundRigidBody = new btRigidBody(groundRigidBodyCI);
-	groundRigidBody->setGravity(btVector3(0, -10, 0));
+	groundRigidBody->setGravity(btVector3(0, 0, 0));
 	dynamicsWorld->addRigidBody(groundRigidBody);
-	groundRigidBody->setGravity(btVector3(0, 0.1, 0));
-	groundRigidBody->setUserIndex(14);
+	groundRigidBody->setGravity(btVector3(0, 0, 0));
+	groundRigidBody->setUserIndex(ClassId::OBSTACLE);
 	// Create Ground Obstacle
 	WorldObstacle* groundwall = new WorldObstacle(z++, groundRigidBody, curWorld);
 	
@@ -57,9 +59,9 @@ void World::Init() {
 	btRigidBody::btRigidBodyConstructionInfo xWallRigidBodyCI(0, xWallMotionState, xWallShape, btVector3(0, 0, 0));
 	xWallRigidBodyCI.m_friction = .5;
 	btRigidBody* xWallRigidBody = new btRigidBody(xWallRigidBodyCI);
-	xWallRigidBody->setGravity(btVector3(0, 0.1, 0));
+	xWallRigidBody->setGravity(btVector3(0, 0, 0));
 	dynamicsWorld->addRigidBody(xWallRigidBody);
-	xWallRigidBody->setUserIndex(5);
+	xWallRigidBody->setUserIndex(ClassId::OBSTACLE);
 	// Create X Wall
 	WorldObstacle* xwall = new WorldObstacle(z++, xWallRigidBody, curWorld);
 
@@ -70,9 +72,9 @@ void World::Init() {
 	btRigidBody::btRigidBodyConstructionInfo nxWallRigidBodyCI(0, nxWallMotionState, nxWallShape, btVector3(0, 0, 0));
 	nxWallRigidBodyCI.m_friction = .5;
 	btRigidBody* nxWallRigidBody = new btRigidBody(nxWallRigidBodyCI);
-	nxWallRigidBody->setGravity(btVector3(0, 0.1, 0));
+	nxWallRigidBody->setGravity(btVector3(0, 0, 0));
 	dynamicsWorld->addRigidBody(nxWallRigidBody);
-	nxWallRigidBody->setUserIndex(6);
+	nxWallRigidBody->setUserIndex(ClassId::OBSTACLE);
 	// Create Neg X Wall
 	WorldObstacle* nxwall = new WorldObstacle(z++, groundRigidBody, curWorld);
 
@@ -83,9 +85,9 @@ void World::Init() {
 	btRigidBody::btRigidBodyConstructionInfo zWallRigidBodyCI(0, zWallMotionState, zWallShape, btVector3(0, 0, 0));
 	zWallRigidBodyCI.m_friction = .5;
 	btRigidBody* zWallRigidBody = new btRigidBody(zWallRigidBodyCI);
-	zWallRigidBody->setGravity(btVector3(0, 0.1, 0));
+	zWallRigidBody->setGravity(btVector3(0, 0, 0));
 	dynamicsWorld->addRigidBody(zWallRigidBody);
-	zWallRigidBody->setUserIndex(7);
+	zWallRigidBody->setUserIndex(ClassId::OBSTACLE);
 	// Create Pos Z Wall
 	WorldObstacle* zwall = new WorldObstacle(z++, zWallRigidBody, curWorld);
 
@@ -96,91 +98,15 @@ void World::Init() {
 	btRigidBody::btRigidBodyConstructionInfo nzWallRigidBodyCI(0, nzWallMotionState, zWallShape, btVector3(0, 0, 0));
 	nzWallRigidBodyCI.m_friction = .5;
 	btRigidBody* nzWallRigidBody = new btRigidBody(nzWallRigidBodyCI);
-	nzWallRigidBody->setGravity(btVector3(0, 0.1, 0));
+	nzWallRigidBody->setGravity(btVector3(0, 0, 0));
 	dynamicsWorld->addRigidBody(nzWallRigidBody);
-	nzWallRigidBody->setUserIndex(8);
+	nzWallRigidBody->setUserIndex(ClassId::OBSTACLE);
 	// Create Neg Z Wall
 	WorldObstacle* nzwall = new WorldObstacle(z++, nzWallRigidBody, curWorld);
 
-
-
-	btCollisionShape* playerShape = new btBoxShape(btVector3(6, 2, 5));
-	// Create tractor physics object
-	btDefaultMotionState*playerMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(16.5, 1, -13)));
-	btScalar mass = 100;
-	btVector3 playerInertia(0, 0, 0);
-	playerShape->calculateLocalInertia(mass, playerInertia);
-	btRigidBody::btRigidBodyConstructionInfo playerRigidBodyCI(mass, playerMotionState, playerShape, playerInertia);
-	btRigidBody* pRigidBody = new btRigidBody(playerRigidBodyCI);
-	pRigidBody->setFriction((btScalar)0.5);
-	pRigidBody->setDamping((btScalar)100, (btScalar)100);
-	dynamicsWorld->addRigidBody(pRigidBody);
-	pRigidBody->setUserIndex(9);
-
-	playerShape = new btBoxShape(btVector3(3, 5, 3));
-	// Create tractor physics object
-	playerMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(-13, 1, -2.5)));
-	mass = 100;
-	playerInertia = btVector3(0, 0, 0);
-	playerShape->calculateLocalInertia(mass, playerInertia);
-	btRigidBody::btRigidBodyConstructionInfo p(mass, playerMotionState, playerShape, playerInertia);
-	pRigidBody = new btRigidBody(p);
-	pRigidBody->setFriction((btScalar)0.5);
-	pRigidBody->setDamping((btScalar)100, (btScalar)100);
-	dynamicsWorld->addRigidBody(pRigidBody);
-	pRigidBody->setUserIndex(10);
-
-	playerShape = new btBoxShape(btVector3(2, 8, 10));
-	// Create tractor physics object
-	playerMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(7.5, 1, 9)));
-	mass = 100;
-	playerInertia = btVector3(0, 0, 0);
-	playerShape->calculateLocalInertia(mass, playerInertia);
-	btRigidBody::btRigidBodyConstructionInfo p1(mass, playerMotionState, playerShape, playerInertia);
-	pRigidBody = new btRigidBody(p1);
-	pRigidBody->setFriction((btScalar)0.5);
-	pRigidBody->setDamping((btScalar)100, (btScalar)100);
-	dynamicsWorld->addRigidBody(pRigidBody);
-	pRigidBody->setUserIndex(11);
-
-	playerShape = new btBoxShape(btVector3(10, 8, 2));
-	// Create tractor physics object
-	playerMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(.1, 1, 17.5)));
-	mass = 100;
-	playerInertia = btVector3(0, 0, 0);
-	playerShape->calculateLocalInertia(mass, playerInertia);
-	btRigidBody::btRigidBodyConstructionInfo p2(mass, playerMotionState, playerShape, playerInertia);
-	pRigidBody = new btRigidBody(p2);
-	pRigidBody->setFriction((btScalar)0.5);
-	pRigidBody->setDamping((btScalar)100, (btScalar)100);
-	dynamicsWorld->addRigidBody(pRigidBody);
-	pRigidBody->setUserIndex(12);
-
-	playerShape = new btBoxShape(btVector3(2, 8, 10));
-	// Create tractor physics object
-	playerMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(-8, 1, 9.7)));
-	mass = 100;
-	playerInertia = btVector3(0, 0, 0);
-	playerShape->calculateLocalInertia(mass, playerInertia);
-	btRigidBody::btRigidBodyConstructionInfo p3(mass, playerMotionState, playerShape, playerInertia);
-	pRigidBody = new btRigidBody(p3);
-	pRigidBody->setFriction((btScalar)0.5);
-	pRigidBody->setDamping((btScalar)100, (btScalar)100);
-	dynamicsWorld->addRigidBody(pRigidBody);
-	pRigidBody->setUserIndex(13);
-
-	playerShape = new btBoxShape(btVector3(11, 2, 11));
-	// Create tractor physics object
-	playerMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(.5, 10, 8)));
-	mass = 100;
-	playerInertia = btVector3(0, 0, 0);
-	playerShape->calculateLocalInertia(mass, playerInertia);
-	btRigidBody::btRigidBodyConstructionInfo p4(mass, playerMotionState, playerShape, playerInertia);
-	pRigidBody = new btRigidBody(p4);
-	pRigidBody->setFriction((btScalar)0.5);
-	pRigidBody->setDamping((btScalar)100, (btScalar)100);
-	dynamicsWorld->addRigidBody(pRigidBody);
-	pRigidBody->setUserIndex(14);
+	// Load in world objects
+	this->worldMapLoader = new MapLoader(dynamicsWorld);
+	worldMapLoader->loadMap();
 
 	// Set Local attributes
 	this->ground = groundwall;
