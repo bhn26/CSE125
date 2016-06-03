@@ -109,6 +109,8 @@ struct RemInfo : GameInfo
 	ClassId rec_cid;
 	int team_id;
 
+	int sub_id;
+
 	void serialize(char * data) {
 		memcpy(data, this, sizeof(RemInfo));
 	}

@@ -34,6 +34,9 @@ CPlayState::~CPlayState()
 	delete hud_egg;
 	delete hud_health;
 	delete hud_weapon_and_timer;
+	delete hud_tomato;
+	delete hud_potato;
+	delete hud_pumpkin_seed;
 
 	delete death_overlay;
 }
@@ -441,6 +444,58 @@ void CPlayState::Draw()
 		y = Window::height - hud_weapon_and_timer->Height() - 20;
 		sprite_renderer->DrawSprite(*hud_weapon_and_timer, glm::vec2(x, y), glm::vec2(hud_weapon_and_timer->Width(), hud_weapon_and_timer->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 
+		switch (ClientGame::instance()->client_weapon) {
+		case SEEDGUN:
+			hud_weapon = hud_pumpkin_seed;
+			break;
+		case BOUNCEGUN:
+			hud_weapon = hud_tomato;
+			break;
+		case GRENADELAUNCHER:
+			hud_weapon = hud_potato;
+			break;
+		default:
+			break;
+		}
+
+		glClear(GL_DEPTH_BUFFER_BIT);
+		if (ClientGame::instance()->client_weapon != -1) {
+			sprite_renderer->DrawSprite(*hud_weapon, glm::vec2(x, y), glm::vec2(hud_weapon->Width(), hud_weapon->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+		}
+
+		int timer = ClientGame::instance()->GetCountdown();
+		int minutes = timer / 60;
+		int seconds = timer % 60;
+		std::string time;
+		if (timer == 0)
+		{
+			time += "5";
+			time += ":";
+			time += "00";
+		}
+		else if (timer == 300)
+		{
+			time += "0";
+			time += ":";
+			time += "00";
+		}
+		else
+		{
+			time += std::to_string(minutes);
+			time += ":";
+			if (seconds == 0)
+				time += "00";
+			else if(seconds < 10)
+			{
+				time += "0";
+				time += std::to_string(seconds);
+			}
+			else
+				time += std::to_string(seconds);
+		}
+		glClear(GL_DEPTH_BUFFER_BIT);
+		TextRenderer::RenderText(time.c_str(), x+54, y+190, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+
 		////////////////////// HEALTH BAR /////////////////////////////////
 		x = Texture::GetWindowCenter(hud_health->Width());
 		y = 20;
@@ -474,6 +529,9 @@ void CPlayState::InitTextures() {
 		hud_egg = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/hud_egg.png");
 		hud_health = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/hud_health.png");
 		hud_weapon_and_timer = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/hud_weapon&timer.png");
+		hud_tomato = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/tomato_icon.png");
+		hud_potato = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/potato_icon.png");
+		hud_pumpkin_seed = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/pumpkin_seed_icon.png");
 
 		death_overlay = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/death.png");
 

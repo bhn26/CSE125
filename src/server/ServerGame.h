@@ -47,6 +47,8 @@ public:
 	// is responsible. The chicken's information would be the rec_cid and rec_oid
 	void sendRemovePacket(ClassId rem_cid, int rem_oid, ClassId rec_cid, int rec_oid);
 
+	void sendRemovePacket(ClassId rem_cid, int rem_oid, ClassId rec_cid, int rec_oid, WeaponType shooter);
+
     // Returns the direction to be moved, if it can't move there, returns BAD_MOVE
     void receiveMovePacket(int offset);
 	// what type is the object moving and what is the id of the object moving?

@@ -389,7 +389,7 @@ void World::UpdateWorld()
 					continue;
 				}
 				collectObj->HandleCollect(collidePlayer);
-				ServerGame::instance()->sendRemovePacket(ClassId::COLLECTABLE, collectObj->GetObjectId(), ClassId::PLAYER, collidePlayer->GetObjectId());
+				ServerGame::instance()->sendRemovePacket(ClassId::COLLECTABLE, collectObj->GetObjectId(), ClassId::PLAYER, collidePlayer->GetObjectId(), collectObj->GetWeapon()->GetWeaponType());
 				deleteList.push_back(collectObj);
 				collectObj->SetToMarked(world_tick);
 			}
@@ -471,7 +471,7 @@ void World::UpdateWorld()
 					continue;
 				}
 				collectObj->HandleCollect(collidePlayer);
-				ServerGame::instance()->sendRemovePacket(ClassId::COLLECTABLE, collectObj->GetObjectId(), ClassId::PLAYER, collidePlayer->GetObjectId());
+				ServerGame::instance()->sendRemovePacket(ClassId::COLLECTABLE, collectObj->GetObjectId(), ClassId::PLAYER, collidePlayer->GetObjectId(), collectObj->GetWeapon()->GetWeaponType());
 				deleteList.push_back(collectObj);
 				collectObj->SetToMarked(world_tick);
 			}

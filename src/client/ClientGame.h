@@ -16,6 +16,10 @@
 #include <memory>
 #include <vector>
 
+#include <chrono>
+#include <ratio>
+#include <thread>
+
 class Window;
 
 namespace Controller
@@ -131,6 +135,7 @@ public:
 
 	int TotalEggs() { return total_eggs; };
 	int * GetScores() { return scores; };
+	int GetCountdown() { return countdown; };
 	int GetClientTeam() { return client_team; };
 
 	int GetWinner() { return winner; };
@@ -160,6 +165,7 @@ private:
     int client_id; // should know what client number we are so we can fill out packet headers
 	int client_team;
 	int client_skin;
+	int client_weapon;
 
     bool start_sent;
 
@@ -167,6 +173,8 @@ private:
 	std::vector <int> team1;
 
 	int total_eggs;
+	std::chrono::time_point<std::chrono::steady_clock> start_time;
+	int countdown; // Seconds
 	int scores[2];
 	int winner; // set on receipt of game over packet
 
