@@ -24,6 +24,9 @@ bool PlayerModifierCollision::HandleBulletCollision(unsigned int world_tick, Ent
 			bul_pos.setZ(WORLD_WIDTH - 5);
 	if (bul_pos.getZ() < (WORLD_WIDTH * (-1)) + 5)
 		bul_pos.setZ((WORLD_WIDTH * (-1)) + 5);
+
+	if (bul_pos.getY() < 2)
+		bul_pos.setY(2);
 		
 	shooter->SetEntityPosition(&bul_pos);
 

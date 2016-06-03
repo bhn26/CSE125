@@ -118,7 +118,7 @@ void Scene::Setup()
 	std::unique_ptr<StaticObject> pumpkin_patch = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Pumpkin_Patch")));
 
 	// Rocks
-    std::unique_ptr<StaticObject> rocks = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Rocks")));
+    //std::unique_ptr<StaticObject> rocks = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Rocks")));
 	//rocks->Translate(glm::vec3(28.0f, 0.2f, -20.0f));
 
 	// Stump
@@ -168,7 +168,7 @@ void Scene::Setup()
 	static_objects.push_back(std::move(windmill));
 	static_objects.push_back(std::move(maze));
 	static_objects.push_back(std::move(silo));
-	static_objects.push_back(std::move(rocks));
+	//static_objects.push_back(std::move(rocks));
 	static_objects.push_back(std::move(fence));
 	static_objects.push_back(std::move(bench));
 	//static_objects.push_back(std::move(pumpkinObj));

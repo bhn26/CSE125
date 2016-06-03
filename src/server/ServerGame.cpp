@@ -181,6 +181,7 @@ void ServerGame::receiveFromClients()
 
 				case START_GAME:
 					receiveStartPacket(i);
+					Sleep(7000);
 					sendStartPacket();
 
 					break;

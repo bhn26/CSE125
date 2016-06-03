@@ -563,7 +563,9 @@ void World::UpdateWorld()
 					((Player *)it->second)->SetPowerupDuration(((Player *)it->second)->GetPowerupDuration() - 4);
 					if (((Player *)it->second)->GetPowerupDuration() <= 0)
 					{
-						((Player *)it->second)->GetPower()->removePower(((Player *)it->second));
+						if(((Player *)it->second)->GetPower() != nullptr)
+							((Player *)it->second)->GetPower()->removePower(((Player *)it->second));
+					
 					}
 				}
 			}
