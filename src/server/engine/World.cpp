@@ -2,7 +2,9 @@
 #include "ObjectId.h"
 #include "../ServerGame.h"
 #include "FireRateReset.h"
+#include "FieldHandler.h"
 #include "RespawnHandler.h"
+#include "CollectableSpawner.h"
 #include "Player.h"
 #include "Flag.h"
 #include "Bullet.h"
@@ -22,6 +24,7 @@ void World::Init() {
 
 	// Init Fire Rate Reseter and World Tick Counter
 	FireRateReset::instance();
+	FieldHandler::instance();
 
 	int z = 1000; // this is a random number for the walls right now, we need to change this
 
@@ -215,8 +218,9 @@ void World::UpdateWorld()
 
 	FireRateReset::instance()->currentWorldTick++;
 
-	// Process Weapon Fire Rate Reset
+	// Process Weapon Fire Rate Reset and field collisions
 	FireRateReset::instance()->ResetWeapons();
+	FieldHandler::instance()->HandleFields();
 
 	// Process all collisions
 	int numManifolds = curWorld->getDispatcher()->getNumManifolds();
@@ -233,7 +237,7 @@ void World::UpdateWorld()
 		{
 			// Grab Bullet Object
 			Bullet * collideBullet = (Bullet *)obA->getUserPointer();
-			if (collideBullet->MarkStatus())
+			if (collideBullet->GetMarked())
 			{
 				continue;
 			}
@@ -241,9 +245,22 @@ void World::UpdateWorld()
 			if (obB->getUserIndex() == PLAYER)
 			{
 				Player * collidePlayer = (Player *)obB->getUserPointer();
+				// ignore friendly fire
+				if (collideBullet->GetTeamId() == collidePlayer->GetTeamId())
+				{
+					continue;
+				}
 				//printf("Pushed to delete!, hit playerB");
-				deleteList.push_back(collideBullet);
-				collideBullet->SetToMarked();
+				collideBullet->SetToMarked(world_tick);
+				if (collideBullet->handleBulletCollision(world_tick))
+				{
+					deleteList.push_back(collideBullet);
+					ServerGame::instance()->sendRemovePacket(ClassId::BULLET, collideBullet->GetObjectId());
+				}
+				else
+				{
+					unmarkList.push_back(collideBullet);
+				}
 				//TODO send "you got hit"
 				if (collidePlayer->takeDamage(collideBullet->GetDamage(),world_tick))
 				{
@@ -252,16 +269,12 @@ void World::UpdateWorld()
 				}
 			}
 
-			// If it hit a bullet
-			else if (obB->getUserIndex() == BULLET)
+			// If it hit a bullet, ignore and just bounce off
+			else if (obB->getUserIndex() == BULLET || obB->getUserIndex() == FIELD)
 			{
-				Bullet * collideBullet2 = (Bullet *)obB->getUserPointer();
-				//printf("Pushed to delete!, hit bullet B");
-				deleteList.push_back(collideBullet);
-				collideBullet->SetToMarked();
-				//delete collideBullet2;
+				continue;
 			}
-			else if (obB->getUserIndex() < 15)
+			else
 			{
 				// deletes bulletA regardless
 				//printf("Pushed to delete!, hit ground B,  %d", obB->getUserIndex());
@@ -269,9 +282,20 @@ void World::UpdateWorld()
 				//printf("Current position:  x: %f, y: %f, z: %f  \n", bulPos.getX(), bulPos.getY(), bulPos.getZ());
 				bulPos = collideBullet->GetRigidBody()->getLinearVelocity();
 				//printf("Current velocity:  x: %f, y: %f, z: %f  \n", bulPos.getX(), bulPos.getY(), bulPos.getZ());
-
-				deleteList.push_back(collideBullet);
-				collideBullet->SetToMarked();
+				if (collideBullet->GetMarked())
+				{
+					continue;
+				}
+				collideBullet->SetToMarked(world_tick);
+				if (collideBullet->handleBulletCollision(world_tick))
+				{
+					deleteList.push_back(collideBullet);
+					ServerGame::instance()->sendRemovePacket(ClassId::BULLET, collideBullet->GetObjectId());
+				}
+				else
+				{
+					unmarkList.push_back(collideBullet);
+				}
 			}
 		}
 
@@ -280,7 +304,7 @@ void World::UpdateWorld()
 		{
 			// Grab Bullet Object
 			Bullet * collideBullet = (Bullet *)obB->getUserPointer();
-			if (collideBullet->MarkStatus())
+			if (collideBullet->GetMarked())
 			{
 				continue;
 			}
@@ -289,36 +313,56 @@ void World::UpdateWorld()
 			if (obA->getUserIndex() == PLAYER)
 			{
 				Player * collidePlayer = (Player *)obA->getUserPointer();
+				// ignore team fire
+				if (collideBullet->GetTeamId() == collidePlayer->GetTeamId())
+				{
+					continue;
+				}
 
-				printf("Pushed to delete! hit player A");
-				deleteList.push_back(collideBullet);
-				collideBullet->SetToMarked();
+				collideBullet->SetToMarked(world_tick);
+				if (collideBullet->handleBulletCollision(world_tick))
+				{
+					deleteList.push_back(collideBullet);
+					ServerGame::instance()->sendRemovePacket(ClassId::BULLET, collideBullet->GetObjectId());
+				}
+				else
+				{
+					unmarkList.push_back(collideBullet);
+				}
 				if (collidePlayer->takeDamage(collideBullet->GetDamage(),world_tick))
 				{
-					printf("Player is dead!");
+					//printf("Player is dead!");
 					//TODO Handle Player death:  send player death to client
 				}
 			}
 
-			// If it hit a bullet
-			else if (obA->getUserIndex() == BULLET)
+			// If it hit a bullet, ignore and bounce off
+			else if (obA->getUserIndex() == BULLET || obB->getUserIndex() == FIELD)
 			{
-				Bullet * collideBullet2 = (Bullet *)obA->getUserPointer();
-				printf("Pushed to delete! hit bullet A");
-				deleteList.push_back(collideBullet);
-				collideBullet->SetToMarked();
+				continue;
 			}
-			else if (obA->getUserIndex() < 15)
+			else
 			{
+				if (collideBullet->GetMarked())
+				{
+					continue;
+				}
 				// deletes bulletB regardless
-				printf("Pushed to delete!, hit ground A,  %d", obA->getUserIndex());
+				//printf("Pushed to delete!, hit ground A,  %d", obA->getUserIndex());
 				btVector3 bulPos = collideBullet->GetEntityPosition();
-				printf("Current position:  x: %f, y: %f, z: %f  \n", bulPos.getX(), bulPos.getY(), bulPos.getZ());
+				//printf("Current position:  x: %f, y: %f, z: %f  \n", bulPos.getX(), bulPos.getY(), bulPos.getZ());
 				bulPos = collideBullet->GetRigidBody()->getLinearVelocity();
-				printf("Current velocity:  x: %f, y: %f, z: %f  \n", bulPos.getX(), bulPos.getY(), bulPos.getZ());
-
-				deleteList.push_back(collideBullet);
-				collideBullet->SetToMarked();
+				//printf("Current velocity:  x: %f, y: %f, z: %f  \n", bulPos.getX(), bulPos.getY(), bulPos.getZ());
+				collideBullet->SetToMarked(world_tick);
+				if (collideBullet->handleBulletCollision(world_tick))
+				{
+					deleteList.push_back(collideBullet);
+					ServerGame::instance()->sendRemovePacket(ClassId::BULLET, collideBullet->GetObjectId());
+				}
+				else
+				{
+					unmarkList.push_back(collideBullet);
+				}
 			}
 		}
 
@@ -339,8 +383,15 @@ void World::UpdateWorld()
 
 				// Handle Collectable Collection
 				Collectable* collectObj = (Collectable*)obB->getUserPointer();
+				// check if collectable has been handled already
+				if (collectObj->GetMarked())
+				{
+					continue;
+				}
 				collectObj->HandleCollect(collidePlayer);
-				ServerGame::instance()->sendRemovePacket(ClassId::COLLECTABLE, collectObj->GetObjectId());
+				ServerGame::instance()->sendRemovePacket(ClassId::COLLECTABLE, collectObj->GetObjectId(), ClassId::PLAYER, collidePlayer->GetObjectId());
+				deleteList.push_back(collectObj);
+				collectObj->SetToMarked(world_tick);
 			}
 
 			// if Obj B is Flag
@@ -353,14 +404,14 @@ void World::UpdateWorld()
 
 				// Handle Flag Collection
 				Flag * collideFlag = (Flag *)obB->getUserPointer();
-				if (collideFlag->MarkStatus())
+				if (collideFlag->GetMarked())
 				{
 					continue;
 				}
 				collideFlag->HandleCollectable(collidePlayer);
-				ServerGame::instance()->sendRemovePacket(ClassId::FLAG, collideFlag->GetObjectId());
+				ServerGame::instance()->sendRemovePacket(ClassId::FLAG, collideFlag->GetObjectId(), ClassId::PLAYER, collidePlayer->GetObjectId());
 				markedList.push_back(collideFlag);
-				collideFlag->SetToMarked();
+				collideFlag->SetToMarked(world_tick);
 				//TODO send a packet for the player to acquire the item for GUI
 			}
 
@@ -413,8 +464,15 @@ void World::UpdateWorld()
 
 				// Handle Collectable Collection
 				Collectable* collectObj = (Collectable*)obA->getUserPointer();
+				// check if collectable has been handled already
+				if (collectObj->GetMarked())
+				{
+					continue;
+				}
 				collectObj->HandleCollect(collidePlayer);
-				ServerGame::instance()->sendRemovePacket(ClassId::COLLECTABLE, collectObj->GetObjectId());
+				ServerGame::instance()->sendRemovePacket(ClassId::COLLECTABLE, collectObj->GetObjectId(), ClassId::PLAYER, collidePlayer->GetObjectId());
+				deleteList.push_back(collectObj);
+				collectObj->SetToMarked(world_tick);
 			}
 
 			// if Obj A is Flag
@@ -426,14 +484,14 @@ void World::UpdateWorld()
 
 				// Handle Flag Collection
 				Flag * collideFlag = (Flag *)obA->getUserPointer();
-				if (collideFlag->MarkStatus())
+				if (collideFlag->GetMarked())
 				{
 					continue;
 				}
 				collideFlag->HandleCollectable(collidePlayer);
-				ServerGame::instance()->sendRemovePacket(ClassId::FLAG, collideFlag->GetObjectId());
+				ServerGame::instance()->sendRemovePacket(ClassId::FLAG, collideFlag->GetObjectId(), ClassId::PLAYER, collidePlayer->GetObjectId());
 				markedList.push_back(collideFlag);
-				collideFlag->SetToMarked();
+				collideFlag->SetToMarked(world_tick);
 				//TODO send a packet for the player to acquire the item for GUI
 			}
 
@@ -484,10 +542,16 @@ void World::UpdateWorld()
 	// Delete Marked Entities
 	for (auto it = deleteList.begin(); it != deleteList.end(); it++)
 	{
-		ServerGame::instance()->sendRemovePacket((ClassId) (*it)->GetClassId(), (*it)->GetObjectId());
 		delete (*it);
 	}
 	deleteList.clear();
+
+	// Unmarks entities not on the previous lists, used for bullet collision
+	for (auto it = unmarkList.begin(); it != unmarkList.end(); it++)
+	{
+		if((*it)->GetMarkTick() == world_tick - 5)
+			(*it)->ResetMark();
+	}
 
 	//if (x++ % 10000 == 0) {
 	if (world_tick % 500 == 0) {
@@ -506,7 +570,7 @@ void World::UpdateWorld()
 		for (std::map<std::pair<int, unsigned int>, Entity*>::iterator it = dynamicMap->begin(); it != dynamicMap->end(); it++)
 		{
 			btVector3 vec = it->second->GetEntityPosition();
-			printf(" Dynamic object classid: %d, objid: %d, at (%f,%f,%f)\n", it->second->GetClassId(), it->second->GetObjectId(), vec.getX(), vec.getY(), vec.getZ());
+			//printf(" Dynamic object classid: %d, objid: %d, at (%f,%f,%f)\n", it->second->GetClassId(), it->second->GetObjectId(), vec.getX(), vec.getY(), vec.getZ());
 		}
 
 		/*
@@ -518,7 +582,9 @@ void World::UpdateWorld()
 		*/
 	}
 
+	// Handle spawning for this tick
 	RespawnHandler::instance()->RespawnPlayers(world_tick);
+	CollectableSpawner::instance()->SpawnRandomCollectables(curWorld, world_tick);
 
 	// Send position updates of all dynamic objects
 	if (world_tick % 4 == 0)
@@ -527,8 +593,17 @@ void World::UpdateWorld()
 		std::map<std::pair<int, unsigned int>, Entity* > * dynamicMap = EntitySpawner::instance()->GetMap();
 		for (std::map<std::pair<int, unsigned int>, Entity*>::iterator it = dynamicMap->begin(); it != dynamicMap->end(); it++)
 		{
-			btVector3 vec = it->second->GetEntityPosition();
-			//printf(" Dynamic object classid: %d, objid: %d, at (%f,%f,%f)\n", it->second->GetClassId(), it->second->GetObjectId(), vec.getX(), vec.getY(), vec.getZ());
+			//btVector3 vec = it->second->GetEntityPosition();
+			btVector3 vec = it->second->GetRigidBody()->getLinearVelocity();
+			float thresh = .0005;
+			// don't send packets if the object is stationary?
+			if ((abs(vec.getX()) < thresh && abs(vec.getY()) < thresh && abs(vec.getZ()) < thresh))
+			{
+				if (it->second->GetClassId() == ClassId::PLAYER)
+					ServerGame::instance()->sendMovePacket((ClassId)it->second->GetClassId(), it->second->GetObjectId());
+				//printf(" Dynamic object classid: %d, objid: %d, velocity (%f,%f,%f)\n", it->second->GetClassId(), it->second->GetObjectId(), vec.getX(), vec.getY(), vec.getZ());
+				continue;
+			}
 			ServerGame::instance()->sendMovePacket((ClassId)it->second->GetClassId(), it->second->GetObjectId());
 		}
 	}

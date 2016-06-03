@@ -1,14 +1,16 @@
 #include "FieldObject.h"
+#include "ObjectId.h"
 #include "Entity.h"
 
 
-FieldObject::FieldObject(btVector3* origin,  btCollisionShape* fieldshape, Entity* fieldowner, btDiscreteDynamicsWorld* curworld)
+FieldObject::FieldObject(btVector3* origin,  btCollisionShape* fieldshape, int team_id, btDiscreteDynamicsWorld* curworld)
 {
 	this->curWorld = curworld;
-	fieldOwner = fieldowner;
+	this->team_id = team_id;
 	FieldGhostObject = new btPairCachingGhostObject();
 	FieldGhostObject->setCollisionShape(fieldshape);
 	FieldGhostObject->setCollisionFlags(btCollisionObject::CF_NO_CONTACT_RESPONSE);
+	FieldGhostObject->setUserIndex(FIELD);
 	curWorld->addCollisionObject(FieldGhostObject, btBroadphaseProxy::SensorTrigger, btBroadphaseProxy::AllFilter & ~btBroadphaseProxy::SensorTrigger);
 	FieldGhostObject->setWorldTransform(btTransform(btQuaternion::getIdentity(), (*origin)));
 }

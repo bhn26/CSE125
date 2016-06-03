@@ -7,12 +7,6 @@
 const int WORLD_WIDTH = 300;
 const int WORLD_HEIGHT = 300;
 
-/*
-static int oid0 = 0;
-static int oid1 = 0;
-static int oid2 = 0;
-*/
-
 enum MoveType {
 
     BAD_MOVE = -1,
@@ -24,6 +18,18 @@ enum MoveType {
     MOVE_LEFT = 2,
 
     MOVE_RIGHT = 3
+};
+
+enum WeaponType {
+	SEEDGUN,
+	BOUNCEGUN,
+	GRENADELAUNCHER
+};
+
+enum AttackType {
+	PECK,
+
+	WEAPON_ATTACK
 };
 
 enum GameDataId 
@@ -60,11 +66,14 @@ struct PosInfo : GameInfo
 
 	int oid; // object id
 	ClassId cid; // class id
+	int sub_id; // this kind of id is used for subclasses, like different weapons spawning different bullets
 
 	// object coordinates
     float x;
 	float y;
 	float z;
+
+	int hp;
 
     int direction; // client -> server move data
 
@@ -73,6 +82,8 @@ struct PosInfo : GameInfo
 	float rotx;
 	float roty;
 	float rotz;
+
+	float yos;
 
 	int num_eggs; // num eggs this player has 
 	int jump;     // jumping semaphore of the player
@@ -91,6 +102,10 @@ struct RemInfo : GameInfo
 {
 	int rem_oid;
 	ClassId rem_cid;
+
+	int rec_oid;    // What was responsible for the removal, i.e. player 2 collects an egg, p2's info goes here
+	ClassId rec_cid;
+	int team_id;
 
 	void serialize(char * data) {
 		memcpy(data, this, sizeof(RemInfo));
@@ -120,10 +135,25 @@ struct EmoteInfo : GameInfo {
 	int id;
 
 	void serialize(char * data) {
-		memcpy(data, this, sizeof(ScoreInfo));
+		memcpy(data, this, sizeof(EmoteInfo));
 	}
 
 	void deserialize(char * data) {
-		memcpy(this, data, sizeof(ScoreInfo));
+		memcpy(this, data, sizeof(EmoteInfo));
+	}
+};
+
+// Anything that just needs some ints, i.e. attacktype
+struct MiscInfo : GameInfo {
+	int misc1;
+	int misc2;
+	float misc3;
+
+	void serialize(char * data) {
+		memcpy(data, this, sizeof(MiscInfo));
+	}
+
+	void deserialize(char * data) {
+		memcpy(this, data, sizeof(MiscInfo));
 	}
 };

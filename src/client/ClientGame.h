@@ -81,6 +81,8 @@ public:
     void receiveMovePacket(int offset);
     void sendMovePacket(int direction);
 
+	void receiveTimeStampPacket(int offset);
+
     void receiveRotationPacket(int offset);
     void sendRotationPacket(); 
 
@@ -97,11 +99,16 @@ public:
 
 	void receiveGameOverPacket(int offset);
 
-	void sendShootPacket();
-	void receiveShootPacket(int offset);
+	void sendAttackPacket(AttackType t);
+	void receiveAttackPacket(int offset);   // do distinct animation for peck and weapon attack later?
 
+	void sendDiscardPacket();
+	void receiveDiscardPacket(int offset);  // do animation for weapon discard later?
 
 	bool hasStarted() { return game_started; };
+
+	void decScore(int team, int amount) { scores[team] -= amount; }
+	void incScore(int team, int amount) { scores[team] += amount; }
 
     char network_data[MAX_PACKET_SIZE];
 
@@ -131,7 +138,9 @@ public:
 private:
     const static std::string EVENT_QUIT;
     const static std::string EVENT_JUMP;
-    const static std::string EVENT_ATTACK;
+    const static std::string EVENT_WEAPON_ATTACK;
+	const static std::string EVENT_PECK_ATTACK;
+	const static std::string EVENT_DISCARD_WEAPON;
     const static std::string EVENT_START;
     const static std::string EVENT_MOVE_FORWARD;
     const static std::string EVENT_MOVE_BACKWARD;
@@ -178,7 +187,8 @@ private:
     ////////////////////////////////////////////////////////////////////////////////
     // Controller handling
     void CheckController();
-    void HandleLeftAnalog(const float* axes);
+	void HandleTriggers(const float* axes);
+	void HandleLeftAnalog(const float* axes);
     void HandleRightAnalog(const float* axes);
     void HandleButtonPress(const unsigned char* buttons);
     void HandleButtonEvent(const std::string& event, bool buttonDown = true);

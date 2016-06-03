@@ -78,7 +78,9 @@ public:
     glm::vec3 CameraPosition() const;
     glm::mat4 GetViewMatrix() const;
     glm::mat4 GetPerspectiveMatrix() const;
+	glm::vec3 GetFront() const;
     glm::mat3 GetNormalMatrix() const;
+	float GetCamAngle() const;
 
     int GetID() const { return id; };
     int GetClassId() const { return class_id; }
@@ -89,7 +91,7 @@ public:
     int GetScore() const override { return num_eggs; };
     void SetScore(int n) override { num_eggs = n; };
 
-    void SetTeam(int team) { team_id = team; }
+	void SetTeam(int team);
     int GetTeam() const { return team_id; }
 
 	bool IsAlive() { return alive; }

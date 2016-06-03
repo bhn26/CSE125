@@ -182,53 +182,88 @@ void Scene::AddEntity(PosInfo p)
 	std::string skin_type;
 
 	switch (p.cid) {
-	case ClassId::PLAYER:
-		player = std::unique_ptr<Player>(new Player(p.x, p.y, p.z, p.rotw, p.rotx, p.roty, p.rotz));
-		if (p.skin == 0)
-		{
-			skin_type = "assets/chickens/objects/chicken.obj";
-		}
-		else if (p.skin == 1)
-		{
-			skin_type = "assets/chickens/objects/robot_chicken.obj";
-		}
-		else if (p.skin == 2)
-		{
-			skin_type = "assets/chickens/objects/pinocchio_chicken.obj";
-		}
-		player->SetModelFile(skin_type);
-		player->GetShader() = ShaderManager::Instance()->GetShader("Model");
-		player->SetObjId(p.oid);
-		player->SetClassId(p.cid);
-		player->SetTeam(p.team_id);
-		//player->RotateTo(rotw, rotx, roty, rotz);
-		// set main player if the oid matches
-		if (p.oid == ClientGame::instance()->GetClientId())
-			Scene::player = player.get();
-		//players.push_back(player);
+		case ClassId::PLAYER:
+			player = std::unique_ptr<Player>(new Player(p.x, p.y, p.z, p.rotw, p.rotx, p.roty, p.rotz));
+			if (p.skin == 0)
+			{
+				skin_type = "assets/chickens/objects/chicken.obj";
+			}
+			else if (p.skin == 1)
+			{
+				skin_type = "assets/chickens/objects/robot_chicken.obj";
+			}
+			else if (p.skin == 2)
+			{
+				skin_type = "assets/chickens/objects/pinocchio_chicken.obj";
+			}
+			player->SetModelFile(skin_type);
+			player->GetShader() = ShaderManager::Instance()->GetShader("Model");
+			player->SetObjId(p.oid);
+			player->SetClassId(p.cid);
+			player->SetTeam(p.team_id);
+			//player->RotateTo(rotw, rotx, roty, rotz);
+			// set main player if the oid matches
+			if (p.oid == ClientGame::instance()->GetClientId())
+				Scene::player = player.get();
+			//players.push_back(player);
 
-		AddEntity(p.cid, p.oid, std::move(player));
-		break;
-	case ClassId::FLAG:
-		egg = std::unique_ptr<Egg>(new Egg(p.x, p.y, p.z));
-		egg->SetColor(glm::vec3(0.27f, 0.16f, 0.0f));
-		egg->GetShader() = ShaderManager::Instance()->GetShader("Model");
-		egg->SetClassId(p.cid);
-		egg->SetObjId(p.oid);
-		AddEntity(p.cid, p.oid, std::move(egg));
-		break;
-    case ClassId::BULLET:
-    {
-        //std::unique_ptr<StaticObject> bullet = std::unique_ptr<StaticObject>(new StaticObject("assets/weapons/pumpkinseed.obj"));
-        std::unique_ptr<StaticObject> bullet = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Pumpkin_Seed")));
-		bullet->Translate(glm::vec3(p.x, p.y, p.z));
-		printf("creating a bullet at %f, %f, %f\n", p.x, p.y, p.z);
-        //bullet->GetShader() = modelShader;        // Set in ModelEntity
-        AddEntity(p.cid, p.oid, std::move(bullet));
-        break;
-    }
-	default:
-		break;
+			AddEntity(p.cid, p.oid, std::move(player));
+			break;
+		case ClassId::FLAG:
+			egg = std::unique_ptr<Egg>(new Egg(p.x, p.y, p.z));
+			egg->SetColor(glm::vec3(0.27f, 0.16f, 0.0f));
+			egg->GetShader() = ShaderManager::Instance()->GetShader("Model");
+			egg->SetClassId(p.cid);
+			egg->SetObjId(p.oid);
+			AddEntity(p.cid, p.oid, std::move(egg));
+			break;
+		case ClassId::BULLET:
+		{
+			//std::unique_ptr<StaticObject> bullet = std::unique_ptr<StaticObject>(new StaticObject("assets/weapons/pumpkinseed.obj"));
+			std::unique_ptr<StaticObject> bullet;
+			switch (p.sub_id)
+			{
+				case(SEEDGUN):
+					bullet = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Pumpkin_Seed")));
+					bullet->Translate(glm::vec3(p.x, p.y, p.z));
+					//bullet->GetShader() = modelShader;        // Set in ModelEntity
+					AddEntity(p.cid, p.oid, std::move(bullet));
+					break;
+				case(BOUNCEGUN):
+					bullet = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Stump")));
+					bullet->Translate(glm::vec3(p.x, p.y, p.z));
+					//bullet->GetShader() = modelShader;        // Set in ModelEntity
+					AddEntity(p.cid, p.oid, std::move(bullet));
+					break;
+				case(GRENADELAUNCHER):
+					bullet = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Rocks")));
+					bullet->Translate(glm::vec3(p.x, p.y, p.z));
+					//bullet->GetShader() = modelShader;        // Set in ModelEntity
+					AddEntity(p.cid, p.oid, std::move(bullet));
+					break;
+				default:
+					std::unique_ptr<StaticObject> bullet = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Pumpkin_Seed")));
+					bullet->Translate(glm::vec3(p.x, p.y, p.z));
+					//bullet->GetShader() = modelShader;        // Set in ModelEntity
+					AddEntity(p.cid, p.oid, std::move(bullet));
+					break;
+			}
+
+			break;
+		}
+		case ClassId::COLLECTABLE:
+		{
+			//std::unique_ptr<StaticObject> bullet = std::unique_ptr<StaticObject>(new StaticObject("assets/weapons/pumpkinseed.obj"));
+			std::unique_ptr<StaticObject> bullet = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Pumpkin")));
+			bullet->Translate(glm::vec3(p.x, p.y, p.z));
+			bullet->SetClassId(p.cid);
+			bullet->SetObjId(p.oid);
+			//bullet->GetShader() = modelShader;        // Set in ModelEntity
+			AddEntity(p.cid, p.oid, std::move(bullet));
+			break;
+		}
+		default:
+			break;
 	}
 	
 }

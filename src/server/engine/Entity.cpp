@@ -57,9 +57,10 @@ int Entity::GetClassId()
 }
 
 // Marks this entity to be deleted and ignored
-void Entity::SetToMarked()
+void Entity::SetToMarked(unsigned int markTick)
 {
 	this->toDelete = 1;
+	this->markTick = markTick;
 }
 
 void Entity::ResetMark()
@@ -68,7 +69,7 @@ void Entity::ResetMark()
 }
 
 // Checks if this entity is set to be deleted, sets collision detection to ignore
-int Entity::MarkStatus()
+int Entity::GetMarked()
 {
 	return (this->toDelete);
 }

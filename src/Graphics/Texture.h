@@ -14,7 +14,7 @@ struct Material
     glm::vec3 _specular;
     glm::vec3 _ambient;
     float _shininess;
-    Material() : _diffuse(), _specular(), _ambient(), _shininess(0.0f) {}
+    Material() : _diffuse(glm::vec3(1.0f)), _specular(glm::vec3(1.0f)), _ambient(glm::vec3(1.0f)), _shininess(0.0f) {}
 };
 
 class Texture
