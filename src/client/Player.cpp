@@ -58,6 +58,7 @@ Player::Player(float x, float y, float z, float rotW, float rotX, float rotY, fl
     m_model->InitBones0();  // Initialize bones to 0 time spot
 	alive = true;
 	health = 100;
+	weapon = -1;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -331,6 +332,17 @@ void Player::ChangeState(State state)
             m_model->PlayAnimation("peck");
             break;
     }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int Player::GetWeapon()
+{
+	return this->weapon;
+}
+
+void Player::SetWeapon(int weapon)
+{
+	this->weapon = weapon;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

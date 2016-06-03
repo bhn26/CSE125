@@ -34,6 +34,9 @@ CPlayState::~CPlayState()
 	delete hud_egg;
 	delete hud_health;
 	delete hud_weapon_and_timer;
+	delete hud_tomato;
+	delete hud_potato;
+	delete hud_pumpkin_seed;
 
 	delete death_overlay;
 }
@@ -455,9 +458,58 @@ void CPlayState::Draw()
 		float health = Scene::Instance()->GetPlayer()->GetHealth();
 		std::shared_ptr<Shader>& shader = sprite_renderer->GetShader();
 		GLint health_pos = shader->GetUniform("health_x_pos");
-		glUniform1i(health_pos, x + (hud_health->Width()*(health/100.0f)));
+		glUniform1i(health_pos, x + (hud_health->Width()*(health / 100.0f)));
 		sprite_renderer->DrawSprite(*hud_health, glm::vec2(x, y), glm::vec2(hud_health->Width(), hud_health->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 		glUniform1i(health_pos, 0);
+
+		switch (Scene::Instance()->GetPlayer()->GetWeapon()) {
+		case SEEDGUN:
+			hud_weapon = hud_pumpkin_seed;
+			break;
+		case BOUNCEGUN:
+			hud_weapon = hud_tomato;
+			break;
+		case GRENADELAUNCHER:
+			hud_weapon = hud_potato;
+			break;
+		default:
+			break;
+		}
+
+		x = Window::width - hud_weapon_and_timer->Width() - 20;
+		y = Window::height - hud_weapon_and_timer->Height() - 20;
+
+		glClear(GL_DEPTH_BUFFER_BIT);
+		if (Scene::Instance()->GetPlayer()->GetWeapon() != -1) {
+			sprite_renderer->DrawSprite(*hud_weapon, glm::vec2(x, y), glm::vec2(hud_weapon->Width(), hud_weapon->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+		}
+
+		int timer = ClientGame::instance()->GetCountdown();
+		int minutes = timer / 60;
+		int seconds = timer % 60;
+		std::string time;
+		if (timer == 0)
+		{
+			time += "5";
+			time += ":";
+			time += "00";
+		}
+		else
+		{
+			time += std::to_string(minutes);
+			time += ":";
+			if (seconds == 0)
+				time += "00";
+			else if(seconds < 10)
+			{
+				time += "0";
+				time += std::to_string(seconds);
+			}
+			else
+				time += std::to_string(seconds);
+		}
+		glClear(GL_DEPTH_BUFFER_BIT);
+		TextRenderer::RenderText(time.c_str(), x+54, y+190, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 
 		/////////// DEATH OVERLAY ////////////////////////////////////
 		if (dead) { // play loud sound
@@ -481,6 +533,9 @@ void CPlayState::InitTextures() {
 		hud_egg = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/hud_egg.png");
 		hud_health = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/hud_health.png");
 		hud_weapon_and_timer = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/hud_weapon&timer.png");
+		hud_tomato = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/tomato_icon.png");
+		hud_potato = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/potato_icon.png");
+		hud_pumpkin_seed = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/pumpkin_seed_icon.png");
 
 		death_overlay = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/death.png");
 

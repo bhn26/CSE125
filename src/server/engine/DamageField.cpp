@@ -1,4 +1,3 @@
-
 #include "DamageField.h"
 #include "Player.h"
 #include "Entity.h"
@@ -32,7 +31,6 @@ int DamageField::handleField()
 			{
 				if (collidedPlayer->takeDamage(this->fieldDamage, FireRateReset::instance()->currentWorldTick))
 				{
-					//TODO Handle Player Death: send player death to client...  Maybe handle this on player
 				}
 			}
 		}
