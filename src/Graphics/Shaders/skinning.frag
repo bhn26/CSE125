@@ -219,5 +219,6 @@ void main()
             FragColor = texture(gColorMap, In.TexCoord.xy) * TotalLight;
         else
             FragColor = vec4(material._diffuse, 1.0f) * TotalLight;
+        // FragColor[3] = 0.2f;   // Invisibility
     }
 }
