@@ -42,16 +42,23 @@ int BlastField::handleField()
 				}
 			}
 
-			btTransform field = FieldGhostObject->getWorldTransform();
-			btVector3 fieldCenter = field.getOrigin();
+			// if we haven't already blasted this kid
+			if(blasted.find(std::pair<int,int>(ent->GetClassId(), ent->GetObjectId())) == blasted.end())
+			{ 
+				btTransform field = FieldGhostObject->getWorldTransform();
+				btVector3 fieldCenter = field.getOrigin();
 
-			btVector3 playerCenter = ent->GetEntityPosition();
-			btVector3 blastDirection = playerCenter - fieldCenter;
-			blastDirection = blastDirection.normalize();
-			btVector3 velocity = magnitude * blastDirection;
-			blastDirection.setY(ydirection);
+				btVector3 playerCenter = ent->GetEntityPosition();
+				btVector3 blastDirection = playerCenter - fieldCenter;
+				blastDirection = blastDirection.normalize();
+				btVector3 velocity = magnitude * blastDirection;
+				blastDirection.setY(ydirection);
 
-			ent->Move(&velocity);
+				ent->Move(&velocity);
+				std::pair<int,int> entpair = std::pair<int, int>(ent->GetClassId(), ent->GetObjectId());
+				blasted.insert(std::pair<std::pair<int,int>,int>(entpair, 1));
+			}
+
 
 		}
 	}

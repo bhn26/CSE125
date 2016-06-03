@@ -6,7 +6,7 @@ private:
 	static const int ttl = 8;
 	static const int magnitude = 100;
 	static const int explosion_size = 17;
-	static const int stun = 20;
+	static const int stun = 12;
 	static const bool nonFriendly = false;
 
 public:
