@@ -145,7 +145,7 @@ public:
 	int GetWinner() { return winner; };
 
 	std::string GetName(int id) { return name_map[id]; }
-	void SetName(std::string name) { name_map[client_id] = name; }
+	void SetName(std::string name);
 
 private:
     const static std::string EVENT_QUIT;
