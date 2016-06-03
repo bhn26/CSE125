@@ -18,9 +18,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-Egg::Egg() : Egg(0.0f, 0.0f, 0.0f, "Egg")
-{
-}
+Egg::Egg() : Egg(0.0f, 0.0f, 0.0f, "Egg") {};
+
 
 Egg::Egg(float x, float y, float z, std::string type) : Entity(glm::vec3(x, y, z))
 {

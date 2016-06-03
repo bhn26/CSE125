@@ -3,6 +3,8 @@
 // NOTE:  Only use by  EntitySpawner::instance()->"...methodcall..."
 #include <map>
 #include "Entity.h"
+#include "Weapon.h"
+#include "BulletCollisionHandler.h"
 #include "../../network/GameData.h"
 //class Entity;
 class Player;
@@ -31,9 +33,10 @@ public:
 
 	Flag*  spawnFlag(PosInfo pos, btDiscreteDynamicsWorld* physicsWorld);
 
-	Bullet* spawnBullet(int playerid, int teamid, int damage, btVector3* pos, btVector3* velocity, btMatrix3x3* rotation, btDiscreteDynamicsWorld* physicsWorld);
+	// id of player spawning, team id of player spawning, dmg the bullet does, the type of weapon that shot the bullet, the collision handler for the bullet, the bullet physics body, the world
+	Bullet* spawnBullet(int playerid, int teamid, int damage, WeaponType shooter, BulletCollisionHandler* handler, btRigidBody* bullet_body, btDiscreteDynamicsWorld* physicsWorld);
 
-	Collectable* spawnCollectable(int objectid, PosInfo pos, btDiscreteDynamicsWorld* curworld);
+	void spawnCollectable(btDiscreteDynamicsWorld* curworld, WeaponType w_type);
 
 	void AddEntity(int cid, unsigned int oid, Entity* ent);
 

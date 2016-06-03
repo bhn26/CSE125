@@ -17,10 +17,10 @@ class GOState : public CGameState
 public:
 	~GOState();
 
-	void OnKeyDown(WPARAM wKey);
-	void OnClick(int button, double x, double y);
-	void Draw();
-	void EnterState();
+	void OnKeyDown(int action, int key) override;
+	void OnClick(int button, int action, double x, double y) override;
+	void Draw() override;
+	void EnterState() override;
 
 	void Update(DWORD dwCurrentTime);
 

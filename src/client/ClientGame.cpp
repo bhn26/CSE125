@@ -20,7 +20,9 @@
 
 const std::string ClientGame::EVENT_QUIT = "Quit";
 const std::string ClientGame::EVENT_JUMP = "Jump";
-const std::string ClientGame::EVENT_ATTACK = "Attack";
+const std::string ClientGame::EVENT_WEAPON_ATTACK = "Weapon_Attack";
+const std::string ClientGame::EVENT_PECK_ATTACK = "Peck_Attack";
+const std::string ClientGame::EVENT_DISCARD_WEAPON = "Discard_Weapon";
 const std::string ClientGame::EVENT_START = "Start";
 const std::string ClientGame::EVENT_MOVE_FORWARD = "Move_Forward";
 const std::string ClientGame::EVENT_MOVE_BACKWARD = "Move_Backward";
@@ -221,9 +223,17 @@ void ClientGame::receiveRemovePacket(int offset)
 	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
 	struct RemInfo* r = (struct RemInfo *) &(dat->buf);
 
-	printf("received a remove packet for type %d object %d\n", r->rem_cid, r->rem_oid);
-
 	Scene::Instance()->RemoveEntity(r->rem_cid, r->rem_oid);
+
+	// if it's a flag, then a player should've removed it
+	if (r->rem_cid == ClassId::FLAG)
+	{
+		// change the player's score based on that flag
+		if (r->rec_cid == ClassId::PLAYER)
+		{
+			incScore(((Player *)(Scene::Instance()->GetEntity(ClassId::PLAYER, r->rec_oid).get()))->GetTeam(), 1);
+		}
+	}
 }
 
 void ClientGame::receiveMovePacket(int offset)
@@ -236,11 +246,11 @@ void ClientGame::receiveMovePacket(int offset)
 		//printf("received move packet for obj id %d. Its coordinates are: %f, %f, %f\n", pi->oid, pi->x, pi->y, pi->z);
 
 	Scene::Instance()->GetEntity(pi->cid, pi->oid)->MoveTo(pi->x, pi->y, pi->z);
-	Scene::Instance()->GetEntity(pi->cid, pi->oid)->SetScore(pi->num_eggs);
 
 	// check the jump animation
 	if (pi->cid == ClassId::PLAYER)
 	{
+		Scene::Instance()->GetEntity(pi->cid, pi->oid)->SetScore(pi->num_eggs);
 		if(pi->jump == 0)
 			((Player *)(Scene::Instance()->GetEntity(pi->cid, pi->oid).get()))->Jump();
 	}
@@ -320,6 +330,34 @@ void ClientGame::sendRotationPacket() {
 	pi.roty = rot.y;
 	pi.rotz = rot.z;
 
+	glm::vec3 camrot = Scene::Instance()->GetPlayer()->GetFront();
+
+	if (camrot.x > 0 && camrot.z > 0)
+	{
+		pi.camx = (-(camrot.y + 0.203336));
+		pi.camz = 0;
+	}
+	else if (camrot.x > 0 && camrot.z < 0)
+	{
+		pi.camx = 0;
+		pi.camz = ((camrot.y + 0.203336));
+	}
+	else if (camrot.x < 0 && camrot.z > 0)
+	{
+		pi.camx = (-(camrot.y + 0.203336));
+		pi.camz = 0;
+	}
+	else if (camrot.x < 0 && camrot.z < 0)
+	{
+		pi.camx = 0;
+		pi.camz = ((camrot.y + 0.203336));
+	}
+	else
+	{
+		pi.camx = 0;
+		pi.camz = 0;
+	}
+
 	//pi.h_rotation = h_rot;
     pi.serialize(packet.dat.buf);
 
@@ -357,32 +395,63 @@ void ClientGame::receiveGameOverPacket(int offset) {
 	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
 	struct ScoreInfo* s = (struct ScoreInfo *) &(dat->buf);
 
-	if (s->t0_score != 0) { // t0 win
+	if (s->t0_score == s->t1_score) {
+		winner = -1;
+	}
+	else if (s->t0_score > s->t1_score) { // t0 win
 		winner = 0;
 	}
 	else { // t1 win
 		winner = 1;
 	}
 
-	printf("Team %d won!\n", winner);
+	if (winner == -1)
+		printf("Game was a tie!\n");
+	else
+		printf("Team %d won!\n", winner);
 	// change state to game over screen
 	Window::m_pStateManager->ChangeState(GOState::GetInstance(Window::m_pStateManager));
 }
 
-void ClientGame::sendShootPacket() {
+void ClientGame::sendAttackPacket(AttackType t) {
 	const unsigned int packet_size = sizeof(Packet);
 	char packet_data[packet_size];
 
 	Packet packet;
-	packet.hdr.packet_type = SHOOT_EVENT;
+	packet.hdr.packet_type = ATTACK_EVENT;
 	packet.hdr.sender_id = client_id;
 	packet.hdr.receiver_id = SERVER_ID;
+
+	MiscInfo m;
+	m.misc1 = t;
+	m.serialize(packet.dat.buf);
 
 	packet.serialize(packet_data);
 
 	NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
 }
 
+void ClientGame::receiveAttackPacket(int offset)
+{
+	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
+	struct EmoteInfo* e = (struct EmoteInfo *) &(dat->buf); // later parse this to miscinfo
+	((Player *)(Scene::Instance()->GetEntity(ClassId::PLAYER, e->id).get()))->Attack();
+}
+
+void ClientGame::sendDiscardPacket()
+{
+
+	const unsigned int packet_size = sizeof(Packet);
+	char packet_data[packet_size];
+
+	Packet packet;
+	packet.hdr.packet_type = DISCARD_EVENT;
+	packet.hdr.sender_id = client_id;
+	packet.hdr.receiver_id = SERVER_ID;
+
+	packet.serialize(packet_data);
+	NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
+}
 
 //	NOTE: We're going to use the sender id as the guy that's dancing instead of changing
 void ClientGame::receiveDancePacket(int offset)
@@ -413,13 +482,8 @@ void ClientGame::receiveDeathPacket(int offset)
 	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
 	struct EmoteInfo* e = (struct EmoteInfo *) &(dat->buf);
 	((Player *)(Scene::Instance()->GetEntity(ClassId::PLAYER, e->id).get()))->Die();
-}
-
-void ClientGame::receiveShootPacket(int offset)
-{
-	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
-	struct EmoteInfo* e = (struct EmoteInfo *) &(dat->buf);
-	((Player *)(Scene::Instance()->GetEntity(ClassId::PLAYER, e->id).get()))->Attack();
+	decScore(((Player *)(Scene::Instance()->GetEntity(ClassId::PLAYER, e->id).get()))->GetTeam(), 
+		((Player *)(Scene::Instance()->GetEntity(ClassId::PLAYER, e->id).get()))->GetScore());
 }
 
 void ClientGame::receiveRespawnPacket(int offset) 
@@ -494,8 +558,8 @@ void ClientGame::update()
 				receiveRotationPacket(i + sizeof(PacketHeader));
 				break;
 
-			case SHOOT_EVENT:
-				receiveShootPacket(i + sizeof(PacketHeader));
+			case ATTACK_EVENT:
+				receiveAttackPacket(i + sizeof(PacketHeader));
 				break;
 
 			case UPDATE_SCORE:
@@ -671,7 +735,7 @@ void ClientGame::PrintFrameRate()
 // Checks the controller input on Microsoft PC-joystick driver
 // axis[0] = (left) right
 // axis[1] = (left) down
-// axis[2] = 
+// axis[2] = (< 0) Left trigger, (> 0) Right trigger
 // axis[3] = (right) down
 // axis[4] = (right) right
 // button[0-3] = a, b, x, y
@@ -708,6 +772,21 @@ void ClientGame::CheckController()
         HandleRightAnalog(axes);
         HandleButtonPress(buttons);
     }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// axis[2] = (< 0) Left trigger, (> 0) Right trigger
+void ClientGame::HandleTriggers(const float * axes)
+{
+	static const float threshold = 0.5f;
+	if (axes[2] < -threshold)
+	{
+		HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_L_Trigger"));
+	}
+	if (axes[2] > threshold)
+	{
+		HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_R_Trigger"));
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -823,10 +902,18 @@ void ClientGame::HandleButtonEvent(const std::string& event, bool buttonDown)
         {
             glfwSetWindowShouldClose(this->window, GL_TRUE);
         }
-        else if (event == EVENT_ATTACK)
+        else if (event == EVENT_WEAPON_ATTACK)
         {
-            sendShootPacket();
+            sendAttackPacket(AttackType::WEAPON_ATTACK);
         }
+		else if (event == EVENT_PECK_ATTACK)
+		{
+			sendAttackPacket(AttackType::PECK);
+		}
+		else if (event == EVENT_DISCARD_WEAPON)
+		{
+			sendDiscardPacket(); // TODOCHANGETHIS
+		}
         else if (event == EVENT_JUMP)
         {
             sendJumpPacket();

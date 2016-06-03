@@ -80,6 +80,7 @@ public:
     glm::vec3 CameraPosition() const;
     glm::mat4 GetViewMatrix() const;
     glm::mat4 GetPerspectiveMatrix() const;
+	glm::vec3 GetFront() const;
     glm::mat3 GetNormalMatrix() const;
 
     int GetID() const { return id; };

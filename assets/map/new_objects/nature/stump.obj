@@ -597,8 +597,8 @@ vn 0.945207 -0.011231 -0.326279
 vn 0.802718 -0.003662 -0.596347
 vn 0.545931 0.587132 -0.597692
 s off
-g map:stump:farm_stump_farm_stump_mesh
-usemtl map:stump:lambert3SG
+g stump:farm_stump_farm_stump_mesh
+usemtl stump:lambert3SG
 f 1/1/1 2/2/2 3/3/3
 f 4/4/4 5/5/5 6/6/6
 f 7/7/7 8/8/8 9/9/9

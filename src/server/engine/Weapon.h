@@ -10,7 +10,6 @@
 #include <BulletPhysics\btBulletDynamicsCommon.h>
 #include <BulletPhysics\btBulletCollisionCommon.h>
 #endif
-
 class Entity;
 
 class Weapon
@@ -19,6 +18,12 @@ class Weapon
 protected:
 	int fireRate;
 	int damage;
+	int currentAmmo; // Current ammo of this weapon
+	int maxAmmo;   // Capacity of this weapon
+	btVector3* gunSpeed;
+
+	WeaponType wt;
+
 	btDiscreteDynamicsWorld* curWorld;
 
 public:
@@ -29,7 +34,12 @@ public:
 	Weapon(int firerate, int wdamage, btDiscreteDynamicsWorld* curworld);
 	~Weapon();
 
-	void virtual UseWeapon(btVector3 * position, btMatrix3x3* rotation, int playerid, int teamid, Entity* owner);
+	// returns the ammo left in the weapon
+	int virtual UseWeapon(btVector3 * position, btMatrix3x3* rotation, int playerid, int teamid, Entity* owner);
+
+	WeaponType virtual GetWeaponType() { return wt; }
+
+	btVector3* GetGunSpeed() { return gunSpeed; }
 
 	void virtual ReloadWeapon();
 };

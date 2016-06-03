@@ -29,7 +29,9 @@ enum PacketTypes
 
 	JUMP_EVENT,
 
-	SHOOT_EVENT,
+	ATTACK_EVENT,
+
+	DISCARD_EVENT,
 
 	DANCE_EVENT,
 

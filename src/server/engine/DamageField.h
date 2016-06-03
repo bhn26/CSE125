@@ -10,7 +10,7 @@ protected:
 	int fieldDamage;
 
 public:
-	DamageField(int ttl, int damage, btVector3* origin, btCollisionShape* fieldshape, Entity* fieldowner, btDiscreteDynamicsWorld* curworld);
+	DamageField(int ttl, int damage, btVector3* origin, btCollisionShape* fieldshape, int team_id, btDiscreteDynamicsWorld* curworld);
 	virtual ~DamageField();
-	int handleField(int world_tick);
+	int handleField();
 };

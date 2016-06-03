@@ -10,4 +10,5 @@ enum ClassId {
 	COLLECTABLE = 3,
 
 	OBSTACLE = 4
+
 };
