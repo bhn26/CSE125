@@ -33,6 +33,9 @@ enum PacketTypes
 
     V_ROTATION_EVENT,
 
+	EQUIP_POWER_UP,
+	RESET_POWER_UP,
+
 	JUMP_EVENT,
 
 	ATTACK_EVENT,

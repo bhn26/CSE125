@@ -84,6 +84,9 @@ public:
 	void sendNamePacket(int player_id);
 	void receiveNamePacket(int offset);
 
+	void sendEquipPowerPacket(int player_id, int power);
+	void sendResetPowerPacket(int player_id, int power);
+
 	static ServerGame* instance()
 	{
 		static ServerGame* instance = new ServerGame();

@@ -44,6 +44,7 @@ ClientGame::ClientGame(void)
     network = new ClientNetwork();
 
     start_sent = false;
+	power = -1;
 
 	sendInitPacket();
 	//sendStartPacket(); // temp - will add start button
@@ -259,6 +260,9 @@ void ClientGame::receiveRemovePacket(int offset)
 		{
 			if(Scene::Instance()->GetPlayer()->GetWeapon() == -1)
 				Scene::Instance()->GetPlayer()->SetWeapon(r->sub_id2);
+		} 
+		if (r->sub_id == CollectType::POWERUPCOLLECT) {
+			printf("got power\n");
 		}
 	}
 }
@@ -564,6 +568,22 @@ void ClientGame::receiveNamePacket(int offset) {
 	//player->SetName(n->name);
 }
 
+void ClientGame::receiveEquipPowerPacket(int offset) {
+	struct PacketData* dat = (struct PacketData *) &(network_data[offset ]);
+	struct PowerInfo* p = (struct PowerInfo *) &(dat->buf);
+
+	power = p->power_type;
+	printf("equiped power %d\n", p->power_type);
+}
+
+void ClientGame::receiveResetPowerPacket(int offset) {
+	struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset]);
+	struct PacketData* dat = (struct PacketData *) &(network_data[offset]);
+	struct PowerInfo* p = (struct PowerInfo *) &(dat->buf);
+
+	power = -1;
+}
+
 void ClientGame::update()
 {
     Packet packet;
@@ -611,6 +631,14 @@ void ClientGame::update()
                 // You want to offset the packet header
                 receiveSpawnPacket(i + sizeof(PacketHeader));
                 break;
+
+			case EQUIP_POWER_UP:
+				receiveEquipPowerPacket(i + sizeof(PacketHeader));
+				break;
+
+			case RESET_POWER_UP:
+				receiveResetPowerPacket(i + sizeof(PacketHeader));
+				break;
 
 			case REMOVE_EVENT:
 				receiveRemovePacket(i + sizeof(PacketHeader));

@@ -211,6 +211,8 @@ void Player::EquipPower(Powerup* powerup)
 	if (!alive)
 		return;
 	this->power = powerup;
+
+	ServerGame::instance()->sendEquipPowerPacket(objectId, powerup->getType());
 }
 
 void Player::LosePower()
@@ -219,6 +221,8 @@ void Player::LosePower()
 	{
 		delete power;
 		power = nullptr;
+
+		ServerGame::instance()->sendResetPowerPacket(objectId, power->getType());
 	}
 }
 

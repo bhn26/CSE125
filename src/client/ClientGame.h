@@ -113,6 +113,9 @@ public:
 	void sendNamePacket();
 	void receiveNamePacket(int offset);
 
+	void receiveEquipPowerPacket(int offset); 
+	void receiveResetPowerPacket(int offset);
+
 	bool hasStarted() { return game_started; };
 
 	void decScore(int team, int amount) { scores[team] -= amount; }
@@ -147,6 +150,8 @@ public:
 	std::string GetName(int id) { return name_map[id]; }
 	void SetName(std::string name);
 
+	int GetPower() { return power; }
+
 private:
     const static std::string EVENT_QUIT;
     const static std::string EVENT_JUMP;
@@ -172,6 +177,7 @@ private:
     int client_id; // should know what client number we are so we can fill out packet headers
 	int client_team;
 	int client_skin;
+	int power;
 
     bool start_sent;
 

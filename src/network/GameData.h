@@ -59,7 +59,8 @@ enum GameDataId
 	REM_OBJ,
 	SCORE_OBJ,
 	EMOTE_OBJ,
-	NAME_OBJ
+	NAME_OBJ,
+	POWER_OBJ
 };
 
 struct GameInfo
@@ -193,5 +194,18 @@ struct NameInfo : GameInfo {
 
 	void deserialize(char * data) {
 		memcpy(this, data, sizeof(NameInfo));
+	}
+};
+
+struct PowerInfo : GameInfo {
+	int player_id;
+	int power_type;
+
+	void serialize(char * data) {
+		memcpy(data, this, sizeof(PowerInfo));
+	}
+
+	void deserialize(char * data) {
+		memcpy(this, data, sizeof(PowerInfo));
 	}
 };

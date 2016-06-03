@@ -857,3 +857,42 @@ void ServerGame::receiveNamePacket(int offset) {
 	sendNamePacket(hdr->sender_id);
 
 }
+
+void ServerGame::sendEquipPowerPacket(int player_id, int power) {
+	const unsigned int packet_size = sizeof(Packet);
+	char packet_data[packet_size];
+
+	Packet packet;
+	packet.hdr.receiver_id = player_id;
+	packet.hdr.sender_id = SERVER_ID;
+	packet.hdr.packet_type = EQUIP_POWER_UP;
+
+	packet.dat.game_data_id = POWER_OBJ;
+
+	PowerInfo p;
+	p.player_id = player_id;
+	p.power_type = power;
+	p.serialize(packet.dat.buf);
+
+	packet.serialize(packet_data);
+	network->sendToClient(packet_data, packet_size, player_id);
+}
+
+void ServerGame::sendResetPowerPacket(int player_id, int power) {
+	const unsigned int packet_size = sizeof(Packet);
+	char packet_data[packet_size];
+
+	Packet packet;
+	packet.hdr.sender_id = SERVER_ID;
+	packet.hdr.packet_type = RESET_POWER_UP;
+
+	packet.dat.game_data_id = POWER_OBJ;
+
+	PowerInfo p;
+	p.player_id = player_id;
+	p.power_type = power;
+	p.serialize(packet.dat.buf);
+
+	packet.serialize(packet_data);
+	network->sendToClient(packet_data, packet_size, player_id);
+}

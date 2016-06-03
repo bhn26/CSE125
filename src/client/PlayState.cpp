@@ -454,11 +454,6 @@ void CPlayState::Draw()
 		y = Window::height - hud_weapon_and_timer->Height() - 20;
 		sprite_renderer->DrawSprite(*hud_weapon_and_timer, glm::vec2(x, y), glm::vec2(hud_weapon_and_timer->Width(), hud_weapon_and_timer->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 
-		////////////// Power Up Bar ///////////////////////////////////////
-		x = Window::width - hud_power->Width() - 20;
-		y = 20;
-		sprite_renderer->DrawSprite(*hud_power, glm::vec2(x, y), glm::vec2(hud_power->Width(), hud_power->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
-
 		////////////////////// HEALTH BAR /////////////////////////////////
 		x = Texture::GetWindowCenter(hud_health->Width());
 		y = 20;
@@ -470,6 +465,27 @@ void CPlayState::Draw()
 		sprite_renderer->DrawSprite(*hud_health, glm::vec2(x, y), glm::vec2(hud_health->Width(), hud_health->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 		glUniform1i(health_pos, 0);
 
+		////////////// Power Up Bar ///////////////////////////////////////
+		/*x = Window::width - hud_power->Width() - 20;
+		y = 20;
+		sprite_renderer->DrawSprite(*hud_power, glm::vec2(x, y), glm::vec2(hud_power->Width(), hud_power->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+
+		glClear(GL_DEPTH_BUFFER_BIT);
+
+		int power = ClientGame::instance()->GetPower();
+
+		switch (power) {
+		case HEALTHGAIN:
+			TextRenderer::RenderText("Health Pack", x + 20, y + 20, 0.5f, glm::vec3(0.7f, 0.7f, 0.7f));
+			break;
+		case JUMPUP:
+			TextRenderer::RenderText("Super Jump", x + 20, y + 20, 0.5f, glm::vec3(0.7f, 0.7f, 0.7f));
+			break;
+		default:
+			break;
+		}*/
+
+		/////// WEAPON STUFF ///////////////////////////
 		switch (Scene::Instance()->GetPlayer()->GetWeapon()) {
 		case SEEDGUN:
 			hud_weapon = hud_pumpkin_seed;
