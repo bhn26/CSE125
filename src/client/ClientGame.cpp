@@ -2,6 +2,10 @@
 
 #include <cstdio>
 
+#include <chrono>
+#include <ratio>
+#include <thread>
+
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
@@ -235,6 +239,15 @@ void ClientGame::receiveRemovePacket(int offset)
 			incScore(((Player *)(Scene::Instance()->GetEntity(ClassId::PLAYER, r->rec_oid).get()))->GetTeam(), 1);
 		}
 	}
+
+	if (Scene::Instance()->GetPlayer()->GetID() == r->rec_cid)
+	{
+		if (r->rem_cid == ClassId::COLLECTABLE)
+		{
+			if(Scene::Instance()->GetPlayer()->GetWeapon() == -1)
+				Scene::Instance()->GetPlayer()->SetWeapon(r->sub_id);
+		}
+	}
 }
 
 void ClientGame::receiveMovePacket(int offset)
@@ -252,7 +265,7 @@ void ClientGame::receiveMovePacket(int offset)
 	if (pi->cid == ClassId::PLAYER)
 	{
 		Scene::Instance()->GetEntity(pi->cid, pi->oid)->SetScore(pi->num_eggs);
-		if(pi->jump == 0)
+		if(pi->jump == 0 || pi->jump == 1)
 			((Player *)(Scene::Instance()->GetEntity(pi->cid, pi->oid).get()))->Jump();
 	}
 
@@ -392,8 +405,14 @@ void ClientGame::receiveTimeStampPacket(int offset)
 {
 	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
 	struct MiscInfo* m = (struct MiscInfo *) &(dat->buf);
+	if (countdown == NULL)
+	{
+		start_time = std::chrono::high_resolution_clock::now();
+		countdown = 300 - m->misc1;
+	}
 
-	printf("TIME ATM in SECONDS: %d\n", m->misc1);
+	if(countdown != m->misc1)
+		countdown = 300 - m->misc1;
 }
 
 void ClientGame::sendAttackPacket(AttackType t) {
@@ -424,7 +443,6 @@ void ClientGame::receiveAttackPacket(int offset)
 
 void ClientGame::sendDiscardPacket()
 {
-
 	const unsigned int packet_size = sizeof(Packet);
 	char packet_data[packet_size];
 
@@ -434,7 +452,14 @@ void ClientGame::sendDiscardPacket()
 	packet.hdr.receiver_id = SERVER_ID;
 
 	packet.serialize(packet_data);
+
+	Scene::Instance()->GetPlayer()->SetWeapon(-1);
 	NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
+}
+
+void ClientGame::receiveDiscardPacket(int offset)
+{
+	Scene::Instance()->GetPlayer()->SetWeapon(-1);
 }
 
 //	NOTE: We're going to use the sender id as the guy that's dancing instead of changing
@@ -572,6 +597,10 @@ void ClientGame::update()
 				receiveRemovePacket(i + sizeof(PacketHeader));
 				break;
 
+			case DISCARD_EVENT:
+				receiveDiscardPacket(i + sizeof(PacketHeader));
+				break;
+
             case MOVE_EVENT:
 				if(game_started) // the game needs to start for the client before this can happen
 					receiveMovePacket(i + sizeof(PacketHeader));
@@ -684,6 +713,16 @@ void ClientGame::GameLoop()
 #ifdef _WIN32
         update();
 #endif
+		auto curr_time = std::chrono::high_resolution_clock::now();
+
+		std::chrono::duration<double, std::milli> fp_stamp = curr_time - start_time;
+
+		int diff = fp_stamp.count();
+
+		diff = diff / 1000;
+
+		if ((300 - diff) == (countdown-1))
+			countdown = 300 - diff;
 
         // Measure speed
         PrintFrameRate();

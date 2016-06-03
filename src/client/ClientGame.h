@@ -17,6 +17,10 @@
 #include <vector>
 #include <map>
 
+#include <chrono>
+#include <ratio>
+#include <thread>
+
 class Window;
 
 namespace Controller
@@ -135,6 +139,7 @@ public:
 
 	int TotalEggs() { return total_eggs; };
 	int * GetScores() { return scores; };
+	int GetCountdown() { return countdown; };
 	int GetClientTeam() { return client_team; };
 
 	int GetWinner() { return winner; };
@@ -175,6 +180,8 @@ private:
 	std::map<int, std::string> name_map;
 
 	int total_eggs;
+	std::chrono::time_point<std::chrono::steady_clock> start_time;
+	int countdown; // Seconds
 	int scores[2];
 	int winner; // set on receipt of game over packet
 

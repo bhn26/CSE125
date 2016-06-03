@@ -10,6 +10,8 @@
 #include "Bullet.h"
 #include "WorldObstacle.h"
 #include "BulletCollision\CollisionDispatch\btGhostObject.h"
+#include "MapLoader.h"
+
 
 World::World() {
 	// initialize map objects 
@@ -38,18 +40,30 @@ void World::Init() {
 
 	// Add Ground Object
 	//btCollisionShape* groundShape = new btStaticPlaneShape(btVector3(btScalar(0.), btScalar(1.), btScalar(0.)), 0);
-	btCollisionShape* groundShape = new btBoxShape(btVector3(WORLD_WIDTH, 1, WORLD_WIDTH));
+	btCollisionShape* groundShape = new btBoxShape(btVector3(WORLD_WIDTH+50, 1, WORLD_WIDTH+50));
 	btDefaultMotionState* groundMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, -1, 0)));
 	btRigidBody::btRigidBodyConstructionInfo groundRigidBodyCI(0, groundMotionState, groundShape, btVector3(0, 0, 0));
 	groundRigidBodyCI.m_friction = .4;
 	btRigidBody* groundRigidBody = new btRigidBody(groundRigidBodyCI);
-	groundRigidBody->setGravity(btVector3(0, -10, 0));
+	groundRigidBody->setGravity(btVector3(0, 0, 0));
 	dynamicsWorld->addRigidBody(groundRigidBody);
-	groundRigidBody->setGravity(btVector3(0, 0.1, 0));
+	groundRigidBody->setGravity(btVector3(0, 0, 0));
 	groundRigidBody->setUserIndex(ClassId::OBSTACLE);
 	// Create Ground Obstacle
 	WorldObstacle* groundwall = new WorldObstacle(z++, groundRigidBody, curWorld);
 	
+	// Add Sky Object
+	btCollisionShape* skyShape = new btBoxShape(btVector3(WORLD_WIDTH + 50, 1, WORLD_WIDTH + 50));
+	btDefaultMotionState* skyMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, WORLD_HEIGHT, 0)));
+	btRigidBody::btRigidBodyConstructionInfo skyRigidBodyCI(0, skyMotionState, skyShape, btVector3(0, 0, 0));
+	skyRigidBodyCI.m_friction = .4;
+	btRigidBody* skyRigidBody = new btRigidBody(skyRigidBodyCI);
+	skyRigidBody->setGravity(btVector3(0, 0, 0));
+	dynamicsWorld->addRigidBody(skyRigidBody);
+	skyRigidBody->setUserIndex(ClassId::OBSTACLE);
+	// Create Ground Obstacle
+	WorldObstacle* skywall = new WorldObstacle(z++, skyRigidBody, curWorld);
+
 	// Add Pos X Wall
 	//btCollisionShape* xWallShape = new btStaticPlaneShape(btVector3(btScalar(-1.), btScalar(0.), btScalar(0.)), 0);
 	btCollisionShape* xWallShape = new btBoxShape(btVector3(1, WORLD_HEIGHT, WORLD_WIDTH));
@@ -57,7 +71,7 @@ void World::Init() {
 	btRigidBody::btRigidBodyConstructionInfo xWallRigidBodyCI(0, xWallMotionState, xWallShape, btVector3(0, 0, 0));
 	xWallRigidBodyCI.m_friction = .5;
 	btRigidBody* xWallRigidBody = new btRigidBody(xWallRigidBodyCI);
-	xWallRigidBody->setGravity(btVector3(0, 0.1, 0));
+	xWallRigidBody->setGravity(btVector3(0, 0, 0));
 	dynamicsWorld->addRigidBody(xWallRigidBody);
 	xWallRigidBody->setUserIndex(ClassId::OBSTACLE);
 	// Create X Wall
@@ -70,7 +84,7 @@ void World::Init() {
 	btRigidBody::btRigidBodyConstructionInfo nxWallRigidBodyCI(0, nxWallMotionState, nxWallShape, btVector3(0, 0, 0));
 	nxWallRigidBodyCI.m_friction = .5;
 	btRigidBody* nxWallRigidBody = new btRigidBody(nxWallRigidBodyCI);
-	nxWallRigidBody->setGravity(btVector3(0, 0.1, 0));
+	nxWallRigidBody->setGravity(btVector3(0, 0, 0));
 	dynamicsWorld->addRigidBody(nxWallRigidBody);
 	nxWallRigidBody->setUserIndex(ClassId::OBSTACLE);
 	// Create Neg X Wall
@@ -83,7 +97,7 @@ void World::Init() {
 	btRigidBody::btRigidBodyConstructionInfo zWallRigidBodyCI(0, zWallMotionState, zWallShape, btVector3(0, 0, 0));
 	zWallRigidBodyCI.m_friction = .5;
 	btRigidBody* zWallRigidBody = new btRigidBody(zWallRigidBodyCI);
-	zWallRigidBody->setGravity(btVector3(0, 0.1, 0));
+	zWallRigidBody->setGravity(btVector3(0, 0, 0));
 	dynamicsWorld->addRigidBody(zWallRigidBody);
 	zWallRigidBody->setUserIndex(ClassId::OBSTACLE);
 	// Create Pos Z Wall
@@ -96,11 +110,15 @@ void World::Init() {
 	btRigidBody::btRigidBodyConstructionInfo nzWallRigidBodyCI(0, nzWallMotionState, zWallShape, btVector3(0, 0, 0));
 	nzWallRigidBodyCI.m_friction = .5;
 	btRigidBody* nzWallRigidBody = new btRigidBody(nzWallRigidBodyCI);
-	nzWallRigidBody->setGravity(btVector3(0, 0.1, 0));
+	nzWallRigidBody->setGravity(btVector3(0, 0, 0));
 	dynamicsWorld->addRigidBody(nzWallRigidBody);
 	nzWallRigidBody->setUserIndex(ClassId::OBSTACLE);
 	// Create Neg Z Wall
 	WorldObstacle* nzwall = new WorldObstacle(z++, nzWallRigidBody, curWorld);
+
+	// Load in world objects
+	this->worldMapLoader = new MapLoader(dynamicsWorld);
+	worldMapLoader->loadMap();
 
 	// Set Local attributes
 	this->ground = groundwall;
@@ -309,7 +327,7 @@ void World::UpdateWorld()
 					continue;
 				}
 				collectObj->HandleCollect(collidePlayer);
-				ServerGame::instance()->sendRemovePacket(ClassId::COLLECTABLE, collectObj->GetObjectId(), ClassId::PLAYER, collidePlayer->GetObjectId());
+				ServerGame::instance()->sendRemovePacket(ClassId::COLLECTABLE, collectObj->GetObjectId(), ClassId::PLAYER, collidePlayer->GetObjectId(), collectObj->GetWeapon()->GetWeaponType());
 				deleteList.push_back(collectObj);
 				collectObj->SetToMarked(world_tick);
 			}
@@ -392,7 +410,7 @@ void World::UpdateWorld()
 					continue;
 				}
 				collectObj->HandleCollect(collidePlayer);
-				ServerGame::instance()->sendRemovePacket(ClassId::COLLECTABLE, collectObj->GetObjectId(), ClassId::PLAYER, collidePlayer->GetObjectId());
+				ServerGame::instance()->sendRemovePacket(ClassId::COLLECTABLE, collectObj->GetObjectId(), ClassId::PLAYER, collidePlayer->GetObjectId(), collectObj->GetWeapon()->GetWeaponType());
 				deleteList.push_back(collectObj);
 				collectObj->SetToMarked(world_tick);
 			}
