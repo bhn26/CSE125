@@ -44,6 +44,11 @@ CPlayState* CPlayState::GetInstance(CStateManager* pManager)
 	return &Instance;
 }
 
+void CPlayState::EnterState()
+{
+	
+}
+
 void CPlayState::Reset()
 {
 	dead = false;

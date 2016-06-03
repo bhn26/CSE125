@@ -100,6 +100,9 @@ public:
 	void SetHealth(int h) override { health = h; }
 	int GetHealth() const override { return health; };
 
+	void SetName(std::string n) { name = n; }
+	std::string GetName() const { return name; }
+
 private:
     // AnimationPlayer::Listener
     virtual void OnFinish() override;
@@ -116,6 +119,7 @@ private:
 
     // Game data
     int id;
+	std::string name;
     int team_id;
     int num_eggs;
 

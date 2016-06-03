@@ -5,6 +5,7 @@
 #include "Window.h"
 
 #include "../Graphics/Shader.h"
+#include "Graphics/Scene.h"
 #include "ClientGame.h"
 
 
@@ -32,8 +33,17 @@ CMenuState* CMenuState::GetInstance(CStateManager* pManager)
 	return &Instance;
 }
 
-void CMenuState::OnKeyDown(WPARAM wKey)
+void CMenuState::OnKeyDown(int action, int key)
 {
+	if (typing) {
+		if (action == GLFW_REPEAT && key == GLFW_KEY_BACKSPACE) { // erase name
+			username.clear();
+		} else if (key == GLFW_KEY_BACKSPACE) { 
+			username.pop_back(); // remove last char
+		} else if (key == GLFW_KEY_ENTER) {
+			StartGame();
+		}
+	} 
 }
 
 void CMenuState::OnClick(int button, int action, double x, double y) {
@@ -53,12 +63,13 @@ void CMenuState::OnClick(int button, int action, double x, double y) {
 				typing = false;
 				break;
 			case 1: printf("Textbox clicked\n"); 
+				if (username == default_name) {
+					username.clear();
+				}
 				typing = true;
 				break;
 			case 2: printf("Button clicked\n");
-				typing = false;
-				// change state
-				m_pStateManager->ChangeState(LobbyState::GetInstance(m_pStateManager));
+				StartGame();
 				break;
 			default: printf("%d clicked%s\n", res[0]);
 				typing = false;
@@ -68,8 +79,8 @@ void CMenuState::OnClick(int button, int action, double x, double y) {
 
 void CMenuState::OnChar(unsigned int codepoint) {
 	if (typing) {
-		std::cout << codepoint << std::endl;
-
+		username += (char)codepoint;
+		std::cout << username.c_str() << std::endl;
 	}
 }
 
@@ -93,7 +104,10 @@ void CMenuState::RenderSelection() {
 }
 
 void CMenuState::Update(DWORD) {
-
+	Player * player = Scene::Instance()->GetPlayer();
+	if (player) {
+		player->SetName(username);
+	}
 }
 
 void CMenuState::Draw()
@@ -108,10 +122,7 @@ void CMenuState::Draw()
 	////////////// USERNAME TEXTBOX /////////////////////////////////
 	sprite_renderer->DrawSprite(*textbox, glm::vec2(x + 115, y + 555), glm::vec2(textbox->Width(), textbox->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 
-	char name[20];
-	strcpy_s(name, "Player ");
-	strcat_s(name, std::to_string(ClientGame::GetClientId()).c_str());
-	TextRenderer::RenderText(name, x + 145, y + 585, 1.0f, glm::vec3(0.5f, 0.5f, 0.5f));
+	TextRenderer::RenderText(username.c_str(), x + 145, y + 585, 1.0f, glm::vec3(0.5f, 0.5f, 0.5f));
 
 	////////////// JOIN BUTTON /////////////////////////////////////
 	sprite_renderer->DrawSprite(*join,glm::vec2(x + 660, y + 555), glm::vec2(join->Width(), join->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
@@ -119,6 +130,9 @@ void CMenuState::Draw()
 
 void CMenuState::EnterState()
 {
+	default_name += "Enter your name";
+
+	username += default_name;
 }
 
 void::CMenuState::InitTextures() {
@@ -130,4 +144,11 @@ void::CMenuState::InitTextures() {
 
 		initialized = true;
 	}
+}
+
+void CMenuState::StartGame() {
+	// send chicken name
+
+	// change state
+	m_pStateManager->ChangeState(LobbyState::GetInstance(m_pStateManager));
 }

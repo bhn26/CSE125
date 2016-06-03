@@ -23,6 +23,7 @@ public:
 	void Die() { dead = true; };
 	void Respawn() { dead = false; };
 
+	void EnterState() override;
 	void Reset();
 
 	// Returns the single instance
