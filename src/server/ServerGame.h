@@ -62,7 +62,7 @@ public:
 
 	void sendGameOverPacket(int winner);
 
-	void sendTimeStampPacket();
+	void sendTimeStampPacket(int diff);
 
 	void receiveDancePacket(int offset);
 	void sendDancePacket(int id);

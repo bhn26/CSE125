@@ -20,13 +20,22 @@ CPlayState::CPlayState(CStateManager* pManager)
 {
 	sprite_renderer = new SpriteRenderer();
 	initialized = false;
+	dead = false;
 }
 
 CPlayState::~CPlayState()
 {
-    delete sprite_renderer;
-    delete sb_bg;
-    delete sb_table;
+	delete sprite_renderer;
+
+	delete sb_chick;
+	delete sb_side;
+	delete sb_table;
+
+	delete hud_egg;
+	delete hud_health;
+	delete hud_weapon_and_timer;
+
+	delete death_overlay;
 }
 
 CPlayState* CPlayState::GetInstance(CStateManager* pManager)
@@ -37,6 +46,7 @@ CPlayState* CPlayState::GetInstance(CStateManager* pManager)
 
 void CPlayState::Reset()
 {
+	dead = false;
 	show_scoreboard = false;
 }
 
@@ -337,21 +347,18 @@ void CPlayState::Draw()
 
 	Scene::Instance()->Draw();
 
-	// SELF NUMBER OF EGGS
-	if (Scene::Instance()->GetPlayer() != NULL) {
-		char score[20];
-		strcpy_s(score, "Eggs Collected: ");
-		strcat_s(score, std::to_string(Scene::Instance()->GetPlayer()->GetScore()).c_str());
-		TextRenderer::RenderText(score, Window::width/2 - 100, Window::height - 50, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
-	}
-
+	//////////////// SCOREBOARD ///////////////////////////////////
 	if (show_scoreboard) {
 		int our_team = ClientGame::instance()->GetClientTeam();
 
 		////////////////// BACKGROUND//////////////////////////
-		float x = Texture::GetWindowCenter(sb_bg->Width());
-		float y = Window::height / 2 - sb_bg->Height() / 2;
-		sprite_renderer->DrawSprite(*sb_bg, glm::vec2(x, y), glm::vec2(sb_bg->Width(), sb_bg->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+		int x = Window::width - sb_chick->Width();
+		int y = Window::height - sb_chick->Height();
+		sprite_renderer->DrawSprite(*sb_chick, glm::vec2(x, y), glm::vec2(sb_chick->Width(), sb_chick->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+
+		int side_x = 0;
+		int side_y = Window::height / 2 - sb_side->Height() / 2;
+		sprite_renderer->DrawSprite(*sb_side, glm::vec2(side_x, side_y), glm::vec2(sb_side->Width(), sb_side->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 
 		glClear(GL_DEPTH_BUFFER_BIT);
 
@@ -405,10 +412,10 @@ void CPlayState::Draw()
 		//////////////// TEAM SCORES ///////////////////////////
 		printf("our team: %d\n", our_team);
 		// us
-		TextRenderer::RenderText(std::to_string(ClientGame::instance()->GetScores()[our_team]).c_str(), 25, 115, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f));
+		TextRenderer::RenderText(std::to_string(ClientGame::instance()->GetScores()[our_team]).c_str(), 25, side_y + 325, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f));
 
 		// them
-		TextRenderer::RenderText(std::to_string(ClientGame::instance()->GetScores()[1 - our_team]).c_str(), 25, 345, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f));
+		TextRenderer::RenderText(std::to_string(ClientGame::instance()->GetScores()[1 - our_team]).c_str(), 25, side_y + 560, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f));
 
 		//neutral
 		int n = ClientGame::instance()->TotalEggs();
@@ -416,16 +423,59 @@ void CPlayState::Draw()
 		printf("score 0: %d\n", ClientGame::instance()->GetScores()[0]);
 		printf("score 1: %d\n", ClientGame::instance()->GetScores()[1]);
 		n = n - ClientGame::instance()->GetScores()[0] - ClientGame::instance()->GetScores()[1];
-		TextRenderer::RenderText(std::to_string(n).c_str(),25, 595, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f));
-	}
+		TextRenderer::RenderText(std::to_string(n).c_str(),25, side_y + 805, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f));
 
+	} else if (Scene::Instance()->GetPlayer() != NULL) {
+		int x = 20;
+		int y = Window::height - hud_egg->Height() - 20;
+
+		//////////////// EGGS COLLECTED ///////////////////////////
+		int score = Scene::Instance()->GetPlayer()->GetScore();
+		for (int i = 0; i < score; i++) {
+			sprite_renderer->DrawSprite(*hud_egg, glm::vec2(x, y), glm::vec2(hud_egg->Width(), hud_egg->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+			x = x + hud_egg->Width() + 5;
+		}
+
+		////////////// WEAPON & TIMER ///////////////////////////////////
+		x = Window::width - hud_weapon_and_timer->Width() - 20;
+		y = Window::height - hud_weapon_and_timer->Height() - 20;
+		sprite_renderer->DrawSprite(*hud_weapon_and_timer, glm::vec2(x, y), glm::vec2(hud_weapon_and_timer->Width(), hud_weapon_and_timer->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+
+		////////////////////// HEALTH BAR /////////////////////////////////
+		x = Texture::GetWindowCenter(hud_health->Width());
+		y = 20;
+
+		float health = Scene::Instance()->GetPlayer()->GetHealth();
+		std::shared_ptr<Shader>& shader = sprite_renderer->GetShader();
+		GLint health_pos = shader->GetUniform("health_x_pos");
+		glUniform1i(health_pos, x + (hud_health->Width()*(health/100.0f)));
+		sprite_renderer->DrawSprite(*hud_health, glm::vec2(x, y), glm::vec2(hud_health->Width(), hud_health->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+		glUniform1i(health_pos, 0);
+
+		/////////// DEATH OVERLAY ////////////////////////////////////
+		if (dead) { // play loud sound
+			glClear(GL_DEPTH_BUFFER_BIT);
+
+			x = Texture::GetWindowCenter(death_overlay->Width());
+			y = Window::height / 2 - death_overlay->Height() / 2;
+
+			sprite_renderer->DrawSprite(*death_overlay, glm::vec2(x, y), glm::vec2(death_overlay->Width(), death_overlay->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+		}
+	}
 }
 
 void CPlayState::InitTextures() {
 	if (!initialized) {
 		// Create the different images
-		sb_bg = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/scoreboard_bg.png");
+		sb_chick = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/scoreboard_chicken.png");
+		sb_side = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/sb_side_panel.png");
 		sb_table = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/scoreboard.png");
+
+		hud_egg = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/hud_egg.png");
+		hud_health = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/hud_health.png");
+		hud_weapon_and_timer = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/hud_weapon&timer.png");
+
+		death_overlay = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/death.png");
 
 		initialized = true;
 	}

@@ -56,9 +56,22 @@ namespace Animation
         return m_animPlayer.PlayAnimation(name);
     }
 
+    ///////////////////////////////////////////////////////////////////////
     bool AnimatedModel::SetAnimation(std::string name)
     {
         return m_animPlayer.SetAnimation(name);
+    }
+
+    ///////////////////////////////////////////////////////////////////////
+    bool AnimatedModel::ChangeMaterial(int index, Material& material)
+    {
+        if (index >= m_mesh.m_materials.size())
+        {
+            return false;
+        }
+
+        m_mesh.m_materials[index] = material;
+        return true;
     }
 
     ///////////////////////////////////////////////////////////////////////

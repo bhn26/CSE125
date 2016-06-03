@@ -12,6 +12,7 @@
 #include "network/GameData.h"
 #include "network/NetworkData.h"
 #include "TextRenderer.h"
+#include "client/LoadState.h"
 #include "client/PlayState.h"
 #include "client/GameOverState.h"
 #include "ConfigManager.h"
@@ -330,34 +331,6 @@ void ClientGame::sendRotationPacket() {
 	pi.roty = rot.y;
 	pi.rotz = rot.z;
 
-	glm::vec3 camrot = Scene::Instance()->GetPlayer()->GetFront();
-
-	if (camrot.x > 0 && camrot.z > 0)
-	{
-		pi.camx = (-(camrot.y + 0.203336));
-		pi.camz = 0;
-	}
-	else if (camrot.x > 0 && camrot.z < 0)
-	{
-		pi.camx = 0;
-		pi.camz = ((camrot.y + 0.203336));
-	}
-	else if (camrot.x < 0 && camrot.z > 0)
-	{
-		pi.camx = (-(camrot.y + 0.203336));
-		pi.camz = 0;
-	}
-	else if (camrot.x < 0 && camrot.z < 0)
-	{
-		pi.camx = 0;
-		pi.camz = ((camrot.y + 0.203336));
-	}
-	else
-	{
-		pi.camx = 0;
-		pi.camz = 0;
-	}
-
 	//pi.h_rotation = h_rot;
     pi.serialize(packet.dat.buf);
 
@@ -413,6 +386,14 @@ void ClientGame::receiveGameOverPacket(int offset) {
 	Window::m_pStateManager->ChangeState(GOState::GetInstance(Window::m_pStateManager));
 }
 
+void ClientGame::receiveTimeStampPacket(int offset) 
+{
+	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
+	struct MiscInfo* m = (struct MiscInfo *) &(dat->buf);
+
+	printf("TIME ATM in SECONDS: %d\n", m->misc1);
+}
+
 void ClientGame::sendAttackPacket(AttackType t) {
 	const unsigned int packet_size = sizeof(Packet);
 	char packet_data[packet_size];
@@ -424,6 +405,7 @@ void ClientGame::sendAttackPacket(AttackType t) {
 
 	MiscInfo m;
 	m.misc1 = t;
+	m.misc3 = Scene::Instance()->GetPlayer()->GetCamAngle();
 	m.serialize(packet.dat.buf);
 
 	packet.serialize(packet_data);
@@ -482,6 +464,7 @@ void ClientGame::receiveDeathPacket(int offset)
 	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
 	struct EmoteInfo* e = (struct EmoteInfo *) &(dat->buf);
 	((Player *)(Scene::Instance()->GetEntity(ClassId::PLAYER, e->id).get()))->Die();
+
 	decScore(((Player *)(Scene::Instance()->GetEntity(ClassId::PLAYER, e->id).get()))->GetTeam(), 
 		((Player *)(Scene::Instance()->GetEntity(ClassId::PLAYER, e->id).get()))->GetScore());
 }
@@ -491,6 +474,11 @@ void ClientGame::receiveRespawnPacket(int offset)
 	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
 	struct EmoteInfo* e = (struct EmoteInfo *) &(dat->buf);
 	((Player *)(Scene::Instance()->GetEntity(ClassId::PLAYER, e->id).get()))->SetAlive(true);
+
+	// update state
+	if (e->id == client_id) {
+		CPlayState::GetInstance(Window::m_pStateManager)->Respawn();
+	}
 }
 
 void ClientGame::update()
@@ -542,6 +530,10 @@ void ClientGame::update()
 					receiveMovePacket(i + sizeof(PacketHeader));
                 break;
 
+			case TIME_EVENT:
+				receiveTimeStampPacket(i + sizeof(PacketHeader));
+				break;
+
 			case DANCE_EVENT:
 				receiveDancePacket(i + sizeof(PacketHeader));
 				break;
@@ -583,6 +575,7 @@ void ClientGame::Initialize()
 {
     // Create the GLFW window
     window = Window::Create_window(1366, 768);
+
     // Print OpenGL and GLSL versions
     Print_versions();
     // Setup callbacks
@@ -590,10 +583,12 @@ void ClientGame::Initialize()
     // Setup OpenGL settings, including lighting, materials, etc.
     Setup_opengl_settings();
 
-    LoadConfigs();
-
     // Initialize the shaders
     ShaderManager::Instance()->LoadShaders();
+
+	// show loading screen
+	ShowLoadingScreen();
+
     ModelManager::Instance()->LoadModels();
     // Initialize objects/pointers for rendering
     Window::Initialize_objects();
@@ -601,9 +596,28 @@ void ClientGame::Initialize()
 	TextRenderer::Initialize();
     Scene::Initialize();
 
+	// go to login menu
+	Window::m_pStateManager->ChangeState(CMenuState::GetInstance(Window::m_pStateManager));
+
     double lastTime = glfwGetTime();
     int nbFrames = 0;
 	srand(time(NULL));
+}
+
+void ClientGame::ShowLoadingScreen() {
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClearColor(0.28f, 0.65f, 0.89f, 1.0f); // reset color
+	SpriteRenderer * sprite_renderer = new SpriteRenderer();
+	Texture * bg = new Texture(GL_TEXTURE_2D, "assets/ui/loading/loading.png");
+	int x = Texture::GetWindowCenter(bg->Width());
+	int y = Window::height / 2 - bg->Height() / 2;
+
+	sprite_renderer->DrawSprite(*bg, glm::vec2(x, y), glm::vec2(bg->Width(), bg->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+
+	glfwSwapBuffers(window);
+
+	delete sprite_renderer;
+	delete bg;
 }
 
 void ClientGame::Destroy()
@@ -663,6 +677,7 @@ void ClientGame::Setup_callbacks()
 
     glfwSetCursorPosCallback(window, Window::Mouse_callback);
     glfwSetMouseButtonCallback(window, Window::Mouse_button_callback);
+	glfwSetCharCallback(window, Window::Char_callback);
     // Set the window resize callback
     glfwSetWindowSizeCallback(window, Window::Resize_callback);
 }

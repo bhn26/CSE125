@@ -255,6 +255,7 @@ void World::UpdateWorld()
 				if (collideBullet->handleBulletCollision(world_tick))
 				{
 					deleteList.push_back(collideBullet);
+					ServerGame::instance()->sendRemovePacket(ClassId::BULLET, collideBullet->GetObjectId());
 				}
 				else
 				{
@@ -268,26 +269,10 @@ void World::UpdateWorld()
 				}
 			}
 
-			// If it hit a bullet
-			else if (obB->getUserIndex() == BULLET)
+			// If it hit a bullet, ignore and just bounce off
+			else if (obB->getUserIndex() == BULLET || obB->getUserIndex() == FIELD)
 			{
-
-				if (collideBullet->GetMarked())
-				{
-					continue;
-				}
-				Bullet * collideBullet2 = (Bullet *)obB->getUserPointer();
-				//printf("Pushed to delete!, hit bullet B");
-				collideBullet->SetToMarked(world_tick);
-				if (collideBullet->handleBulletCollision(world_tick))
-				{
-					deleteList.push_back(collideBullet);
-				}
-				else
-				{
-					unmarkList.push_back(collideBullet);
-				}
-				//delete collideBullet2;
+				continue;
 			}
 			else
 			{
@@ -305,6 +290,7 @@ void World::UpdateWorld()
 				if (collideBullet->handleBulletCollision(world_tick))
 				{
 					deleteList.push_back(collideBullet);
+					ServerGame::instance()->sendRemovePacket(ClassId::BULLET, collideBullet->GetObjectId());
 				}
 				else
 				{
@@ -337,6 +323,7 @@ void World::UpdateWorld()
 				if (collideBullet->handleBulletCollision(world_tick))
 				{
 					deleteList.push_back(collideBullet);
+					ServerGame::instance()->sendRemovePacket(ClassId::BULLET, collideBullet->GetObjectId());
 				}
 				else
 				{
@@ -349,24 +336,10 @@ void World::UpdateWorld()
 				}
 			}
 
-			// If it hit a bullet
-			else if (obA->getUserIndex() == BULLET)
+			// If it hit a bullet, ignore and bounce off
+			else if (obA->getUserIndex() == BULLET || obB->getUserIndex() == FIELD)
 			{
-				if (collideBullet->GetMarked())
-				{
-					continue;
-				}
-				Bullet * collideBullet2 = (Bullet *)obA->getUserPointer();
-				//printf("Pushed to delete! hit bullet A");
-				collideBullet->SetToMarked(world_tick);
-				if (collideBullet->handleBulletCollision(world_tick))
-				{
-					deleteList.push_back(collideBullet);
-				}
-				else
-				{
-					unmarkList.push_back(collideBullet);
-				}
+				continue;
 			}
 			else
 			{
@@ -384,6 +357,7 @@ void World::UpdateWorld()
 				if (collideBullet->handleBulletCollision(world_tick))
 				{
 					deleteList.push_back(collideBullet);
+					ServerGame::instance()->sendRemovePacket(ClassId::BULLET, collideBullet->GetObjectId());
 				}
 				else
 				{
@@ -409,8 +383,15 @@ void World::UpdateWorld()
 
 				// Handle Collectable Collection
 				Collectable* collectObj = (Collectable*)obB->getUserPointer();
+				// check if collectable has been handled already
+				if (collectObj->GetMarked())
+				{
+					continue;
+				}
 				collectObj->HandleCollect(collidePlayer);
 				ServerGame::instance()->sendRemovePacket(ClassId::COLLECTABLE, collectObj->GetObjectId(), ClassId::PLAYER, collidePlayer->GetObjectId());
+				deleteList.push_back(collectObj);
+				collectObj->SetToMarked(world_tick);
 			}
 
 			// if Obj B is Flag
@@ -484,8 +465,15 @@ void World::UpdateWorld()
 
 				// Handle Collectable Collection
 				Collectable* collectObj = (Collectable*)obA->getUserPointer();
+				// check if collectable has been handled already
+				if (collectObj->GetMarked())
+				{
+					continue;
+				}
 				collectObj->HandleCollect(collidePlayer);
 				ServerGame::instance()->sendRemovePacket(ClassId::COLLECTABLE, collectObj->GetObjectId(), ClassId::PLAYER, collidePlayer->GetObjectId());
+				deleteList.push_back(collectObj);
+				collectObj->SetToMarked(world_tick);
 			}
 
 			// if Obj A is Flag
@@ -555,7 +543,6 @@ void World::UpdateWorld()
 	// Delete Marked Entities
 	for (auto it = deleteList.begin(); it != deleteList.end(); it++)
 	{
-		ServerGame::instance()->sendRemovePacket((ClassId) (*it)->GetClassId(), (*it)->GetObjectId());
 		delete (*it);
 	}
 	deleteList.clear();
@@ -611,8 +598,10 @@ void World::UpdateWorld()
 			btVector3 vec = it->second->GetRigidBody()->getLinearVelocity();
 			float thresh = .0005;
 			// don't send packets if the object is stationary?
-			if (abs(vec.getX()) < thresh && abs(vec.getY()) < thresh && abs(vec.getZ()) < thresh)
+			if ((abs(vec.getX()) < thresh && abs(vec.getY()) < thresh && abs(vec.getZ()) < thresh))
 			{
+				if (it->second->GetClassId() == ClassId::PLAYER)
+					ServerGame::instance()->sendMovePacket((ClassId)it->second->GetClassId(), it->second->GetObjectId());
 				//printf(" Dynamic object classid: %d, objid: %d, velocity (%f,%f,%f)\n", it->second->GetClassId(), it->second->GetObjectId(), vec.getX(), vec.getY(), vec.getZ());
 				continue;
 			}

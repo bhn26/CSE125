@@ -9,7 +9,6 @@
 
 Collectable::Collectable(int objectid, PosInfo pos, btDiscreteDynamicsWorld* curworld, Weapon* wp) : Entity(ClassId::COLLECTABLE, objectid, curworld)
 {
-	this->curWorld = curworld;
 	this->weapon = wp;
 	btCollisionShape* collectableShape = new btBoxShape(btVector3(1, 1, 1));
 
@@ -33,11 +32,6 @@ Collectable::Collectable(int objectid, PosInfo pos, btDiscreteDynamicsWorld* cur
 //NOTE***  Version if Weapon is only thing collectable
 void Collectable::HandleCollect(Player* collidedPlayer)
 {
-	//Remove collectable rigidBody
-	this->curWorld->removeCollisionObject(entityRigidBody);
-	delete entityRigidBody->getMotionState();
-	delete entityRigidBody->getCollisionShape();
-	delete entityRigidBody;
 
 	//Remove collectable object from EntitySpawner Map
 	EntitySpawner::instance()->RemoveEntity(ClassId::COLLECTABLE, objectId);
@@ -65,9 +59,12 @@ void Collectable::HandleCollect(Player* collidedPlayer)
 }
 
 Collectable::~Collectable()
-{
-	this->curWorld->removeCollisionObject(entityRigidBody);
-	delete entityRigidBody->getMotionState();
-	delete entityRigidBody->getCollisionShape();
-	delete entityRigidBody;
+{	
+	if (entityRigidBody)
+	{
+		this->curWorld->removeCollisionObject(entityRigidBody);
+		delete entityRigidBody->getMotionState();
+		delete entityRigidBody->getCollisionShape();
+		delete entityRigidBody;
+	}
 }

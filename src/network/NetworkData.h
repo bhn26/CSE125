@@ -25,6 +25,8 @@ enum PacketTypes
 
     MOVE_EVENT,
 
+	TIME_EVENT,
+
     V_ROTATION_EVENT,
 
 	JUMP_EVENT,

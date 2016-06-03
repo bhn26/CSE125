@@ -26,6 +26,7 @@ namespace Animation
     class Mesh
     {
         friend class AnimationPlayer;
+        friend class AnimatedModel;
     public:
         ///////////////////////////////////////////////////////////////////////
         // Public Methods

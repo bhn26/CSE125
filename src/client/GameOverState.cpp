@@ -19,8 +19,10 @@ GOState::GOState(CStateManager* pManager)
 
 GOState::~GOState()
 {
-    delete sprite_renderer;
-    delete bg;
+	delete sprite_renderer;
+	delete bg;
+	delete win;
+	delete lose;
 }
 
 GOState* GOState::GetInstance(CStateManager* pManager)
@@ -31,6 +33,14 @@ GOState* GOState::GetInstance(CStateManager* pManager)
 
 void GOState::OnKeyDown(int action, int key)
 {
+	switch (key)
+	{
+	case GLFW_KEY_ESCAPE:
+		glfwSetWindowShouldClose(ClientGame::instance()->window, GL_TRUE);
+		break;
+	default:
+		break;
+	}
 }
 
 void GOState::OnClick(int button, int action, double x, double y) {
@@ -80,14 +90,11 @@ void GOState::Draw()
 	glClear(GL_DEPTH_BUFFER_BIT); // remove depth info so text and buttons go on top
 
 	//////////////// DISPLAY WINNER ////////////////////////////////
-	if (ClientGame::instance()->GetWinner() == -1) {
-		TextRenderer::RenderText("You Tied!!", x + 275, y + 350, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
-	}
-	else if (ClientGame::instance()->GetWinner() == ClientGame::instance()->GetClientTeam()) {
-		TextRenderer::RenderText("You Win!", x + 275, y + 350, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+	if (ClientGame::instance()->GetWinner() == ClientGame::instance()->GetClientTeam()) {
+		sprite_renderer->DrawSprite(*win, glm::vec2(x, y), glm::vec2(win->Width(), win->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 	}
 	else {
-		TextRenderer::RenderText("You lose :(", x + 275, y + 350, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+		sprite_renderer->DrawSprite(*lose, glm::vec2(x, y), glm::vec2(lose->Width(), lose->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 	}
 }
 
@@ -105,6 +112,9 @@ void::GOState::InitTextures() {
 	if (!initialized) {
 		// Create the different images
 		bg = new Texture(GL_TEXTURE_2D, "assets/ui/gameover/gameover.png");
+
+		win = new Texture(GL_TEXTURE_2D, "assets/ui/gameover/win.png");
+		lose = new Texture(GL_TEXTURE_2D, "assets/ui/gameover/lose.png");
 
 		initialized = true;
 	}

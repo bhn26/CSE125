@@ -11,6 +11,7 @@
 #include "Player.h"
 #include "Graphics/Objects/Entity.h"
 #include "MenuState.h"
+#include "LoadState.h"
 #include "ConfigManager.h"
 
 const char* window_title = "Egg Scramble!";
@@ -62,15 +63,17 @@ GLFWwindow* Window::Create_window(int width, int height)
 
     // Create the GLFW window
 
-	/*GLFWmonitor * monitor = glfwGetPrimaryMonitor();
+#ifdef _DEBUG
+	GLFWwindow* window = glfwCreateWindow(width, height, window_title, NULL, NULL);
+#else
+	GLFWmonitor * monitor = glfwGetPrimaryMonitor();
 	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
 	glfwWindowHint(GLFW_RED_BITS, mode->redBits);
 	glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
 	glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
 	glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
-	GLFWwindow* window = glfwCreateWindow(mode->width, mode->height, window_title, monitor, NULL);*/ // for full screen mode
-
-	GLFWwindow* window = glfwCreateWindow(width, height, window_title, NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(mode->width, mode->height, window_title, monitor, NULL); // for full screen mode
+#endif	
 
     // Check if the window could not be created
     if (!window)
@@ -92,8 +95,6 @@ GLFWwindow* Window::Create_window(int width, int height)
     // Call the resize callback to make sure things get drawn immediately
     glfwGetFramebufferSize(window, &width, &height);
     Window::Resize_callback(window, width, height);
-
-	m_pStateManager->ChangeState(CMenuState::GetInstance(m_pStateManager));
 
     return window;
 }
@@ -174,4 +175,9 @@ void Window::Mouse_button_callback(GLFWwindow* window, int button, int action, i
 	glfwGetCursorPos(window, &x, &y);
 
 	m_pStateManager->GetActiveState()->OnClick(button, action, x, y);
+}
+
+void Window::Char_callback(GLFWwindow *window, unsigned int codepoint)
+{
+	m_pStateManager->GetActiveState()->OnChar(codepoint);
 }

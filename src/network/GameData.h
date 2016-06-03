@@ -75,6 +75,8 @@ struct PosInfo : GameInfo
 	float y;
 	float z;
 
+	int hp;
+
     int direction; // client -> server move data
 
 	//rotation coords
@@ -83,8 +85,7 @@ struct PosInfo : GameInfo
 	float roty;
 	float rotz;
 
-	float camx;
-	float camz;
+	float yos;
 
 	int num_eggs; // num eggs this player has 
 	int jump;     // jumping semaphore of the player
@@ -136,11 +137,11 @@ struct EmoteInfo : GameInfo {
 	int id;
 
 	void serialize(char * data) {
-		memcpy(data, this, sizeof(ScoreInfo));
+		memcpy(data, this, sizeof(EmoteInfo));
 	}
 
 	void deserialize(char * data) {
-		memcpy(this, data, sizeof(ScoreInfo));
+		memcpy(this, data, sizeof(EmoteInfo));
 	}
 };
 
@@ -148,13 +149,13 @@ struct EmoteInfo : GameInfo {
 struct MiscInfo : GameInfo {
 	int misc1;
 	int misc2;
-	int misc3;
+	float misc3;
 
 	void serialize(char * data) {
-		memcpy(data, this, sizeof(ScoreInfo));
+		memcpy(data, this, sizeof(MiscInfo));
 	}
 
 	void deserialize(char * data) {
-		memcpy(this, data, sizeof(ScoreInfo));
+		memcpy(this, data, sizeof(MiscInfo));
 	}
 };

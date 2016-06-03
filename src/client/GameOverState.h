@@ -17,10 +17,10 @@ class GOState : public CGameState
 public:
 	~GOState();
 
-	void OnKeyDown(int action, int key) override;
-	void OnClick(int button, int action, double x, double y) override;
-	void Draw() override;
-	void EnterState() override;
+    void OnKeyDown(int action, int key) override;
+    void OnClick(int button, int action, double x, double y) override;
+    void Draw() override;
+    void EnterState() override;
 
 	void Update(DWORD dwCurrentTime);
 
@@ -36,6 +36,8 @@ private:
 	SpriteRenderer * sprite_renderer;
 
 	Texture * bg;
+	Texture * win;
+	Texture * lose;
 
 	bool initialized;
 };

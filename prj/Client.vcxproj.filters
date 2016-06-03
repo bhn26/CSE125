@@ -181,11 +181,11 @@
     <ClCompile Include="..\src\Graphics\Objects\InstanceObject.cpp">
       <Filter>Source Files\Graphics\Objects</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\client\GameOverState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\Graphics\ModelManager.cpp">
       <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\client\GameOverState.cpp">
+      <Filter>Source Files\Game State</Filter>
     </ClCompile>
     <ClCompile Include="..\src\client\GameState.cpp">
       <Filter>Source Files\GameState</Filter>
@@ -202,9 +202,15 @@
     <ClCompile Include="..\src\client\StateManager.cpp">
       <Filter>Source Files\GameState</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\client\StateManager.cpp">
+      <Filter>Source Files\Game State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\client\LoadState.cpp">
+      <Filter>Source Files\Game State</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\Graphics\Objects\Explosion.cpp">
       <Filter>Source Files\Graphics\Objects</Filter>
-    </ClCompile>
+	</ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Graphics\Camera.h">
@@ -318,11 +324,11 @@
     <ClInclude Include="..\src\Graphics\Objects\Grass.h">
       <Filter>Source Files\Graphics\Objects</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\client\GameOverState.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Graphics\ModelManager.h">
       <Filter>Source Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\client\GameOverState.h">
+      <Filter>Source Files\Game State</Filter>
     </ClInclude>
     <ClInclude Include="..\src\client\GameState.h">
       <Filter>Source Files\GameState</Filter>
@@ -338,6 +344,9 @@
     </ClInclude>
     <ClInclude Include="..\src\client\StateManager.h">
       <Filter>Source Files\GameState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\client\LoadState.h">
+      <Filter>Source Files\Game State</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Graphics\Lights.h">
       <Filter>Source Files\Graphics</Filter>

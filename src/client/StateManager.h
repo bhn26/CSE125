@@ -28,7 +28,7 @@ public:
 	// the active state.
 	void OnKeyDown(int action, int key);
 	void OnKeyUp(int action, int key);
-	void OnChar(WPARAM wChar);
+	void OnChar(unsigned int keycode);
 	void Update(DWORD dwCurrentTime);
 	void Draw();
 

@@ -67,16 +67,7 @@ void SpriteRenderer::DrawSprite(Texture &texture, glm::vec2 position, glm::vec2 
 }
 
 void SpriteRenderer::RenderSelection(int selection_code, Texture &texture, glm::vec2 position, glm::vec2 size, GLfloat rotate) {
-	if (!initialized) {
-        //shader = new Shader("src/Graphics/Shaders/sprite.vert", "src/Graphics/Shaders/sprite.frag");
-        //selectionShader = new Shader("src/Graphics/Shaders/selection.vert", "src/Graphics/Shaders/selection.frag");
-        shader = ShaderManager::GetShader("Sprite");
-        selectionShader = ShaderManager::GetShader("Selection");
-
-		initRenderData();
-		initialized = true;
-	}
-
+	assert(initialized);
 	initRenderData();
 
 	// Prepare transformations
