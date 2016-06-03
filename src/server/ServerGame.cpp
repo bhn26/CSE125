@@ -452,6 +452,11 @@ void ServerGame::receiveMovePacket(int offset)
 
 	btVector3* vec;
 	Player* player = (Player*)(EntitySpawner::instance()->GetEntity(ClassId::PLAYER, hdr->sender_id));
+
+	// don't take client input if stunned
+	if(player->GetStun() > 0)
+		return;
+
 	if (player->GetJump())
 	{
 		switch (pi->direction) {
@@ -608,6 +613,10 @@ void ServerGame::receiveJumpPacket(int offset)
     struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset]);
 
 	Player* player = (Player*)(EntitySpawner::instance()->GetEntity(ClassId::PLAYER, hdr->sender_id));
+
+	// ignore client input if stunned
+	if(player->GetStun() > 0)
+		return;
 
 	player->JumpPlayer();
 }

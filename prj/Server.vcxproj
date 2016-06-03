@@ -160,6 +160,8 @@
     <ClInclude Include="..\src\network\GameData.h" />
     <ClInclude Include="..\src\network\NetworkData.h" />
     <ClInclude Include="..\src\network\NetworkServices.h" />
+    <ClInclude Include="..\src\server\engine\BlastField.h" />
+    <ClInclude Include="..\src\server\engine\BlastMine.h" />
     <ClInclude Include="..\src\server\engine\BounceBulletCollision.h" />
     <ClInclude Include="..\src\server\engine\BounceGun.h" />
     <ClInclude Include="..\src\server\engine\Bullet.h" />
@@ -176,6 +178,7 @@
     <ClInclude Include="..\src\server\engine\FireRateReset.h" />
     <ClInclude Include="..\src\server\engine\Flag.h" />
     <ClInclude Include="..\src\server\engine\GrenadeLauncher.h" />
+    <ClInclude Include="..\src\server\engine\MineBulletHandler.h" />
     <ClInclude Include="..\src\server\engine\ObjectId.h" />
     <ClInclude Include="..\src\server\engine\Peck.h" />
     <ClInclude Include="..\src\server\engine\Player.h" />
@@ -193,6 +196,8 @@
   <ItemGroup>
     <ClCompile Include="..\src\ConfigManager.cpp" />
     <ClCompile Include="..\src\network\NetworkServices.cpp" />
+    <ClCompile Include="..\src\server\engine\BlastField.cpp" />
+    <ClCompile Include="..\src\server\engine\BlastMine.cpp" />
     <ClCompile Include="..\src\server\engine\BounceGun.cpp" />
     <ClCompile Include="..\src\server\engine\Bullet.cpp" />
     <ClCompile Include="..\src\server\engine\Collectable.cpp" />
@@ -207,6 +212,7 @@
     <ClCompile Include="..\src\server\engine\FireRateReset.cpp" />
     <ClCompile Include="..\src\server\engine\Flag.cpp" />
     <ClCompile Include="..\src\server\engine\GrenadeLauncher.cpp" />
+    <ClCompile Include="..\src\server\engine\MineBulletHandler.cpp" />
     <ClCompile Include="..\src\server\engine\Peck.cpp" />
     <ClCompile Include="..\src\server\engine\Player.cpp" />
     <ClCompile Include="..\src\server\engine\PlayerModifierCollision.cpp" />

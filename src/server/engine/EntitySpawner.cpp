@@ -12,6 +12,7 @@
 #include "BounceGun.h"
 #include "GrenadeLauncher.h"
 #include "TeleportGun.h"
+#include "BlastMine.h"
 
 EntitySpawner* EntitySpawner::spawnInstance = nullptr;
 
@@ -122,7 +123,7 @@ void EntitySpawner::spawnCollectable(btDiscreteDynamicsWorld* curWorld, WeaponTy
 {
 	Weapon* wp;
 	//switch (w_type)
-	switch (TELEPORTGUN)
+	switch (BLASTMINE)
 	{
 		case WeaponType::SEEDGUN:
 		{
@@ -146,6 +147,12 @@ void EntitySpawner::spawnCollectable(btDiscreteDynamicsWorld* curWorld, WeaponTy
 		{
 			printf("spawned teleportgun\n");
 			wp = new TeleportGun(curWorld);
+			break;
+		}
+		case WeaponType::BLASTMINE:
+		{
+			printf("spawned blastmine\n");
+			wp = new BlastMine(curWorld);
 			break;
 		}
 		default:

@@ -7,7 +7,8 @@ PlayerModifierCollision::PlayerModifierCollision(Player* shooter)
 
 PlayerModifierCollision::~PlayerModifierCollision() {}
 
-bool PlayerModifierCollision::HandleBulletCollision(unsigned int world_tick)
+// Does not consider what collided with it
+bool PlayerModifierCollision::HandleBulletCollision(unsigned int world_tick, Entity* collidee)
 {
 	if(bullet == nullptr)
 		return true;

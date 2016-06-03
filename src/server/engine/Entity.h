@@ -30,7 +30,7 @@ public:
 
 	void SetEntityPosition(btVector3* newPosition);
 
-	void Move(btVector3* changeVelocity);
+	virtual void Move(btVector3* changeVelocity);
 
 	// Return current rotation quaternion of Player
 	btQuaternion GetEntityRotation();

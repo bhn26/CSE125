@@ -17,7 +17,6 @@ btVector3 Entity::GetEntityPosition()
 
 void Entity::SetEntityPosition(btVector3* newPosition)
 {
-	printf("setting entityposition");
 	btTransform currentTrans;
 	entityRigidBody->getMotionState()->getWorldTransform(currentTrans);
 	currentTrans.setOrigin(*newPosition);
