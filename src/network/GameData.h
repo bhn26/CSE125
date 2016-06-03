@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string.h>
+#include <string>
 #include <stdio.h>
 #include "../server/engine/ObjectId.h"
 
@@ -39,7 +40,8 @@ enum GameDataId
     POS_OBJ,
 	REM_OBJ,
 	SCORE_OBJ,
-	EMOTE_OBJ
+	EMOTE_OBJ,
+	NAME_OBJ
 };
 
 struct GameInfo
@@ -157,5 +159,18 @@ struct MiscInfo : GameInfo {
 
 	void deserialize(char * data) {
 		memcpy(this, data, sizeof(MiscInfo));
+	}
+};
+
+struct NameInfo : GameInfo {
+	int player_id;
+	std::string name;
+
+	void serialize(char * data) {
+		memcpy(data, this, sizeof(NameInfo));
+	}
+
+	void deserialize(char * data) {
+		memcpy(this, data, sizeof(NameInfo));
 	}
 };

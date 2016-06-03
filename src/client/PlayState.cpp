@@ -44,6 +44,11 @@ CPlayState* CPlayState::GetInstance(CStateManager* pManager)
 	return &Instance;
 }
 
+void CPlayState::EnterState()
+{
+	
+}
+
 void CPlayState::Reset()
 {
 	dead = false;
@@ -384,12 +389,13 @@ void CPlayState::Draw()
 		}
 
 		for (int i = 0; i < team0.size(); i++) {
-			char score[20];
-			strcpy_s(score, "Player ");
-			strcat_s(score, std::to_string(team0.at(i)).c_str());
-			strcat_s(score, ": ");
-			Player * player = (Player *) Scene::Instance()->GetEntity(PLAYER, team0.at(i)).get();
-			strcat_s(score, std::to_string(player->GetScore()).c_str());
+			Player * player = (Player *)Scene::Instance()->GetEntity(PLAYER, team0.at(i)).get();
+
+			std::string score;
+			score += ClientGame::instance()->GetName(team0.at(i)).c_str();
+			score += ": ";
+			score += std::to_string(player->GetScore());
+			
 			TextRenderer::RenderText(score, x0, y0, 1.0f, glm::vec3(0.5f, 0.5f, 0.5f));
 
 			y0 = y0 + 80; // row height
@@ -398,12 +404,13 @@ void CPlayState::Draw()
 		// team 1
 		std::vector<int> team1 = ClientGame::Team1();
 		for (int i = 0; i < team1.size(); i++) {
-			char score[20];
-			strcpy_s(score, "Player ");
-			strcat_s(score, std::to_string(team1.at(i)).c_str());
-			strcat_s(score, ": ");
 			Player * player = (Player *)Scene::Instance()->GetEntity(PLAYER, team1.at(i)).get();
-			strcat_s(score, std::to_string(player->GetScore()).c_str());
+
+			std::string score;
+			score += ClientGame::instance()->GetName(team1.at(i)).c_str();
+			score += ": ";
+			score += std::to_string(player->GetScore());
+
 			TextRenderer::RenderText(score, x1, y1, 1.0f, glm::vec3(0.5f, 0.5f, 0.5f));
 
 			y1 = y1 + 80; // row height

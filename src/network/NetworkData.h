@@ -9,6 +9,8 @@ enum PacketTypes
 {
     INIT_CONNECTION,  // Initial connection setup
 
+	SET_USERNAME,
+
 	JOIN_TEAM,
 
 	START_GAME, // A client would send this to start the game

@@ -77,6 +77,9 @@ public:
 	void sendDiscardPacket();  // not sent until there's an animation for this
 	void receiveDiscardPacket(int offset);  // do animation for weapon discard later? 
 
+	void sendNamePacket(int player_id);
+	void receiveNamePacket(int offset);
+
 	static ServerGame* instance()
 	{
 		static ServerGame* instance = new ServerGame();
@@ -106,6 +109,7 @@ private:
     // IDs for the clients connecting for table in ServerNetwork 
     static unsigned int client_id;
 
+	std::map <int, std::string> name_map;
 	std::map <int, int> team_map; // <player, team>
 
 	// variables for starting the game

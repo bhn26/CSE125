@@ -14,6 +14,7 @@ class Player : public Entity
 private:
 
 	int teamId;
+	std::string name;
 
 	PosInfo position;
 	std::vector<Flag*> *flags;
@@ -87,6 +88,9 @@ public:
 
 	bool IsAlive() { return alive; }
 	void SetAlive(bool a) { alive = a; }
+
+	void SetName(std::string n) { name = n; }
+	std::string GetName() { return name; }
 
 };
 

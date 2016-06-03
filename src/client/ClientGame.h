@@ -15,6 +15,7 @@
 #include "Graphics/Objects/Entity.h"
 #include <memory>
 #include <vector>
+#include <map>
 
 class Window;
 
@@ -105,6 +106,9 @@ public:
 	void sendDiscardPacket();
 	void receiveDiscardPacket(int offset);  // do animation for weapon discard later?
 
+	void sendNamePacket();
+	void receiveNamePacket(int offset);
+
 	bool hasStarted() { return game_started; };
 
 	void decScore(int team, int amount) { scores[team] -= amount; }
@@ -134,6 +138,9 @@ public:
 	int GetClientTeam() { return client_team; };
 
 	int GetWinner() { return winner; };
+
+	std::string GetName(int id) { return name_map[id]; }
+	void SetName(std::string name) { name_map[client_id] = name; }
 
 private:
     const static std::string EVENT_QUIT;
@@ -165,6 +172,7 @@ private:
 
 	std::vector <int> team0;
 	std::vector <int> team1;
+	std::map<int, std::string> name_map;
 
 	int total_eggs;
 	int scores[2];

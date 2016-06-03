@@ -165,6 +165,10 @@ void ServerGame::receiveFromClients()
 
                     break;
 
+				case SET_USERNAME:
+					receiveNamePacket(i);
+					break;
+
 				case JOIN_TEAM:
 					receiveJoinPacket(i);
 					break;
@@ -770,4 +774,36 @@ void ServerGame::sendRespawnPacket(int id) {
 
 	packet.serialize(packet_data);
 	network->sendToAll(packet_data, packet_size);
+}
+
+void ServerGame::sendNamePacket(int player_id) {
+	const unsigned int packet_size = sizeof(Packet);
+	char packet_data[packet_size];
+
+	Packet packet;
+	packet.hdr.sender_id = SERVER_ID;
+	packet.hdr.packet_type = SET_USERNAME;
+
+	packet.dat.game_data_id = NAME_OBJ;
+
+	NameInfo n;
+	n.player_id = player_id;
+	n.name = name_map.at(player_id);
+	n.serialize(packet.dat.buf);
+
+	packet.serialize(packet_data);
+	network->sendToAll(packet_data, packet_size);
+}
+
+void ServerGame::receiveNamePacket(int offset) {
+	struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset]);
+	struct PacketData* dat = (struct PacketData *) &(network_data[offset + sizeof(PacketHeader)]);
+	struct NameInfo* n = (struct NameInfo *) &(dat->buf);
+
+	name_map[hdr->sender_id] = n->name;
+	/*Player* player = (Player*)(EntitySpawner::instance()->GetEntity(ClassId::PLAYER, hdr->sender_id));
+	player->SetName(n->name);*/
+
+	sendNamePacket(hdr->sender_id);
+
 }
