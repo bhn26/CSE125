@@ -21,6 +21,13 @@ enum MoveType {
     MOVE_RIGHT = 3
 };
 
+static const int NUM_COLLECT_TYPES = 2; // Types of collectables there are
+
+enum CollectType {
+	WEAPONCOLLECT,
+	POWERUPCOLLECT
+};
+
 static const int NUM_WEAPON_TYPES = 6; // number of types of weapons there are
 
 enum WeaponType {
@@ -30,6 +37,14 @@ enum WeaponType {
 	TELEPORTGUN,
 	BLASTMINE,
 	SHOTGUN
+};
+
+static const int NUM_POWER_TYPES = 2;
+
+enum PowerupType {
+	HEALTHGAIN,
+	JUMPUP
+	//SPEEDUP
 };
 
 enum AttackType {
@@ -112,9 +127,10 @@ struct RemInfo : GameInfo
 
 	int rec_oid;    // What was responsible for the removal, i.e. player 2 collects an egg, p2's info goes here
 	ClassId rec_cid;
-	int team_id;
+	int team_id;    
 
-	int sub_id;
+	int sub_id;   // For removing collectable of type sub_id
+	int sub_id2;  // For removing subtype of collectable, like subtypes of the weapon or powerup
 
 	void serialize(char * data) {
 		memcpy(data, this, sizeof(RemInfo));

@@ -23,6 +23,30 @@ Collectable::Collectable(int objectid, PosInfo pos, btDiscreteDynamicsWorld* cur
 
 	// Set Collectable's protected fields
 	this->entityRigidBody = pRigidBody;
+	this->type = CollectType::WEAPONCOLLECT;
+
+	// Set RigidBody to point to Collectable
+	pRigidBody->setUserPointer(this);
+	pRigidBody->setUserIndex(COLLECTABLE);
+}
+
+Collectable::Collectable(int objectid, PosInfo pos, btDiscreteDynamicsWorld* curworld, Powerup* powerup) : Entity(ClassId::COLLECTABLE, objectid, curworld)
+{
+	this->powerup = powerup;
+	btCollisionShape* collectableShape = new btBoxShape(btVector3(1, 1, 1));
+
+	// Create Collectable physics object
+	btDefaultMotionState*collectableMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(pos.x, pos.y, pos.z)));
+	btScalar mass = 1;
+	btVector3 collectableInertia(0, 0, 0);
+	collectableShape->calculateLocalInertia(mass, collectableInertia);
+	btRigidBody::btRigidBodyConstructionInfo collectableRigidBodyCI(mass, collectableMotionState, collectableShape, collectableInertia);
+	btRigidBody* pRigidBody = new btRigidBody(collectableRigidBodyCI);
+	curWorld->addRigidBody(pRigidBody);
+
+	// Set Collectable's protected fields
+	this->entityRigidBody = pRigidBody;
+	this->type = CollectType::POWERUPCOLLECT;
 
 	// Set RigidBody to point to Collectable
 	pRigidBody->setUserPointer(this);
@@ -37,25 +61,44 @@ void Collectable::HandleCollect(Player* collidedPlayer)
 	EntitySpawner::instance()->RemoveEntity(ClassId::COLLECTABLE, objectId);
 	CollectableSpawner::instance()->DecCollectables();
 
-	// If player already has usable
-	if (collidedPlayer->HasWeapon())
-	{
-		if (this->weapon->GetWeaponType() == collidedPlayer->GetPlayerWeaponType())
+	if(type == CollectType::WEAPONCOLLECT)
+	{ 
+		// If player already has usable
+		if (collidedPlayer->HasWeapon())
 		{
-			collidedPlayer->GetWeapon()->ReloadWeapon();
+			if (this->weapon->GetWeaponType() == collidedPlayer->GetPlayerWeaponType())
+			{
+				collidedPlayer->GetWeapon()->ReloadWeapon();
+			}
+
+			return;
 		}
 
-		return;
+		printf("acquired weapon of type %d\n", weapon->GetWeaponType());
+		collidedPlayer->EquipWeapon(weapon);
 	}
+	else if (type == CollectType::POWERUPCOLLECT)
+	{
+		// always apply health gain
+		if (powerup->getType() == PowerupType::HEALTHGAIN)
+		{
+			powerup->applyPower(collidedPlayer);
+			return;
+		}
 
-	// Otherwise, give random useable
-	// Randomize what type of weapon or powerup that player would get
-//	switch (ranPower)
-//	{
-//	}
+		if (collidedPlayer->HasPower())
+		{
+			if (this->powerup->getType() == collidedPlayer->GetPower()->getType())
+			{
+				powerup->applyPower(collidedPlayer);
+			}
+			return;
+		}
 
-	printf("acquired weapon of type %d\n", weapon->GetWeaponType());
-	collidedPlayer->EquipWeapon(weapon);
+		powerup->applyPower(collidedPlayer);
+
+		printf("acquired powerup of type %d\n", powerup->getType());
+	}
 }
 
 Collectable::~Collectable()

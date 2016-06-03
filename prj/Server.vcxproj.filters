@@ -22,6 +22,9 @@
     <Filter Include="Source Files\engine\FieldDetection">
       <UniqueIdentifier>{9b8f5fb6-c9f1-40f5-bd13-c43bead33a60}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\engine\Powerups">
+      <UniqueIdentifier>{5e35aea3-989c-40a9-80b3-ab3926952a04}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\network\NetworkData.h">
@@ -137,6 +140,18 @@
     </ClInclude>
     <ClInclude Include="..\src\server\engine\Shotgun.h">
       <Filter>Source Files\engine\Weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\server\engine\Powerup.h">
+      <Filter>Source Files\engine\Powerups</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\server\engine\HealthGain.h">
+      <Filter>Source Files\engine\Powerups</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\server\engine\JumpUp.h">
+      <Filter>Source Files\engine\Powerups</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\server\engine\SpeedUp.h">
+      <Filter>Source Files\engine\Powerups</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

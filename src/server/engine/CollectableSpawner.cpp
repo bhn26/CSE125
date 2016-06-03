@@ -10,10 +10,24 @@ void CollectableSpawner::SpawnRandomCollectables(btDiscreteDynamicsWorld* curwor
 	// determine how many to spawn
 	int num_spawns = (rand() % (MAX_NUM_SPAWNS + MIN_NUM_SPAWNS)) + MIN_NUM_SPAWNS;
 
-	for(int i = 0; i < num_spawns; i++)
+	int num_weapons = 0;
+	int num_powers = num_spawns;
+
+	// spawn that number of weapons
+	for(int i = 0; i < num_weapons; i++)
 	{
 		// determine which weapon and spawn the number of weapons
 		EntitySpawner::instance()->spawnCollectable(curworld, (WeaponType) (rand() % NUM_WEAPON_TYPES));
+		collectables++;
+
+		if (collectables == MAX_COLLECTABLES)
+			break;
+	}
+
+	for (int i = 0; i < num_powers; i++)
+	{
+		// determine which weapon and spawn the number of weapons
+		EntitySpawner::instance()->spawnCollectable(curworld, (PowerupType)(rand() % NUM_POWER_TYPES));
 		collectables++;
 
 		if (collectables == MAX_COLLECTABLES)

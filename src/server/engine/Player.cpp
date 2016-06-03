@@ -176,12 +176,28 @@ int Player::GetTeamId()
 		 this->cameraAngle = (playerRotation) * (btQuaternion(btVector3(-1, 0, 0), yos));
 	 }
  }
-
+ 
 void Player::EquipWeapon(Weapon* newWeapon)
 {
 	if (!alive)
 		return;
 	this->playerWeapon = newWeapon;
+}
+
+void Player::EquipPower(Powerup* powerup)
+{
+	if (!alive)
+		return;
+	this->power = powerup;
+}
+
+void Player::LosePower()
+{
+	if (power)
+	{
+		delete power;
+		power = nullptr;
+	}
 }
 
 void Player::DiscardWeapon()
@@ -199,6 +215,11 @@ void Player::DiscardWeapon()
 bool Player::HasWeapon()
 {
 	return (this->playerWeapon != nullptr);
+}
+
+bool Player::HasPower()
+{
+	return (this->power != nullptr);
 }
 
  // If player is dead, returns 1,  else returns 0
@@ -253,6 +274,7 @@ void Player::HandleDeath(unsigned int death_tick)
 	//printf("Player %u has died!", objectId);
 	this->alive = false;
 	DiscardWeapon();
+	LosePower();
 	death_time = death_tick;
 	ServerGame::instance()->sendDeathPacket(objectId);
 	//EntitySpawner::instance()->RemoveEntity(classId, objectId);
