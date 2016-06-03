@@ -12,10 +12,21 @@
 #include <time.h>
 #include "../ServerGame.h"
 
+#include <ConvexDecomposition\ConvexDecomposition.h>
+#include <ConvexDecomposition\ConvexBuilder.h>
+#include "ConvexDecomposition\cd_vector.h"
+#include "ConvexDecomposition\cd_hull.h"
+#include <ConvexDecomposition\cd_wavefront.h>
+
+#include <BulletCollision\CollisionShapes\btTriangleMesh.h>
+#include <BulletCollision\CollisionShapes\btShapeHull.h>
+#include <BulletCollision\CollisionShapes\btBvhTriangleMeshShape.h>
+
 
 Player::Player(int objectid, int teamid, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld) : Entity(ClassId::PLAYER, objectid, physicsWorld) 
 {
-	btCollisionShape* playerShape = new btCylinderShape(btVector3(1, 1, 1));
+
+	btCollisionShape* playerShape = new btCylinderShape(btVector3(btScalar(1.5), btScalar(1), btScalar(1.5)));
 	// Create player physics object
 	btDefaultMotionState*playerMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(pos.x, pos.y, pos.z)));
 	btScalar mass = 1;
@@ -32,15 +43,21 @@ Player::Player(int objectid, int teamid, PosInfo pos, btDiscreteDynamicsWorld* p
 	// Set Player protected fields
 	this->entityRigidBody = pRigidBody;
 	this->teamId = teamid;
-	this->jumpSem = 1;
+	this->jumpSem = 100;
 	this->hitPoints = 100;
+
+	// Set Base and Bonus speed and jump
+	this->baseJump = 25;
+	this->baseSpeed = 25;
+	this->bonusJump = 0;
+	this->bonusSpeed = 0;
+		
 	this->flags = new std::vector<Flag*>;
 	this->position = pos;
 	this->playerWeapon = nullptr;
 	this->peckWeapon = new Peck(curWorld);
 	this->alive = true;
 	this->death_time = 0;
-
 
 	// Set RigidBody to point to Player
 	pRigidBody->setUserPointer(this);
@@ -73,7 +90,7 @@ void Player::JumpPlayer()
 	if (jumpSem)
 	{
 		// Change jump semaphore, change upward y-axis velocity
-		jumpSem = 0;
+		jumpSem--;
 		btVector3 curVelocity = entityRigidBody->getLinearVelocity();
 		// setting upward velocity to 3
 		curVelocity[1] = 25;
@@ -83,7 +100,7 @@ void Player::JumpPlayer()
 
 void Player::ResetJump()
 {
-	(this->jumpSem) = 1;
+	(this->jumpSem) = 100;
 }
 
 void Player::AcquireFlag(Flag* flag)

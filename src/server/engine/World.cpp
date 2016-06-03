@@ -10,6 +10,29 @@
 #include "Bullet.h"
 #include "WorldObstacle.h"
 #include "BulletCollision\CollisionDispatch\btGhostObject.h"
+#include "MapLoader.h"
+
+
+
+/*
+#include <BulletCollision\CollisionShapes\btTriangleMesh.h>
+#include <BulletCollision\CollisionShapes\btShapeHull.h>
+#include <ConvexDecomposition\ConvexDecomposition.h>
+#include <ConvexDecomposition\ConvexBuilder.h>
+
+#include "ConvexDecomposition\cd_vector.h"
+#include "ConvexDecomposition\cd_hull.h"
+#include "ConvexDecomposition\bestfit.h"
+#include "ConvexDecomposition\planetri.h"
+#include "ConvexDecomposition\vlookup.h"
+#include "ConvexDecomposition\splitplane.h"
+#include "ConvexDecomposition\meshvolume.h"
+#include "ConvexDecomposition\concavity.h"
+#include "ConvexDecomposition\bestfitobb.h"
+#include "ConvexDecomposition\float_math.h"
+#include "ConvexDecomposition\fitsphere.h"
+#include <ConvexDecomposition\cd_wavefront.h>
+*/
 
 World::World() {
 	// initialize map objects 
@@ -43,9 +66,8 @@ void World::Init() {
 	btRigidBody::btRigidBodyConstructionInfo groundRigidBodyCI(0, groundMotionState, groundShape, btVector3(0, 0, 0));
 	groundRigidBodyCI.m_friction = .4;
 	btRigidBody* groundRigidBody = new btRigidBody(groundRigidBodyCI);
-	groundRigidBody->setGravity(btVector3(0, -10, 0));
+	groundRigidBody->setGravity(btVector3(0, 15, 0));
 	dynamicsWorld->addRigidBody(groundRigidBody);
-	groundRigidBody->setGravity(btVector3(0, 0.1, 0));
 	groundRigidBody->setUserIndex(14);
 	// Create Ground Obstacle
 	WorldObstacle* groundwall = new WorldObstacle(z++, groundRigidBody, curWorld);
@@ -101,86 +123,12 @@ void World::Init() {
 	nzWallRigidBody->setUserIndex(8);
 	// Create Neg Z Wall
 	WorldObstacle* nzwall = new WorldObstacle(z++, nzWallRigidBody, curWorld);
+	
 
-
-
-	btCollisionShape* playerShape = new btBoxShape(btVector3(6, 2, 5));
-	// Create tractor physics object
-	btDefaultMotionState*playerMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(16.5, 1, -13)));
-	btScalar mass = 100;
-	btVector3 playerInertia(0, 0, 0);
-	playerShape->calculateLocalInertia(mass, playerInertia);
-	btRigidBody::btRigidBodyConstructionInfo playerRigidBodyCI(mass, playerMotionState, playerShape, playerInertia);
-	btRigidBody* pRigidBody = new btRigidBody(playerRigidBodyCI);
-	pRigidBody->setFriction((btScalar)0.5);
-	pRigidBody->setDamping((btScalar)100, (btScalar)100);
-	dynamicsWorld->addRigidBody(pRigidBody);
-	pRigidBody->setUserIndex(9);
-
-	playerShape = new btBoxShape(btVector3(3, 5, 3));
-	// Create tractor physics object
-	playerMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(-13, 1, -2.5)));
-	mass = 100;
-	playerInertia = btVector3(0, 0, 0);
-	playerShape->calculateLocalInertia(mass, playerInertia);
-	btRigidBody::btRigidBodyConstructionInfo p(mass, playerMotionState, playerShape, playerInertia);
-	pRigidBody = new btRigidBody(p);
-	pRigidBody->setFriction((btScalar)0.5);
-	pRigidBody->setDamping((btScalar)100, (btScalar)100);
-	dynamicsWorld->addRigidBody(pRigidBody);
-	pRigidBody->setUserIndex(10);
-
-	playerShape = new btBoxShape(btVector3(2, 8, 10));
-	// Create tractor physics object
-	playerMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(7.5, 1, 9)));
-	mass = 100;
-	playerInertia = btVector3(0, 0, 0);
-	playerShape->calculateLocalInertia(mass, playerInertia);
-	btRigidBody::btRigidBodyConstructionInfo p1(mass, playerMotionState, playerShape, playerInertia);
-	pRigidBody = new btRigidBody(p1);
-	pRigidBody->setFriction((btScalar)0.5);
-	pRigidBody->setDamping((btScalar)100, (btScalar)100);
-	dynamicsWorld->addRigidBody(pRigidBody);
-	pRigidBody->setUserIndex(11);
-
-	playerShape = new btBoxShape(btVector3(10, 8, 2));
-	// Create tractor physics object
-	playerMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(.1, 1, 17.5)));
-	mass = 100;
-	playerInertia = btVector3(0, 0, 0);
-	playerShape->calculateLocalInertia(mass, playerInertia);
-	btRigidBody::btRigidBodyConstructionInfo p2(mass, playerMotionState, playerShape, playerInertia);
-	pRigidBody = new btRigidBody(p2);
-	pRigidBody->setFriction((btScalar)0.5);
-	pRigidBody->setDamping((btScalar)100, (btScalar)100);
-	dynamicsWorld->addRigidBody(pRigidBody);
-	pRigidBody->setUserIndex(12);
-
-	playerShape = new btBoxShape(btVector3(2, 8, 10));
-	// Create tractor physics object
-	playerMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(-8, 1, 9.7)));
-	mass = 100;
-	playerInertia = btVector3(0, 0, 0);
-	playerShape->calculateLocalInertia(mass, playerInertia);
-	btRigidBody::btRigidBodyConstructionInfo p3(mass, playerMotionState, playerShape, playerInertia);
-	pRigidBody = new btRigidBody(p3);
-	pRigidBody->setFriction((btScalar)0.5);
-	pRigidBody->setDamping((btScalar)100, (btScalar)100);
-	dynamicsWorld->addRigidBody(pRigidBody);
-	pRigidBody->setUserIndex(13);
-
-	playerShape = new btBoxShape(btVector3(11, 2, 11));
-	// Create tractor physics object
-	playerMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(.5, 10, 8)));
-	mass = 100;
-	playerInertia = btVector3(0, 0, 0);
-	playerShape->calculateLocalInertia(mass, playerInertia);
-	btRigidBody::btRigidBodyConstructionInfo p4(mass, playerMotionState, playerShape, playerInertia);
-	pRigidBody = new btRigidBody(p4);
-	pRigidBody->setFriction((btScalar)0.5);
-	pRigidBody->setDamping((btScalar)100, (btScalar)100);
-	dynamicsWorld->addRigidBody(pRigidBody);
-	pRigidBody->setUserIndex(14);
+	//try loading in some objects
+	MapLoader* worldMapLoader = new MapLoader(dynamicsWorld);
+	worldMapLoader->loadMap();
+	printf("MapLoader->loadMap() has been called\n");
 
 	// Set Local attributes
 	this->ground = groundwall;
@@ -566,6 +514,9 @@ void World::UpdateWorld()
 		if((*it)->GetMarkTick() == world_tick - 5)
 			(*it)->ResetMark();
 	}
+
+	btVector3 vec = (EntitySpawner::instance()->GetEntity(0, 0))->GetEntityPosition();
+	printf(" Dynamic obj at (%f,%f,%f)\n", vec.getX(), vec.getY(), vec.getZ());
 
 	//if (x++ % 10000 == 0) {
 	if (world_tick % 500 == 0) {
