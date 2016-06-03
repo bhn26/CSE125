@@ -50,6 +50,8 @@ Player::Player(int objectid, int teamid, PosInfo pos, btDiscreteDynamicsWorld* p
 	// Set Base and Bonus speed and jump
 	this->baseJump = 20;
 	this->baseSpeed = 25;
+	this->speedPenalty = 0;
+	this->lowestSpeed = 12;
 	this->bonusJump = 0;
 	this->bonusSpeed = 0;
 
@@ -103,6 +105,26 @@ void Player::AcquireFlag(Flag* flag)
 		return;
 	// player collects flag, remove from entity list
 	flags->push_back(flag);
+	switch (flags->size()) {
+		case 1:
+			speedPenalty = 1;
+			break;
+		case 2:
+			speedPenalty = 3;
+			break;
+		case 3:
+			speedPenalty = 6;
+			break;
+		case 4:
+			speedPenalty = 10;
+			break;
+		case 5:
+			speedPenalty = 15;
+			break;
+		default:
+			speedPenalty = 15;
+			break;
+	}
 	printf("FLAG ACQUIRED\n");
 
 	// note - individual scores are updated with move packets
@@ -230,7 +252,6 @@ int Player::takeDamage(int damage, unsigned int world_tick)
 
 	this->hitPoints = this->hitPoints - damage;
 
-	printf("Player %u has taken damage!  Hitpoints:%d, damage: %d\n", objectId, this->hitPoints, damage);
 	if (this->hitPoints <= 0)
 	{
 		this->HandleDeath(world_tick);
@@ -273,6 +294,7 @@ void Player::HandleDeath(unsigned int death_tick)
 {
 	//printf("Player %u has died!", objectId);
 	this->alive = false;
+	speedPenalty = 0;
 	DiscardWeapon();
 	LosePower();
 	death_time = death_tick;
@@ -298,7 +320,6 @@ void Player::HandleDeath(unsigned int death_tick)
 		deathPos.setY((deathPos.getY() + 4));
 		std::pair<int, int> vel = EntitySpawner::getRandomLoc();
 		ranVelocity = btVector3((vel.first % 100), (rand() % 100), (vel.second % 100));
-		printf("random velocity:  x: %f, y: %f, z: %f  \n", ranVelocity.getX(), ranVelocity.getY(), ranVelocity.getZ());
 
 		// add Flag to world
 		curWorld->addRigidBody(curFlag->GetRigidBody());

@@ -8,10 +8,8 @@ void CollectableSpawner::SpawnRandomCollectables(btDiscreteDynamicsWorld* curwor
 		return;
 
 	// determine how many to spawn
-	int num_spawns = (rand() % (MAX_NUM_SPAWNS + MIN_NUM_SPAWNS)) + MIN_NUM_SPAWNS;
-
-	int num_weapons = 0;
-	int num_powers = num_spawns;
+	int num_weapons = (rand() % (MAX_WEAP_SPAWNS - MIN_WEAP_SPAWNS)) + MIN_WEAP_SPAWNS;
+	int num_powers = (rand() % (MAX_POW_SPAWNS - MIN_POW_SPAWNS)) + MIN_POW_SPAWNS;
 
 	// spawn that number of weapons
 	for(int i = 0; i < num_weapons; i++)

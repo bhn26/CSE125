@@ -246,7 +246,6 @@ void World::UpdateWorld()
 			{
 				continue;
 			}
-			printf("collided with user index%d\n", obA->getUserIndex());
 			// Bullet hits player
 			if (obA->getUserIndex() == PLAYER)
 			{
@@ -558,14 +557,12 @@ void World::UpdateWorld()
 				if (((Player *)it->second)->GetStun() > 0)
 					((Player *)it->second)->SetStun(((Player *)it->second)->GetStun() - 4); // unstun the guy
 
-				printf("powerup duration left %d\n", ((Player *)it->second)->GetPowerupDuration());
 				//resets powerups
 				if (((Player *)it->second)->GetPowerupDuration() > 0)
 				{
 					((Player *)it->second)->SetPowerupDuration(((Player *)it->second)->GetPowerupDuration() - 4);
 					if (((Player *)it->second)->GetPowerupDuration() <= 0)
 					{
-						printf("removing power\n");
 						((Player *)it->second)->GetPower()->removePower(((Player *)it->second));
 					}
 				}

@@ -29,6 +29,8 @@ private:
 	// Base and Bonus movement
 	int baseJump;
 	int baseSpeed;
+	int speedPenalty;  // penalty on your speed
+	int lowestSpeed;   // lower bound on speed
 	int bonusJump;
 	int bonusSpeed;
 	int hitPoints;
@@ -50,7 +52,14 @@ public:
 	void SetJumpSem() { jumpSem = 0; }
 
 	// Return Player Base + Bonus
-	int GetPlayerSpeed() { return (baseSpeed + bonusSpeed); };
+	int GetPlayerSpeed() 
+	{ 
+		// check if you're too slow for the speed threshold
+		if((baseSpeed +bonusSpeed - speedPenalty) < lowestSpeed)
+			return lowestSpeed;
+		else
+			return (baseSpeed + bonusSpeed - speedPenalty); 
+	};
 	int GetPlayerJump() { return (baseJump + bonusJump); };
 
 	//TODO *********************************
