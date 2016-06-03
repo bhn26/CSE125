@@ -162,7 +162,8 @@ void Player::MoveTo(float x, float y, float z)
     Entity::MoveTo(x, y, z);
     CalculateCameraPosition();
     CalculateCameraFront();
-    SetAudioListener();
+	if (Scene::Instance()->GetPlayer() == this)
+		SetAudioListener();
     if (m_state != State::JUMP)
     {
         ChangeState(State::WALK);
@@ -176,7 +177,8 @@ void Player::RotateTo(const glm::quat& newOrientation)
     Entity::RotateTo(rotation);
     CalculateCameraPosition();
     CalculateCameraFront();
-    SetAudioListener();
+	if (Scene::Instance()->GetPlayer() == this)
+		SetAudioListener();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
