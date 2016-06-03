@@ -38,6 +38,7 @@ private:
 	Texture * bg;
 	Texture * win;
 	Texture * lose;
+	Texture * tied;
 
 	bool initialized;
 };

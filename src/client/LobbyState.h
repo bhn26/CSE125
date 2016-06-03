@@ -24,12 +24,15 @@ public:
 
 	static LobbyState* GetInstance(CStateManager* pManager);
 
+	void ServerLoading() { loading = true; }
+
 protected:
 	LobbyState(CStateManager* pManager);
 
 private:
 	void RenderSelection();
 	void InitTextures();
+	void ShowLoadingScreen();
 
 	SpriteRenderer * sprite_renderer;
 
@@ -43,7 +46,10 @@ private:
 	Texture *join;
 	Texture *join_disabled;
 
+	Texture * load_screen;
+
 	bool initialized;
+	bool loading;
 };
 
 #endif  // _LOBBYSTATE_H_

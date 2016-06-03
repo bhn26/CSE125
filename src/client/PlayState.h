@@ -51,10 +51,18 @@ private:
 
 	Texture * hud_egg;
 	Texture * hud_health;
+	Texture * hud_power;
 	Texture * hud_weapon_and_timer;
+	
 	Texture * hud_tomato;
 	Texture * hud_potato;
 	Texture * hud_pumpkin_seed;
+	Texture * hud_bb;
+	Texture * hud_mine;
+	Texture * hud_seeds;
+
+	Texture * weapon_missing;
+
 	Texture * hud_weapon;
 
 	Texture * death_overlay;

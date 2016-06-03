@@ -17,7 +17,7 @@ Player::Player(int objectid, int teamid, PosInfo pos, btDiscreteDynamicsWorld* p
 {
 	btCollisionShape* playerShape = new btSphereShape(1);//btCylinderShape(btVector3(1, 1, 1));
 	// Create player physics object
-	btDefaultMotionState*playerMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(pos.x, pos.y, pos.z)));
+	btDefaultMotionState*playerMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(pos.x, 90, pos.z)));
 	btScalar mass = 100;
 	btVector3 playerInertia(0, 0, 0);
 	playerShape->calculateLocalInertia(mass, playerInertia);

@@ -23,6 +23,7 @@ GOState::~GOState()
 	delete bg;
 	delete win;
 	delete lose;
+	delete tied;
 }
 
 GOState* GOState::GetInstance(CStateManager* pManager)
@@ -90,7 +91,10 @@ void GOState::Draw()
 	glClear(GL_DEPTH_BUFFER_BIT); // remove depth info so text and buttons go on top
 
 	//////////////// DISPLAY WINNER ////////////////////////////////
-	if (ClientGame::instance()->GetWinner() == ClientGame::instance()->GetClientTeam()) {
+	if (ClientGame::instance()->GetWinner() == -1) { // tie 
+		sprite_renderer->DrawSprite(*tied, glm::vec2(x, y), glm::vec2(tied->Width(), tied->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+
+	} else if (ClientGame::instance()->GetWinner() == ClientGame::instance()->GetClientTeam()) {
 		sprite_renderer->DrawSprite(*win, glm::vec2(x, y), glm::vec2(win->Width(), win->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 	}
 	else {
@@ -115,6 +119,7 @@ void::GOState::InitTextures() {
 
 		win = new Texture(GL_TEXTURE_2D, "assets/ui/gameover/win.png");
 		lose = new Texture(GL_TEXTURE_2D, "assets/ui/gameover/lose.png");
+		tied = new Texture(GL_TEXTURE_2D, "assets/ui/gameover/tied.png");
 
 		initialized = true;
 	}
