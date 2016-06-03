@@ -1,6 +1,6 @@
 #include "StaticObject.h"
 #include "../Scene.h"
-#include "../PointLight.h"
+#include "../Lights.h"
 #include "../Camera.h"
 #include "../Model.h"
 #include "../Shader.h"
@@ -22,33 +22,24 @@ StaticObject::~StaticObject()
 
 void StaticObject::Translate(glm::vec3 translate)
 {
-	this->toWorld = glm::translate(glm::mat4(1.0f), translate) * this->toWorld;
-}
-
-void StaticObject::Scale(float scaleFactor)
-{
-	this->toWorld = glm::scale(glm::mat4(1.0f), glm::vec3(scaleFactor)) * this->toWorld;
+	//this->toWorld = glm::translate(glm::mat4(1.0f), translate) * this->toWorld;
+    this->toWorld[3] = std::move(glm::vec4(translate, 1.0f));
 }
 
 void StaticObject::Rotate(float deg, glm::vec3 axis)
 {
-	this->toWorld = glm::rotate(glm::mat4(1.0f), deg / 180.0f * glm::pi<float>(), axis) * this->toWorld;
+    //this->toWorld = glm::rotate(glm::mat4(1.0f), glm::radians(deg), axis) * this->toWorld;
+    //this->normalMatrix = glm::mat3(glm::transpose(glm::inverse(toWorld)));
+    RotateTo(glm::mat3(glm::rotate(toWorld, glm::radians(deg), axis)));
 }
 
 void StaticObject::Draw() const
 {
-	shader->Use();
+    // Use the appropriate shader (depth or model)
+    UseShader();
 
-	// Draw the loaded model
-	GLint viewLoc = shader->GetUniform("view");
-	GLint modelLocation = shader->GetUniform("model");
-	GLint projectionLocation = shader->GetUniform("projection");
-
-	glUniformMatrix4fv(viewLoc, 1, false, glm::value_ptr(Scene::Instance()->GetViewMatrix()));
-	glUniformMatrix4fv(modelLocation, 1, false, glm::value_ptr(this->toWorld));
-	glUniformMatrix4fv(projectionLocation, 1, false, glm::value_ptr(Scene::Instance()->GetPerspectiveMatrix()));
-
-	model->Draw(shader.get());
+    // Draw the loaded model
+    model->Draw(Scene::Instance()->IsRenderingDepth() ? nullptr : shader.get());
 }
 
 void StaticObject::Update(float deltaTime)
@@ -60,5 +51,19 @@ void StaticObject::Spin(float deg)
 {
 	// This creates the matrix to rotate the cube
 	this->toWorld = toWorld * glm::rotate(glm::mat4(1.0f), glm::radians(deg), glm::vec3(0.0f, 1.0f, 0.0f));
-	this->normalMatrix = glm::mat3(glm::transpose(glm::inverse(toWorld)));
+    CalculateNormalMatrix();
+}
+
+void StaticObject::SetShaderUniforms() const
+{
+    glUniform1i(shader->GetUniform("shadowMap"), Scene::Instance()->ShadowMapIndex());
+    glActiveTexture(GL_TEXTURE0 + Scene::Instance()->ShadowMapIndex());
+    glBindTexture(GL_TEXTURE_2D, Scene::Instance()->DepthMap());
+
+    glUniformMatrix4fv(shader->GetUniform("model"), 1, false, glm::value_ptr(this->toWorld));
+    glUniformMatrix3fv(shader->GetUniform("normalMatrix"), 1, false, glm::value_ptr(this->normalMatrix));
+    glUniformMatrix4fv(shader->GetUniform("view"), 1, false, glm::value_ptr(Scene::Instance()->GetViewMatrix()));
+    glUniformMatrix4fv(shader->GetUniform("projection"), 1, false, glm::value_ptr(Scene::Instance()->GetPerspectiveMatrix()));
+    glUniformMatrix4fv(shader->GetUniform("lightSpaceMatrix"), 1, false, glm::value_ptr(Scene::Instance()->LightSpaceMatrix()));
+    LoadDirectionalLight(Scene::Instance()->GetDirectionalLight());
 }

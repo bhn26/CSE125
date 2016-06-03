@@ -176,7 +176,8 @@ private:
 	bool iSpawned = false;
 
     static void Error_callback(int error, const char* description);
-    void Setup_callbacks();
+    void LoadConfigs();
+	void Setup_callbacks();
     void Setup_glew();
     void Setup_opengl_settings();
     void Print_versions();

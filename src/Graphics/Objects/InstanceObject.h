@@ -1,5 +1,5 @@
 //
-//  InstanceObject.h
+//  Grass.h
 //  egg scramble
 //
 //  Created by Michelle on 4/11/16.
@@ -22,8 +22,8 @@ class Model;
 class InstanceObject : public Entity
 {
 public:
-	//InstanceObject(const GLchar* path, GLuint num);
-    InstanceObject(std::shared_ptr<Model> instanceModel, GLuint num);
+	//InstanceObject(const GLchar* path, GLuint num, GLfloat delta);
+	InstanceObject(std::shared_ptr<Model> instanceModel, GLuint num, GLfloat delta);
 	~InstanceObject();
 
     //Model* instance;
@@ -34,6 +34,13 @@ public:
 	glm::vec3 color;
 	static GLfloat deltaTime;
 	static GLfloat lastFrame;
-	void Draw() const override;
+
+    // Inherited via Entity
+    void Draw() const override;
     void Update(float deltaTime) override {}
+    virtual void UseShader() const override;
+    virtual void SetShaderUniforms() const override;
+
+    void SetColor(glm::vec3 color);
 };
+

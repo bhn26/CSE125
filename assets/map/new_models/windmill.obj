@@ -1,7 +1,8 @@
 # 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
 # File Created: 09.09.2015 12:10:43
 
-mtllib 3d-model.mtl
+#mtllib 3d-model.mtl
+mtllib windmill.mtl
 
 #
 # object Component_1_068
@@ -8204,4 +8205,3 @@ f 1672/2271/950 1671/2272/950 1650/2273/950 1651/2274/950
 f 1670/2275/949 1673/2276/949 1652/2277/949 1653/2278/949 
 f 1652/2279/955 1673/2280/955 1672/2281/955 1651/2282/955 
 # 68 polygons
-

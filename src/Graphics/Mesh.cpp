@@ -7,12 +7,16 @@
 // GL Includes
 #include <GL/glew.h> // Contains all the necessery OpenGL includes
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
-Mesh::Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices, std::vector<Mesh::Texture> textures)
+#include "Shader.h"
+
+Mesh::Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices, std::vector<Mesh::Texture> textures, Material material)
 {
     this->vertices = vertices;
     this->indices = indices;
     this->textures = textures;
+    this->material = material;
 
     // Now that we have all the required data, set the vertex buffers and its attribute pointers.
     this->SetupMesh();
@@ -30,33 +34,51 @@ Mesh::~Mesh()
 
 void Mesh::Draw(const Shader* shader)
 {
-    shader->Use(); 
-
-    // Bind appropriate textures
-    GLuint diffuseNr = 1;
-    GLuint specularNr = 1;
-
-    // Textures
-    for (GLuint i = 0; i < this->textures.size(); i++)
+    if (shader)
     {
-        glActiveTexture(GL_TEXTURE0 + i); // Active proper texture unit before binding
-                                          // Retrieve texture number (the N in diffuse_textureN)
-        std::stringstream ss;
-        std::string number;
-        std::string name = this->textures[i].type;
-        if (name == "texture_diffuse")
-            ss << diffuseNr++; // Transfer GLuint to stream
-        else if (name == "texture_specular")
-            ss << specularNr++; // Transfer GLuint to stream
-        number = ss.str();
-        // Now set the sampler to the correct texture unit
-        glUniform1i(shader->GetUniform((name + number).c_str()), i);
-        // And finally bind the texture
-        glBindTexture(GL_TEXTURE_2D, this->textures[i].id);
-    }
+        shader->Use(); 
 
-    // Also set each mesh's shininess property to a default value (if you want you could extend this to another mesh property and possibly change this value)
-    glUniform1f(shader->GetUniform("material.shininess"), 16.0f);
+        // Bind appropriate textures
+        GLuint diffuseNr = 1;
+        GLuint specularNr = 1;
+
+        // Textures
+        if (!this->textures.size())
+        {
+            glUniform1i(shader->GetUniform("useTexture"), FALSE);
+        }
+        for (GLuint i = 0; i < this->textures.size(); i++)
+        {
+            glUniform1i(shader->GetUniform("useTexture"), TRUE);        // I think this is right??
+            glActiveTexture(GL_TEXTURE0 + i); // Active proper texture unit before binding
+                                              // Retrieve texture number (the N in diffuse_textureN)
+            std::stringstream ss;
+            std::string number;
+            std::string name = this->textures[i].type;
+            if (name == "texture_diffuse")
+                ss << diffuseNr++; // Transfer GLuint to stream
+            else if (name == "texture_specular")
+                ss << specularNr++; // Transfer GLuint to stream
+            number = ss.str();
+            // Now set the sampler to the correct texture unit
+            glUniform1i(shader->GetUniform((name + number).c_str()), i);
+            // And finally bind the texture
+            glBindTexture(GL_TEXTURE_2D, this->textures[i].id);
+        }
+
+        // Also set each mesh's shininess property to a default value (if you want you could extend this to another mesh property and possibly change this value)
+        glUniform1f(shader->GetUniform("material.shininess"), 16.0f);
+
+        if (material.Valid())       // Test if there's a diffuse
+        {
+            SetMaterial(shader, material);
+            glUniform1i(shader->GetUniform("useMaterial"), TRUE);
+        }
+        else
+        {
+            glUniform1i(shader->GetUniform("useMaterial"), FALSE);
+        }
+    }
 
     // Draw mesh
     glBindVertexArray(this->vao);
@@ -65,7 +87,7 @@ void Mesh::Draw(const Shader* shader)
 
     // Always good practice to set everything back to defaults once configured.
     // Textures
-    for (GLuint i = 0; i < this->textures.size(); i++)
+    for (GLuint i = 0; shader && i < this->textures.size(); i++)
     {
         glActiveTexture(GL_TEXTURE0 + i);
         glBindTexture(GL_TEXTURE_2D, 0);
@@ -104,4 +126,12 @@ void Mesh::SetupMesh()
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, texCoords));
 
     glBindVertexArray(0);
+}
+
+void Mesh::SetMaterial(const Shader* shader, const Material & material) const
+{
+    glUniform3fv(shader->GetUniform("material._diffuse"), 1, glm::value_ptr(material._diffuse));
+    glUniform3fv(shader->GetUniform("material._specular"), 1, glm::value_ptr(material._specular));
+    glUniform3fv(shader->GetUniform("material._ambient"), 1, glm::value_ptr(material._ambient));
+    glUniform1f(shader->GetUniform("material._shininess"), material._shininess);
 }

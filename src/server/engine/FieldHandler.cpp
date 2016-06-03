@@ -30,9 +30,11 @@ void FieldHandler::HandleFields()
 	while (it != activeFields->end())
 	{
 		// if field is done, remove from queue
-		if (!(*it)->handleField())
+		if ((*it)->handleField())
 		{
+			auto tempIt = (*it);
 			it = activeFields->erase(it);
+			delete tempIt;
 		}
 		else
 		{

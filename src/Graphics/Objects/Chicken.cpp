@@ -8,7 +8,7 @@
 
 #include "Chicken.h"
 #include "../Scene.h"
-#include "../PointLight.h"
+#include "../Lights.h"
 #include "../Camera.h"
 #include "../Model.h"
 #include "../ModelManager.h"
@@ -33,20 +33,16 @@ Chicken::~Chicken()
 
 void Chicken::Draw() const
 {
-    shader->Use();
-    
-    // Draw the loaded model
-    GLint viewLoc = shader->GetUniform("view");
-    GLint modelLocation = shader->GetUniform("model");
-    GLint projectionLocation = shader->GetUniform("projection");
-    
-    glUniformMatrix4fv(viewLoc, 1, false, glm::value_ptr(Scene::Instance()->GetViewMatrix()));
-    glUniformMatrix4fv(modelLocation, 1, false, glm::value_ptr(this->toWorld));
-    glUniformMatrix4fv(projectionLocation, 1, false, glm::value_ptr(Scene::Instance()->GetPerspectiveMatrix()));
+    // Use the appropriate shader (depth or model)
+    UseShader();
 
-    model->Draw(shader.get());
+    // Draw the loaded model
+    model->Draw(Scene::Instance()->IsRenderingDepth() ? nullptr : shader.get());
 }
 
-void Chicken::Update(float deltaTime)
+void Chicken::SetShaderUniforms() const
 {
+    glUniformMatrix4fv(shader->GetUniform("view"), 1, false, glm::value_ptr(Scene::Instance()->GetViewMatrix()));
+    glUniformMatrix4fv(shader->GetUniform("model"), 1, false, glm::value_ptr(this->toWorld));
+    glUniformMatrix4fv(shader->GetUniform("projection"), 1, false, glm::value_ptr(Scene::Instance()->GetPerspectiveMatrix()));
 }

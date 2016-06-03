@@ -4,6 +4,8 @@
 #include <iostream>
 #include <map>
 #include <string>
+#include <memory>
+
 // GLM
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -11,8 +13,8 @@
 // FreeType
 #include <ft2build.h>
 #include FT_FREETYPE_H
-// GL includes
-#include "../Graphics/Shader.h"
+
+class Shader;
 
 // Properties
 const GLuint WIDTH = 800, HEIGHT = 600;
@@ -26,7 +28,7 @@ struct Character {
 };
 
 class TextRenderer {
-	static Shader shader; // shader for font
+	static std::shared_ptr<Shader> shader; // shader for font
 	static std::map<GLchar, Character> Characters;
 	static GLuint VAO, VBO;
 

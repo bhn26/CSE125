@@ -408,6 +408,7 @@ void World::UpdateWorld()
 				{
 					continue;
 				}
+
 				collideFlag->HandleCollectable(collidePlayer);
 				ServerGame::instance()->sendRemovePacket(ClassId::FLAG, collideFlag->GetObjectId(), ClassId::PLAYER, collidePlayer->GetObjectId());
 				markedList.push_back(collideFlag);

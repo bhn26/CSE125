@@ -2,35 +2,55 @@
 #include <memory>
 #include <vector>
 
+#include <GL/glew.h>
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include <vector>
 #include <map>
 
 #include "Objects/Entity.h"
-#include "Objects/CubeMap.h"
 #include "Objects/Ground.h"
-#include "Objects/StaticObject.h"
 #include "Objects/Grass.h"
-#include "Objects/InstanceObject.h"
 #include "ShaderManager.h"
-#include "client\SpriteRenderer.h"
-#include "../network/GameData.h"
+#include "client/SpriteRenderer.h"
+#include "network/GameData.h"
 
 
 class Camera;
 class Player;
+class Shader;
+class CubeMap;
+class InstanceObject;
+class StaticObject;
 
 struct PointLight;
-class ChickenAnim;
+struct DirectionalLight;
 
 class Scene
 {
+    enum UBOIndex
+    {
+        Matrices = 0,
+        Lights = 1,
+    };
+
+    //const GLuint SHADOW_DEPTH_WIDTH = 4096, SHADOW_DEPTH_HEIGHT = 4096;
+    const GLuint SHADOW_DEPTH_WIDTH = 1024, SHADOW_DEPTH_HEIGHT = 1024;
+    unsigned int shadowMapIndex = 7;
     float lastTime;
+    GLuint uboMatricesBuffer;
+    GLuint depthMapFBO;
+    GLuint depthMap;
+    bool renderingDepthMap = false;
+    std::shared_ptr<Shader> depthShader;
+    glm::mat4 lightSpaceMatrix;
+
     std::unique_ptr<Camera> camera;
     std::unique_ptr<PointLight> pLight;
+    std::unique_ptr<DirectionalLight> dLight;
 	std::unique_ptr<CubeMap> cubeMap;
 	std::unique_ptr<Ground> ground;
-	std::unique_ptr<Grass> grass;
+	std::unique_ptr<InstanceObject> grass;
 	std::unique_ptr<InstanceObject> pumpkin;
 
     Player* player;
@@ -43,15 +63,19 @@ class Scene
 
     Scene();
     void Setup();
+    void InitializeUBOs();
+    void InitializeFBO();
+    void SetViewUBO();
+    void SetLightSpaceUBO();
+    void SetProjectionUBO();
+    void ConfigureShaderAndMatrices();
+    void RenderDepthMap();
+    void DrawDepthMap();
+    void RenderScene();
+    void RenderQuad();
 
 public:
-    std::shared_ptr<Shader> basicShader;
-    std::shared_ptr<Shader> diffuseShader;
-    std::shared_ptr<Shader> modelShader;
-    std::shared_ptr<Shader> cubeMapShader;
-    std::shared_ptr<Shader> instanceShader;
-
-	static SpriteRenderer * sprite_renderer;
+    static SpriteRenderer * sprite_renderer;
 
     static Scene* Instance()
     {
@@ -78,8 +102,21 @@ public:
     std::unique_ptr<PointLight>& GetPointLight() { return pLight; }
 	Player*& GetPlayer() { return player; }
 	StaticObject* GetStaticObject(int i) { return static_objects[i].get(); }
-	int GetSize() { return static_objects.size(); }
+    DirectionalLight* GetDirectionalLight() { return dLight.get(); }
+    int NumberOfStaticObjects() { return static_objects.size(); }
 
-	// helpers 
-	static glm::vec2 Get2D(glm::vec3 coords, glm::mat4 view, glm::mat4 projection/*perspective matrix */, int width, int height);
+    bool IsRenderingDepth() const { return renderingDepthMap; }
+    std::shared_ptr<Shader>& GetDepthShader() { return depthShader; }
+
+    unsigned int ShadowMapIndex() const { return shadowMapIndex; }
+    GLuint DepthMap() const { return depthMap; }
+    const glm::mat4& LightSpaceMatrix()
+    {
+        //lightSpaceMatrix = glm::ortho(-100.0f, 100.0f, -100.0f, 100.0f, 1.0f, 500.0f) * GetViewMatrix();
+        return lightSpaceMatrix;
+    }
+
+private:
+    // helpers 
+    static glm::vec2 Get2D(glm::vec3 coords, glm::mat4 view, glm::mat4 projection/*perspective matrix */, int width, int height);
 };

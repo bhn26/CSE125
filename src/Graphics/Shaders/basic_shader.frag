@@ -1,8 +1,13 @@
 #version 330 core
 
+in VS_OUT
+{
+    vec3 _fragPos;
+    vec3 _normal;
+    vec2 _texCoords;
+} fs_in;
+
 out vec4 color;
-in vec3 FragPos;
-in vec3 Normal;
 
 uniform vec3 objectColor;
 uniform vec3 lightColor;
@@ -18,9 +23,9 @@ void main()
     vec3 ambient = ambientStrength * lightColor;
 
     // Calculations
-    vec3 norm = normalize(Normal);
-    vec3 lightDir = normalize(lightPos - FragPos); 
-    vec3 viewDir = normalize(viewPos - FragPos);
+    vec3 norm = normalize(fs_in._normal);
+    vec3 lightDir = normalize(lightPos - fs_in._fragPos); 
+    vec3 viewDir = normalize(viewPos - fs_in._fragPos);
     vec3 reflectDir = reflect(-lightPos, norm);
 
     // Diffuse

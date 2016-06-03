@@ -4,17 +4,19 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "client/Window.h"
+#include "client/Player.h"
 #include "../Scene.h"
-#include "../PointLight.h"
+#include "../Lights.h"
 #include "../Camera.h"
-#include "../../client/Player.h"
 #include "../Model.h"
 #include "../ModelManager.h"
 
-Grass::Grass() : Entity()
+Grass::Grass(const GLchar* path, GLuint num) : Entity()
 {
-	//grass = new Model("assets/map/objects/nature/plant.obj");
-    grass = ModelManager::GetModel("Grass");
+	//grass = new Model(path);
+	grass = ModelManager::GetModel("Grass");
+	amount = num;
+	shader = ShaderManager::Instance()->GetShader("Instancing");
 
 	// Generate large list of semi-random transformation matrices
 	amount = 10000;
@@ -79,18 +81,11 @@ void Grass::Draw() const
 	//deltaTime = currentFrame - lastFrame;
 	//lastFrame = currentFrame;
 
-	// Draw the loaded model
-	shader->Use();
-	GLint viewLoc = shader->GetUniform("view");
-	glUniformMatrix4fv(viewLoc, 1, false, glm::value_ptr(Scene::Instance()->GetViewMatrix()));
-	GLint modelLocation = shader->GetUniform("model");
-	GLint projectionLocation = shader->GetUniform("projection");
+    // Use the appropriate shader (depth or model)
+    UseShader();
 
-	glUniformMatrix4fv(modelLocation, 1, false, glm::value_ptr(this->toWorld));
-	glUniformMatrix4fv(projectionLocation, 1, false, glm::value_ptr(Scene::Instance()->GetPerspectiveMatrix()));
-
-	glBindTexture(GL_TEXTURE_2D, grass->Textures()[0].id);
 	for (GLuint i = 0; i < grass->Meshes().size(); i++) {
+		glBindTexture(GL_TEXTURE_2D, grass->Textures()[i].id);
 		glBindVertexArray(grass->Meshes()[i].VAO());
 		glDrawElementsInstanced(GL_TRIANGLES, grass->Meshes()[i].vertices.size(), GL_UNSIGNED_INT, 0, amount);
 		glBindVertexArray(0);
@@ -101,4 +96,12 @@ void Grass::Draw() const
 
 void Grass::Update(float deltaTime)
 {
+}
+
+void Grass::SetShaderUniforms() const
+{
+    glUniformMatrix4fv(shader->GetUniform("view"), 1, false, glm::value_ptr(Scene::Instance()->GetViewMatrix()));
+    glUniformMatrix4fv(shader->GetUniform("model"), 1, false, glm::value_ptr(this->toWorld));
+    glUniformMatrix4fv(shader->GetUniform("projection"), 1, false, glm::value_ptr(Scene::Instance()->GetPerspectiveMatrix()));
+    LoadDirectionalLight(Scene::Instance()->GetDirectionalLight());
 }
