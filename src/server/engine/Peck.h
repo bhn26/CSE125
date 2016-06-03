@@ -7,7 +7,7 @@ class Peck : public Weapon
 {
 protected:
 	int meleefireRate = 50;
-	int meleeDamage = 25;
+	int meleeDamage = 32;
 public:
 	Peck(btDiscreteDynamicsWorld* curWorld);
 	~Peck();

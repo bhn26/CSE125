@@ -163,6 +163,8 @@ void Player::MoveTo(float x, float y, float z)
     Entity::MoveTo(x, y, z);
     CalculateCameraPosition();
     CalculateCameraFront();
+    if (Scene::Instance()->GetPlayer() == this)
+        SetAudioListener();
     if (m_state != State::JUMP)
     {
         ChangeState(State::WALK);
@@ -176,6 +178,8 @@ void Player::RotateTo(const glm::quat& newOrientation)
     Entity::RotateTo(rotation);
     CalculateCameraPosition();
     CalculateCameraFront();
+    if (Scene::Instance()->GetPlayer() == this)
+        SetAudioListener();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -213,6 +217,7 @@ void Player::ProcessMouseMovement(GLfloat xoffset, GLfloat yoffset, GLboolean co
 
     CalculateCameraPosition();
     CalculateCameraFront();
+    SetAudioListener();
 
 	// Don't send me stuff unless you're alive
 	if (++tick % 10 == 0 && alive == true)
@@ -244,6 +249,7 @@ void Player::ProcessViewMovement(GLfloat xoffset, GLfloat yoffset, GLboolean con
 
     CalculateCameraPosition();
     CalculateCameraFront();
+    SetAudioListener();
 
     if (++tick % 10 == 0)
     {
@@ -279,6 +285,7 @@ glm::vec3 Player::GetFront() const
 	return camera->Front();
 }
 
+////////////////////////////////////////////////////////////////////////////////
 glm::mat4 Player::GetPerspectiveMatrix() const
 {
     return camera->GetPerspectiveMatrix();
@@ -302,35 +309,63 @@ void Player::ChangeState(State state)
     if (state == m_state && !(state == State::DANCE || state == State::DEATH || state == State::PECK))
         return;
 
+    CheckStopDanceSound();
     SetState(state);
     switch (state)
     {
         case State::IDLE:
+        {
             m_model->SetAnimation("dance");
             m_model->Reset();
             break;
+        }
         case State::WALK:
+        {
             m_model->PlayAnimation("walk");
             m_lastTime_t = Utils::CurrentTime();
             m_lastPos_t = Position();
             break;
+        }
         case State::JUMP:
+        {
             m_model->PlayAnimation("jump");
             m_lastTime_t = Utils::CurrentTime();
             m_lastPos_t = Position();
+            glm::vec3 position = Position();
+            SoundsHandler::SoundOptions options(position.x, position.y, position.z);
+            ClientGame::instance()->PlaySound("Jump", options);
             break;
+        }
         case State::ATTACK:
+        {
             m_model->PlayAnimation("melee");
+            glm::vec3 position = Position();
+            SoundsHandler::SoundOptions options(position.x, position.y, position.z);     // Play at own position
+            ClientGame::instance()->PlaySound("Melee", options);     // Play at own position
             break;
+        }
         case State::DANCE:
+        {
             m_model->PlayAnimation("dance");
+            glm::vec3 position = Position();
+            SoundsHandler::SoundOptions options(position.x, position.y, position.z);     // Play at own position
+            options._loops = true;
+            m_danceSoundIndices.push(ClientGame::instance()->PlaySound("Dance", options));
             break;
+        }
         case State::DEATH:
+        {
             m_model->PlayAnimation("death");
+            glm::vec3 position = Position();
+            SoundsHandler::SoundOptions options(position.x, position.y, position.z);     // Play at own position
+            ClientGame::instance()->PlaySound("Death", options);
             break;
+        }
         case State::PECK:
+        {
             m_model->PlayAnimation("peck");
             break;
+        }
     }
 }
 
@@ -365,6 +400,17 @@ void Player::OnFinish()
 		ChangeState(State::IDLE);
 }
 
+void Player::CheckStopDanceSound()
+{
+    while (m_danceSoundIndices.size())
+    {
+        int index = m_danceSoundIndices.top();
+        m_danceSoundIndices.pop();
+        if (index != -1)
+            ClientGame::instance()->StopSound(index);
+    }
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 void Player::SetRelativeCamPosition(glm::vec3 relativePos)
 {
@@ -393,4 +439,13 @@ void Player::CalculateCameraFront()
 float Player::DistanceFromLastPos(glm::vec3 newPosition) const
 {
     return glm::distance(m_lastPos_t, newPosition);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Player::SetAudioListener() const
+{
+    glm::vec3 position = Position();
+    glm::vec3 direction = camera->Front();
+    sf::Listener::setPosition(position.x, position.y, position.z);
+    sf::Listener::setDirection(direction.x, direction.y, direction.z);
 }

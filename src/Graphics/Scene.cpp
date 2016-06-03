@@ -38,6 +38,7 @@ Scene::Scene() : camera(std::unique_ptr<Camera>(nullptr)), pLight(nullptr),
 ////////////////////////////////////////////////////////////////////////////////
 void Scene::Setup()
 {
+    printf("\n=== Setting up Scene ===\n");
     entities.clear();
 
     InitializeUBOs();
@@ -46,11 +47,12 @@ void Scene::Setup()
     glm::vec3 pos = glm::vec3(std::stof(ConfigManager::instance()->GetConfigValue("Light_Pos_X")),
         std::stof(ConfigManager::instance()->GetConfigValue("Light_Pos_Y")),
         std::stof(ConfigManager::instance()->GetConfigValue("Light_Pos_Z")));
+    glm::vec3 camPos = pos + glm::vec3(-75.0f, 0.0f, 0.0f);
 
     pLight = std::unique_ptr<PointLight>(new PointLight(glm::vec3(0.0f, 20.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)));
     dLight = std::unique_ptr<DirectionalLight>(new DirectionalLight(glm::vec3(0.5, -sqrt(3)/2.0f, 0.0f)));
     dLight->_ambientIntensity = 0.3f;
-    camera = std::unique_ptr<Camera>(new Camera(pos, glm::vec3(0.0f, 1.0f, 0.0f), dLight->_direction));
+    camera = std::unique_ptr<Camera>(new Camera(camPos, glm::vec3(0.0f, 1.0f, 0.0f), dLight->_direction));
 
     //glm::vec3 pos = glm::vec3(0.0f, 250.0f, 0.0f);
     //lightSpaceMatrix = glm::ortho(-425.0f, 350.0f, -500.0f, 300.0f, 10.0f, 500.0f) *
@@ -171,6 +173,7 @@ void Scene::Setup()
 	static_objects.push_back(std::move(bench));
 	//static_objects.push_back(std::move(pumpkinObj));
 	static_objects.push_back(std::move(seed));
+    printf("=== Done setting up Scene! ===\n\n");
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -492,13 +495,26 @@ void Scene::AddEntity(PosInfo p)
 		case ClassId::COLLECTABLE:
 		{
 			//std::unique_ptr<StaticObject> bullet = std::unique_ptr<StaticObject>(new StaticObject("assets/weapons/pumpkinseed.obj"));
-			egg = std::unique_ptr<Egg>(new Egg(p.x, p.y, p.z, "Wood_Egg"));
-			egg->SetColor(glm::vec3(0.27f, 0.16f, 0.0f));
-			egg->GetShader() = ShaderManager::GetShader("Model");
-			egg->SetClassId(p.cid);
-			egg->SetObjId(p.oid);
-			//bullet->GetShader() = modelShader;        // Set in ModelEntity
-			AddEntity(p.cid, p.oid, std::move(egg));
+			if(p.sub_id == CollectType::WEAPONCOLLECT)
+			{ 
+				egg = std::unique_ptr<Egg>(new Egg(p.x, p.y, p.z, "Robot_Egg"));
+				egg->SetColor(glm::vec3(0.27f, 0.16f, 0.0f));
+				egg->GetShader() = ShaderManager::GetShader("Model");
+				egg->SetClassId(p.cid);
+				egg->SetObjId(p.oid);
+				//bullet->GetShader() = modelShader;        // Set in ModelEntity
+				AddEntity(p.cid, p.oid, std::move(egg));
+			}
+			else if (p.sub_id == CollectType::POWERUPCOLLECT)
+			{
+				egg = std::unique_ptr<Egg>(new Egg(p.x, p.y, p.z, "Wood_Egg"));
+				egg->SetColor(glm::vec3(0.27f, 0.16f, 0.0f));
+				egg->GetShader() = ShaderManager::GetShader("Model");
+				egg->SetClassId(p.cid);
+				egg->SetObjId(p.oid);
+				//bullet->GetShader() = modelShader;        // Set in ModelEntity
+				AddEntity(p.cid, p.oid, std::move(egg));
+			}
 			break;
 		}
         case ClassId::FIELD:

@@ -199,6 +199,7 @@ void EntitySpawner::spawnCollectable(btDiscreteDynamicsWorld* curWorld, WeaponTy
 	out.x = vec.getX();
 	out.y = vec.getY();
 	out.z = vec.getZ();
+	out.sub_id = CollectType::WEAPONCOLLECT;
 	out.rotw = quat.getW();
 	out.rotx = quat.getX();
 	out.roty = quat.getY();
@@ -255,6 +256,7 @@ void EntitySpawner::spawnCollectable(btDiscreteDynamicsWorld* curWorld, PowerupT
 	out.x = vec.getX();
 	out.y = vec.getY();
 	out.z = vec.getZ();
+	out.sub_id = CollectType::POWERUPCOLLECT;
 	out.rotw = quat.getW();
 	out.rotx = quat.getX();
 	out.roty = quat.getY();

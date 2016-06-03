@@ -52,7 +52,7 @@ CPlayState* CPlayState::GetInstance(CStateManager* pManager)
 
 void CPlayState::EnterState()
 {
-	
+    ClientGame::instance()->PlayMenuSound();
 }
 
 void CPlayState::Reset()

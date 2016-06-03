@@ -5,7 +5,7 @@ Shotgun::Shotgun(btDiscreteDynamicsWorld* curworld) : Weapon(fireRate, damage, c
 {
 	wt = WeaponType::SHOTGUN;
 	nextFireTick = 0;
-	fireRate = 40;
+	fireRate = 30;
 	damage = 20;
 	currentAmmo = 100;
 	maxAmmo = 100;

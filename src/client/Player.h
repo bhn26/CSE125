@@ -6,6 +6,7 @@
 #include <GLFW/glfw3.h>
 
 #include <string>
+#include <stack>
 #include <unordered_map>
 #include "Graphics/Objects/Entity.h"
 #include "Graphics/Animation/AnimationPlayer.h"
@@ -62,7 +63,8 @@ public:
     void Jump() { ChangeState(State::JUMP); }
     void Dance() { ChangeState(State::DANCE); }
     void Attack() { ChangeState(State::ATTACK); }
-	void Die() { ChangeState(State::DEATH); alive = false; health = 0; }
+    void TauntDie() { ChangeState(State::DEATH); }
+    void Die() { ChangeState(State::DEATH); alive = false; health = 0; }
     void Peck() { ChangeState(State::PECK); }
 
 
@@ -111,10 +113,12 @@ public:
 private:
     // AnimationPlayer::Listener
     virtual void OnFinish() override;
+    void CheckStopDanceSound();
     void SetRelativeCamPosition(glm::vec3 relativePos);
     void CalculateCameraPosition();
     void CalculateCameraFront();
     float DistanceFromLastPos(glm::vec3 newPosition) const;
+    void SetAudioListener() const;
 
 private:
     // Player is made up of a model with a camera following it
@@ -152,6 +156,8 @@ private:
     float m_lastTime_t;     // Test
     float m_distanceThreshhold_t;
     glm::vec3 m_lastPos_t;
+
+    std::stack<int> m_danceSoundIndices;      // Sound index
 
 };
 

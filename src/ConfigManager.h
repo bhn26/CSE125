@@ -1,13 +1,11 @@
 //
-//  ConfigLoader.hpp
+//  ConfigManager.hpp
 //  egg scramble
 //
 //  Created by Phoebe on 4/18/16.
 //  Copyright © 2016 sunny side up. All rights reserved.
 //
-
-#ifndef ConfigLoader_h
-#define ConfigLoader_h
+#pragma once
 
 #include <string>
 #include <map>
@@ -21,7 +19,10 @@ public:
     void LoadConfigs(const std::string& file_name);
 
     // use this to get the value read from the config file
-    std::string GetConfigValue(const std::string& key) const;
+    static std::string GetConfigValue(const std::string& key);
+    static int GetAsInt(const std::string& key);
+    static long GetAsLong(const std::string& key);
+    static float GetAsFloat(const std::string& key);
 
     static ConfigManager* instance()
     {
@@ -32,6 +33,5 @@ public:
 private:
     ConfigManager(void) {}
     ~ConfigManager(void) {}
+    bool HasPrefix(const std::string& word, const std::string& prefix) const;
 };
-
-#endif /* ConfigLoader_h */
