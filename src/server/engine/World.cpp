@@ -40,7 +40,7 @@ void World::Init() {
 
 	// Add Ground Object
 	//btCollisionShape* groundShape = new btStaticPlaneShape(btVector3(btScalar(0.), btScalar(1.), btScalar(0.)), 0);
-	btCollisionShape* groundShape = new btBoxShape(btVector3(WORLD_WIDTH, 1, WORLD_WIDTH));
+	btCollisionShape* groundShape = new btBoxShape(btVector3(WORLD_WIDTH+50, 1, WORLD_WIDTH+50));
 	btDefaultMotionState* groundMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, -1, 0)));
 	btRigidBody::btRigidBodyConstructionInfo groundRigidBodyCI(0, groundMotionState, groundShape, btVector3(0, 0, 0));
 	groundRigidBodyCI.m_friction = .4;
@@ -52,6 +52,18 @@ void World::Init() {
 	// Create Ground Obstacle
 	WorldObstacle* groundwall = new WorldObstacle(z++, groundRigidBody, curWorld);
 	
+	// Add Sky Object
+	btCollisionShape* skyShape = new btBoxShape(btVector3(WORLD_WIDTH + 50, 1, WORLD_WIDTH + 50));
+	btDefaultMotionState* skyMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, WORLD_HEIGHT, 0)));
+	btRigidBody::btRigidBodyConstructionInfo skyRigidBodyCI(0, skyMotionState, skyShape, btVector3(0, 0, 0));
+	skyRigidBodyCI.m_friction = .4;
+	btRigidBody* skyRigidBody = new btRigidBody(skyRigidBodyCI);
+	skyRigidBody->setGravity(btVector3(0, 0, 0));
+	dynamicsWorld->addRigidBody(skyRigidBody);
+	skyRigidBody->setUserIndex(ClassId::OBSTACLE);
+	// Create Ground Obstacle
+	WorldObstacle* skywall = new WorldObstacle(z++, skyRigidBody, curWorld);
+
 	// Add Pos X Wall
 	//btCollisionShape* xWallShape = new btStaticPlaneShape(btVector3(btScalar(-1.), btScalar(0.), btScalar(0.)), 0);
 	btCollisionShape* xWallShape = new btBoxShape(btVector3(1, WORLD_HEIGHT, WORLD_WIDTH));

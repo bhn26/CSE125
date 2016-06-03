@@ -8,6 +8,7 @@
 #include "../../network/GameData.h"
 
 class WorldObstacle;
+class MapLoader;
 
 using namespace std;
 

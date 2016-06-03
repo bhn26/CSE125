@@ -1,4 +1,49 @@
-newmtl bench3:lambert2SG
+newmtl barn:lambert2SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.32 0.32 0.32
+Tf 1.00 1.00 1.00
+map_Kd barn.png
+Ni 1.00
+newmtl barn1:lambert2SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.32 0.32 0.32
+Tf 1.00 1.00 1.00
+map_Kd barn.png
+Ni 1.00
+newmtl barn2:lambert3SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd barn.png
+Ni 1.00
+newmtl initialShadingGroup
+illum 4
+Kd 0.50 0.50 0.50
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+newmtl map_resized:Material
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd pumpkin.png
+Ni 1.00
+Ks 0.50 0.50 0.50
+Ns 18.00
+newmtl map_resized:Material_001
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd stem.png
+Ni 1.00
+Ks 0.50 0.50 0.50
+Ns 18.00
+newmtl map_resized:bench3:lambert2SG
 illum 4
 Kd 0.00 0.00 0.00
 Ka 0.00 0.00 0.00
@@ -7,7 +52,7 @@ map_Kd bench.png
 Ni 1.00
 Ks 0.50 0.50 0.50
 Ns 18.00
-newmtl boat1:Color_000
+newmtl map_resized:boat1:Color_000
 illum 4
 Kd 1.00 1.00 1.00
 Ka 0.59 0.59 0.59
@@ -15,7 +60,7 @@ Tf 1.00 1.00 1.00
 Ni 1.50
 Ks 0.00 0.00 0.00
 Ns 10.00
-newmtl boat1:Color_005
+newmtl map_resized:boat1:Color_005
 illum 4
 Kd 0.45 0.45 0.45
 Ka 0.59 0.59 0.59
@@ -23,7 +68,7 @@ Tf 1.00 1.00 1.00
 Ni 1.50
 Ks 0.00 0.00 0.00
 Ns 10.00
-newmtl boat1:Color_A01
+newmtl map_resized:boat1:Color_A01
 illum 4
 Kd 1.00 0.00 0.00
 Ka 0.59 0.59 0.59
@@ -31,7 +76,7 @@ Tf 1.00 1.00 1.00
 Ni 1.50
 Ks 0.00 0.00 0.00
 Ns 10.00
-newmtl boat1:Color_A05
+newmtl map_resized:boat1:Color_A05
 illum 4
 Kd 1.00 0.80 0.80
 Ka 0.59 0.59 0.59
@@ -39,7 +84,7 @@ Tf 1.00 1.00 1.00
 Ni 1.50
 Ks 0.00 0.00 0.00
 Ns 10.00
-newmtl boat1:Color_F03
+newmtl map_resized:boat1:Color_F03
 illum 4
 Kd 0.70 1.00 0.40
 Ka 0.59 0.59 0.59
@@ -47,7 +92,7 @@ Tf 1.00 1.00 1.00
 Ni 1.50
 Ks 0.00 0.00 0.00
 Ns 10.00
-newmtl boat1:Color_H14
+newmtl map_resized:boat1:Color_H14
 illum 4
 Kd 0.36 0.60 0.60
 Ka 0.59 0.59 0.59
@@ -55,7 +100,7 @@ Tf 1.00 1.00 1.00
 Ni 1.50
 Ks 0.00 0.00 0.00
 Ns 10.00
-newmtl boat1:Metal_Aluminum_Anodized
+newmtl map_resized:boat1:Metal_Aluminum_Anodized
 illum 4
 Kd 1.00 1.00 1.00
 Ka 0.59 0.59 0.59
@@ -63,7 +108,7 @@ Tf 1.00 1.00 1.00
 Ni 1.50
 Ks 0.00 0.00 0.00
 Ns 10.00
-newmtl boat1:Translucent_Glass_Gold
+newmtl map_resized:boat1:Translucent_Glass_Gold
 illum 4
 Kd 1.00 1.00 1.00
 Ka 0.59 0.59 0.59
@@ -71,7 +116,7 @@ Tf 0.60 0.60 0.60
 Ni 1.50
 Ks 0.00 0.00 0.00
 Ns 10.00
-newmtl boat1:_FireBrick
+newmtl map_resized:boat1:_FireBrick
 illum 4
 Kd 0.70 0.13 0.13
 Ka 0.59 0.59 0.59
@@ -79,7 +124,7 @@ Tf 1.00 1.00 1.00
 Ni 1.50
 Ks 0.00 0.00 0.00
 Ns 10.00
-newmtl boat1:_Maroon
+newmtl map_resized:boat1:_Maroon
 illum 4
 Kd 0.50 0.00 0.00
 Ka 0.59 0.59 0.59
@@ -87,7 +132,7 @@ Tf 1.00 1.00 1.00
 Ni 1.50
 Ks 0.00 0.00 0.00
 Ns 10.00
-newmtl boat1:_Metal_Aluminum_Anodized_1
+newmtl map_resized:boat1:_Metal_Aluminum_Anodized_1
 illum 4
 Kd 1.00 1.00 1.00
 Ka 0.59 0.59 0.59
@@ -95,7 +140,7 @@ Tf 1.00 1.00 1.00
 Ni 1.50
 Ks 0.00 0.00 0.00
 Ns 10.00
-newmtl boat1:_Metal_Aluminum_Anodized_2
+newmtl map_resized:boat1:_Metal_Aluminum_Anodized_2
 illum 4
 Kd 1.00 1.00 1.00
 Ka 0.59 0.59 0.59
@@ -103,7 +148,7 @@ Tf 1.00 1.00 1.00
 Ni 1.50
 Ks 0.00 0.00 0.00
 Ns 10.00
-newmtl boat1:_Metal_Corrogated_Shiny_1
+newmtl map_resized:boat1:_Metal_Corrogated_Shiny_1
 illum 4
 Kd 1.00 1.00 1.00
 Ka 0.59 0.59 0.59
@@ -111,7 +156,7 @@ Tf 1.00 1.00 1.00
 Ni 1.50
 Ks 0.00 0.00 0.00
 Ns 10.00
-newmtl boat1:_Orange
+newmtl map_resized:boat1:_Orange
 illum 4
 Kd 1.00 0.65 0.00
 Ka 0.59 0.59 0.59
@@ -119,7 +164,7 @@ Tf 1.00 1.00 1.00
 Ni 1.50
 Ks 0.00 0.00 0.00
 Ns 10.00
-newmtl boat1:_OrangeRed
+newmtl map_resized:boat1:_OrangeRed
 illum 4
 Kd 1.00 0.27 0.00
 Ka 0.59 0.59 0.59
@@ -127,7 +172,7 @@ Tf 1.00 1.00 1.00
 Ni 1.50
 Ks 0.00 0.00 0.00
 Ns 10.00
-newmtl boat1:_YellowGreen
+newmtl map_resized:boat1:_YellowGreen
 illum 4
 Kd 0.60 0.80 0.20
 Ka 0.59 0.59 0.59
@@ -135,7 +180,7 @@ Tf 1.00 1.00 1.00
 Ni 1.50
 Ks 0.00 0.00 0.00
 Ns 10.00
-newmtl boat1:black
+newmtl map_resized:boat1:black
 illum 4
 Kd 0.00 0.00 0.00
 Ka 0.59 0.59 0.59
@@ -143,7 +188,7 @@ Tf 1.00 1.00 1.00
 Ni 1.50
 Ks 0.00 0.00 0.00
 Ns 10.00
-newmtl boat1:skp_front_default
+newmtl map_resized:boat1:skp_front_default
 illum 4
 Kd 1.00 1.00 1.00
 Ka 0.59 0.59 0.59
@@ -151,7 +196,7 @@ Tf 1.00 1.00 1.00
 Ni 1.50
 Ks 0.00 0.00 0.00
 Ns 10.00
-newmtl chicken_still:HenSG
+newmtl map_resized:chicken_still:HenSG
 illum 4
 Kd 0.80 0.68 0.53
 Ka 0.00 0.01 0.02
@@ -159,7 +204,7 @@ Tf 1.00 1.00 1.00
 Ni 1.00
 Ks 0.00 0.00 0.00
 Ns 7.61
-newmtl chicken_still:HenSG1
+newmtl map_resized:chicken_still:HenSG1
 illum 4
 Kd 0.00 0.00 0.00
 Ka 0.00 0.01 0.02
@@ -167,7 +212,7 @@ Tf 1.00 1.00 1.00
 Ni 1.00
 Ks 0.25 0.25 0.25
 Ns 7.61
-newmtl chicken_still:HenSG2
+newmtl map_resized:chicken_still:HenSG2
 illum 4
 Kd 0.80 0.03 0.04
 Ka 0.00 0.01 0.02
@@ -175,7 +220,7 @@ Tf 1.00 1.00 1.00
 Ni 1.00
 Ks 0.06 0.06 0.06
 Ns 0.00
-newmtl chicken_still:HenSG3
+newmtl map_resized:chicken_still:HenSG3
 illum 4
 Kd 0.80 0.23 0.00
 Ka 0.00 0.01 0.02
@@ -183,7 +228,7 @@ Tf 1.00 1.00 1.00
 Ni 1.00
 Ks 0.25 0.25 0.25
 Ns 7.61
-newmtl eco_patio2:Metal_Aluminum_Anodized
+newmtl map_resized:eco_patio2:Metal_Aluminum_Anodized
 illum 4
 Kd 1.00 1.00 1.00
 Ka 0.59 0.59 0.59
@@ -191,7 +236,7 @@ Tf 1.00 1.00 1.00
 Ni 1.50
 Ks 0.00 0.00 0.00
 Ns 10.00
-newmtl eco_patio2:Tile_Ceramic_Natural
+newmtl map_resized:eco_patio2:Tile_Ceramic_Natural
 illum 4
 Kd 1.00 1.00 1.00
 Ka 0.59 0.59 0.59
@@ -199,7 +244,7 @@ Tf 1.00 1.00 1.00
 Ni 1.50
 Ks 0.00 0.00 0.00
 Ns 10.00
-newmtl eco_patio2:Translucent_Glass_Blue
+newmtl map_resized:eco_patio2:Translucent_Glass_Blue
 illum 4
 Kd 0.39 0.58 0.93
 Ka 0.59 0.59 0.59
@@ -207,7 +252,7 @@ Tf 0.50 0.50 0.50
 Ni 1.50
 Ks 0.00 0.00 0.00
 Ns 10.00
-newmtl eco_patio2:Translucent_Glass_Tinted
+newmtl map_resized:eco_patio2:Translucent_Glass_Tinted
 illum 4
 Kd 1.00 1.00 1.00
 Ka 0.59 0.59 0.59
@@ -215,7 +260,7 @@ Tf 0.22 0.22 0.22
 Ni 1.50
 Ks 0.00 0.00 0.00
 Ns 10.00
-newmtl eco_patio2:skp_front_default
+newmtl map_resized:eco_patio2:skp_front_default
 illum 4
 Kd 1.00 1.00 1.00
 Ka 0.59 0.59 0.59
@@ -223,7 +268,7 @@ Tf 1.00 1.00 1.00
 Ni 1.50
 Ks 0.00 0.00 0.00
 Ns 10.00
-newmtl floating_hottub1:Carpet_Low_Smoke
+newmtl map_resized:floating_hottub1:Carpet_Low_Smoke
 illum 4
 Kd 1.00 1.00 1.00
 Ka 0.59 0.59 0.59
@@ -231,7 +276,7 @@ Tf 1.00 1.00 1.00
 Ni 1.50
 Ks 0.00 0.00 0.00
 Ns 10.00
-newmtl floating_hottub1:Color_000
+newmtl map_resized:floating_hottub1:Color_000
 illum 4
 Kd 1.00 1.00 1.00
 Ka 0.59 0.59 0.59
@@ -239,7 +284,7 @@ Tf 1.00 1.00 1.00
 Ni 1.50
 Ks 0.00 0.00 0.00
 Ns 10.00
-newmtl floating_hottub1:Color_003
+newmtl map_resized:floating_hottub1:Color_003
 illum 4
 Kd 0.67 0.67 0.67
 Ka 0.59 0.59 0.59
@@ -247,7 +292,7 @@ Tf 1.00 1.00 1.00
 Ni 1.50
 Ks 0.00 0.00 0.00
 Ns 10.00
-newmtl floating_hottub1:Color_005
+newmtl map_resized:floating_hottub1:Color_005
 illum 4
 Kd 0.45 0.45 0.45
 Ka 0.59 0.59 0.59
@@ -255,7 +300,7 @@ Tf 1.00 1.00 1.00
 Ni 1.50
 Ks 0.00 0.00 0.00
 Ns 10.00
-newmtl floating_hottub1:Color_A04
+newmtl map_resized:floating_hottub1:Color_A04
 illum 4
 Kd 0.74 0.57 0.36
 Ka 0.59 0.59 0.59
@@ -263,7 +308,7 @@ Tf 1.00 1.00 1.00
 Ni 1.50
 Ks 0.00 0.00 0.00
 Ns 10.00
-newmtl floating_hottub1:Color_A17
+newmtl map_resized:floating_hottub1:Color_A17
 illum 4
 Kd 0.40 0.21 0.11
 Ka 0.59 0.59 0.59
@@ -271,7 +316,7 @@ Tf 1.00 1.00 1.00
 Ni 1.50
 Ks 0.00 0.00 0.00
 Ns 10.00
-newmtl floating_hottub1:Color_D21
+newmtl map_resized:floating_hottub1:Color_D21
 illum 4
 Kd 0.20 0.15 0.00
 Ka 0.59 0.59 0.59
@@ -279,7 +324,7 @@ Tf 1.00 1.00 1.00
 Ni 1.50
 Ks 0.00 0.00 0.00
 Ns 10.00
-newmtl floating_hottub1:Material2
+newmtl map_resized:floating_hottub1:Material2
 illum 4
 Kd 0.70 0.70 0.70
 Ka 0.59 0.59 0.59
@@ -287,7 +332,7 @@ Tf 1.00 1.00 1.00
 Ni 1.50
 Ks 0.00 0.00 0.00
 Ns 10.00
-newmtl floating_hottub1:Material6
+newmtl map_resized:floating_hottub1:Material6
 illum 4
 Kd 0.00 0.25 0.50
 Ka 0.59 0.59 0.59
@@ -295,7 +340,7 @@ Tf 1.00 1.00 1.00
 Ni 1.50
 Ks 0.00 0.00 0.00
 Ns 10.00
-newmtl floating_hottub1:Material12
+newmtl map_resized:floating_hottub1:Material12
 illum 4
 Kd 1.00 1.00 1.00
 Ka 0.59 0.59 0.59
@@ -303,7 +348,7 @@ Tf 1.00 1.00 1.00
 Ni 1.50
 Ks 0.00 0.00 0.00
 Ns 10.00
-newmtl floating_hottub1:Material16
+newmtl map_resized:floating_hottub1:Material16
 illum 4
 Kd 0.65 0.67 0.67
 Ka 0.59 0.59 0.59
@@ -311,7 +356,7 @@ Tf 1.00 1.00 1.00
 Ni 1.50
 Ks 0.00 0.00 0.00
 Ns 10.00
-newmtl floating_hottub1:Material18
+newmtl map_resized:floating_hottub1:Material18
 illum 4
 Kd 0.80 0.80 0.80
 Ka 0.59 0.59 0.59
@@ -319,7 +364,7 @@ Tf 1.00 1.00 1.00
 Ni 1.50
 Ks 0.00 0.00 0.00
 Ns 10.00
-newmtl floating_hottub1:Material20
+newmtl map_resized:floating_hottub1:Material20
 illum 4
 Kd 0.95 0.95 0.95
 Ka 0.59 0.59 0.59
@@ -327,7 +372,7 @@ Tf 1.00 1.00 1.00
 Ni 1.50
 Ks 0.00 0.00 0.00
 Ns 10.00
-newmtl floating_hottub1:Material22
+newmtl map_resized:floating_hottub1:Material22
 illum 4
 Kd 0.50 0.00 0.00
 Ka 0.59 0.59 0.59
@@ -335,7 +380,7 @@ Tf 1.00 1.00 1.00
 Ni 1.50
 Ks 0.00 0.00 0.00
 Ns 10.00
-newmtl floating_hottub1:Material24
+newmtl map_resized:floating_hottub1:Material24
 illum 4
 Kd 0.00 0.23 0.50
 Ka 0.59 0.59 0.59
@@ -343,7 +388,7 @@ Tf 1.00 1.00 1.00
 Ni 1.50
 Ks 0.00 0.00 0.00
 Ns 10.00
-newmtl floating_hottub1:Metal_Aluminum_Anodized
+newmtl map_resized:floating_hottub1:Metal_Aluminum_Anodized
 illum 4
 Kd 1.00 1.00 1.00
 Ka 0.59 0.59 0.59
@@ -351,7 +396,7 @@ Tf 1.00 1.00 1.00
 Ni 1.50
 Ks 0.00 0.00 0.00
 Ns 10.00
-newmtl floating_hottub1:Metal_Corrogated_Shiny
+newmtl map_resized:floating_hottub1:Metal_Corrogated_Shiny
 illum 4
 Kd 1.00 1.00 1.00
 Ka 0.59 0.59 0.59
@@ -359,7 +404,7 @@ Tf 1.00 1.00 1.00
 Ni 1.50
 Ks 0.00 0.00 0.00
 Ns 10.00
-newmtl floating_hottub1:Teak_Deck
+newmtl map_resized:floating_hottub1:Teak_Deck
 illum 4
 Kd 1.00 1.00 1.00
 Ka 0.59 0.59 0.59
@@ -367,7 +412,7 @@ Tf 1.00 1.00 1.00
 Ni 1.50
 Ks 0.00 0.00 0.00
 Ns 10.00
-newmtl floating_hottub1:White
+newmtl map_resized:floating_hottub1:White
 illum 4
 Kd 1.00 1.00 1.00
 Ka 0.59 0.59 0.59
@@ -375,7 +420,7 @@ Tf 1.00 1.00 1.00
 Ni 1.50
 Ks 0.00 0.00 0.00
 Ns 10.00
-newmtl floating_hottub1:_Burnt_Umber_2
+newmtl map_resized:floating_hottub1:_Burnt_Umber_2
 illum 4
 Kd 0.41 0.18 0.11
 Ka 0.59 0.59 0.59
@@ -383,7 +428,7 @@ Tf 1.00 1.00 1.00
 Ni 1.50
 Ks 0.00 0.00 0.00
 Ns 10.00
-newmtl floating_hottub1:_Charcoal_
+newmtl map_resized:floating_hottub1:_Charcoal_
 illum 4
 Kd 0.14 0.14 0.14
 Ka 0.59 0.59 0.59
@@ -391,7 +436,7 @@ Tf 1.00 1.00 1.00
 Ni 1.50
 Ks 0.00 0.00 0.00
 Ns 10.00
-newmtl floating_hottub1:_Glass_Sky_Reflection_
+newmtl map_resized:floating_hottub1:_Glass_Sky_Reflection_
 illum 4
 Kd 1.00 1.00 1.00
 Ka 0.59 0.59 0.59
@@ -399,7 +444,7 @@ Tf 0.52 0.52 0.52
 Ni 1.50
 Ks 0.00 0.00 0.00
 Ns 10.00
-newmtl floating_hottub1:f96f91cf_dds1
+newmtl map_resized:floating_hottub1:f96f91cf_dds1
 illum 4
 Kd 0.70 0.70 0.70
 Ka 0.59 0.59 0.59
@@ -407,7 +452,7 @@ Tf 1.00 1.00 1.00
 Ni 1.50
 Ks 0.00 0.00 0.00
 Ns 10.00
-newmtl floating_hottub1:skp_front_default
+newmtl map_resized:floating_hottub1:skp_front_default
 illum 4
 Kd 1.00 1.00 1.00
 Ka 0.59 0.59 0.59
@@ -415,14 +460,14 @@ Tf 1.00 1.00 1.00
 Ni 1.50
 Ks 0.00 0.00 0.00
 Ns 10.00
-newmtl ground_lambert2SG
+newmtl map_resized:ground_lambert2SG
 illum 4
 Kd 0.00 0.00 0.00
 Ka 0.14 0.14 0.14
 Tf 1.00 1.00 1.00
 map_Kd veg_grass_ground_d.png
 Ni 1.00
-newmtl house:wire_006134006
+newmtl map_resized:house:wire_006134006
 illum 4
 Kd 0.02 0.53 0.02
 Ka 0.02 0.53 0.02
@@ -430,7 +475,7 @@ Tf 1.00 1.00 1.00
 Ni 1.00
 Ks 0.35 0.35 0.35
 Ns 32.00
-newmtl house:wire_028089177
+newmtl map_resized:house:wire_028089177
 illum 4
 Kd 0.11 0.35 0.69
 Ka 0.11 0.35 0.69
@@ -438,15 +483,15 @@ Tf 1.00 1.00 1.00
 Ni 1.00
 Ks 0.35 0.35 0.35
 Ns 32.00
-newmtl house:wire_134006006
+newmtl map_resized:house:wire_134006006
 illum 4
-Kd 0.53 0.02 0.02
-Ka 0.53 0.02 0.02
+Kd 0.58 0.31 0.15
+Ka 0.52 0.18 0.18
 Tf 1.00 1.00 1.00
 Ni 1.00
 Ks 0.35 0.35 0.35
 Ns 32.00
-newmtl house:wire_134110008
+newmtl map_resized:house:wire_134110008
 illum 4
 Kd 0.53 0.43 0.03
 Ka 0.53 0.43 0.03
@@ -454,7 +499,7 @@ Tf 1.00 1.00 1.00
 Ni 1.00
 Ks 0.35 0.35 0.35
 Ns 32.00
-newmtl house:wire_143224087
+newmtl map_resized:house:wire_143224087
 illum 4
 Kd 0.56 0.88 0.34
 Ka 0.56 0.88 0.34
@@ -462,15 +507,15 @@ Tf 1.00 1.00 1.00
 Ni 1.00
 Ks 0.35 0.35 0.35
 Ns 32.00
-newmtl house:wire_177028149
+newmtl map_resized:house:wire_177028149
 illum 4
-Kd 0.69 0.11 0.58
-Ka 0.69 0.11 0.58
+Kd 0.88 0.87 0.65
+Ka 0.79 0.68 0.38
 Tf 1.00 1.00 1.00
 Ni 1.00
 Ks 0.35 0.35 0.35
 Ns 32.00
-newmtl house:wire_224086086
+newmtl map_resized:house:wire_224086086
 illum 4
 Kd 0.88 0.34 0.34
 Ka 0.88 0.34 0.34
@@ -478,7 +523,7 @@ Tf 1.00 1.00 1.00
 Ni 1.00
 Ks 0.35 0.35 0.35
 Ns 32.00
-newmtl house:wire_224198087
+newmtl map_resized:house:wire_224198087
 illum 4
 Kd 0.88 0.78 0.34
 Ka 0.88 0.78 0.34
@@ -486,92 +531,81 @@ Tf 1.00 1.00 1.00
 Ni 1.00
 Ks 0.35 0.35 0.35
 Ns 32.00
-newmtl house:wire_229166215
+newmtl map_resized:house:wire_229166215
 illum 4
-Kd 0.90 0.65 0.84
-Ka 0.90 0.65 0.84
+Kd 0.90 0.83 0.72
+Ka 0.90 0.84 0.76
 Tf 1.00 1.00 1.00
 Ni 1.00
 Ks 0.35 0.35 0.35
 Ns 32.00
-newmtl initialShadingGroup
-illum 4
-Kd 0.50 0.50 0.50
-Ka 0.00 0.00 0.00
-Tf 1.00 1.00 1.00
-Ni 1.00
-newmtl lambert2SG
-illum 4
-Kd 0.00 0.00 0.00
-Ka 0.00 0.00 0.00
-Tf 1.00 1.00 1.00
-Ni 1.00
-newmtl lambert3SG
+newmtl map_resized:lambert3SG
 illum 4
 Kd 0.14 0.05 0.01
 Ka 0.15 0.15 0.15
 Tf 1.00 1.00 1.00
 Ni 1.00
-newmtl lambert4SG
+newmtl map_resized:lambert4SG
 illum 4
 Kd 0.14 0.14 0.14
 Ka 0.00 0.00 0.00
 Tf 1.00 1.00 1.00
 Ni 1.00
-newmtl lambert5SG
+newmtl map_resized:lambert5SG
 illum 4
 Kd 0.72 0.72 0.72
 Ka 0.00 0.00 0.00
 Tf 1.00 1.00 1.00
 Ni 1.00
-newmtl lambert6SG
+newmtl map_resized:lambert6SG
 illum 4
 Kd 0.50 0.50 0.50
 Ka 0.35 0.03 0.03
 Tf 1.00 1.00 1.00
 Ni 1.00
-newmtl lambert7SG
+newmtl map_resized:lambert7SG
 illum 4
 Kd 0.68 0.68 0.68
 Ka 0.00 0.00 0.00
 Tf 1.00 1.00 1.00
 Ni 1.00
-newmtl lambert8SG
+newmtl map_resized:lambert8SG
 illum 4
 Kd 0.00 0.00 0.00
 Ka 0.00 0.00 0.00
 Tf 1.00 1.00 1.00
 map_Kd silo.png
 Ni 1.00
-newmtl lambert9SG
+newmtl map_resized:lambert9SG
 illum 4
 Kd 0.00 0.00 0.00
 Ka 0.00 0.00 0.00
 Tf 1.00 1.00 1.00
 Ni 1.00
-newmtl maze:lambert2SG
+newmtl map_resized:maze:lambert2SG
 illum 4
 Kd 0.00 0.00 0.00
 Ka 0.30 0.30 0.30
 Tf 1.00 1.00 1.00
 map_Kd soil.png
 Ni 1.00
-newmtl maze:lambert3SG
+newmtl map_resized:maze:lambert3SG
 illum 4
 Kd 0.00 0.00 0.00
 Ka 0.00 0.00 0.00
 Tf 1.00 1.00 1.00
 map_Kd corn.png
 Ni 1.00
-newmtl pumpkin:Material
+newmtl map_resized:pumpkin:Material
 illum 4
 Kd 0.00 0.00 0.00
 Ka 0.00 0.00 0.00
 Tf 1.00 1.00 1.00
+map_Kd pumpkin.png
 Ni 1.00
 Ks 0.14 0.14 0.14
 Ns 194.12
-newmtl pumpkin:Material_001
+newmtl map_resized:pumpkin:Material_001
 illum 4
 Kd 0.00 0.00 0.00
 Ka 0.00 0.00 0.00
@@ -580,23 +614,452 @@ map_Kd stem.png
 Ni 1.00
 Ks 0.19 0.19 0.19
 Ns 194.12
-newmtl pumpkinseed:shellSG
+newmtl map_resized:pumpkinseed:shellSG
 illum 4
 Kd 0.00 0.00 0.00
 Ka 0.00 0.00 0.00
 Tf 1.00 1.00 1.00
 Ni 1.00
-newmtl rocks:lambert3SG
+newmtl map_resized:rocks:lambert3SG
 illum 4
 Kd 0.00 0.00 0.00
 Ka 0.00 0.00 0.00
 Tf 1.00 1.00 1.00
 map_Kd rocks.png
 Ni 1.00
-newmtl stump:lambert3SG
+newmtl map_resized:stump:lambert3SG
 illum 4
 Kd 0.00 0.00 0.00
 Ka 0.00 0.00 0.00
 Tf 1.00 1.00 1.00
 map_Kd stump.png
 Ni 1.00
+newmtl pinocchio_chicken1:lambert2SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd pinocchio_chicken_texture.jpg
+Ni 1.00
+newmtl pumpkin_patch:pumpkin:Material
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd pumpkin.png
+Ni 1.00
+Ks 0.14 0.14 0.14
+Ns 194.12
+newmtl pumpkin_patch:pumpkin:Material_001
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd stem.png
+Ni 1.00
+Ks 0.19 0.19 0.19
+Ns 194.12
+newmtl pumpkin_patch:pumpkin1:Material
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd pumpkin.png
+Ni 1.00
+Ks 0.14 0.14 0.14
+Ns 194.12
+newmtl pumpkin_patch:pumpkin1:Material_001
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd stem.png
+Ni 1.00
+Ks 0.19 0.19 0.19
+Ns 194.12
+newmtl pumpkin_patch:pumpkin3:Material
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd pumpkin.png
+Ni 1.00
+Ks 0.14 0.14 0.14
+Ns 194.12
+newmtl pumpkin_patch:pumpkin3:Material_001
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd stem.png
+Ni 1.00
+Ks 0.19 0.19 0.19
+Ns 194.12
+newmtl pumpkin_patch:pumpkin4:Material
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd pumpkin.png
+Ni 1.00
+Ks 0.14 0.14 0.14
+Ns 194.12
+newmtl pumpkin_patch:pumpkin4:Material_001
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd stem.png
+Ni 1.00
+Ks 0.19 0.19 0.19
+Ns 194.12
+newmtl pumpkin_patch:pumpkin6:Material
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd pumpkin.png
+Ni 1.00
+Ks 0.14 0.14 0.14
+Ns 194.12
+newmtl pumpkin_patch:pumpkin6:Material_001
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd stem.png
+Ni 1.00
+Ks 0.19 0.19 0.19
+Ns 194.12
+newmtl pumpkin_patch:pumpkin7:Material
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd pumpkin.png
+Ni 1.00
+Ks 0.14 0.14 0.14
+Ns 194.12
+newmtl pumpkin_patch:pumpkin7:Material_001
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd stem.png
+Ni 1.00
+Ks 0.19 0.19 0.19
+Ns 194.12
+newmtl pumpkin_patch:pumpkin8:Material
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd pumpkin.png
+Ni 1.00
+Ks 0.14 0.14 0.14
+Ns 194.12
+newmtl pumpkin_patch:pumpkin8:Material_001
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd stem.png
+Ni 1.00
+Ks 0.19 0.19 0.19
+Ns 194.12
+newmtl pumpkin_patch:pumpkin9:Material
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd pumpkin.png
+Ni 1.00
+Ks 0.14 0.14 0.14
+Ns 194.12
+newmtl pumpkin_patch:pumpkin9:Material_001
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd stem.png
+Ni 1.00
+Ks 0.19 0.19 0.19
+Ns 194.12
+newmtl pumpkin_patch:pumpkin10:Material
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd pumpkin.png
+Ni 1.00
+Ks 0.14 0.14 0.14
+Ns 194.12
+newmtl pumpkin_patch:pumpkin10:Material_001
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd stem.png
+Ni 1.00
+Ks 0.19 0.19 0.19
+Ns 194.12
+newmtl pumpkin_patch:pumpkin12:Material
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd pumpkin.png
+Ni 1.00
+Ks 0.14 0.14 0.14
+Ns 194.12
+newmtl pumpkin_patch:pumpkin12:Material_001
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd stem.png
+Ni 1.00
+Ks 0.19 0.19 0.19
+Ns 194.12
+newmtl pumpkin_patch:pumpkin13:Material
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd pumpkin.png
+Ni 1.00
+Ks 0.14 0.14 0.14
+Ns 194.12
+newmtl pumpkin_patch:pumpkin13:Material_001
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd stem.png
+Ni 1.00
+Ks 0.19 0.19 0.19
+Ns 194.12
+newmtl pumpkin_patch:pumpkin14:Material
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd pumpkin.png
+Ni 1.00
+Ks 0.14 0.14 0.14
+Ns 194.12
+newmtl pumpkin_patch:pumpkin14:Material_001
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd stem.png
+Ni 1.00
+Ks 0.19 0.19 0.19
+Ns 194.12
+newmtl pumpkin_patch:pumpkin15:Material
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd pumpkin.png
+Ni 1.00
+Ks 0.14 0.14 0.14
+Ns 194.12
+newmtl pumpkin_patch:pumpkin15:Material_001
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd stem.png
+Ni 1.00
+Ks 0.19 0.19 0.19
+Ns 194.12
+newmtl pumpkin_patch:pumpkin16:Material
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd pumpkin.png
+Ni 1.00
+Ks 0.14 0.14 0.14
+Ns 194.12
+newmtl pumpkin_patch:pumpkin16:Material_001
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd stem.png
+Ni 1.00
+Ks 0.19 0.19 0.19
+Ns 194.12
+newmtl pumpkin_patch:pumpkin17:Material
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd pumpkin.png
+Ni 1.00
+Ks 0.14 0.14 0.14
+Ns 194.12
+newmtl pumpkin_patch:pumpkin17:Material_001
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd stem.png
+Ni 1.00
+Ks 0.19 0.19 0.19
+Ns 194.12
+newmtl pumpkin_patch:pumpkin18:Material
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd pumpkin.png
+Ni 1.00
+Ks 0.14 0.14 0.14
+Ns 194.12
+newmtl pumpkin_patch:pumpkin18:Material_001
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd stem.png
+Ni 1.00
+Ks 0.19 0.19 0.19
+Ns 194.12
+newmtl pumpkin_patch:pumpkin19:Material
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd pumpkin.png
+Ni 1.00
+Ks 0.14 0.14 0.14
+Ns 194.12
+newmtl pumpkin_patch:pumpkin19:Material_001
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd stem.png
+Ni 1.00
+Ks 0.19 0.19 0.19
+Ns 194.12
+newmtl pumpkin_patch:pumpkin20:Material
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd pumpkin.png
+Ni 1.00
+Ks 0.14 0.14 0.14
+Ns 194.12
+newmtl pumpkin_patch:pumpkin20:Material_001
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd stem.png
+Ni 1.00
+Ks 0.19 0.19 0.19
+Ns 194.12
+newmtl pumpkin_patch:pumpkin21:Material
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd pumpkin.png
+Ni 1.00
+Ks 0.14 0.14 0.14
+Ns 194.12
+newmtl pumpkin_patch:pumpkin21:Material_001
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd stem.png
+Ni 1.00
+Ks 0.19 0.19 0.19
+Ns 194.12
+newmtl pumpkin_patch:pumpkin22:Material
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd pumpkin.png
+Ni 1.00
+Ks 0.14 0.14 0.14
+Ns 194.12
+newmtl pumpkin_patch:pumpkin22:Material_001
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd stem.png
+Ni 1.00
+Ks 0.19 0.19 0.19
+Ns 194.12
+newmtl pumpkin_patch:pumpkin23:Material
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd pumpkin.png
+Ni 1.00
+Ks 0.14 0.14 0.14
+Ns 194.12
+newmtl pumpkin_patch:pumpkin23:Material_001
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd stem.png
+Ni 1.00
+Ks 0.19 0.19 0.19
+Ns 194.12
+newmtl pumpkin_patch:pumpkin24:Material
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd pumpkin.png
+Ni 1.00
+Ks 0.14 0.14 0.14
+Ns 194.12
+newmtl pumpkin_patch:pumpkin24:Material_001
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd stem.png
+Ni 1.00
+Ks 0.19 0.19 0.19
+Ns 194.12
+newmtl wooden_fence_without_proxy:log
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd logs.jpg
+Ni 1.50
+Ks 0.00 0.00 0.00
+Ns 10.00
+newmtl wooden_fence_without_proxy:logends
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.50
+Ks 0.00 0.00 0.00
+Ns 10.00
+newmtl wooden_fence_without_proxy:planks
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd planks.jpg
+Ni 1.50
+Ks 0.00 0.00 0.00
+Ns 10.00

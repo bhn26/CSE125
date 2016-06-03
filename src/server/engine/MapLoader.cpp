@@ -41,7 +41,7 @@ void MapLoader::loadMap()
 
 	// push all the strings for loading objects
 	std::string* file;
-	/*
+	
 	file = new std::string("./assets/map/new_objects/structures/barn.obj");
 	fileNames.push_back((*file).c_str());
 	file = new std::string("./assets/map/new_objects/structures/bench.obj");
@@ -60,8 +60,8 @@ void MapLoader::loadMap()
 	fileNames.push_back((*file).c_str());
 	file = new std::string("./assets/map/new_objects/structures/patio.obj");
 	fileNames.push_back((*file).c_str());
-	file = new std::string("./assets/map/new_objects/nature/pumpkin_patch.obj");
-	fileNames.push_back((*file).c_str());*/
+	//file = new std::string("./assets/map/new_objects/nature/pumpkin_patch.obj");
+	//fileNames.push_back((*file).c_str());
 
 
 	int result;

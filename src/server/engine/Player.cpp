@@ -25,7 +25,7 @@ Player::Player(int objectid, int teamid, PosInfo pos, btDiscreteDynamicsWorld* p
 	btRigidBody* pRigidBody = new btRigidBody(playerRigidBodyCI);
 	// only allow rotation around Y-axis
 	pRigidBody->forceActivationState(DISABLE_DEACTIVATION);
-    pRigidBody->setDamping((btScalar)0.1, (btScalar)10);
+    pRigidBody->setDamping((btScalar)0.1, (btScalar)5);
 	pRigidBody->setFriction((btScalar) 3);
 	physicsWorld->addRigidBody(pRigidBody);
 

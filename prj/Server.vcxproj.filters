@@ -120,6 +120,9 @@
     <ClInclude Include="..\src\server\engine\MapLoader.h">
       <Filter>Source Files\engine</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\server\engine\Shotgun.h">
+      <Filter>Source Files\engine\Weapons</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\network\NetworkServices.cpp">
@@ -202,6 +205,9 @@
     </ClCompile>
     <ClCompile Include="..\src\server\engine\MapLoader.cpp">
       <Filter>Source Files\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\server\engine\Shotgun.cpp">
+      <Filter>Source Files\engine\Weapons</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -5,8 +5,8 @@
 #include <stdio.h>
 #include "../server/engine/ObjectId.h"
 
-const int WORLD_WIDTH = 300;
-const int WORLD_HEIGHT = 300;
+const int WORLD_WIDTH = 230;
+const int WORLD_HEIGHT = 500;
 
 enum MoveType {
 
