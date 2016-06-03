@@ -21,12 +21,13 @@ enum MoveType {
     MOVE_RIGHT = 3
 };
 
-static const int NUM_WEAPON_TYPES = 3; // number of types of weapons there are
+static const int NUM_WEAPON_TYPES = 4; // number of types of weapons there are
 
 enum WeaponType {
 	SEEDGUN,
 	BOUNCEGUN,
-	GRENADELAUNCHER
+	GRENADELAUNCHER,
+	TELEPORTGUN
 };
 
 enum AttackType {

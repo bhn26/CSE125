@@ -15,6 +15,17 @@ btVector3 Entity::GetEntityPosition()
 	return entityRigidBody->getCenterOfMassPosition(); 
 }
 
+void Entity::SetEntityPosition(btVector3* newPosition)
+{
+	printf("setting entityposition");
+	btTransform currentTrans;
+	entityRigidBody->getMotionState()->getWorldTransform(currentTrans);
+	currentTrans.setOrigin(*newPosition);
+	entityRigidBody->getMotionState()->setWorldTransform(currentTrans);
+	entityRigidBody->setCenterOfMassTransform(currentTrans);
+
+}
+
 void Entity::Move(btVector3* changeVelocity) 
 {
 	//Calculate new velocity

@@ -11,6 +11,7 @@
 #include "SeedGun.h"
 #include "BounceGun.h"
 #include "GrenadeLauncher.h"
+#include "TeleportGun.h"
 
 EntitySpawner* EntitySpawner::spawnInstance = nullptr;
 
@@ -139,6 +140,12 @@ void EntitySpawner::spawnCollectable(btDiscreteDynamicsWorld* curWorld, WeaponTy
 		{
 			printf("spawned grenadelauncher\n");
 			wp = new GrenadeLauncher(curWorld);
+			break;
+		}
+		case WeaponType::TELEPORTGUN:
+		{
+			printf("spawned teleportgun\n");
+			wp = new TeleportGun(curWorld);
 			break;
 		}
 		default:
