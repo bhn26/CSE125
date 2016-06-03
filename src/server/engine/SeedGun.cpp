@@ -5,11 +5,11 @@ SeedGun::SeedGun(btDiscreteDynamicsWorld* curworld): Weapon(fireRate, damage, cu
 {
 	wt = WeaponType::SEEDGUN;
 	nextFireTick = 0;
-	fireRate = 5;
+	fireRate = 8;
 	damage = 15;
-	currentAmmo = 1000;
-	maxAmmo = 12;
-	gunSpeed = new btVector3(0, 5, 25);
+	currentAmmo = 300;
+	maxAmmo = 300;
+	gunSpeed = new btVector3(0, 5, 40);
 }
 
 SeedGun::~SeedGun(){}
@@ -21,7 +21,7 @@ int SeedGun::UseWeapon(btVector3* position, btMatrix3x3* rotation, int playerid,
 		btCollisionShape* bulletShape = new btSphereShape(btScalar(0.5));
 
 		// Create bullet physics object
-		btVector3 globalPos = ((*rotation) * (btVector3(0, 1, 5))) + (*position);
+		btVector3 globalPos = ((*rotation) * (btVector3(0, 1, 10))) + (*position);
 
 		btDefaultMotionState*bulletMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), (globalPos)));
 		btScalar mass = 1;

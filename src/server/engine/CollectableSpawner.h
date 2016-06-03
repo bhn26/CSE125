@@ -13,8 +13,10 @@ private:
 
 public:
 	static const int STARTING_TICK = 25;  // the tick to start spawning collectables on
-	static const int MIN_NUM_SPAWNS = 2;   // Minumum number of collectables spawned for this spawn period
-	static const int MAX_NUM_SPAWNS = 4;   // Maximum number of collectables spawned for this spawn period
+	static const int MIN_WEAP_SPAWNS = 1;   // Minumum number of weapons spawned for this spawn period
+	static const int MAX_WEAP_SPAWNS = 3;   // Maximum number of weapons spawned for this spawn period
+	static const int MIN_POW_SPAWNS = 1;	// Minumum number of powerups spawned for this spawn period
+	static const int MAX_POW_SPAWNS = 2;	// Minumum number of powerups spawned for this spawn period
 	static const int MIN_SPAWN_PERIOD = 400;   //  The minimum number of ticks before a new collectable spawns
 	static const int MAX_SPAWN_PERIOD = 700;   //  The maximum number of ticks before a new collectable spawns
 	static const int MAX_COLLECTABLES = 60;    // Maximum number of collectables that can exist at once

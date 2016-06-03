@@ -3,6 +3,7 @@
 
 class FieldObject;
 
+// A field that does damage over time
 class DamageField : public FieldObject
 {
 protected:

@@ -5,12 +5,20 @@
 #include "Flag.h"
 #include "../ServerGame.h"
 
-//Collectables
+//Collectable weapons
 #include "Collectable.h"
 #include "CollectableSpawner.h"
 #include "SeedGun.h"
 #include "BounceGun.h"
 #include "GrenadeLauncher.h"
+#include "TeleportGun.h"
+#include "BlastMine.h"
+#include "Shotgun.h"
+
+//Collectabable powerups
+#include "HealthGain.h"
+#include "JumpUp.h"
+#include "SpeedUp.h"
 
 EntitySpawner* EntitySpawner::spawnInstance = nullptr;
 
@@ -141,6 +149,24 @@ void EntitySpawner::spawnCollectable(btDiscreteDynamicsWorld* curWorld, WeaponTy
 			wp = new GrenadeLauncher(curWorld);
 			break;
 		}
+		case WeaponType::TELEPORTGUN:
+		{
+			printf("spawned teleportgun\n");
+			wp = new TeleportGun(curWorld);
+			break;
+		}
+		case WeaponType::BLASTMINE:
+		{
+			printf("spawned blastmine\n");
+			wp = new BlastMine(curWorld);
+			break;
+		}
+		case WeaponType::SHOTGUN:
+		{
+			printf("spawned shotgun\n");
+			wp = new Shotgun(curWorld);
+			break;
+		}
 		default:
 		{
 			wp = nullptr;
@@ -158,6 +184,62 @@ void EntitySpawner::spawnCollectable(btDiscreteDynamicsWorld* curWorld, WeaponTy
 	pos.z = p.second;
 
 	Collectable* ranCollectable = new Collectable(oid_collectable, pos, curWorld, wp);
+	AddEntity(ClassId::COLLECTABLE, oid_collectable, ranCollectable);
+	oid_collectable++;
+
+	// Send Collectable Spawn packet
+	btVector3 vec = ranCollectable->GetEntityPosition();
+	btQuaternion quat = ranCollectable->GetEntityRotation();
+
+	PosInfo out;
+	out.cid = ClassId::COLLECTABLE;
+	out.oid = ranCollectable->GetObjectId();
+	out.x = vec.getX();
+	out.y = vec.getY();
+	out.z = vec.getZ();
+	out.rotw = quat.getW();
+	out.rotx = quat.getX();
+	out.roty = quat.getY();
+	out.rotz = quat.getZ();
+	ServerGame::instance()->sendSpawnPacket(out);
+}
+
+void EntitySpawner::spawnCollectable(btDiscreteDynamicsWorld* curWorld, PowerupType p_type)
+{
+
+	Powerup* pow = nullptr;
+
+	switch(p_type)
+	{
+		case PowerupType::HEALTHGAIN:
+			printf("spawned healthgain\n");
+			pow = new HealthGain();
+			break;
+		case PowerupType::JUMPUP:
+			printf("spawned jumpup\n");
+			pow = new JumpUp();
+			break;
+		/*case PowerupType::SPEEDUP:
+			printf("spawned speedup\n");
+			pow = new SpeedUp();
+			break;*/
+		default:
+		{
+			pow = nullptr;
+			break;
+		}
+	}
+
+	if (pow == nullptr)
+		return;
+
+	std::pair<int, int> p = getRandomLoc();
+	PosInfo pos;
+	pos.x = p.first;
+	pos.y = 90;
+	pos.z = p.second;
+
+	Collectable* ranCollectable = new Collectable(oid_collectable, pos, curWorld, pow);
 	AddEntity(ClassId::COLLECTABLE, oid_collectable, ranCollectable);
 	oid_collectable++;
 

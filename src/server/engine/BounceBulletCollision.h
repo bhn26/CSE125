@@ -14,7 +14,8 @@ public:
 	};
 	~BounceBulletCollision() { delete speed; };
 
-	bool HandleBulletCollision(unsigned int world_tick) {
+	// Does not consider what it collided with
+	bool HandleBulletCollision(unsigned int world_tick, Entity* collidee) {
 		if (bullet == nullptr)
 			return false;
 

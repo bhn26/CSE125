@@ -20,8 +20,9 @@ public:
 
 	btVector3 GetBulletPosition();
 
-	// the tick that the collision occured, returns true if the bullet needs to be deleted, the handler decides this
-	bool handleBulletCollision(unsigned int world_tick) { return c_handler->HandleBulletCollision(world_tick); }
+	// the tick that the collision occured, may consider the object it collided with, returns true if the bullet needs to be deleted, the handler decides this
+	// collidee will be nullptr if the collidee is a static object
+	bool handleBulletCollision(unsigned int world_tick, Entity* collidee) { return c_handler->HandleBulletCollision(world_tick, collidee); }
 
 	// get player id
 	int GetPlayerId();

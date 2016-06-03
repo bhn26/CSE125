@@ -15,6 +15,16 @@ btVector3 Entity::GetEntityPosition()
 	return entityRigidBody->getCenterOfMassPosition(); 
 }
 
+void Entity::SetEntityPosition(btVector3* newPosition)
+{
+	btTransform currentTrans;
+	entityRigidBody->getMotionState()->getWorldTransform(currentTrans);
+	currentTrans.setOrigin(*newPosition);
+	entityRigidBody->getMotionState()->setWorldTransform(currentTrans);
+	entityRigidBody->setCenterOfMassTransform(currentTrans);
+
+}
+
 void Entity::Move(btVector3* changeVelocity) 
 {
 	//Calculate new velocity
@@ -25,6 +35,11 @@ void Entity::Move(btVector3* changeVelocity)
 
 	// set new velocity
 	entityRigidBody->setLinearVelocity(newVelocity);
+}
+
+btVector3 Entity::GetEntityVelocity()
+{
+	return (entityRigidBody->getLinearVelocity());
 }
 
 btQuaternion Entity::GetEntityRotation()

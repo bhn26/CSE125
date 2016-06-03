@@ -22,6 +22,9 @@
     <Filter Include="Source Files\engine\FieldDetection">
       <UniqueIdentifier>{9b8f5fb6-c9f1-40f5-bd13-c43bead33a60}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\engine\Powerups">
+      <UniqueIdentifier>{5e35aea3-989c-40a9-80b3-ab3926952a04}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\network\NetworkData.h">
@@ -117,6 +120,39 @@
     <ClInclude Include="..\src\server\engine\ExplosiveBulletCollision.h">
       <Filter>Source Files\engine\Weapons</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\server\engine\TeleportGun.h">
+      <Filter>Source Files\engine\Weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\server\engine\PlayerModifierCollision.h">
+      <Filter>Source Files\engine\Weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\server\engine\BlastMine.h">
+      <Filter>Source Files\engine\Weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\server\engine\MineBulletHandler.h">
+      <Filter>Source Files\engine\Weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\server\engine\BlastField.h">
+      <Filter>Source Files\engine\FieldDetection</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\server\engine\MapLoader.h">
+      <Filter>Source Files\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\server\engine\Shotgun.h">
+      <Filter>Source Files\engine\Weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\server\engine\Powerup.h">
+      <Filter>Source Files\engine\Powerups</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\server\engine\HealthGain.h">
+      <Filter>Source Files\engine\Powerups</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\server\engine\JumpUp.h">
+      <Filter>Source Files\engine\Powerups</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\server\engine\SpeedUp.h">
+      <Filter>Source Files\engine\Powerups</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\network\NetworkServices.cpp">
@@ -195,6 +231,27 @@
       <Filter>Source Files\engine\Weapons</Filter>
     </ClCompile>
     <ClCompile Include="..\src\server\engine\ExplosiveBulletCollision.cpp">
+      <Filter>Source Files\engine\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\server\engine\TeleportGun.cpp">
+      <Filter>Source Files\engine\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\server\engine\PlayerModifierCollision.cpp">
+      <Filter>Source Files\engine\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\server\engine\BlastMine.cpp">
+      <Filter>Source Files\engine\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\server\engine\MineBulletHandler.cpp">
+      <Filter>Source Files\engine\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\server\engine\BlastField.cpp">
+      <Filter>Source Files\engine\FieldDetection</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\server\engine\MapLoader.cpp">
+      <Filter>Source Files\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\server\engine\Shotgun.cpp">
       <Filter>Source Files\engine\Weapons</Filter>
     </ClCompile>
   </ItemGroup>

@@ -15,18 +15,18 @@
 
 Player::Player(int objectid, int teamid, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld) : Entity(ClassId::PLAYER, objectid, physicsWorld) 
 {
-	btCollisionShape* playerShape = new btCylinderShape(btVector3(1, 1, 1));
+	btCollisionShape* playerShape = new btSphereShape(1);//btCylinderShape(btVector3(1, 1, 1));
 	// Create player physics object
-	btDefaultMotionState*playerMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(pos.x, pos.y, pos.z)));
-	btScalar mass = 1;
+	btDefaultMotionState*playerMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(pos.x, 90, pos.z)));
+	btScalar mass = 100;
 	btVector3 playerInertia(0, 0, 0);
 	playerShape->calculateLocalInertia(mass, playerInertia);
 	btRigidBody::btRigidBodyConstructionInfo playerRigidBodyCI(mass, playerMotionState, playerShape, playerInertia);
 	btRigidBody* pRigidBody = new btRigidBody(playerRigidBodyCI);
 	// only allow rotation around Y-axis
 	pRigidBody->forceActivationState(DISABLE_DEACTIVATION);
-    pRigidBody->setDamping((btScalar)0.1, (btScalar)1);
-	pRigidBody->setFriction((btScalar) 10);
+    pRigidBody->setDamping((btScalar)0.8, (btScalar)60.0);
+	pRigidBody->setFriction((btScalar) 0);
 	physicsWorld->addRigidBody(pRigidBody);
 
 	btTransform currentTrans;
@@ -37,7 +37,7 @@ Player::Player(int objectid, int teamid, PosInfo pos, btDiscreteDynamicsWorld* p
 	// Set Player protected fields
 	this->entityRigidBody = pRigidBody;
 	this->teamId = teamid;
-	this->jumpSem = 1;
+	this->jumpSem = 2;
 	this->hitPoints = 100;
 	this->flags = new std::vector<Flag*>;
 	this->position = pos;
@@ -45,7 +45,15 @@ Player::Player(int objectid, int teamid, PosInfo pos, btDiscreteDynamicsWorld* p
 	this->peckWeapon = new Peck(curWorld);
 	this->alive = true;
 	this->death_time = 0;
+	this->stun_count = 0;
 
+	// Set Base and Bonus speed and jump
+	this->baseJump = 40;
+	this->baseSpeed = 25;
+	this->speedPenalty = 0;
+	this->lowestSpeed = 12;
+	this->bonusJump = 0;
+	this->bonusSpeed = 0;
 
 	// Set RigidBody to point to Player
 	pRigidBody->setUserPointer(this);
@@ -78,17 +86,17 @@ void Player::JumpPlayer()
 	if (jumpSem)
 	{
 		// Change jump semaphore, change upward y-axis velocity
-		jumpSem = 0;
+		jumpSem--;
 		btVector3 curVelocity = entityRigidBody->getLinearVelocity();
 		// setting upward velocity to 3
-		curVelocity[1] = 25;
+		curVelocity[1] = this->GetPlayerJump();
 		entityRigidBody->setLinearVelocity(curVelocity);
 	}
 }
 
 void Player::ResetJump()
 {
-	(this->jumpSem) = 1;
+	(this->jumpSem) = 2;
 }
 
 void Player::AcquireFlag(Flag* flag)
@@ -97,6 +105,26 @@ void Player::AcquireFlag(Flag* flag)
 		return;
 	// player collects flag, remove from entity list
 	flags->push_back(flag);
+	switch (flags->size()) {
+		case 1:
+			speedPenalty = 1;
+			break;
+		case 2:
+			speedPenalty = 3;
+			break;
+		case 3:
+			speedPenalty = 6;
+			break;
+		case 4:
+			speedPenalty = 10;
+			break;
+		case 5:
+			speedPenalty = 15;
+			break;
+		default:
+			speedPenalty = 15;
+			break;
+	}
 	printf("FLAG ACQUIRED\n");
 
 	// note - individual scores are updated with move packets
@@ -131,6 +159,9 @@ int Player::GetTeamId()
 	if (!alive)
 		return;
 
+	if(stun_count > 0)
+		return;
+
 	//printf("Player %u : attempting to use weapon\n", objectId);
 	// If player weapon doesn't exist, exit
 	if(!playerWeapon)
@@ -150,6 +181,7 @@ int Player::GetTeamId()
 	//ServerGame::instance()->sendShootPacket(objectId);
 	if (playerWeapon->UseWeapon(position, currentOrientation, this->objectId, this->teamId, this) == 0)
 	{
+		ServerGame::instance()->sendDiscardPacket(this->GetObjectId());
 		delete playerWeapon;
 		playerWeapon = nullptr;
 	}
@@ -166,12 +198,28 @@ int Player::GetTeamId()
 		 this->cameraAngle = (playerRotation) * (btQuaternion(btVector3(-1, 0, 0), yos));
 	 }
  }
-
+ 
 void Player::EquipWeapon(Weapon* newWeapon)
 {
 	if (!alive)
 		return;
 	this->playerWeapon = newWeapon;
+}
+
+void Player::EquipPower(Powerup* powerup)
+{
+	if (!alive)
+		return;
+	this->power = powerup;
+}
+
+void Player::LosePower()
+{
+	if (power)
+	{
+		delete power;
+		power = nullptr;
+	}
 }
 
 void Player::DiscardWeapon()
@@ -180,6 +228,7 @@ void Player::DiscardWeapon()
 	{
 		delete playerWeapon;
 		playerWeapon = nullptr;
+		ServerGame::instance()->sendDiscardPacket(objectId);
 	}
 
 	//if(alive) send packet for discard animation
@@ -190,6 +239,11 @@ bool Player::HasWeapon()
 	return (this->playerWeapon != nullptr);
 }
 
+bool Player::HasPower()
+{
+	return (this->power != nullptr);
+}
+
  // If player is dead, returns 1,  else returns 0
 int Player::takeDamage(int damage, unsigned int world_tick)
 {
@@ -198,7 +252,6 @@ int Player::takeDamage(int damage, unsigned int world_tick)
 
 	this->hitPoints = this->hitPoints - damage;
 
-	printf("Player %u has taken damage!  Hitpoints:%d, damage: %d\n", objectId, this->hitPoints, damage);
 	if (this->hitPoints <= 0)
 	{
 		this->HandleDeath(world_tick);
@@ -214,6 +267,9 @@ void Player::UsePeck()
 {
 
 	if (!alive)
+		return;
+
+	if (stun_count > 0)
 		return;
 
 	btVector3 temp = this->GetEntityPosition();
@@ -238,7 +294,9 @@ void Player::HandleDeath(unsigned int death_tick)
 {
 	//printf("Player %u has died!", objectId);
 	this->alive = false;
+	speedPenalty = 0;
 	DiscardWeapon();
+	LosePower();
 	death_time = death_tick;
 	ServerGame::instance()->sendDeathPacket(objectId);
 	//EntitySpawner::instance()->RemoveEntity(classId, objectId);
@@ -262,7 +320,6 @@ void Player::HandleDeath(unsigned int death_tick)
 		deathPos.setY((deathPos.getY() + 4));
 		std::pair<int, int> vel = EntitySpawner::getRandomLoc();
 		ranVelocity = btVector3((vel.first % 100), (rand() % 100), (vel.second % 100));
-		printf("random velocity:  x: %f, y: %f, z: %f  \n", ranVelocity.getX(), ranVelocity.getY(), ranVelocity.getZ());
 
 		// add Flag to world
 		curWorld->addRigidBody(curFlag->GetRigidBody());
@@ -297,6 +354,7 @@ void Player::Move(btVector3* changeVelocity)
 {
 	if (!alive)
 		return;
+
 	Entity::Move(changeVelocity);
 }
 /*

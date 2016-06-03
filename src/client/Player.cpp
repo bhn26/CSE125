@@ -58,6 +58,7 @@ Player::Player(float x, float y, float z, float rotW, float rotX, float rotY, fl
     m_model->InitBones0();  // Initialize bones to 0 time spot
 	alive = true;
 	health = 100;
+	weapon = -1;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -369,13 +370,24 @@ void Player::ChangeState(State state)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+int Player::GetWeapon()
+{
+	return this->weapon;
+}
+
+void Player::SetWeapon(int weapon)
+{
+	this->weapon = weapon;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void Player::SetTeam(int team)
 {
     team_id = team;
     if (team == 1)
     {
         Material material = Material();
-        material._diffuse = glm::vec3(0.941f, 0.922f, 0.271f);
+        material._diffuse = glm::vec3(1.0f, 210.0f/255.0f, 77.0f/255.0f);
         m_model->ChangeMaterial(1, material);
     }
 }

@@ -35,6 +35,8 @@ public:
 	void receiveStartPacket(int offset);
 	void sendStartPacket();
 
+	void sendLoadPacket();
+
 	void receiveIndSpawnPacket(int offset);
 	void sendReadyToSpawnPacket();
 
@@ -46,6 +48,8 @@ public:
 	// this one is used when another object is responsible for removing an object, like if a chicken collects an egg, then the chicken
 	// is responsible. The chicken's information would be the rec_cid and rec_oid
 	void sendRemovePacket(ClassId rem_cid, int rem_oid, ClassId rec_cid, int rec_oid);
+
+	void sendRemovePacket(ClassId rem_cid, int rem_oid, ClassId rec_cid, int rec_oid, CollectType c_type, int subtype);
 
     // Returns the direction to be moved, if it can't move there, returns BAD_MOVE
     void receiveMovePacket(int offset);
@@ -74,7 +78,7 @@ public:
 	void sendAttackPacket(int id);
 	void receiveAttackPacket(int offset);   // do distinct animation for peck and weapon attack later?
 
-	void sendDiscardPacket();  // not sent until there's an animation for this
+	void sendDiscardPacket(int id);  // not sent until there's an animation for this
 	void receiveDiscardPacket(int offset);  // do animation for weapon discard later? 
 
 	void sendNamePacket(int player_id);

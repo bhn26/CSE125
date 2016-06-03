@@ -3,10 +3,6 @@
 #include "engine/Player.h"
 #include <algorithm>
 
-#include <chrono>
-#include <ratio>
-#include <thread>
-
 unsigned int ServerGame::client_id; 
 
 ServerGame::ServerGame(void)
@@ -316,6 +312,9 @@ void ServerGame::sendJoinPacket(int client) {
 };
 
 void ServerGame::receiveStartPacket(int offset) {
+
+	sendLoadPacket();
+
 	struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset]);
 
 	printf("recieved start packet from %d\n", hdr->sender_id);
@@ -350,6 +349,19 @@ void ServerGame::sendStartPacket() { // will add more later based on generated w
     packet.serialize(packet_data);
 
     packet.hdr.sender_id = SERVER_ID;
+
+	packet.serialize(packet_data);
+
+	network->sendToAll(packet_data, packet_size);
+}
+
+void ServerGame::sendLoadPacket() {
+	Packet packet;
+	packet.hdr.packet_type = SERVER_LOADING;
+
+	const unsigned int packet_size = sizeof(Packet);
+
+	char packet_data[packet_size];
 
 	packet.serialize(packet_data);
 
@@ -442,6 +454,51 @@ void ServerGame::sendRemovePacket(ClassId rem_cid, int rem_oid, ClassId rec_cid,
 	network->sendToAll(packet_data, packet_size);
 }
 
+void ServerGame::sendDiscardPacket(int id)
+{
+	Packet packet;
+	packet.hdr.packet_type = DISCARD_EVENT;
+
+	const unsigned int packet_size = sizeof(Packet);
+
+	char packet_data[packet_size];
+
+	MiscInfo m;
+	m.misc1 = id;
+
+	m.serialize(packet.dat.buf);
+
+	packet.serialize(packet_data);
+
+	network->sendToAll(packet_data, packet_size);
+}
+
+void ServerGame::sendRemovePacket(ClassId rem_cid, int rem_oid, ClassId rec_cid, int rec_oid, CollectType c_type, int subtype)
+{
+	Packet packet;
+	packet.hdr.packet_type = REMOVE_EVENT;
+
+	const unsigned int packet_size = sizeof(Packet);
+
+	char packet_data[packet_size];
+
+	packet.dat.game_data_id = REM_OBJ;
+
+	RemInfo r;
+	r.rem_cid = rem_cid;
+	r.rem_oid = rem_oid;
+	r.rec_cid = rec_cid;
+	r.rec_oid = rec_oid;
+	r.sub_id = c_type;
+	r.sub_id2 = subtype;
+
+	r.serialize(packet.dat.buf);
+
+	packet.serialize(packet_data);
+
+	network->sendToAll(packet_data, packet_size);
+}
+
 void ServerGame::receiveMovePacket(int offset)
 {
 
@@ -450,58 +507,48 @@ void ServerGame::receiveMovePacket(int offset)
     struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
 	Entity* ent = (Entity*)(EntitySpawner::instance()->GetEntity(ClassId::PLAYER, hdr->sender_id));
 
-	btVector3* vec;
 	Player* player = (Player*)(EntitySpawner::instance()->GetEntity(ClassId::PLAYER, hdr->sender_id));
-	if (player->GetJump())
+
+	// don't take client input if stunned
+	if(player->GetStun() > 0)
+		return;
+
+	switch (pi->direction) 
 	{
-		switch (pi->direction) {
 		case MOVE_FORWARD:
-			vec = new btVector3(0, 0, 25);
-			ent->Move(vec);
-			delete vec;
+		{
+			btVector3 curVec = player->GetEntityVelocity();
+			curVec.setZ(player->GetPlayerSpeed());
+			curVec.setX(0);
+			ent->Move((&curVec));
 			break;
+		}
 		case MOVE_BACKWARD:
-			vec = new btVector3(0, 0, -25);
-			ent->Move(vec);
-			delete vec;
+		{
+			btVector3 curVec = player->GetEntityVelocity();
+			curVec.setZ(-(player->GetPlayerSpeed()));
+			curVec.setX(0);
+			ent->Move((&curVec));
 			break;
+		}
 		case MOVE_LEFT:
-			vec = new btVector3(25, 0, 0);
-			ent->Move(vec);
-			delete vec;
+		{
+			btVector3 curVec = player->GetEntityVelocity();
+			curVec.setX(player->GetPlayerSpeed());
+			curVec.setZ(0);
+			ent->Move((&curVec));
 			break;
+		}
 		case MOVE_RIGHT:
-			vec = new btVector3(-25, 0, 0);
-			ent->Move(vec);
-			delete vec;
+		{
+			btVector3 curVec = player->GetEntityVelocity();
+			curVec.setX(-(player->GetPlayerSpeed()));
+			curVec.setZ(0);
+			ent->Move((&curVec));
 			break;
 		}
 	}
-	else
-	{
-		switch (pi->direction) {
-		case MOVE_FORWARD:
-			vec = new btVector3(0, -6, 25);
-			ent->Move(vec);
-			delete vec;
-			break;
-		case MOVE_BACKWARD:
-			vec = new btVector3(0, -6, -25);
-			ent->Move(vec);
-			delete vec;
-			break;
-		case MOVE_LEFT:
-			vec = new btVector3(25, -6, 0);
-			ent->Move(vec);
-			delete vec;
-			break;
-		case MOVE_RIGHT:
-			vec = new btVector3(-25, -6, 0);
-			ent->Move(vec);
-			delete vec;
-			break;
-		}
-	}
+	
 }
 
 void ServerGame::sendMovePacket(ClassId class_id, int obj_id)
@@ -531,11 +578,10 @@ void ServerGame::sendMovePacket(ClassId class_id, int obj_id)
 		p.y = vec.getY();
 		p.z = vec.getZ();
 
-		p.hp = ((Player*)ent)->GetHP();
-
 		if (class_id == PLAYER) {
 			p.num_eggs = ((Player*)ent)->GetScore();
-			p.jump = ((Player*)ent)->GetJump();
+			p.jump = ((Player*)ent)->GetJumpSem();
+			p.hp = ((Player*)ent)->GetHP();
 		}
 
         p.serialize(packet.dat.buf);
@@ -608,6 +654,10 @@ void ServerGame::receiveJumpPacket(int offset)
     struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset]);
 
 	Player* player = (Player*)(EntitySpawner::instance()->GetEntity(ClassId::PLAYER, hdr->sender_id));
+
+	// ignore client input if stunned
+	if(player->GetStun() > 0)
+		return;
 
 	player->JumpPlayer();
 }

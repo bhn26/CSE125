@@ -2,6 +2,10 @@
 
 #include <cstdio>
 
+#include <chrono>
+#include <ratio>
+#include <thread>
+
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
@@ -12,8 +16,8 @@
 #include "network/GameData.h"
 #include "network/NetworkData.h"
 #include "TextRenderer.h"
-#include "client/LoadState.h"
 #include "client/PlayState.h"
+#include "client/LobbyState.h"
 #include "client/GameOverState.h"
 #include "ConfigManager.h"
 #include "Graphics/ShaderManager.h"
@@ -270,6 +274,20 @@ void ClientGame::receiveSpawnPacket(int offset)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void ClientGame::SetName(std::string name)
+{
+	if (name == "Enter your name" || name == "")
+	{
+		std::string def;
+		def += "Player ";
+		def += std::to_string(client_id);
+		name_map[client_id] = def;
+	}
+	else
+		name_map[client_id] = name;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void ClientGame::receiveRemovePacket(int offset)
 {
 	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
@@ -289,6 +307,19 @@ void ClientGame::receiveRemovePacket(int offset)
         SoundsHandler::SoundOptions options(position.x, position.y, position.z);     // Play at own position
         PlaySound("Collect_Egg", options);
     }
+	if (r->rem_cid == ClassId::COLLECTABLE && r->sub_id == CollectType::WEAPONCOLLECT)      // If Weapon/collectable
+	{
+        // Tell the client you got a weapon!
+		if (client_id == r->rec_oid)
+		{
+			if(Scene::Instance()->GetPlayer()->GetWeapon() == -1)
+				Scene::Instance()->GetPlayer()->SetWeapon(r->sub_id2);
+		}
+        // make sound regardless of who it is
+        glm::vec3 position = ((Player *)(Scene::Instance()->GetEntity(ClassId::PLAYER, r->rec_oid).get()))->Position();
+        SoundsHandler::SoundOptions options(position.x, position.y, position.z);     // Play at own position
+        PlaySound("Collect_Weapon", options);
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -307,7 +338,7 @@ void ClientGame::receiveMovePacket(int offset)
 	if (pi->cid == ClassId::PLAYER)
 	{
 		Scene::Instance()->GetEntity(pi->cid, pi->oid)->SetScore(pi->num_eggs);
-		if(pi->jump == 0)
+		if(pi->jump == 0 || pi->jump == 1)
 			((Player *)(Scene::Instance()->GetEntity(pi->cid, pi->oid).get()))->Jump();
 	}
 
@@ -454,8 +485,14 @@ void ClientGame::receiveTimeStampPacket(int offset)
 {
 	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
 	struct MiscInfo* m = (struct MiscInfo *) &(dat->buf);
+	if (countdown == NULL)
+	{
+		start_time = std::chrono::high_resolution_clock::now();
+		countdown = 300 - m->misc1;
+	}
 
-	printf("TIME ATM in SECONDS: %d\n", m->misc1);
+	if(countdown != m->misc1)
+		countdown = 300 - m->misc1;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -489,7 +526,6 @@ void ClientGame::receiveAttackPacket(int offset)
 ////////////////////////////////////////////////////////////////////////////////
 void ClientGame::sendDiscardPacket()
 {
-
 	const unsigned int packet_size = sizeof(Packet);
 	char packet_data[packet_size];
 
@@ -499,7 +535,17 @@ void ClientGame::sendDiscardPacket()
 	packet.hdr.receiver_id = SERVER_ID;
 
 	packet.serialize(packet_data);
+
 	NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ClientGame::receiveDiscardPacket(int offset)
+{
+	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
+	struct MiscInfo* m = (struct MiscInfo *) &(dat->buf);
+	if(m->misc1 == client_id)
+		Scene::Instance()->GetPlayer()->SetWeapon(-1);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -631,6 +677,10 @@ void ClientGame::update()
 				receiveStartPacket(i);
 				break;
 
+			case SERVER_LOADING:
+				LobbyState::GetInstance(Window::m_pStateManager)->ServerLoading();
+				break;
+
 			case READY_TO_SPAWN_EVENT:
 				receiveReadyToSpawnPacket(i);
 				break;
@@ -642,6 +692,10 @@ void ClientGame::update()
 
 			case REMOVE_EVENT:
 				receiveRemovePacket(i + sizeof(PacketHeader));
+				break;
+
+			case DISCARD_EVENT:
+				receiveDiscardPacket(i + sizeof(PacketHeader));
 				break;
 
             case MOVE_EVENT:
@@ -768,6 +822,16 @@ void ClientGame::GameLoop()
 #ifdef _WIN32
         update();
 #endif
+		auto curr_time = std::chrono::high_resolution_clock::now();
+
+		std::chrono::duration<double, std::milli> fp_stamp = curr_time - start_time;
+
+		int diff = fp_stamp.count();
+
+		diff = diff / 1000;
+
+		if ((300 - diff) == (countdown-1))
+			countdown = 300 - diff;
 
         // Measure speed
         PrintFrameRate();

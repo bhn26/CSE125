@@ -8,7 +8,8 @@ public:
 	SimpleBulletCollision() {};
 	~SimpleBulletCollision() {};
 
-	bool HandleBulletCollision(unsigned int world_tick) {
+	// Does not consider what collided with it
+	bool HandleBulletCollision(unsigned int world_tick, Entity* collidee) {
 		return true;
 	}
 };

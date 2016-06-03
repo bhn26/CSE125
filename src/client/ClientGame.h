@@ -14,6 +14,10 @@
 #include <vector>
 #include <map>
 
+#include <chrono>
+#include <ratio>
+#include <thread>
+
 #include "Player.h"
 #include "Graphics/Objects/Entity.h"
 #include "Audio/SoundsHandler.h"
@@ -136,12 +140,13 @@ public:
 
 	int TotalEggs() { return total_eggs; };
 	int * GetScores() { return scores; };
+	int GetCountdown() { return countdown; };
 	int GetClientTeam() { return client_team; };
 
 	int GetWinner() { return winner; };
 
 	std::string GetName(int id) { return name_map[id]; }
-	void SetName(std::string name) { name_map[client_id] = name; }
+	void SetName(std::string name);
 
     ////////////////////////////////////////////////////////////////////////////////
     // Sounds
@@ -207,6 +212,8 @@ private:
 	std::map<int, std::string> name_map;
 
 	int total_eggs;
+	std::chrono::time_point<std::chrono::steady_clock> start_time;
+	int countdown; // Seconds
 	int scores[2];
 	int winner; // set on receipt of game over packet
 
