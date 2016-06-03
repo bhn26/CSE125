@@ -36,9 +36,15 @@ CMenuState* CMenuState::GetInstance(CStateManager* pManager)
 void CMenuState::OnKeyDown(int action, int key)
 {
 	if (typing) {
+        static bool first = true;
+        if (first)
+        {
+            username.clear();
+            first = false;
+        }
 		if (action == GLFW_REPEAT && key == GLFW_KEY_BACKSPACE) { // erase name
 			username.clear();
-		} else if (key == GLFW_KEY_BACKSPACE) { 
+		} else if (key == GLFW_KEY_BACKSPACE && username.size()) { 
 			username.pop_back(); // remove last char
 		} else if (key == GLFW_KEY_ENTER) {
 			StartGame();
@@ -58,21 +64,26 @@ void CMenuState::OnClick(int button, int action, double x, double y) {
 
 	if (action == GLFW_PRESS)
 	{
+        SoundsHandler::SoundOptions options;
+        options._isRelativeToListener = true;
 		switch (res[0]) {
 			case 0: printf("None clicked\n"); 
 				typing = false;
 				break;
 			case 1: printf("Textbox clicked\n"); 
 				if (username == default_name) {
-					username.clear();
+                    ClientGame::instance()->PlaySound("Button_Click", options);
+                    username.clear();
 				}
 				typing = true;
 				break;
 			case 2: printf("Button clicked\n");
-				StartGame();
+                ClientGame::instance()->PlaySound("Button_Click", options);
+                StartGame();
 				break;
 			default: printf("%d clicked%s\n", res[0]);
-				typing = false;
+                ClientGame::instance()->PlaySound("Button_Click", options);
+                typing = false;
 		}
 	}
 }
@@ -130,6 +141,8 @@ void CMenuState::EnterState()
 	default_name += "Enter your name";
 
 	username += default_name;
+    typing = true;
+    //ClientGame::instance()->PlayMenuSound();      // DO NOT CALL HERE. Loops
 }
 
 void::CMenuState::InitTextures() {
