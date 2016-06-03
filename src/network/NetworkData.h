@@ -15,6 +15,8 @@ enum PacketTypes
 
 	START_GAME, // A client would send this to start the game
 
+	SERVER_LOADING, // server sends to client
+
 	READY_GAME, // The clients send this to say they're ready
 
 	READY_TO_SPAWN_EVENT,

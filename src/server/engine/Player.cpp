@@ -17,16 +17,16 @@ Player::Player(int objectid, int teamid, PosInfo pos, btDiscreteDynamicsWorld* p
 {
 	btCollisionShape* playerShape = new btSphereShape(1);//btCylinderShape(btVector3(1, 1, 1));
 	// Create player physics object
-	btDefaultMotionState*playerMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(pos.x, pos.y, pos.z)));
-	btScalar mass = 2;
+	btDefaultMotionState*playerMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(pos.x, 90, pos.z)));
+	btScalar mass = 100;
 	btVector3 playerInertia(0, 0, 0);
 	playerShape->calculateLocalInertia(mass, playerInertia);
 	btRigidBody::btRigidBodyConstructionInfo playerRigidBodyCI(mass, playerMotionState, playerShape, playerInertia);
 	btRigidBody* pRigidBody = new btRigidBody(playerRigidBodyCI);
 	// only allow rotation around Y-axis
 	pRigidBody->forceActivationState(DISABLE_DEACTIVATION);
-    pRigidBody->setDamping((btScalar)0.1, (btScalar)5);
-	pRigidBody->setFriction((btScalar) 3);
+    pRigidBody->setDamping((btScalar)0.8, (btScalar)60.0);
+	pRigidBody->setFriction((btScalar) 0);
 	physicsWorld->addRigidBody(pRigidBody);
 
 	btTransform currentTrans;
@@ -48,7 +48,7 @@ Player::Player(int objectid, int teamid, PosInfo pos, btDiscreteDynamicsWorld* p
 	this->stun_count = 0;
 
 	// Set Base and Bonus speed and jump
-	this->baseJump = 20;
+	this->baseJump = 40;
 	this->baseSpeed = 25;
 	this->speedPenalty = 0;
 	this->lowestSpeed = 12;

@@ -312,6 +312,9 @@ void ServerGame::sendJoinPacket(int client) {
 };
 
 void ServerGame::receiveStartPacket(int offset) {
+
+	sendLoadPacket();
+
 	struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset]);
 
 	printf("recieved start packet from %d\n", hdr->sender_id);
@@ -346,6 +349,19 @@ void ServerGame::sendStartPacket() { // will add more later based on generated w
     packet.serialize(packet_data);
 
     packet.hdr.sender_id = SERVER_ID;
+
+	packet.serialize(packet_data);
+
+	network->sendToAll(packet_data, packet_size);
+}
+
+void ServerGame::sendLoadPacket() {
+	Packet packet;
+	packet.hdr.packet_type = SERVER_LOADING;
+
+	const unsigned int packet_size = sizeof(Packet);
+
+	char packet_data[packet_size];
 
 	packet.serialize(packet_data);
 

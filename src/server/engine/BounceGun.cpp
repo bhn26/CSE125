@@ -21,7 +21,7 @@ int BounceGun::UseWeapon(btVector3 * position, btMatrix3x3* rotation, int player
 		btCollisionShape* bulletShape = new btSphereShape(btScalar(0.5));
 
 		// Create bullet physics object
-		btVector3 globalPos = ((*rotation) * (btVector3(0, 2, 5))) + (*position);
+		btVector3 globalPos = ((*rotation) * (btVector3(0, 2, 14))) + (*position);
 
 		btDefaultMotionState*bulletMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), (globalPos)));
 		btScalar mass = 1;

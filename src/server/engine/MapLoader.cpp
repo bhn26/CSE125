@@ -58,8 +58,8 @@ void MapLoader::loadMap()
 	//fileNames.push_back((*file).c_str());
 	file = new std::string("./assets/map/new_objects/structures/house_under_construction.obj");
 	fileNames.push_back((*file).c_str());
-	file = new std::string("./assets/map/new_objects/structures/patio.obj");
-	fileNames.push_back((*file).c_str());
+	//file = new std::string("./assets/map/new_objects/structures/patio.obj");
+	//fileNames.push_back((*file).c_str());
 	//file = new std::string("./assets/map/new_objects/nature/pumpkin_patch.obj");
 	//fileNames.push_back((*file).c_str());
 

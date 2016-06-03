@@ -35,6 +35,8 @@ public:
 	void receiveStartPacket(int offset);
 	void sendStartPacket();
 
+	void sendLoadPacket();
+
 	void receiveIndSpawnPacket(int offset);
 	void sendReadyToSpawnPacket();
 
