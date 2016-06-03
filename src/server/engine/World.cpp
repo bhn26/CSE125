@@ -36,14 +36,14 @@ void World::Init() {
 	btBroadphaseInterface* overlappingPairCache = new btDbvtBroadphase();
 	btSequentialImpulseConstraintSolver* solver = new btSequentialImpulseConstraintSolver;
 	btDiscreteDynamicsWorld* dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfig);
-	dynamicsWorld->setGravity(btVector3(0, -15, 0));
+	dynamicsWorld->setGravity(btVector3(0, -20, 0));
 
 	// Add Ground Object
 	//btCollisionShape* groundShape = new btStaticPlaneShape(btVector3(btScalar(0.), btScalar(1.), btScalar(0.)), 0);
 	btCollisionShape* groundShape = new btBoxShape(btVector3(WORLD_WIDTH+50, 1, WORLD_WIDTH+50));
 	btDefaultMotionState* groundMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, -1, 0)));
 	btRigidBody::btRigidBodyConstructionInfo groundRigidBodyCI(0, groundMotionState, groundShape, btVector3(0, 0, 0));
-	groundRigidBodyCI.m_friction = .4;
+	groundRigidBodyCI.m_friction = 1.0;
 	btRigidBody* groundRigidBody = new btRigidBody(groundRigidBodyCI);
 	groundRigidBody->setGravity(btVector3(0, 0, 0));
 	dynamicsWorld->addRigidBody(groundRigidBody);

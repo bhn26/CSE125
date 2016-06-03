@@ -473,6 +473,7 @@ void CPlayState::Draw()
 			hud_weapon = hud_potato;
 			break;
 		default:
+			hud_weapon = hud_tomato;
 			break;
 		}
 
