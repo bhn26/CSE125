@@ -9,7 +9,7 @@ BounceGun::BounceGun(btDiscreteDynamicsWorld* curworld) : Weapon(fireRate, damag
 	damage = 8;
 	currentAmmo = 200;
 	maxAmmo = 200;
-	gunSpeed = new btVector3(0, 8, 20);
+	gunSpeed = new btVector3(0, 8, 40);
 }
 
 BounceGun::~BounceGun() {}
