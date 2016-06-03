@@ -394,6 +394,7 @@ void Scene::AddEntity(PosInfo p)
 	std::unique_ptr<Player> player;
 	std::unique_ptr<Egg> egg;
 	std::string skin_type;
+	int eggtype = 0;
 
 	switch (p.cid) {
 		case ClassId::PLAYER:
@@ -453,6 +454,24 @@ void Scene::AddEntity(PosInfo p)
 					bullet->Translate(glm::vec3(p.x, p.y, p.z));
 					//bullet->GetShader() = modelShader;        // Set in ModelEntity
 					AddEntity(p.cid, p.oid, std::move(bullet));
+					break;
+				case(TELEPORTGUN):
+					bullet = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Teleport")));
+					bullet->Translate(glm::vec3(p.x, p.y, p.z));
+					//bullet->GetShader() = modelShader;        // Set in ModelEntity
+					AddEntity(p.cid, p.oid, std::move(bullet));
+					break;
+				case(BLASTMINE):
+					eggtype = rand() % 2;
+					if(eggtype == 1)
+						egg = std::unique_ptr<Egg>(new Egg(p.x, p.y, p.z, "Easter_Egg"));
+					else
+						egg = std::unique_ptr<Egg>(new Egg(p.x, p.y, p.z, "Wood_Egg"));
+					egg->SetColor(glm::vec3(0.27f, 0.16f, 0.0f));
+					egg->GetShader() = ShaderManager::GetShader("Model");
+					egg->SetClassId(p.cid);
+					egg->SetObjId(p.oid);
+					AddEntity(p.cid, p.oid, std::move(egg));
 					break;
 				default:
 					std::unique_ptr<StaticObject> bullet = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Tomato")));

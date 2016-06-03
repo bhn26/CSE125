@@ -1,27 +1,30 @@
+newmtl barn:lambert2SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.32 0.32 0.32
+Tf 1.00 1.00 1.00
+map_Kd barn.png
+Ni 1.00
+newmtl barn1:lambert2SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.32 0.32 0.32
+Tf 1.00 1.00 1.00
+map_Kd barn.png
+Ni 1.00
+newmtl barn2:lambert3SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd barn.png
+Ni 1.00
 newmtl initialShadingGroup
 illum 4
 Kd 0.50 0.50 0.50
 Ka 0.00 0.00 0.00
 Tf 1.00 1.00 1.00
 Ni 1.00
-newmtl map_resized:Material
-illum 4
-Kd 0.00 0.00 0.00
-Ka 0.00 0.00 0.00
-Tf 1.00 1.00 1.00
-map_Kd pumpkin.png
-Ni 1.00
-Ks 0.50 0.50 0.50
-Ns 18.00
-newmtl map_resized:Material_001
-illum 4
-Kd 0.00 0.00 0.00
-Ka 0.00 0.00 0.00
-Tf 1.00 1.00 1.00
-map_Kd stem.png
-Ni 1.00
-Ks 0.50 0.50 0.50
-Ns 18.00
 newmtl map_resized:bench3:lambert2SG
 illum 4
 Kd 0.00 0.00 0.00
@@ -464,8 +467,8 @@ Ks 0.35 0.35 0.35
 Ns 32.00
 newmtl map_resized:house:wire_134006006
 illum 4
-Kd 0.53 0.02 0.02
-Ka 0.53 0.02 0.02
+Kd 0.58 0.31 0.15
+Ka 0.52 0.18 0.18
 Tf 1.00 1.00 1.00
 Ni 1.00
 Ks 0.35 0.35 0.35
@@ -488,8 +491,8 @@ Ks 0.35 0.35 0.35
 Ns 32.00
 newmtl map_resized:house:wire_177028149
 illum 4
-Kd 0.69 0.11 0.58
-Ka 0.69 0.11 0.58
+Kd 0.88 0.87 0.65
+Ka 0.79 0.68 0.38
 Tf 1.00 1.00 1.00
 Ni 1.00
 Ks 0.35 0.35 0.35
@@ -512,19 +515,12 @@ Ks 0.35 0.35 0.35
 Ns 32.00
 newmtl map_resized:house:wire_229166215
 illum 4
-Kd 0.90 0.65 0.84
-Ka 0.90 0.65 0.84
+Kd 0.90 0.83 0.72
+Ka 0.90 0.84 0.76
 Tf 1.00 1.00 1.00
 Ni 1.00
 Ks 0.35 0.35 0.35
 Ns 32.00
-newmtl map_resized:lambert2SG
-illum 4
-Kd 0.00 0.00 0.00
-Ka 0.00 0.00 0.00
-Tf 1.00 1.00 1.00
-map_Kd barn.png
-Ni 1.00
 newmtl map_resized:lambert3SG
 illum 4
 Kd 0.14 0.05 0.01
@@ -567,6 +563,7 @@ illum 4
 Kd 0.00 0.00 0.00
 Ka 0.00 0.00 0.00
 Tf 1.00 1.00 1.00
+map_Kd blue_tractor.png
 Ni 1.00
 newmtl map_resized:maze:lambert2SG
 illum 4
@@ -582,24 +579,6 @@ Ka 0.00 0.00 0.00
 Tf 1.00 1.00 1.00
 map_Kd corn.png
 Ni 1.00
-newmtl map_resized:pumpkin:Material
-illum 4
-Kd 0.00 0.00 0.00
-Ka 0.00 0.00 0.00
-Tf 1.00 1.00 1.00
-map_Kd pumpkin.png
-Ni 1.00
-Ks 0.14 0.14 0.14
-Ns 194.12
-newmtl map_resized:pumpkin:Material_001
-illum 4
-Kd 0.00 0.00 0.00
-Ka 0.00 0.00 0.00
-Tf 1.00 1.00 1.00
-map_Kd stem.png
-Ni 1.00
-Ks 0.19 0.19 0.19
-Ns 194.12
 newmtl map_resized:pumpkinseed:shellSG
 illum 4
 Kd 0.00 0.00 0.00
@@ -620,24 +599,13 @@ Ka 0.00 0.00 0.00
 Tf 1.00 1.00 1.00
 map_Kd stump.png
 Ni 1.00
-newmtl pumpkin_patch:pumpkin:Material
+newmtl pinocchio_chicken1:lambert2SG
 illum 4
 Kd 0.00 0.00 0.00
 Ka 0.00 0.00 0.00
 Tf 1.00 1.00 1.00
-map_Kd pumpkin.png
+map_Kd pinocchio_chicken_texture.jpg
 Ni 1.00
-Ks 0.14 0.14 0.14
-Ns 194.12
-newmtl pumpkin_patch:pumpkin:Material_001
-illum 4
-Kd 0.00 0.00 0.00
-Ka 0.00 0.00 0.00
-Tf 1.00 1.00 1.00
-map_Kd stem.png
-Ni 1.00
-Ks 0.19 0.19 0.19
-Ns 194.12
 newmtl pumpkin_patch:pumpkin1:Material
 illum 4
 Kd 0.00 0.00 0.00
@@ -666,42 +634,6 @@ Ni 1.00
 Ks 0.14 0.14 0.14
 Ns 194.12
 newmtl pumpkin_patch:pumpkin3:Material_001
-illum 4
-Kd 0.00 0.00 0.00
-Ka 0.00 0.00 0.00
-Tf 1.00 1.00 1.00
-map_Kd stem.png
-Ni 1.00
-Ks 0.19 0.19 0.19
-Ns 194.12
-newmtl pumpkin_patch:pumpkin4:Material
-illum 4
-Kd 0.00 0.00 0.00
-Ka 0.00 0.00 0.00
-Tf 1.00 1.00 1.00
-map_Kd pumpkin.png
-Ni 1.00
-Ks 0.14 0.14 0.14
-Ns 194.12
-newmtl pumpkin_patch:pumpkin4:Material_001
-illum 4
-Kd 0.00 0.00 0.00
-Ka 0.00 0.00 0.00
-Tf 1.00 1.00 1.00
-map_Kd stem.png
-Ni 1.00
-Ks 0.19 0.19 0.19
-Ns 194.12
-newmtl pumpkin_patch:pumpkin6:Material
-illum 4
-Kd 0.00 0.00 0.00
-Ka 0.00 0.00 0.00
-Tf 1.00 1.00 1.00
-map_Kd pumpkin.png
-Ni 1.00
-Ks 0.14 0.14 0.14
-Ns 194.12
-newmtl pumpkin_patch:pumpkin6:Material_001
 illum 4
 Kd 0.00 0.00 0.00
 Ka 0.00 0.00 0.00
@@ -800,24 +732,6 @@ map_Kd stem.png
 Ni 1.00
 Ks 0.19 0.19 0.19
 Ns 194.12
-newmtl pumpkin_patch:pumpkin13:Material
-illum 4
-Kd 0.00 0.00 0.00
-Ka 0.00 0.00 0.00
-Tf 1.00 1.00 1.00
-map_Kd pumpkin.png
-Ni 1.00
-Ks 0.14 0.14 0.14
-Ns 194.12
-newmtl pumpkin_patch:pumpkin13:Material_001
-illum 4
-Kd 0.00 0.00 0.00
-Ka 0.00 0.00 0.00
-Tf 1.00 1.00 1.00
-map_Kd stem.png
-Ni 1.00
-Ks 0.19 0.19 0.19
-Ns 194.12
 newmtl pumpkin_patch:pumpkin14:Material
 illum 4
 Kd 0.00 0.00 0.00
@@ -846,24 +760,6 @@ Ni 1.00
 Ks 0.14 0.14 0.14
 Ns 194.12
 newmtl pumpkin_patch:pumpkin15:Material_001
-illum 4
-Kd 0.00 0.00 0.00
-Ka 0.00 0.00 0.00
-Tf 1.00 1.00 1.00
-map_Kd stem.png
-Ni 1.00
-Ks 0.19 0.19 0.19
-Ns 194.12
-newmtl pumpkin_patch:pumpkin16:Material
-illum 4
-Kd 0.00 0.00 0.00
-Ka 0.00 0.00 0.00
-Tf 1.00 1.00 1.00
-map_Kd pumpkin.png
-Ni 1.00
-Ks 0.14 0.14 0.14
-Ns 194.12
-newmtl pumpkin_patch:pumpkin16:Material_001
 illum 4
 Kd 0.00 0.00 0.00
 Ka 0.00 0.00 0.00
@@ -1016,25 +912,12 @@ map_Kd stem.png
 Ni 1.00
 Ks 0.19 0.19 0.19
 Ns 194.12
-newmtl pumpkin_patch:tree:lambert2SG
-illum 4
-Kd 0.00 0.00 0.00
-Ka 0.00 0.00 0.00
-Tf 1.00 1.00 1.00
-map_Kd farm_trees_rocks_flowers_D.tga
-Ni 1.00
-newmtl pumpkin_patch:tree1:lambert2SG
-illum 4
-Kd 0.00 0.00 0.00
-Ka 0.00 0.00 0.00
-Tf 1.00 1.00 1.00
-map_Kd farm_trees_rocks_flowers_D.tga
-Ni 1.00
 newmtl wooden_fence_without_proxy:log
 illum 4
 Kd 0.00 0.00 0.00
 Ka 0.00 0.00 0.00
 Tf 1.00 1.00 1.00
+map_Kd logs.jpg
 Ni 1.50
 Ks 0.00 0.00 0.00
 Ns 10.00
@@ -1051,6 +934,7 @@ illum 4
 Kd 0.00 0.00 0.00
 Ka 0.00 0.00 0.00
 Tf 1.00 1.00 1.00
+map_Kd planks.jpg
 Ni 1.50
 Ks 0.00 0.00 0.00
 Ns 10.00

@@ -160,6 +160,8 @@
     <ClInclude Include="..\src\network\GameData.h" />
     <ClInclude Include="..\src\network\NetworkData.h" />
     <ClInclude Include="..\src\network\NetworkServices.h" />
+    <ClInclude Include="..\src\server\engine\BlastField.h" />
+    <ClInclude Include="..\src\server\engine\BlastMine.h" />
     <ClInclude Include="..\src\server\engine\BounceBulletCollision.h" />
     <ClInclude Include="..\src\server\engine\BounceGun.h" />
     <ClInclude Include="..\src\server\engine\Bullet.h" />
@@ -176,12 +178,17 @@
     <ClInclude Include="..\src\server\engine\FireRateReset.h" />
     <ClInclude Include="..\src\server\engine\Flag.h" />
     <ClInclude Include="..\src\server\engine\GrenadeLauncher.h" />
+    <ClInclude Include="..\src\server\engine\MineBulletHandler.h" />
+    <ClInclude Include="..\src\server\engine\MapLoader.h" />
     <ClInclude Include="..\src\server\engine\ObjectId.h" />
     <ClInclude Include="..\src\server\engine\Peck.h" />
     <ClInclude Include="..\src\server\engine\Player.h" />
+    <ClInclude Include="..\src\server\engine\PlayerModifierCollision.h" />
     <ClInclude Include="..\src\server\engine\RespawnHandler.h" />
     <ClInclude Include="..\src\server\engine\SeedGun.h" />
+    <ClInclude Include="..\src\server\engine\Shotgun.h" />
     <ClInclude Include="..\src\server\engine\SimpleBulletCollision.h" />
+    <ClInclude Include="..\src\server\engine\TeleportGun.h" />
     <ClInclude Include="..\src\server\engine\Weapon.h" />
     <ClInclude Include="..\src\server\engine\World.h" />
     <ClInclude Include="..\src\server\engine\WorldObstacle.h" />
@@ -191,6 +198,8 @@
   <ItemGroup>
     <ClCompile Include="..\src\ConfigManager.cpp" />
     <ClCompile Include="..\src\network\NetworkServices.cpp" />
+    <ClCompile Include="..\src\server\engine\BlastField.cpp" />
+    <ClCompile Include="..\src\server\engine\BlastMine.cpp" />
     <ClCompile Include="..\src\server\engine\BounceGun.cpp" />
     <ClCompile Include="..\src\server\engine\Bullet.cpp" />
     <ClCompile Include="..\src\server\engine\Collectable.cpp" />
@@ -205,10 +214,15 @@
     <ClCompile Include="..\src\server\engine\FireRateReset.cpp" />
     <ClCompile Include="..\src\server\engine\Flag.cpp" />
     <ClCompile Include="..\src\server\engine\GrenadeLauncher.cpp" />
+    <ClCompile Include="..\src\server\engine\MineBulletHandler.cpp" />
+    <ClCompile Include="..\src\server\engine\MapLoader.cpp" />
     <ClCompile Include="..\src\server\engine\Peck.cpp" />
     <ClCompile Include="..\src\server\engine\Player.cpp" />
+    <ClCompile Include="..\src\server\engine\PlayerModifierCollision.cpp" />
     <ClCompile Include="..\src\server\engine\RespawnHandler.cpp" />
     <ClCompile Include="..\src\server\engine\SeedGun.cpp" />
+    <ClCompile Include="..\src\server\engine\TeleportGun.cpp" />
+    <ClCompile Include="..\src\server\engine\Shotgun.cpp" />
     <ClCompile Include="..\src\server\engine\Weapon.cpp" />
     <ClCompile Include="..\src\server\engine\World.cpp" />
     <ClCompile Include="..\src\server\engine\WorldObstacle.cpp" />

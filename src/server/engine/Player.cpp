@@ -15,18 +15,18 @@
 
 Player::Player(int objectid, int teamid, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld) : Entity(ClassId::PLAYER, objectid, physicsWorld) 
 {
-	btCollisionShape* playerShape = new btCylinderShape(btVector3(1, 1, 1));
+	btCollisionShape* playerShape = new btSphereShape(1);//btCylinderShape(btVector3(1, 1, 1));
 	// Create player physics object
 	btDefaultMotionState*playerMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(pos.x, pos.y, pos.z)));
-	btScalar mass = 1;
+	btScalar mass = 2;
 	btVector3 playerInertia(0, 0, 0);
 	playerShape->calculateLocalInertia(mass, playerInertia);
 	btRigidBody::btRigidBodyConstructionInfo playerRigidBodyCI(mass, playerMotionState, playerShape, playerInertia);
 	btRigidBody* pRigidBody = new btRigidBody(playerRigidBodyCI);
 	// only allow rotation around Y-axis
 	pRigidBody->forceActivationState(DISABLE_DEACTIVATION);
-    pRigidBody->setDamping((btScalar)0.1, (btScalar)1);
-	pRigidBody->setFriction((btScalar) 10);
+    pRigidBody->setDamping((btScalar)0.1, (btScalar)5);
+	pRigidBody->setFriction((btScalar) 3);
 	physicsWorld->addRigidBody(pRigidBody);
 
 	btTransform currentTrans;
@@ -37,7 +37,7 @@ Player::Player(int objectid, int teamid, PosInfo pos, btDiscreteDynamicsWorld* p
 	// Set Player protected fields
 	this->entityRigidBody = pRigidBody;
 	this->teamId = teamid;
-	this->jumpSem = 1;
+	this->jumpSem = 2;
 	this->hitPoints = 100;
 	this->flags = new std::vector<Flag*>;
 	this->position = pos;
@@ -45,7 +45,13 @@ Player::Player(int objectid, int teamid, PosInfo pos, btDiscreteDynamicsWorld* p
 	this->peckWeapon = new Peck(curWorld);
 	this->alive = true;
 	this->death_time = 0;
+	this->stun_count = 0;
 
+	// Set Base and Bonus speed and jump
+	this->baseJump = 20;
+	this->baseSpeed = 25;
+	this->bonusJump = 0;
+	this->bonusSpeed = 0;
 
 	// Set RigidBody to point to Player
 	pRigidBody->setUserPointer(this);
@@ -78,17 +84,17 @@ void Player::JumpPlayer()
 	if (jumpSem)
 	{
 		// Change jump semaphore, change upward y-axis velocity
-		jumpSem = 0;
+		jumpSem--;
 		btVector3 curVelocity = entityRigidBody->getLinearVelocity();
 		// setting upward velocity to 3
-		curVelocity[1] = 25;
+		curVelocity[1] = this->GetPlayerJump();
 		entityRigidBody->setLinearVelocity(curVelocity);
 	}
 }
 
 void Player::ResetJump()
 {
-	(this->jumpSem) = 1;
+	(this->jumpSem) = 2;
 }
 
 void Player::AcquireFlag(Flag* flag)
@@ -129,6 +135,9 @@ int Player::GetTeamId()
  void Player::UseWeapon()
 {
 	if (!alive)
+		return;
+
+	if(stun_count > 0)
 		return;
 
 	//printf("Player %u : attempting to use weapon\n", objectId);
@@ -218,6 +227,9 @@ void Player::UsePeck()
 	if (!alive)
 		return;
 
+	if (stun_count > 0)
+		return;
+
 	btVector3 temp = this->GetEntityPosition();
 
 	btQuaternion * playerRotation = &(this->GetEntityRotation());
@@ -299,6 +311,7 @@ void Player::Move(btVector3* changeVelocity)
 {
 	if (!alive)
 		return;
+
 	Entity::Move(changeVelocity);
 }
 /*
