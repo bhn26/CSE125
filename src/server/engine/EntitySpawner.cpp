@@ -122,7 +122,7 @@ void EntitySpawner::spawnCollectable(btDiscreteDynamicsWorld* curWorld, WeaponTy
 {
 	Weapon* wp;
 	//switch (w_type)
-	switch (w_type)
+	switch (TELEPORTGUN)
 	{
 		case WeaponType::SEEDGUN:
 		{
