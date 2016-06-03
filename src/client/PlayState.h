@@ -51,7 +51,9 @@ private:
 
 	Texture * hud_egg;
 	Texture * hud_health;
+	Texture * hud_power;
 	Texture * hud_weapon_and_timer;
+	
 	Texture * hud_tomato;
 	Texture * hud_potato;
 	Texture * hud_pumpkin_seed;

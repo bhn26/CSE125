@@ -33,6 +33,8 @@ CPlayState::~CPlayState()
 
 	delete hud_egg;
 	delete hud_health;
+	delete hud_power;
+
 	delete hud_weapon_and_timer;
 	delete hud_tomato;
 	delete hud_potato;
@@ -451,6 +453,11 @@ void CPlayState::Draw()
 		y = Window::height - hud_weapon_and_timer->Height() - 20;
 		sprite_renderer->DrawSprite(*hud_weapon_and_timer, glm::vec2(x, y), glm::vec2(hud_weapon_and_timer->Width(), hud_weapon_and_timer->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 
+		////////////// Power Up Bar ///////////////////////////////////////
+		x = Window::width - hud_power->Width() - 20;
+		y = 20;
+		sprite_renderer->DrawSprite(*hud_power, glm::vec2(x, y), glm::vec2(hud_power->Width(), hud_power->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+
 		////////////////////// HEALTH BAR /////////////////////////////////
 		x = Texture::GetWindowCenter(hud_health->Width());
 		y = 20;
@@ -532,6 +539,8 @@ void CPlayState::InitTextures() {
 
 		hud_egg = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/hud_egg.png");
 		hud_health = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/hud_health.png");
+		hud_power = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/hud_power_up.png");
+
 		hud_weapon_and_timer = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/hud_weapon&timer.png");
 		hud_tomato = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/tomato_icon.png");
 		hud_potato = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/potato_icon.png");
