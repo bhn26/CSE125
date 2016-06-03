@@ -33,6 +33,7 @@ void main()
     gl_Position = vec4(position, 1.0f);
     vs_out._fragPos = vec3(model * gl_Position);
     vs_out._normal = normalize(normalMatrix * normal);
+    vs_out._normal = normalize(vec3(model * vec4(normal, 0.0f)));
     vs_out._texCoords = texCoords;
     vs_out._fragPosLightSpace = lightSpaceMatrix * vec4(vs_out._fragPos, 1.0f);
     gl_Position = projection * view * model * gl_Position;

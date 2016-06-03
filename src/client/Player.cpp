@@ -162,8 +162,8 @@ void Player::MoveTo(float x, float y, float z)
     Entity::MoveTo(x, y, z);
     CalculateCameraPosition();
     CalculateCameraFront();
-	if (Scene::Instance()->GetPlayer() == this)
-		SetAudioListener();
+    if (Scene::Instance()->GetPlayer() == this)
+        SetAudioListener();
     if (m_state != State::JUMP)
     {
         ChangeState(State::WALK);
@@ -177,8 +177,8 @@ void Player::RotateTo(const glm::quat& newOrientation)
     Entity::RotateTo(rotation);
     CalculateCameraPosition();
     CalculateCameraFront();
-	if (Scene::Instance()->GetPlayer() == this)
-		SetAudioListener();
+    if (Scene::Instance()->GetPlayer() == this)
+        SetAudioListener();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -216,6 +216,7 @@ void Player::ProcessMouseMovement(GLfloat xoffset, GLfloat yoffset, GLboolean co
 
     CalculateCameraPosition();
     CalculateCameraFront();
+    SetAudioListener();
 
 	// Don't send me stuff unless you're alive
 	if (++tick % 10 == 0 && alive == true)
@@ -247,6 +248,7 @@ void Player::ProcessViewMovement(GLfloat xoffset, GLfloat yoffset, GLboolean con
 
     CalculateCameraPosition();
     CalculateCameraFront();
+    SetAudioListener();
 
     if (++tick % 10 == 0)
     {
@@ -329,8 +331,8 @@ void Player::ChangeState(State state)
             m_lastTime_t = Utils::CurrentTime();
             m_lastPos_t = Position();
             glm::vec3 position = Position();
-            SoundsHandler::SoundOptions options(position.x, position.y, position.z);     // Play at own position
-            ClientGame::instance()->PlaySound("Jump", options);     // Play at own position
+            SoundsHandler::SoundOptions options(position.x, position.y, position.z);
+            ClientGame::instance()->PlaySound("Jump", options);
             break;
         }
         case State::ATTACK:

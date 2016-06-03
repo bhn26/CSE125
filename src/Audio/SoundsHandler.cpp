@@ -22,6 +22,8 @@ int SoundsHandler::Play(const sf::SoundBuffer& buffer, SoundOptions options)
         if (m_sounds[i].getStatus() == sf::Sound::Status::Stopped)
         {
             InitializeSoundOptions(i, options);
+            m_sounds[i].setMinDistance(ConfigManager::GetAsFloat("Sounds_Min_Distance"));
+            m_sounds[i].setAttenuation(ConfigManager::GetAsFloat("Sounds_Attenuation"));
             m_sounds[i].setBuffer(buffer);
             m_sounds[i].play();
             return i;
