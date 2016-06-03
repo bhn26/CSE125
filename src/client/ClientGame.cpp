@@ -256,6 +256,8 @@ void ClientGame::receiveMovePacket(int offset)
 			((Player *)(Scene::Instance()->GetEntity(pi->cid, pi->oid).get()))->Jump();
 	}
 
+	// update hp
+	((Player *)(Scene::Instance()->GetEntity(pi->cid, pi->oid).get()))->SetHealth(pi->hp);
 }
 
 // Need to know what direction to move in
