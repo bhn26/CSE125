@@ -24,6 +24,7 @@ public:
 	void Respawn() { dead = false; };
 
 	void EnterState() override;
+	void LeaveState() override;
 	void Reset();
 
 	// Returns the single instance
@@ -38,6 +39,8 @@ private:
 
 	bool dead;
 	bool show_scoreboard;
+
+	int backgroundMusicID = -1;
 
 	////// HUD ////////////
 	bool initialized;

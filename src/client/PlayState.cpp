@@ -52,7 +52,19 @@ CPlayState* CPlayState::GetInstance(CStateManager* pManager)
 
 void CPlayState::EnterState()
 {
-	
+	SoundsHandler::SoundOptions option;
+	option._isRelativeToListener = true;
+	option._loops = true;
+	backgroundMusicID = ClientGame::instance()->PlaySound("Background", option);
+}
+
+void CPlayState::LeaveState()
+{
+	if (backgroundMusicID != -1)
+	{
+		ClientGame::instance()->StopSound(backgroundMusicID);
+		backgroundMusicID = -1;
+	}
 }
 
 void CPlayState::Reset()

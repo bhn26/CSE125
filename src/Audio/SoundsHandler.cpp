@@ -15,7 +15,7 @@ SoundsHandler::SoundsHandler()
 // Finds the first available sound and uses it to play
 // @return returns the index of the played sound to stop it, or -1 if no available
 //     sound
-int SoundsHandler::Play(const sf::SoundBuffer& buffer, SoundOptions options)
+int SoundsHandler::Play(const sf::SoundBuffer& buffer, SoundOptions options, float volume)
 {
     for (int i = 0; i < MAX_SOUNDS; i++)
     {
@@ -24,6 +24,7 @@ int SoundsHandler::Play(const sf::SoundBuffer& buffer, SoundOptions options)
             InitializeSoundOptions(i, options);
             m_sounds[i].setMinDistance(ConfigManager::GetAsFloat("Sounds_Min_Distance"));
             m_sounds[i].setAttenuation(ConfigManager::GetAsFloat("Sounds_Attenuation"));
+			m_sounds[i].setVolume(volume);
             m_sounds[i].setBuffer(buffer);
             m_sounds[i].play();
             return i;

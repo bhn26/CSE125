@@ -21,7 +21,7 @@ public:
 
     SoundsHandler();
 
-    int Play(const sf::SoundBuffer& buffer, SoundOptions options = SoundOptions());
+    int Play(const sf::SoundBuffer& buffer, SoundOptions options = SoundOptions(), float volume = 100.0f);
     bool PauseSound(int soundIndex);
     bool ContinueSound(int soundIndex);
     bool StopSound(int soundIndex);

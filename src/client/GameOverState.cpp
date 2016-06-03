@@ -104,6 +104,7 @@ void GOState::Draw()
 
 void GOState::EnterState()
 {
+	ClientGame::instance()->StopMenuSound();
 	Window::mouseCaptured = false;
 	glfwSetInputMode(ClientGame::instance()->window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 }
