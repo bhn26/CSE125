@@ -10,17 +10,6 @@
 #include <BulletCollision\CollisionShapes\btShapeHull.h>
 #include <BulletCollision\CollisionShapes\btBvhTriangleMeshShape.h>
 
-/*
-#include "ConvexDecomposition\bestfit.h"
-#include "ConvexDecomposition\planetri.h"
-#include "ConvexDecomposition\vlookup.h"
-#include "ConvexDecomposition\splitplane.h"
-#include "ConvexDecomposition\meshvolume.h"
-#include "ConvexDecomposition\concavity.h"
-#include "ConvexDecomposition\bestfitobb.h"
-#include "ConvexDecomposition\float_math.h"
-#include "ConvexDecomposition\fitsphere.h"
-*/
 
 MapLoader::MapLoader(btDiscreteDynamicsWorld* dynamicsWorld)
 {
@@ -48,15 +37,15 @@ void MapLoader::loadMap()
 	fileNames.push_back((*file).c_str());
 	//file = new std::string("./assets/map/new_objects/structures/house.obj");
 	//fileNames.push_back((*file).c_str());
-	file = new std::string("./assets/map/new_objects/structures/boat.obj");
-	fileNames.push_back((*file).c_str());
+	//file = new std::string("./assets/map/new_objects/structures/boat.obj");
+	//fileNames.push_back((*file).c_str());
 	file = new std::string("./assets/map/new_objects/structures/floating_hottub.obj");
 	fileNames.push_back((*file).c_str());
 	file = new std::string("./assets/map/new_objects/structures/silo.obj");
 	fileNames.push_back((*file).c_str());
-	//file = new std::string("./assets/map/new_objects/structures/windmill.obj");
-	//fileNames.push_back((*file).c_str());
-	file = new std::string("./assets/map/new_objects/structures/house_under_construction.obj");
+	file = new std::string("./assets/map/new_objects/structures/windmill.obj");             
+	fileNames.push_back((*file).c_str());
+	file = new std::string("./assets/map/new_objects/structures/house_under_construction.obj");     
 	fileNames.push_back((*file).c_str());
 	//file = new std::string("./assets/map/new_objects/structures/patio.obj");
 	//fileNames.push_back((*file).c_str());
@@ -93,28 +82,6 @@ void MapLoader::loadMap()
 
 		btBvhTriangleMeshShape* tmpConvexShape = new btBvhTriangleMeshShape(trimesh, false);
 
-		/*
-		// Reducing vertices and lines by converting to a btShapeHull
-		btShapeHull* hull = new btShapeHull(tmpConvexShape);
-		btScalar margin = tmpConvexShape->getMargin();
-		hull->buildHull(margin);
-		tmpConvexShape->setUserPointer(hull);
-
-		btConvexHullShape* convexShape = new btConvexHullShape();
-		bool updateLocalAabb = false;
-
-		for (i = 0; i<hull->numVertices(); i++)
-		{
-		convexShape->addPoint(hull->getVertexPointer()[i], updateLocalAabb);
-		}
-		convexShape->recalcLocalAabb();
-
-		//if (sEnableSAT)
-		convexShape->initializePolyhedralFeatures();
-		delete tmpConvexShape;
-		delete hull;
-		*/
-
 		btDefaultMotionState*playerMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 0, 0)));
 		//btScalar mass = 500;
 		//btVector3 playerInertia(0, 0, 0);
@@ -128,6 +95,123 @@ void MapLoader::loadMap()
 
 	}
 
+	// Windmill object                                       bottom    top
+	/*
+	btCollisionShape* windmill = new btCylinderShape(btVector3(30, 110, 15));
+	btDefaultMotionState*playerMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(-128, 1, 3)));
+	btRigidBody::btRigidBodyConstructionInfo playerRigidBodyCI(0, playerMotionState, windmill, btVector3(0, 0, 0));
+	btRigidBody* pRigidBody = new btRigidBody(playerRigidBodyCI);
+	pRigidBody->setFriction((btScalar)0.5);
+	pRigidBody->setDamping((btScalar)100, (btScalar)100);
+	pRigidBody->setUserIndex(ClassId::OBSTACLE);
+	curWorld->addRigidBody(pRigidBody);
+
+	btCollisionShape* windmill_plat = new btCylinderShape(btVector3(33, 2, 33));
+	playerMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(-129, 37, 4)));
+	btRigidBody::btRigidBodyConstructionInfo platRigidBodyCI(0, playerMotionState, windmill_plat, btVector3(0, 0, 0));
+	pRigidBody = new btRigidBody(platRigidBodyCI);
+	pRigidBody->setFriction((btScalar)0.5);
+	pRigidBody->setDamping((btScalar)100, (btScalar)100);
+	pRigidBody->setUserIndex(ClassId::OBSTACLE);
+	curWorld->addRigidBody(pRigidBody);
+	*/
+
+	btCollisionShape* patio = new btBoxShape(btVector3(32, 2, 16));
+	btDefaultMotionState* playerMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(49, 16, 111)));
+	btRigidBody::btRigidBodyConstructionInfo patioCI(0, playerMotionState, patio, btVector3(0, 0, 0));
+	btRigidBody* pRigidBody = new btRigidBody(patioCI);
+	pRigidBody->setFriction((btScalar)0.5);
+	pRigidBody->setDamping((btScalar)100, (btScalar)100);
+	pRigidBody->setUserIndex(ClassId::OBSTACLE);
+	curWorld->addRigidBody(pRigidBody);
+
+	patio = new btBoxShape(btVector3(10, 15, 6));
+	playerMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(31.6, 0, 130)));
+	btRigidBody::btRigidBodyConstructionInfo patio4CI(0, playerMotionState, patio, btVector3(0, 0, 0));
+	pRigidBody = new btRigidBody(patio4CI);
+	pRigidBody->setFriction((btScalar)0.5);
+	pRigidBody->setDamping((btScalar)100, (btScalar)100);
+	pRigidBody->setUserIndex(ClassId::OBSTACLE);
+	curWorld->addRigidBody(pRigidBody);
+
+	patio = new btBoxShape(btVector3(10, 15, 6));
+	playerMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(69, 0, 130)));
+	btRigidBody::btRigidBodyConstructionInfo patio1CI(0, playerMotionState, patio, btVector3(0, 0, 0));
+	pRigidBody = new btRigidBody(patio1CI);
+	pRigidBody->setFriction((btScalar)0.5);
+	pRigidBody->setDamping((btScalar)100, (btScalar)100);
+	pRigidBody->setUserIndex(ClassId::OBSTACLE);
+	curWorld->addRigidBody(pRigidBody);
+
+	
+	patio = new btBoxShape(btVector3(5, 15, 7));
+	playerMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(15, 0, 101)));
+	btRigidBody::btRigidBodyConstructionInfo patio2CI(0, playerMotionState, patio, btVector3(0, 0, 0));
+	pRigidBody = new btRigidBody(patio2CI);
+	pRigidBody->setFriction((btScalar)0.5);
+	pRigidBody->setDamping((btScalar)100, (btScalar)100);
+	pRigidBody->setUserIndex(ClassId::OBSTACLE);
+	curWorld->addRigidBody(pRigidBody);
+
+	patio = new btBoxShape(btVector3(5, 15, 7));
+	playerMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(83, 0, 100)));
+	btRigidBody::btRigidBodyConstructionInfo patio3CI(0, playerMotionState, patio, btVector3(0, 0, 0));
+	pRigidBody = new btRigidBody(patio3CI);
+	pRigidBody->setFriction((btScalar)0.5);
+	pRigidBody->setDamping((btScalar)100, (btScalar)100);
+	pRigidBody->setUserIndex(ClassId::OBSTACLE);
+	curWorld->addRigidBody(pRigidBody);
+
+
+	// Rock
+	btCollisionShape* rock = new btCylinderShape(btVector3(7, 11, 7));
+	playerMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(-15.4, 0, 103)));
+	btRigidBody::btRigidBodyConstructionInfo platRigidBodyCI(0, playerMotionState, rock, btVector3(0, 0, 0));
+	pRigidBody = new btRigidBody(platRigidBodyCI);
+	pRigidBody->setFriction((btScalar)0.5);
+	pRigidBody->setDamping((btScalar)100, (btScalar)100);
+	pRigidBody->setUserIndex(ClassId::OBSTACLE);
+	curWorld->addRigidBody(pRigidBody);
+
+	//boat
+	patio = new btBoxShape(btVector3(50, 2, 23));
+	playerMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(-145, 20, 136)));
+	btRigidBody::btRigidBodyConstructionInfo boatCI(0, playerMotionState, patio, btVector3(0, 0, 0));
+	pRigidBody = new btRigidBody(boatCI);
+	pRigidBody->setFriction((btScalar)0.5);
+	pRigidBody->setDamping((btScalar)100, (btScalar)100);
+	pRigidBody->setUserIndex(ClassId::OBSTACLE);
+	curWorld->addRigidBody(pRigidBody);
+
+	
+	// House
+	patio = new btBoxShape(btVector3(40, 50, 60));
+	playerMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(155, 0, 114)));
+	btRigidBody::btRigidBodyConstructionInfo houseCI(0, playerMotionState, patio, btVector3(0, 0, 0));
+	pRigidBody = new btRigidBody(houseCI);
+	pRigidBody->setFriction((btScalar)0.5);
+	pRigidBody->setDamping((btScalar)100, (btScalar)100);
+	pRigidBody->setUserIndex(ClassId::OBSTACLE);
+	curWorld->addRigidBody(pRigidBody);
+	
+
+	patio = new btBoxShape(btVector3(22, 2, 60));
+	playerMotionState = new btDefaultMotionState(btTransform(btQuaternion(btVector3(0,0,-1), -.60), btVector3(135, 60, 114)));
+	btRigidBody::btRigidBodyConstructionInfo roof1(0, playerMotionState, patio, btVector3(0, 0, 0));
+	pRigidBody = new btRigidBody(roof1);
+	pRigidBody->setFriction((btScalar)0.5);
+	pRigidBody->setDamping((btScalar)100, (btScalar)100);
+	pRigidBody->setUserIndex(ClassId::OBSTACLE);
+	curWorld->addRigidBody(pRigidBody);
+
+	patio = new btBoxShape(btVector3(22, 2, 60));
+	playerMotionState = new btDefaultMotionState(btTransform(btQuaternion(btVector3(0, 0, 1), -.60), btVector3(175, 60, 114)));
+	btRigidBody::btRigidBodyConstructionInfo roof2(0, playerMotionState, patio, btVector3(0, 0, 0));
+	pRigidBody = new btRigidBody(roof2);
+	pRigidBody->setFriction((btScalar)0.5);
+	pRigidBody->setDamping((btScalar)100, (btScalar)100);
+	pRigidBody->setUserIndex(ClassId::OBSTACLE);
+	curWorld->addRigidBody(pRigidBody);
 }
 
 
