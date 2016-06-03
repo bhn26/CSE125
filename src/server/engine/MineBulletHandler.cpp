@@ -3,6 +3,8 @@
 #include "FieldHandler.h"
 #include "network/GameData.h"
 #include "Player.h"
+#include "EntitySpawner.h"
+#include "../ServerGame.h"
 
 MineBulletHandler::MineBulletHandler(FieldObject* field)
 {
@@ -32,8 +34,22 @@ bool MineBulletHandler::HandleBulletCollision(unsigned int world_tick, Entity* c
 			currentTrans.setOrigin(temp);
 			field->GetFieldGhostObject()->setWorldTransform(currentTrans);
 			FieldHandler::instance()->AddField(field);
+
+            FieldHandler::instance()->AddField(field);
+            PosInfo p;
+            btVector3 origin = field->GetFieldGhostObject()->getWorldTransform().getOrigin();
+            p.cid = ClassId::FIELD;
+            p.oid = EntitySpawner::instance()->oid_field++;
+            field->oid = p.oid;
+            p.sub_id = field->GetFieldType();
+            p.x = origin.getX();
+            p.y = origin.getY();
+            p.z = origin.getZ();
+            p.rad = 17;   // hack cuz demo soon
+
+            ServerGame::instance()->sendSpawnPacket(p);
 			return true;
 		}
 	}
 	return false;
-}
+}  

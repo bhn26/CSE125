@@ -25,7 +25,7 @@ private:
 	unsigned int oid_collectable;  // collectable
 
 public:
-
+    unsigned int oid_field;  // field
 	~EntitySpawner();
 
 	static EntitySpawner *instance();

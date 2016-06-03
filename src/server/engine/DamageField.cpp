@@ -8,6 +8,7 @@ DamageField::DamageField(int ttl, int damage, btVector3* origin, btCollisionShap
 {
 	this->fieldTtl = ttl;
 	this->fieldDamage = damage;
+    this->type = FieldType::POISON;
 }
 
 DamageField::~DamageField()

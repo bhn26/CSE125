@@ -16,13 +16,11 @@ class Model;
 class StaticObject : public Entity
 {
 public:
-    StaticObject(std::shared_ptr<Model> model);
+    StaticObject(std::shared_ptr<Model> model, float x = 0.0f, float y = 0.0f, float z = 0.0f);
     ~StaticObject();
 
     void Translate(glm::vec3 translate);
     void Rotate(float deg, glm::vec3 axis);
-
-    std::shared_ptr<Model> model;
 
     float angle; // For spinning if we want
 
@@ -32,7 +30,10 @@ public:
     virtual void SetShaderUniforms() const override;
 
     void Spin(float deg);
+    float& GetAlpha() { return alpha; }
 
 private:
+    std::shared_ptr<Model> model;
+    float alpha = 1.0f;
 
 };

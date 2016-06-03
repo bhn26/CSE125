@@ -1,3 +1,4 @@
+
 #include "EntitySpawner.h"
 #include "Entity.h"
 #include "Bullet.h"
@@ -37,6 +38,7 @@ EntitySpawner::EntitySpawner()
 	oid_flag = 0;
 	oid_bullet = 0;
 	oid_collectable = 0;
+    oid_field = 0;
 }
 
 EntitySpawner::~EntitySpawner(){}

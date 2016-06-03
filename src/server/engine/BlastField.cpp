@@ -10,6 +10,7 @@ BlastField::BlastField(bool nonFriendly, int stun, int magnitude, int ttl, int d
 	this->fieldDamage = damage;
 	this->nonFriendly = nonFriendly;
 	this->magnitude = magnitude;
+    this->type = FieldType::EXPLOSION;
 }
 BlastField::~BlastField()
 {

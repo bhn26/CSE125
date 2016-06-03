@@ -1,6 +1,8 @@
 #include "ExplosiveBulletCollision.h"
 #include "DamageField.h"
 #include "FieldHandler.h"
+#include "../ServerGame.h"
+#include "EntitySpawner.h"
 
 // Does not consider what collided with it
 bool ExplosiveBulletCollision::HandleBulletCollision(unsigned int world_tick, Entity* collidee) {
@@ -15,6 +17,18 @@ bool ExplosiveBulletCollision::HandleBulletCollision(unsigned int world_tick, En
 
 	//TODO: Add to damage field checker. Add this new field to the checker
 	FieldHandler::instance()->AddField(explosionField);
+    PosInfo p;
+    btVector3 origin = explosionField->GetFieldGhostObject()->getWorldTransform().getOrigin();
+    p.cid = ClassId::FIELD;
+    p.oid = EntitySpawner::instance()->oid_field++;
+    explosionField->oid = p.oid;
+    p.sub_id = explosionField->GetFieldType();
+    p.x = origin.getX();
+    p.y = origin.getY();
+    p.z = origin.getZ();
+    p.rad = explosion_size;
+
+    ServerGame::instance()->sendSpawnPacket(p);
 
 	return true;
 }

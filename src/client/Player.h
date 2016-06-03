@@ -43,6 +43,7 @@ public:
         DEATH,
         TAUNT,
         PECK,
+		CHEER
     };
 
     Player(float x = 0.0f, float y = 0.0f, float z = 0.0f,
@@ -104,6 +105,8 @@ public:
 
 	void SetHealth(int h) override { health = h; }
 	int GetHealth() const override { return health; };
+
+    void PrintPosition() const { printf("Player %d position: (%lf, %lf, %lf)\n", id, Position().x, Position().y, Position().z); }
 
 private:
     // AnimationPlayer::Listener

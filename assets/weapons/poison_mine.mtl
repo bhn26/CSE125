@@ -1,0 +1,7 @@
+newmtl lambert2SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.37 0.37 0.37
+Tf 0.72 0.72 0.72
+map_Kd stormclouds.jpg
+Ni 1.00

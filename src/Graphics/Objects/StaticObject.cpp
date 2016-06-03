@@ -10,7 +10,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-StaticObject::StaticObject(std::shared_ptr<Model> model) : Entity(), model(model)
+StaticObject::StaticObject(std::shared_ptr<Model> model, float x, float y, float z) : Entity(x,y,z), model(model)
 {
     shader = ShaderManager::Instance()->GetShader("Model");
 }
@@ -65,5 +65,6 @@ void StaticObject::SetShaderUniforms() const
     glUniformMatrix4fv(shader->GetUniform("view"), 1, false, glm::value_ptr(Scene::Instance()->GetViewMatrix()));
     glUniformMatrix4fv(shader->GetUniform("projection"), 1, false, glm::value_ptr(Scene::Instance()->GetPerspectiveMatrix()));
     glUniformMatrix4fv(shader->GetUniform("lightSpaceMatrix"), 1, false, glm::value_ptr(Scene::Instance()->LightSpaceMatrix()));
+    glUniform1f(shader->GetUniform("alpha"), this->alpha);
     LoadDirectionalLight(Scene::Instance()->GetDirectionalLight());
 }

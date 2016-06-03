@@ -2,6 +2,7 @@
 #include "FieldHandler.h"
 #include "FieldObject.h"
 #include "../../network/GameData.h"
+#include "../ServerGame.h"
 
 
 FieldHandler* FieldHandler::fh = nullptr;
@@ -33,6 +34,7 @@ void FieldHandler::HandleFields()
 		if ((*it)->handleField())
 		{
 			auto tempIt = (*it);
+            ServerGame::instance()->sendRemovePacket(ClassId::FIELD, (*it)->oid);
 			it = activeFields->erase(it);
 			delete tempIt;
 		}

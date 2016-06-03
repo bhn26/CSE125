@@ -501,6 +501,25 @@ void Scene::AddEntity(PosInfo p)
 			AddEntity(p.cid, p.oid, std::move(egg));
 			break;
 		}
+        case ClassId::FIELD:
+        {
+            std::unique_ptr<StaticObject> field; 
+            if (p.sub_id == FieldType::EXPLOSION)
+            {
+                field = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Fire_Mine"), p.x, p.y, p.z));
+                field->GetAlpha() = 0.8;
+            }
+            else if (p.sub_id == FieldType::POISON)
+            {
+                field = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Poison_Mine"), p.x, p.y, p.z));
+                field->GetAlpha() = 0.6;
+            }
+            field->SetScale(p.rad);
+            field->SetClassId(p.cid);
+            field->SetObjId(p.oid);
+            AddEntity(p.cid, p.oid, std::move(field));
+            break;
+        }
 		default:
 			break;
 	}

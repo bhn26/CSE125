@@ -21,6 +21,13 @@ enum MoveType {
     MOVE_RIGHT = 3
 };
 
+static const int NUM_FIELD_TYPES = 2;
+
+enum FieldType {
+    EXPLOSION,
+    POISON
+};
+
 static const int NUM_COLLECT_TYPES = 2; // Types of collectables there are
 
 enum CollectType {
@@ -96,6 +103,8 @@ struct PosInfo : GameInfo
 	float z;
 
 	int hp;
+
+    float rad;
 
     int direction; // client -> server move data
 

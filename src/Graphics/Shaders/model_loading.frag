@@ -30,6 +30,8 @@ uniform bool useTexture;
 uniform bool useMaterial;
 uniform Material material;
 
+uniform float alpha;
+
 uniform vec3 cameraEye;
 uniform DirectionalLight dLight;
 
@@ -125,4 +127,5 @@ void main()
     }
     vec4 totalLight = CalcLight(dLight._base, dLight._direction);
     color = color * totalLight;
+    color[3] = alpha;
 }
