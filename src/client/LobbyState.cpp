@@ -60,7 +60,6 @@ void LobbyState::OnClick(int button, int action, double x, double y) {
 		case 0: printf("None clicked\n"); break;
 		case 1: printf("Start Button clicked\n");
 			ClientGame::instance()->sendStartPacket();
-			loading = true;
 			break;
 		case 2: printf("Join T0 clicked\n");  // team 1
 			ClientGame::instance()->sendJoinPacket(0);
