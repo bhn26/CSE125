@@ -5,11 +5,11 @@ SeedGun::SeedGun(btDiscreteDynamicsWorld* curworld): Weapon(fireRate, damage, cu
 {
 	wt = WeaponType::SEEDGUN;
 	nextFireTick = 0;
-	fireRate = 5;
+	fireRate = 8;
 	damage = 15;
-	currentAmmo = 20;
-	maxAmmo = 12;
-	gunSpeed = new btVector3(0, 5, 25);
+	currentAmmo = 300;
+	maxAmmo = 300;
+	gunSpeed = new btVector3(0, 5, 40);
 }
 
 SeedGun::~SeedGun(){}
