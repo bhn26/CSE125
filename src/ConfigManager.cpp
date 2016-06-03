@@ -66,6 +66,51 @@ std::string ConfigManager::GetConfigValue(const std::string& key) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+int ConfigManager::GetAsInt(const std::string& key) const
+{
+    std::string value = GetConfigValue(key);
+    try
+    {
+        return std::stoi(value);
+    }
+    catch (int exception)
+    {
+        assert("Cannot get key: %s as int! Value: %s\n", key.c_str(), value.c_str());
+        return 0;
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+long ConfigManager::GetAsLong(const std::string& key) const
+{
+    std::string value = GetConfigValue(key);
+    try
+    {
+        return std::stol(value);
+    }
+    catch (int exception)
+    {
+        assert("Cannot get key: %s as long! Value: %s\n", key.c_str(), value.c_str());
+        return 0;
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+float ConfigManager::GetAsFloat(const std::string& key) const
+{
+    std::string value = GetConfigValue(key);
+    try
+    {
+        return std::stof(value);
+    }
+    catch (int exception)
+    {
+        assert("Cannot get key: %s as float! Value: %s\n", key.c_str(), value.c_str());
+        return 0;
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
 bool ConfigManager::HasPrefix(const std::string& word, const std::string& prefix) const
 {
     return (word.substr(0, prefix.length()) == prefix);
