@@ -4,19 +4,21 @@
 
 #include <iostream>
 
+////////////////////////////////////////////////////////////////////////////////
 void ModelManager::LoadModels()
 {
-    for (std::string& shaderName : _modelNames)
+    for (std::string& modelName : _modelNames)
     {
-        if (shaderName == std::string("Pumpkin_Patch"))
+        if (modelName == std::string("Pumpkin_Patch"))
         {
             printf("Pumpkin_Patch!\n");
         }
-        LoadModel(shaderName);
+        LoadModel(modelName);
     }
     _modelNames.clear();
 }
 
+////////////////////////////////////////////////////////////////////////////////
 bool ModelManager::LoadModel(const std::string& modelName)
 {
     // Don't duplicate load
@@ -27,7 +29,7 @@ bool ModelManager::LoadModel(const std::string& modelName)
 
     const static std::string modelPrefix = std::string("Model_");
     std::string modelPath = ConfigManager::instance()->GetConfigValue(modelPrefix + modelName);
-    if (!modelPath.length())   // Make sure we get the shader paths
+    if (!modelPath.length())   // Make sure we get the model paths
     {
         return false;
     }
@@ -37,17 +39,19 @@ bool ModelManager::LoadModel(const std::string& modelName)
     return true;
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void ModelManager::AddModelToLoad(std::string modelName)
 {
     _modelNames.push_back(modelName);
 }
 
+////////////////////////////////////////////////////////////////////////////////
 std::shared_ptr<Model> ModelManager::GetModel(std::string modelName)
 {
     const ModelManager* manager = Instance();
     std::map<std::string, std::shared_ptr<Model>>::const_iterator it = manager->_modelMap.find(modelName);
     // If in map
-    if (it != manager->_modelMap.end())    // Get shader mapped to this string
+    if (it != manager->_modelMap.end())    // Get model mapped to this string
     {
         return it->second;
     }

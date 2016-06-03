@@ -32,6 +32,7 @@ public:
 private:
     ConfigManager(void) {}
     ~ConfigManager(void) {}
+    bool HasPrefix(const std::string& word, const std::string& prefix) const;
 };
 
 #endif /* ConfigLoader_h */
