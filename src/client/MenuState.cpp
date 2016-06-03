@@ -64,21 +64,26 @@ void CMenuState::OnClick(int button, int action, double x, double y) {
 
 	if (action == GLFW_PRESS)
 	{
+        SoundsHandler::SoundOptions options;
+        options._isRelativeToListener = true;
 		switch (res[0]) {
 			case 0: printf("None clicked\n"); 
 				typing = false;
 				break;
 			case 1: printf("Textbox clicked\n"); 
 				if (username == default_name) {
-					username.clear();
+                    ClientGame::instance()->PlaySound("Button_Click", options);
+                    username.clear();
 				}
 				typing = true;
 				break;
 			case 2: printf("Button clicked\n");
-				StartGame();
+                ClientGame::instance()->PlaySound("Button_Click", options);
+                StartGame();
 				break;
 			default: printf("%d clicked%s\n", res[0]);
-				typing = false;
+                ClientGame::instance()->PlaySound("Button_Click", options);
+                typing = false;
 		}
 	}
 }
