@@ -96,6 +96,9 @@ public:
 	void SetTeam(int team);
     int GetTeam() const { return team_id; }
 
+	int GetWeapon();
+	void SetWeapon(int weapon);
+
 	bool IsAlive() { return alive; }
 	void SetAlive(bool a) { alive = a; health = 100; }
 
@@ -120,6 +123,7 @@ private:
     int id;
     int team_id;
     int num_eggs;
+	int weapon;
 
     Texture* info_panel;
 

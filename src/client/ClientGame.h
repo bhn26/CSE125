@@ -165,7 +165,6 @@ private:
     int client_id; // should know what client number we are so we can fill out packet headers
 	int client_team;
 	int client_skin;
-	int client_weapon;
 
     bool start_sent;
 

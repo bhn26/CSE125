@@ -244,8 +244,8 @@ void ClientGame::receiveRemovePacket(int offset)
 	{
 		if (r->rem_cid == ClassId::COLLECTABLE)
 		{
-			if(client_weapon == -1)
-				client_weapon = r->sub_id;
+			if(Scene::Instance()->GetPlayer()->GetWeapon() == -1)
+				Scene::Instance()->GetPlayer()->SetWeapon(r->sub_id);
 		}
 	}
 }
@@ -451,9 +451,13 @@ void ClientGame::sendDiscardPacket()
 
 	packet.serialize(packet_data);
 
-	//Scene::Instance()->GetPlayer()->SetWeapon(-1); // TO FIX LATER
-	client_weapon = -1;
+	Scene::Instance()->GetPlayer()->SetWeapon(-1);
 	NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
+}
+
+void ClientGame::receiveDiscardPacket(int offset)
+{
+	Scene::Instance()->GetPlayer()->SetWeapon(-1);
 }
 
 //	NOTE: We're going to use the sender id as the guy that's dancing instead of changing
@@ -544,6 +548,10 @@ void ClientGame::update()
 
 			case REMOVE_EVENT:
 				receiveRemovePacket(i + sizeof(PacketHeader));
+				break;
+
+			case DISCARD_EVENT:
+				receiveDiscardPacket(i + sizeof(PacketHeader));
 				break;
 
             case MOVE_EVENT:

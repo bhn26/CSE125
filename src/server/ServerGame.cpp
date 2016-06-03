@@ -434,6 +434,20 @@ void ServerGame::sendRemovePacket(ClassId rem_cid, int rem_oid, ClassId rec_cid,
 	network->sendToAll(packet_data, packet_size);
 }
 
+void ServerGame::sendDiscardPacket()
+{
+	Packet packet;
+	packet.hdr.packet_type = DISCARD_EVENT;
+
+	const unsigned int packet_size = sizeof(Packet);
+
+	char packet_data[packet_size];
+
+	packet.serialize(packet_data);
+
+	network->sendToAll(packet_data, packet_size);
+}
+
 void ServerGame::sendRemovePacket(ClassId rem_cid, int rem_oid, ClassId rec_cid, int rec_oid, WeaponType shooter)
 {
 	Packet packet;

@@ -150,6 +150,7 @@ int Player::GetTeamId()
 	//ServerGame::instance()->sendShootPacket(objectId);
 	if (playerWeapon->UseWeapon(position, currentOrientation, this->objectId, this->teamId, this) == 0)
 	{
+		ServerGame::instance()->sendDiscardPacket();
 		delete playerWeapon;
 		playerWeapon = nullptr;
 	}

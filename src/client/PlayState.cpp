@@ -444,7 +444,7 @@ void CPlayState::Draw()
 		y = Window::height - hud_weapon_and_timer->Height() - 20;
 		sprite_renderer->DrawSprite(*hud_weapon_and_timer, glm::vec2(x, y), glm::vec2(hud_weapon_and_timer->Width(), hud_weapon_and_timer->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 
-		switch (ClientGame::instance()->client_weapon) {
+		switch (Scene::Instance()->GetPlayer()->GetWeapon()) {
 		case SEEDGUN:
 			hud_weapon = hud_pumpkin_seed;
 			break;
@@ -459,7 +459,7 @@ void CPlayState::Draw()
 		}
 
 		glClear(GL_DEPTH_BUFFER_BIT);
-		if (ClientGame::instance()->client_weapon != -1) {
+		if (Scene::Instance()->GetPlayer()->GetWeapon() != -1) {
 			sprite_renderer->DrawSprite(*hud_weapon, glm::vec2(x, y), glm::vec2(hud_weapon->Width(), hud_weapon->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 		}
 
@@ -470,12 +470,6 @@ void CPlayState::Draw()
 		if (timer == 0)
 		{
 			time += "5";
-			time += ":";
-			time += "00";
-		}
-		else if (timer == 300)
-		{
-			time += "0";
 			time += ":";
 			time += "00";
 		}
