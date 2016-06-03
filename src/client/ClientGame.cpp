@@ -60,6 +60,7 @@ void ClientGame::PlayMenuSound()
         // loop and set to origin
         SoundsHandler::SoundOptions options;
         options._loops = true;
+        options._isRelativeToListener = true;
         m_menuSound = m_soundsHandler.Play(*soundBuffer, options);
     }
 }
@@ -284,7 +285,9 @@ void ClientGame::receiveRemovePacket(int offset)
 		{
 			incScore(((Player *)(Scene::Instance()->GetEntity(ClassId::PLAYER, r->rec_oid).get()))->GetTeam(), 1);
 		}
-        PlaySound("Collect_Egg");
+        glm::vec3 position = ((Player *)(Scene::Instance()->GetEntity(ClassId::PLAYER, r->rec_oid).get()))->Position();
+        SoundsHandler::SoundOptions options(position.x, position.y, position.z);     // Play at own position
+        PlaySound("Collect_Egg", options);
     }
 }
 
@@ -716,6 +719,12 @@ void ClientGame::Initialize()
 
 	// go to login menu
 	Window::m_pStateManager->ChangeState(CMenuState::GetInstance(Window::m_pStateManager));
+    sf::Listener::setUpVector(0.0f, 1.0f, 0.0f);        // Initialize the up vector
+    for (int i = 0; i < SoundsHandler::MAX_SOUNDS; i++)
+    {
+        m_soundsHandler.SetMinDistance(i, ConfigManager::GetAsFloat("Sounds_Min_Distance"));
+        m_soundsHandler.SetAttenuation(i, ConfigManager::GetAsFloat("Sounds_Attenuation"));
+    }
     PlayMenuSound();
 
     double lastTime = glfwGetTime();
@@ -1092,7 +1101,7 @@ void ClientGame::HandleButtonEvent(const std::string& event, bool buttonDown)
         }
         else if (event == EVENT_TAUNT_DEATH)
         {
-            Scene::Instance()->GetPlayer()->Die();
+            Scene::Instance()->GetPlayer()->TauntDie();
         }
         else if (event == EVENT_TAUNT_PECK)
         {

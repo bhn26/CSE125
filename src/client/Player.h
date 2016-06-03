@@ -62,7 +62,8 @@ public:
     void Jump() { ChangeState(State::JUMP); }
     void Dance() { ChangeState(State::DANCE); }
     void Attack() { ChangeState(State::ATTACK); }
-	void Die() { ChangeState(State::DEATH); alive = false; health = 0; }
+    void TauntDie() { ChangeState(State::DEATH); }
+    void Die() { ChangeState(State::DEATH); alive = false; health = 0; }
     void Peck() { ChangeState(State::PECK); }
 
 
@@ -111,6 +112,7 @@ private:
     void CalculateCameraPosition();
     void CalculateCameraFront();
     float DistanceFromLastPos(glm::vec3 newPosition) const;
+    void SetAudioListener() const;
 
 private:
     // Player is made up of a model with a camera following it

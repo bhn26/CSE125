@@ -58,23 +58,24 @@ void ConfigManager::LoadConfigs(const std::string& file_name)
 
 ////////////////////////////////////////////////////////////////////////////////
 // use this to get the value read from the config file
-std::string ConfigManager::GetConfigValue(const std::string& key) const
+std::string ConfigManager::GetConfigValue(const std::string& key)
 {
-    if (cfg_map.find(key) != cfg_map.end())
-        return cfg_map.at(key);
+    const ConfigManager* manager = instance();
+    if (manager->cfg_map.find(key) != manager->cfg_map.end())
+        return manager->cfg_map.at(key);
     else
         return "";
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int ConfigManager::GetAsInt(const std::string& key) const
+int ConfigManager::GetAsInt(const std::string& key)
 {
     std::string value = GetConfigValue(key);
     try
     {
         return std::stoi(value);
     }
-    catch (int exception)
+    catch (...)
     {
         assert("Cannot get key: %s as int! Value: %s\n", key.c_str(), value.c_str());
         return 0;
@@ -82,14 +83,14 @@ int ConfigManager::GetAsInt(const std::string& key) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long ConfigManager::GetAsLong(const std::string& key) const
+long ConfigManager::GetAsLong(const std::string& key)
 {
     std::string value = GetConfigValue(key);
     try
     {
         return std::stol(value);
     }
-    catch (int exception)
+    catch (...)
     {
         assert("Cannot get key: %s as long! Value: %s\n", key.c_str(), value.c_str());
         return 0;
@@ -97,14 +98,14 @@ long ConfigManager::GetAsLong(const std::string& key) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-float ConfigManager::GetAsFloat(const std::string& key) const
+float ConfigManager::GetAsFloat(const std::string& key)
 {
     std::string value = GetConfigValue(key);
     try
     {
         return std::stof(value);
     }
-    catch (int exception)
+    catch (...)
     {
         assert("Cannot get key: %s as float! Value: %s\n", key.c_str(), value.c_str());
         return 0;

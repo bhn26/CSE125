@@ -162,6 +162,7 @@ void Player::MoveTo(float x, float y, float z)
     Entity::MoveTo(x, y, z);
     CalculateCameraPosition();
     CalculateCameraFront();
+    SetAudioListener();
     if (m_state != State::JUMP)
     {
         ChangeState(State::WALK);
@@ -175,6 +176,7 @@ void Player::RotateTo(const glm::quat& newOrientation)
     Entity::RotateTo(rotation);
     CalculateCameraPosition();
     CalculateCameraFront();
+    SetAudioListener();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -278,6 +280,7 @@ glm::vec3 Player::GetFront() const
 	return camera->Front();
 }
 
+////////////////////////////////////////////////////////////////////////////////
 glm::mat4 Player::GetPerspectiveMatrix() const
 {
     return camera->GetPerspectiveMatrix();
@@ -306,39 +309,58 @@ void Player::ChangeState(State state)
     switch (state)
     {
         case State::IDLE:
+        {
             m_model->SetAnimation("dance");
             m_model->Reset();
             break;
+        }
         case State::WALK:
+        {
             m_model->PlayAnimation("walk");
             m_lastTime_t = Utils::CurrentTime();
             m_lastPos_t = Position();
             break;
+        }
         case State::JUMP:
+        {
             m_model->PlayAnimation("jump");
             m_lastTime_t = Utils::CurrentTime();
             m_lastPos_t = Position();
-            ClientGame::instance()->PlaySound("Jump");     // Play at own position
+            glm::vec3 position = Position();
+            SoundsHandler::SoundOptions options(position.x, position.y, position.z);     // Play at own position
+            ClientGame::instance()->PlaySound("Jump", options);     // Play at own position
             break;
+        }
         case State::ATTACK:
+        {
             m_model->PlayAnimation("melee");
-            ClientGame::instance()->PlaySound("Melee");     // Play at own position
+            glm::vec3 position = Position();
+            SoundsHandler::SoundOptions options(position.x, position.y, position.z);     // Play at own position
+            ClientGame::instance()->PlaySound("Melee", options);     // Play at own position
             break;
+        }
         case State::DANCE:
         {
             m_model->PlayAnimation("dance");
-            SoundsHandler::SoundOptions options;     // Play at own position
+            glm::vec3 position = Position();
+            SoundsHandler::SoundOptions options(position.x, position.y, position.z);     // Play at own position
             options._loops = true;
             m_danceSoundIndices.push(ClientGame::instance()->PlaySound("Dance", options));
             break;
         }
         case State::DEATH:
+        {
             m_model->PlayAnimation("death");
-            ClientGame::instance()->PlaySound("Death");
+            glm::vec3 position = Position();
+            SoundsHandler::SoundOptions options(position.x, position.y, position.z);     // Play at own position
+            ClientGame::instance()->PlaySound("Death", options);
             break;
+        }
         case State::PECK:
+        {
             m_model->PlayAnimation("peck");
             break;
+        }
     }
 }
 
@@ -401,4 +423,13 @@ void Player::CalculateCameraFront()
 float Player::DistanceFromLastPos(glm::vec3 newPosition) const
 {
     return glm::distance(m_lastPos_t, newPosition);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Player::SetAudioListener() const
+{
+    glm::vec3 position = Position();
+    glm::vec3 direction = camera->Front();
+    sf::Listener::setPosition(position.x, position.y, position.z);
+    sf::Listener::setDirection(direction.x, direction.y, direction.z);
 }

@@ -19,10 +19,10 @@ public:
     void LoadConfigs(const std::string& file_name);
 
     // use this to get the value read from the config file
-    std::string GetConfigValue(const std::string& key) const;
-    int GetAsInt(const std::string& key) const;
-    long GetAsLong(const std::string& key) const;
-    float GetAsFloat(const std::string& key) const;
+    static std::string GetConfigValue(const std::string& key);
+    static int GetAsInt(const std::string& key);
+    static long GetAsLong(const std::string& key);
+    static float GetAsFloat(const std::string& key);
 
     static ConfigManager* instance()
     {
