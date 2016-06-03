@@ -495,13 +495,26 @@ void Scene::AddEntity(PosInfo p)
 		case ClassId::COLLECTABLE:
 		{
 			//std::unique_ptr<StaticObject> bullet = std::unique_ptr<StaticObject>(new StaticObject("assets/weapons/pumpkinseed.obj"));
-			egg = std::unique_ptr<Egg>(new Egg(p.x, p.y, p.z, "Wood_Egg"));
-			egg->SetColor(glm::vec3(0.27f, 0.16f, 0.0f));
-			egg->GetShader() = ShaderManager::GetShader("Model");
-			egg->SetClassId(p.cid);
-			egg->SetObjId(p.oid);
-			//bullet->GetShader() = modelShader;        // Set in ModelEntity
-			AddEntity(p.cid, p.oid, std::move(egg));
+			if(p.sub_id == CollectType::WEAPONCOLLECT)
+			{ 
+				egg = std::unique_ptr<Egg>(new Egg(p.x, p.y, p.z, "Robot_Egg"));
+				egg->SetColor(glm::vec3(0.27f, 0.16f, 0.0f));
+				egg->GetShader() = ShaderManager::GetShader("Model");
+				egg->SetClassId(p.cid);
+				egg->SetObjId(p.oid);
+				//bullet->GetShader() = modelShader;        // Set in ModelEntity
+				AddEntity(p.cid, p.oid, std::move(egg));
+			}
+			else if (p.sub_id == CollectType::POWERUPCOLLECT)
+			{
+				egg = std::unique_ptr<Egg>(new Egg(p.x, p.y, p.z, "Wood_Egg"));
+				egg->SetColor(glm::vec3(0.27f, 0.16f, 0.0f));
+				egg->GetShader() = ShaderManager::GetShader("Model");
+				egg->SetClassId(p.cid);
+				egg->SetObjId(p.oid);
+				//bullet->GetShader() = modelShader;        // Set in ModelEntity
+				AddEntity(p.cid, p.oid, std::move(egg));
+			}
 			break;
 		}
 		default:
