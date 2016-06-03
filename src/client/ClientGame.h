@@ -182,6 +182,8 @@ private:
     void Print_versions();
     void PrintFrameRate();
 
+	void ShowLoadingScreen();
+
     ////////////////////////////////////////////////////////////////////////////////
     // Controller handling
     void CheckController();

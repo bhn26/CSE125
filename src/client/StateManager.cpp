@@ -21,10 +21,10 @@ void CStateManager::OnKeyUp(int action, int key)
 		m_pActiveState->OnKeyUp(action, key);
 }
 
-void CStateManager::OnChar(WPARAM wChar)
+void CStateManager::OnChar(unsigned int keycode)
 {
 	if (m_pActiveState)
-		m_pActiveState->OnChar(wChar);
+		m_pActiveState->OnChar(keycode);
 }
 
 void CStateManager::Update(DWORD dwCurrentTime)

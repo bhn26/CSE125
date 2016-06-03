@@ -17,7 +17,7 @@ class GOState : public CGameState
 public:
 	~GOState();
 
-	void OnKeyDown(WPARAM wKey);
+	void OnKeyDown(int action, int key);
 	void OnClick(int button, double x, double y);
 	void Draw();
 	void EnterState();
@@ -36,6 +36,8 @@ private:
 	SpriteRenderer * sprite_renderer;
 
 	Texture * bg;
+	Texture * win;
+	Texture * lose;
 
 	bool initialized;
 };

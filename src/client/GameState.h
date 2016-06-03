@@ -23,7 +23,7 @@ public:
 
 	virtual void OnKeyDown(int action, int key ) { }
 	virtual void OnKeyUp(int action, int key )   { }
-	virtual void OnChar(WPARAM )   { }
+	virtual void OnChar(unsigned int codepoint)   { }
 	virtual void Update(DWORD )  { }
 	virtual void Draw()  { }
 

@@ -19,6 +19,9 @@ public:
 
 	void OnKeyDown(WPARAM wKey);
 	void OnClick(int button, int action, double x, double y) override;
+	void OnChar(unsigned int codepoint) override;
+
+	void Update(DWORD) override;
 	void Draw() override;
 	void EnterState() override;
 
@@ -38,6 +41,9 @@ private:
 	Texture *textbox;
 	Texture *join;
 
+	std::string username;
+	bool typing; // true when player selects textbox
+	
 	bool initialized;
 };
 

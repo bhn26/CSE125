@@ -197,6 +197,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\client\GameOverState.cpp" />
+    <ClCompile Include="..\src\client\LoadState.cpp" />
     <ClCompile Include="..\src\Graphics\ModelManager.cpp" />
     <ClCompile Include="..\src\Graphics\Objects\InstanceObject.cpp" />
     <ClCompile Include="..\src\Graphics\ShaderManager.cpp" />
@@ -240,6 +241,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\client\GameOverState.h" />
+    <ClInclude Include="..\src\client\LoadState.h" />
     <ClInclude Include="..\src\Graphics\ModelManager.h" />
     <ClInclude Include="..\src\Graphics\Objects\InstanceObject.h" />
     <ClInclude Include="..\src\Graphics\ShaderManager.h" />
