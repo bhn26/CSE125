@@ -24,6 +24,8 @@ public:
 
 	static LobbyState* GetInstance(CStateManager* pManager);
 
+	void ServerLoading() { loading = true; }
+
 protected:
 	LobbyState(CStateManager* pManager);
 

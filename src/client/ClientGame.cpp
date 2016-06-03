@@ -16,8 +16,8 @@
 #include "network/GameData.h"
 #include "network/NetworkData.h"
 #include "TextRenderer.h"
-#include "client/LoadState.h"
 #include "client/PlayState.h"
+#include "client/LobbyState.h"
 #include "client/GameOverState.h"
 #include "ConfigManager.h"
 #include "Graphics/ShaderManager.h"
@@ -582,6 +582,10 @@ void ClientGame::update()
 
 			case START_GAME:
 				receiveStartPacket(i);
+				break;
+
+			case SERVER_LOADING:
+				LobbyState::GetInstance(Window::m_pStateManager)->ServerLoading();
 				break;
 
 			case READY_TO_SPAWN_EVENT:
