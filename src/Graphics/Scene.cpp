@@ -164,7 +164,7 @@ void Scene::Setup()
 	static_objects.push_back(std::move(orange_tractor));
 	static_objects.push_back(std::move(construction_site));
 	static_objects.push_back(std::move(windmill));
-	//static_objects.push_back(std::move(maze));
+	static_objects.push_back(std::move(maze));
 	static_objects.push_back(std::move(silo));
 	static_objects.push_back(std::move(rocks));
 	static_objects.push_back(std::move(fence));
@@ -456,7 +456,7 @@ void Scene::AddEntity(PosInfo p)
 					AddEntity(p.cid, p.oid, std::move(bullet));
 					break;
 				case(TELEPORTGUN):
-					bullet = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Potato")));
+					bullet = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Teleport")));
 					bullet->Translate(glm::vec3(p.x, p.y, p.z));
 					//bullet->GetShader() = modelShader;        // Set in ModelEntity
 					AddEntity(p.cid, p.oid, std::move(bullet));

@@ -78,7 +78,7 @@ public:
 	void sendAttackPacket(int id);
 	void receiveAttackPacket(int offset);   // do distinct animation for peck and weapon attack later?
 
-	void sendDiscardPacket();  // not sent until there's an animation for this
+	void sendDiscardPacket(int id);  // not sent until there's an animation for this
 	void receiveDiscardPacket(int offset);  // do animation for weapon discard later? 
 
 	void sendNamePacket(int player_id);
