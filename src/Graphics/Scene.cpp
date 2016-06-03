@@ -164,7 +164,7 @@ void Scene::Setup()
 	static_objects.push_back(std::move(orange_tractor));
 	static_objects.push_back(std::move(construction_site));
 	static_objects.push_back(std::move(windmill));
-	//static_objects.push_back(std::move(maze));
+	static_objects.push_back(std::move(maze));
 	static_objects.push_back(std::move(silo));
 	static_objects.push_back(std::move(rocks));
 	static_objects.push_back(std::move(fence));

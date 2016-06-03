@@ -150,7 +150,7 @@ int Player::GetTeamId()
 	//ServerGame::instance()->sendShootPacket(objectId);
 	if (playerWeapon->UseWeapon(position, currentOrientation, this->objectId, this->teamId, this) == 0)
 	{
-		ServerGame::instance()->sendDiscardPacket();
+		ServerGame::instance()->sendDiscardPacket(this->GetObjectId());
 		delete playerWeapon;
 		playerWeapon = nullptr;
 	}
@@ -181,6 +181,7 @@ void Player::DiscardWeapon()
 	{
 		delete playerWeapon;
 		playerWeapon = nullptr;
+		ServerGame::instance()->sendDiscardPacket(objectId);
 	}
 
 	//if(alive) send packet for discard animation

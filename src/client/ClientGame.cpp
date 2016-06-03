@@ -223,6 +223,19 @@ void ClientGame::receiveSpawnPacket(int offset)
 	}
 }
 
+void ClientGame::SetName(std::string name)
+{
+	if (name == "Enter your name")
+	{
+		std::string def;
+		def += "Player ";
+		def += std::to_string(client_id);
+		name_map[client_id] = def;
+	}
+	else
+		name_map[client_id] = name;
+}
+
 void ClientGame::receiveRemovePacket(int offset)
 {
 	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
@@ -240,7 +253,7 @@ void ClientGame::receiveRemovePacket(int offset)
 		}
 	}
 
-	if (Scene::Instance()->GetPlayer()->GetID() == r->rec_cid)
+	if (client_id == r->rec_oid)
 	{
 		if (r->rem_cid == ClassId::COLLECTABLE)
 		{
@@ -453,13 +466,15 @@ void ClientGame::sendDiscardPacket()
 
 	packet.serialize(packet_data);
 
-	Scene::Instance()->GetPlayer()->SetWeapon(-1);
 	NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
 }
 
 void ClientGame::receiveDiscardPacket(int offset)
 {
-	Scene::Instance()->GetPlayer()->SetWeapon(-1);
+	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
+	struct MiscInfo* m = (struct MiscInfo *) &(dat->buf);
+	if(m->misc1 == client_id)
+		Scene::Instance()->GetPlayer()->SetWeapon(-1);
 }
 
 //	NOTE: We're going to use the sender id as the guy that's dancing instead of changing
