@@ -479,7 +479,8 @@ void CPlayState::Draw()
 		case GRENADELAUNCHER:
 			hud_weapon = hud_potato;
 			break;
-		default:
+		default: 
+			hud_weapon = hud_tomato;
 			break;
 		}
 

@@ -352,7 +352,7 @@ void Player::SetTeam(int team)
     if (team == 1)
     {
         Material material = Material();
-        material._diffuse = glm::vec3(0.941f, 0.922f, 0.271f);
+        material._diffuse = glm::vec3(1.0f, 210.0f/255.0f, 77.0f/255.0f);
         m_model->ChangeMaterial(1, material);
     }
 }
