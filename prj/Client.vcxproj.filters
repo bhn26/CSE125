@@ -31,6 +31,9 @@
     <Filter Include="Source Files\GameState">
       <UniqueIdentifier>{8c017488-fc19-43c4-802b-53fa3478caed}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Audio">
+      <UniqueIdentifier>{fafc2566-1ecf-45d0-b233-8e36fb6bb348}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\src\Graphics\Shaders\basic_shader.frag">
@@ -205,9 +208,17 @@
     <ClCompile Include="..\src\Graphics\Objects\Explosion.cpp">
       <Filter>Source Files\Graphics\Objects</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\client\LoadState.cpp" />
     <ClCompile Include="..\src\client\GameOverState.cpp">
       <Filter>Source Files\GameState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\client\LoadState.cpp">
+      <Filter>Source Files\GameState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Audio\SoundBufferManager.cpp">
+      <Filter>Source Files\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Audio\SoundsHandler.cpp">
+      <Filter>Source Files\Audio</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -346,9 +357,17 @@
     <ClInclude Include="..\src\Graphics\Objects\Explosion.h">
       <Filter>Source Files\Graphics\Objects</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\client\LoadState.h" />
     <ClInclude Include="..\src\client\GameOverState.h">
       <Filter>Source Files\GameState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\client\LoadState.h">
+      <Filter>Source Files\GameState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Audio\SoundBufferManager.h">
+      <Filter>Source Files\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Audio\SoundsHandler.h">
+      <Filter>Source Files\Audio</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -200,6 +200,8 @@
     <None Include="..\src\Graphics\Shaders\text.vert" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\Audio\SoundBufferManager.cpp" />
+    <ClCompile Include="..\src\Audio\SoundsHandler.cpp" />
     <ClCompile Include="..\src\client\GameOverState.cpp" />
     <ClCompile Include="..\src\client\LoadState.cpp" />
     <ClCompile Include="..\src\Graphics\ModelManager.cpp" />
@@ -245,6 +247,8 @@
     <ClCompile Include="..\src\Graphics\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\src\Audio\SoundBufferManager.h" />
+    <ClInclude Include="..\src\Audio\SoundsHandler.h" />
     <ClInclude Include="..\src\client\GameOverState.h" />
     <ClInclude Include="..\src\client\LoadState.h" />
     <ClInclude Include="..\src\Graphics\ModelManager.h" />

@@ -56,19 +56,25 @@ void LobbyState::OnClick(int button, int action, double x, double y) {
 	glGetIntegerv(GL_VIEWPORT, viewport);
 	glReadPixels(x, viewport[3] - y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, &res);
 	if (action == GLFW_PRESS) {
+        SoundsHandler::SoundOptions options;
+        options._isRelativeToListener = true;
 		switch (res[0]) {
-		case 0: printf("None clicked\n"); break;
-		case 1: printf("Start Button clicked\n");
-			ClientGame::instance()->sendStartPacket();
-			break;
-		case 2: printf("Join T0 clicked\n");  // team 1
-			ClientGame::instance()->sendJoinPacket(0);
-			break;
-		case 3: printf("Join T1 clicked\n"); // team 2
-			ClientGame::instance()->sendJoinPacket(1);
-			break;
-		default: printf("%d clicked%s\n", res[0]);
-		}
+            case 0: printf("None clicked\n"); break;
+            case 1: printf("Start Button clicked\n");
+                ClientGame::instance()->PlaySound("Button_Click", options);
+                ClientGame::instance()->sendStartPacket();
+                break;
+            case 2: printf("Join T0 clicked\n");  // team 1
+                ClientGame::instance()->PlaySound("Button_Click", options);
+                ClientGame::instance()->sendJoinPacket(0);
+                break;
+            case 3: printf("Join T1 clicked\n"); // team 2
+                ClientGame::instance()->PlaySound("Button_Click", options);
+                ClientGame::instance()->sendJoinPacket(1);
+                break;
+            default: printf("%d clicked%s\n", res[0]);
+                ClientGame::instance()->PlaySound("Button_Click", options);
+        }
 	}
 }
 
@@ -182,6 +188,11 @@ void LobbyState::Draw()
 
 void LobbyState::EnterState()
 {
+}
+
+void LobbyState::LeaveState()
+{
+    ClientGame::instance()->StopMenuSound();
 }
 
 void::LobbyState::InitTextures() {
