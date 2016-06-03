@@ -36,6 +36,22 @@ const std::string ClientGame::EVENT_TAUNT_DEATH = "Taunt_Death";
 const std::string ClientGame::EVENT_TAUNT_PECK = "Taunt_Peck";
 
 ////////////////////////////////////////////////////////////////////////////////
+int ClientGame::PlaySound(const std::string& soundName, SoundsHandler::SoundOptions options)
+{
+    std::shared_ptr<sf::SoundBuffer> soundBuffer = SoundBufferManager::GetSoundBuffer(soundName);
+    if (soundBuffer)
+    {
+        return m_soundsHandler.Play(*soundBuffer, options);
+    }
+    return -1;
+}
+
+bool ClientGame::StopSound(int index)
+{
+    return m_soundsHandler.StopSound(index);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void ClientGame::PlayMenuSound()
 {
     std::shared_ptr<sf::SoundBuffer> soundBuffer = SoundBufferManager::GetSoundBuffer("Menu");
@@ -268,7 +284,8 @@ void ClientGame::receiveRemovePacket(int offset)
 		{
 			incScore(((Player *)(Scene::Instance()->GetEntity(ClassId::PLAYER, r->rec_oid).get()))->GetTeam(), 1);
 		}
-	}
+        PlaySound("Collect_Egg");
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

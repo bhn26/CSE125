@@ -6,6 +6,7 @@
 #include <GLFW/glfw3.h>
 
 #include <string>
+#include <stack>
 #include <unordered_map>
 #include "Graphics/Objects/Entity.h"
 #include "Graphics/Animation/AnimationPlayer.h"
@@ -105,6 +106,7 @@ public:
 private:
     // AnimationPlayer::Listener
     virtual void OnFinish() override;
+    void CheckStopDanceSound();
     void SetRelativeCamPosition(glm::vec3 relativePos);
     void CalculateCameraPosition();
     void CalculateCameraFront();
@@ -145,6 +147,8 @@ private:
     float m_lastTime_t;     // Test
     float m_distanceThreshhold_t;
     glm::vec3 m_lastPos_t;
+
+    std::stack<int> m_danceSoundIndices;      // Sound index
 
 };
 

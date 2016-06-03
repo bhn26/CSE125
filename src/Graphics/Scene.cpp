@@ -47,11 +47,12 @@ void Scene::Setup()
     glm::vec3 pos = glm::vec3(std::stof(ConfigManager::instance()->GetConfigValue("Light_Pos_X")),
         std::stof(ConfigManager::instance()->GetConfigValue("Light_Pos_Y")),
         std::stof(ConfigManager::instance()->GetConfigValue("Light_Pos_Z")));
+    glm::vec3 camPos = pos + glm::vec3(-50.0f, 0.0f, 0.0f);
 
     pLight = std::unique_ptr<PointLight>(new PointLight(glm::vec3(0.0f, 20.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)));
     dLight = std::unique_ptr<DirectionalLight>(new DirectionalLight(glm::vec3(0.5, -sqrt(3)/2.0f, 0.0f)));
     dLight->_ambientIntensity = 0.3f;
-    camera = std::unique_ptr<Camera>(new Camera(pos, glm::vec3(0.0f, 1.0f, 0.0f), dLight->_direction));
+    camera = std::unique_ptr<Camera>(new Camera(camPos, glm::vec3(0.0f, 1.0f, 0.0f), dLight->_direction));
 
     //glm::vec3 pos = glm::vec3(0.0f, 250.0f, 0.0f);
     //lightSpaceMatrix = glm::ortho(-425.0f, 350.0f, -500.0f, 300.0f, 10.0f, 500.0f) *

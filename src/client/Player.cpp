@@ -301,6 +301,7 @@ void Player::ChangeState(State state)
     if (state == m_state && !(state == State::DANCE || state == State::DEATH || state == State::PECK))
         return;
 
+    CheckStopDanceSound();
     SetState(state);
     switch (state)
     {
@@ -317,15 +318,23 @@ void Player::ChangeState(State state)
             m_model->PlayAnimation("jump");
             m_lastTime_t = Utils::CurrentTime();
             m_lastPos_t = Position();
+            ClientGame::instance()->PlaySound("Jump");     // Play at own position
             break;
         case State::ATTACK:
             m_model->PlayAnimation("melee");
+            ClientGame::instance()->PlaySound("Melee");     // Play at own position
             break;
         case State::DANCE:
+        {
             m_model->PlayAnimation("dance");
+            SoundsHandler::SoundOptions options;     // Play at own position
+            options._loops = true;
+            m_danceSoundIndices.push(ClientGame::instance()->PlaySound("Dance", options));
             break;
+        }
         case State::DEATH:
             m_model->PlayAnimation("death");
+            ClientGame::instance()->PlaySound("Death");
             break;
         case State::PECK:
             m_model->PlayAnimation("peck");
@@ -351,6 +360,17 @@ void Player::OnFinish()
 {
 	if (m_state != State::DEATH)
 		ChangeState(State::IDLE);
+}
+
+void Player::CheckStopDanceSound()
+{
+    while (m_danceSoundIndices.size())
+    {
+        int index = m_danceSoundIndices.top();
+        m_danceSoundIndices.pop();
+        if (index != -1)
+            ClientGame::instance()->StopSound(index);
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

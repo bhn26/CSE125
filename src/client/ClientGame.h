@@ -145,6 +145,11 @@ public:
 
     ////////////////////////////////////////////////////////////////////////////////
     // Sounds
+#ifdef PlaySound
+#undef PlaySound
+#endif
+    int PlaySound(const std::string& soundName, SoundsHandler::SoundOptions options = SoundsHandler::SoundOptions());
+    bool StopSound(int index);
     void PlayMenuSound();
     void StopMenuSound();
 
