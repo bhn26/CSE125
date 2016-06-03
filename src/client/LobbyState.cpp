@@ -138,10 +138,7 @@ void LobbyState::Draw()
 	y = ty + 90 + 6; // skip header
 
 	for (int i = 0; i < team0.size(); i++) {
-		char name[20];
-		strcpy_s(name, "Player ");
-		strcat_s(name, std::to_string(team0.at(i)).c_str());
-		TextRenderer::RenderText(name, x, y, 1.0f, glm::vec3(0.5f, 0.5f, 0.5f));
+		TextRenderer::RenderText(ClientGame::instance()->GetName(team0.at(i)).c_str(), x, y, 1.0f, glm::vec3(0.5f, 0.5f, 0.5f));
 
 		y = y + 60; // row height
 	}
@@ -160,10 +157,7 @@ void LobbyState::Draw()
 	y = ty + 90 + 6; // skip header
 
 	for (int i = 0; i < team1.size(); i++) {
-		char name[20];
-		strcpy_s(name, "Player ");
-		strcat_s(name, std::to_string(team1.at(i)).c_str());
-		TextRenderer::RenderText(name, x, y, 1.0f, glm::vec3(0.5f, 0.5f, 0.5f));
+		TextRenderer::RenderText(ClientGame::instance()->GetName(team1.at(i)).c_str(), x, y, 1.0f, glm::vec3(0.5f, 0.5f, 0.5f));
 
 		y = y + 60; // row height
 	}

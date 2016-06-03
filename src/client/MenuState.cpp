@@ -104,10 +104,7 @@ void CMenuState::RenderSelection() {
 }
 
 void CMenuState::Update(DWORD) {
-	Player * player = Scene::Instance()->GetPlayer();
-	if (player) {
-		player->SetName(username);
-	}
+	ClientGame::instance()->SetName(username);
 }
 
 void CMenuState::Draw()
@@ -148,7 +145,7 @@ void::CMenuState::InitTextures() {
 
 void CMenuState::StartGame() {
 	// send chicken name
-
+	ClientGame::instance()->sendNamePacket();
 	// change state
 	m_pStateManager->ChangeState(LobbyState::GetInstance(m_pStateManager));
 }
