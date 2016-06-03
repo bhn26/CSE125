@@ -30,6 +30,7 @@ protected:
 private:
 	void RenderSelection();
 	void InitTextures();
+	void ShowLoadingScreen();
 
 	SpriteRenderer * sprite_renderer;
 
@@ -43,7 +44,10 @@ private:
 	Texture *join;
 	Texture *join_disabled;
 
+	Texture * load_screen;
+
 	bool initialized;
+	bool loading;
 };
 
 #endif  // _LOBBYSTATE_H_
