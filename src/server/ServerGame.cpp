@@ -473,7 +473,7 @@ void ServerGame::sendDiscardPacket(int id)
 	network->sendToAll(packet_data, packet_size);
 }
 
-void ServerGame::sendRemovePacket(ClassId rem_cid, int rem_oid, ClassId rec_cid, int rec_oid, WeaponType shooter)
+void ServerGame::sendRemovePacket(ClassId rem_cid, int rem_oid, ClassId rec_cid, int rec_oid, CollectType c_type, int subtype)
 {
 	Packet packet;
 	packet.hdr.packet_type = REMOVE_EVENT;
@@ -489,7 +489,8 @@ void ServerGame::sendRemovePacket(ClassId rem_cid, int rem_oid, ClassId rec_cid,
 	r.rem_oid = rem_oid;
 	r.rec_cid = rec_cid;
 	r.rec_oid = rec_oid;
-	r.sub_id = shooter;
+	r.sub_id = c_type;
+	r.sub_id2 = subtype;
 
 	r.serialize(packet.dat.buf);
 
@@ -511,7 +512,7 @@ void ServerGame::receiveMovePacket(int offset)
 	// don't take client input if stunned
 	if(player->GetStun() > 0)
 		return;
-	printf("attempting to move\n");
+
 	switch (pi->direction) 
 	{
 		case MOVE_FORWARD:
@@ -577,11 +578,10 @@ void ServerGame::sendMovePacket(ClassId class_id, int obj_id)
 		p.y = vec.getY();
 		p.z = vec.getZ();
 
-		p.hp = ((Player*)ent)->GetHP();
-
 		if (class_id == PLAYER) {
 			p.num_eggs = ((Player*)ent)->GetScore();
 			p.jump = ((Player*)ent)->GetJumpSem();
+			p.hp = ((Player*)ent)->GetHP();
 		}
 
         p.serialize(packet.dat.buf);

@@ -5,11 +5,11 @@ Shotgun::Shotgun(btDiscreteDynamicsWorld* curworld) : Weapon(fireRate, damage, c
 {
 	wt = WeaponType::SHOTGUN;
 	nextFireTick = 0;
-	fireRate = 20;
+	fireRate = 40;
 	damage = 20;
-	currentAmmo = 7;
-	maxAmmo = 7;
-	gunSpeed = new btVector3(0, 5, 20);
+	currentAmmo = 100;
+	maxAmmo = 100;
+	gunSpeed = new btVector3(0, 5, 35);
 }
 
 

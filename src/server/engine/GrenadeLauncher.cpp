@@ -7,13 +7,10 @@ GrenadeLauncher::GrenadeLauncher(btDiscreteDynamicsWorld* curworld) : Weapon(fir
 	nextFireTick = 0;
 	fireRate = 100;
 	damage = 1;
-	currentAmmo = 3;
-	maxAmmo = 3;
-	gunSpeed = new btVector3(0, 15, 20);
+	currentAmmo = 12;
+	maxAmmo = 12;
+	gunSpeed = new btVector3(0, 15, 30);
 
-	int gunfireRate = 1;
-	int gunDamage = 20;
-	btVector3* gunSpeed = new btVector3(0, 15, 20);
 }
 
 GrenadeLauncher::~GrenadeLauncher() {}

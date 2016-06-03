@@ -5,10 +5,10 @@ BounceGun::BounceGun(btDiscreteDynamicsWorld* curworld) : Weapon(fireRate, damag
 {
 	wt = WeaponType::BOUNCEGUN;
 	nextFireTick = 0;
-	fireRate = 15;
-	damage = 4;
-	currentAmmo = 12;
-	maxAmmo = 12;
+	fireRate = 10;
+	damage = 8;
+	currentAmmo = 200;
+	maxAmmo = 200;
 	gunSpeed = new btVector3(0, 8, 20);
 }
 

@@ -4,6 +4,7 @@
 #include <map>
 #include "Entity.h"
 #include "Weapon.h"
+#include "Powerup.h"
 #include "BulletCollisionHandler.h"
 #include "../../network/GameData.h"
 //class Entity;
@@ -37,6 +38,8 @@ public:
 	Bullet* spawnBullet(int playerid, int teamid, int damage, WeaponType shooter, BulletCollisionHandler* handler, btRigidBody* bullet_body, btDiscreteDynamicsWorld* physicsWorld);
 
 	void spawnCollectable(btDiscreteDynamicsWorld* curworld, WeaponType w_type);
+
+	void spawnCollectable(btDiscreteDynamicsWorld* curworld, PowerupType p_type);
 
 	void AddEntity(int cid, unsigned int oid, Entity* ent);
 

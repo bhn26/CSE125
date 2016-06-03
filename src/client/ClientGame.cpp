@@ -255,10 +255,10 @@ void ClientGame::receiveRemovePacket(int offset)
 
 	if (client_id == r->rec_oid)
 	{
-		if (r->rem_cid == ClassId::COLLECTABLE)
+		if (r->rem_cid == ClassId::COLLECTABLE && r->sub_id == CollectType::WEAPONCOLLECT)
 		{
 			if(Scene::Instance()->GetPlayer()->GetWeapon() == -1)
-				Scene::Instance()->GetPlayer()->SetWeapon(r->sub_id);
+				Scene::Instance()->GetPlayer()->SetWeapon(r->sub_id2);
 		}
 	}
 }

@@ -246,7 +246,6 @@ void World::UpdateWorld()
 			{
 				continue;
 			}
-			printf("collided with user index%d\n", obA->getUserIndex());
 			// Bullet hits player
 			if (obA->getUserIndex() == PLAYER)
 			{
@@ -327,7 +326,10 @@ void World::UpdateWorld()
 					continue;
 				}
 				collectObj->HandleCollect(collidePlayer);
-				ServerGame::instance()->sendRemovePacket(ClassId::COLLECTABLE, collectObj->GetObjectId(), ClassId::PLAYER, collidePlayer->GetObjectId(), collectObj->GetWeapon()->GetWeaponType());
+				if(collectObj->getType() == CollectType::WEAPONCOLLECT)
+					ServerGame::instance()->sendRemovePacket(ClassId::COLLECTABLE, collectObj->GetObjectId(), ClassId::PLAYER, collidePlayer->GetObjectId(), CollectType::WEAPONCOLLECT, collectObj->GetWeapon()->GetWeaponType());
+				else if(collectObj->getType() == CollectType::POWERUPCOLLECT)
+					ServerGame::instance()->sendRemovePacket(ClassId::COLLECTABLE, collectObj->GetObjectId(), ClassId::PLAYER, collidePlayer->GetObjectId(), CollectType::POWERUPCOLLECT, collectObj->GetPowerup()->getType());
 				deleteList.push_back(collectObj);
 				collectObj->SetToMarked(world_tick);
 			}
@@ -410,7 +412,10 @@ void World::UpdateWorld()
 					continue;
 				}
 				collectObj->HandleCollect(collidePlayer);
-				ServerGame::instance()->sendRemovePacket(ClassId::COLLECTABLE, collectObj->GetObjectId(), ClassId::PLAYER, collidePlayer->GetObjectId(), collectObj->GetWeapon()->GetWeaponType());
+				if (collectObj->getType() == CollectType::WEAPONCOLLECT)
+					ServerGame::instance()->sendRemovePacket(ClassId::COLLECTABLE, collectObj->GetObjectId(), ClassId::PLAYER, collidePlayer->GetObjectId(), CollectType::WEAPONCOLLECT, collectObj->GetWeapon()->GetWeaponType());
+				else if (collectObj->getType() == CollectType::POWERUPCOLLECT)
+					ServerGame::instance()->sendRemovePacket(ClassId::COLLECTABLE, collectObj->GetObjectId(), ClassId::PLAYER, collidePlayer->GetObjectId(), CollectType::POWERUPCOLLECT, collectObj->GetPowerup()->getType());
 				deleteList.push_back(collectObj);
 				collectObj->SetToMarked(world_tick);
 			}
@@ -541,12 +546,28 @@ void World::UpdateWorld()
 			{
 				if (it->second->GetClassId() == ClassId::PLAYER){
 					ServerGame::instance()->sendMovePacket((ClassId)it->second->GetClassId(), it->second->GetObjectId());
-					if(((Player *)it->second)->GetStun() > 0)
-						((Player *) it->second)->SetStun(((Player *)it->second)->GetStun() - 4); // unstun the guy
 				}
 				//printf(" Dynamic object classid: %d, objid: %d, velocity (%f,%f,%f)\n", it->second->GetClassId(), it->second->GetObjectId(), vec.getX(), vec.getY(), vec.getZ());
 				continue;
 			}
+
+			// modify on player ticks
+			if (it->second->GetClassId() == ClassId::PLAYER) {
+				// resets stuns
+				if (((Player *)it->second)->GetStun() > 0)
+					((Player *)it->second)->SetStun(((Player *)it->second)->GetStun() - 4); // unstun the guy
+
+				//resets powerups
+				if (((Player *)it->second)->GetPowerupDuration() > 0)
+				{
+					((Player *)it->second)->SetPowerupDuration(((Player *)it->second)->GetPowerupDuration() - 4);
+					if (((Player *)it->second)->GetPowerupDuration() <= 0)
+					{
+						((Player *)it->second)->GetPower()->removePower(((Player *)it->second));
+					}
+				}
+			}
+
 			ServerGame::instance()->sendMovePacket((ClassId)it->second->GetClassId(), it->second->GetObjectId());
 		}
 	}
