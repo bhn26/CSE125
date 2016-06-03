@@ -225,7 +225,7 @@ void ClientGame::receiveSpawnPacket(int offset)
 
 void ClientGame::SetName(std::string name)
 {
-	if (name == "Enter your name")
+	if (name == "Enter your name" || name == "")
 	{
 		std::string def;
 		def += "Player ";

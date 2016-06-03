@@ -10,7 +10,7 @@ Flag::Flag(int objid, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld): Entit
 	btCollisionShape* playerShape = new btBoxShape(btVector3(1, 1, 1));
 
 	// Create Flag physics object
-	btDefaultMotionState*playerMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(pos.x, pos.y, pos.z)));
+	btDefaultMotionState*playerMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(pos.x, 90, pos.z)));
 	btScalar mass = 1;
 	btVector3 playerInertia(0, 0, 0);
 	playerShape->calculateLocalInertia(mass, playerInertia);

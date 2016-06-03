@@ -160,6 +160,7 @@ void EntitySpawner::spawnCollectable(btDiscreteDynamicsWorld* curWorld, WeaponTy
 		{
 			printf("spawned shotgun\n");
 			wp = new Shotgun(curWorld);
+			break;
 		}
 		default:
 		{

@@ -473,6 +473,12 @@ void Scene::AddEntity(PosInfo p)
 					egg->SetObjId(p.oid);
 					AddEntity(p.cid, p.oid, std::move(egg));
 					break;
+				case(SHOTGUN):
+					bullet = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Pumpkin_Seed")));
+					bullet->Translate(glm::vec3(p.x, p.y, p.z));
+					//bullet->GetShader() = modelShader;        // Set in ModelEntity
+					AddEntity(p.cid, p.oid, std::move(bullet));
+					break;
 				default:
 					std::unique_ptr<StaticObject> bullet = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Tomato")));
 					bullet->Translate(glm::vec3(p.x, p.y, p.z));
