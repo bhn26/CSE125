@@ -17,7 +17,7 @@ class CMenuState : public CGameState
 public:
 	~CMenuState();
 
-	void OnKeyDown(WPARAM wKey);
+	void OnKeyDown(int action, int key) override;
 	void OnClick(int button, int action, double x, double y) override;
 	void OnChar(unsigned int codepoint) override;
 
@@ -31,6 +31,7 @@ protected:
 	CMenuState(CStateManager* pManager);
 
 private:
+	void StartGame();
 	void RenderSelection();
 	void InitTextures();
 
@@ -41,7 +42,9 @@ private:
 	Texture *textbox;
 	Texture *join;
 
+	std::string default_name;
 	std::string username;
+
 	bool typing; // true when player selects textbox
 	
 	bool initialized;

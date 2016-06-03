@@ -269,6 +269,8 @@ void ClientGame::receiveMovePacket(int offset)
 			((Player *)(Scene::Instance()->GetEntity(pi->cid, pi->oid).get()))->Jump();
 	}
 
+	// update hp
+	((Player *)(Scene::Instance()->GetEntity(pi->cid, pi->oid).get()))->SetHealth(pi->hp);
 }
 
 // Need to know what direction to move in
@@ -488,10 +490,18 @@ void ClientGame::receiveDeathPacket(int offset)
 {
 	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
 	struct EmoteInfo* e = (struct EmoteInfo *) &(dat->buf);
+
+	// model
 	((Player *)(Scene::Instance()->GetEntity(ClassId::PLAYER, e->id).get()))->Die();
 
+	// score
 	decScore(((Player *)(Scene::Instance()->GetEntity(ClassId::PLAYER, e->id).get()))->GetTeam(), 
 		((Player *)(Scene::Instance()->GetEntity(ClassId::PLAYER, e->id).get()))->GetScore());
+
+	// death overlay
+	if (e->id == client_id) {
+		CPlayState::GetInstance(Window::m_pStateManager)->Die();
+	}
 }
 
 void ClientGame::receiveRespawnPacket(int offset) 
@@ -504,6 +514,39 @@ void ClientGame::receiveRespawnPacket(int offset)
 	if (e->id == client_id) {
 		CPlayState::GetInstance(Window::m_pStateManager)->Respawn();
 	}
+}
+
+void ClientGame::sendNamePacket() {
+	const unsigned int packet_size = sizeof(Packet);
+	char packet_data[packet_size];
+
+	Packet packet;
+	packet.hdr.packet_type = SET_USERNAME;
+	packet.hdr.sender_id = client_id;
+	packet.hdr.receiver_id = SERVER_ID;
+
+	NameInfo n;
+	n.player_id = client_id;
+	n.name = name_map.at(client_id);
+	n.serialize(packet.dat.buf);
+
+	packet.serialize(packet_data);
+
+	NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
+
+	packet.serialize(packet_data);
+
+	NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
+}
+
+void ClientGame::receiveNamePacket(int offset) {
+	struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset]);
+	struct PacketData* dat = (struct PacketData *) &(network_data[offset + sizeof(PacketHeader)]);
+	struct NameInfo* n = (struct NameInfo *) &(dat->buf);
+
+	name_map[n->player_id] = n->name;
+	//Player* player = (Player*)Scene::Instance()->GetEntity(ClassId::PLAYER,n->player_id).get();
+	//player->SetName(n->name);
 }
 
 void ClientGame::update()
@@ -528,6 +571,10 @@ void ClientGame::update()
                 // offset for this will be the packet header
                 receiveInitPacket(i);
                 break;
+
+			case SET_USERNAME:
+				receiveNamePacket(i);
+				break;
 
 			case JOIN_TEAM:
 				receiveJoinPacket(i + sizeof(PacketHeader));
