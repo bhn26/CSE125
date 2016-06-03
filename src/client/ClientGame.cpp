@@ -143,7 +143,7 @@ void ClientGame::sendReadyPacket()
 	packet.hdr.packet_type = READY_GAME;
 	packet.hdr.sender_id = client_id;
 
-    printf("sending a ready packet");
+    printf("sending a ready packet\n");
 
 	packet.serialize(packet_data);
 
@@ -196,7 +196,7 @@ void ClientGame::receiveReadyToSpawnPacket(int offset)
 	PosInfo pi;
 	pi.id = client_id;
 	pi.team_id = client_team;
-	printf("send IndSpawn Packet for player %d on team %d", client_id, pi.team_id);
+	printf("send IndSpawn Packet for player %d on team %d\n", client_id, pi.team_id);
 	pi.skin = rand() % 3;
 
 	pi.serialize(packet.dat.buf);
@@ -698,6 +698,11 @@ void ClientGame::Error_callback(int error, const char* description)
 {
     // Print error
     fputs(description, stderr);
+}
+
+void ClientGame::LoadConfigs()
+{
+    ConfigManager::instance()->LoadConfigs("eggs.cfg");
 }
 
 void ClientGame::Setup_callbacks()

@@ -74,3 +74,6 @@ Debug/
 #xcode
 *.xcbkptlist
 *.xcuserstate
+
+# object files
+maze.obj

@@ -28,8 +28,8 @@
     <Filter Include="Source Files\Graphics\UI">
       <UniqueIdentifier>{1adf384d-7920-4519-829d-d35a639b6aa1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Game State">
-      <UniqueIdentifier>{210b2663-75c4-4fe2-ab88-4b5a5984e82d}</UniqueIdentifier>
+    <Filter Include="Source Files\GameState">
+      <UniqueIdentifier>{8c017488-fc19-43c4-802b-53fa3478caed}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -62,6 +62,18 @@
       <Filter>Source Files\Graphics\Shaders</Filter>
     </None>
     <None Include="..\eggs.cfg" />
+    <None Include="..\src\Graphics\Shaders\depthMap.frag">
+      <Filter>Source Files\Graphics\Shaders</Filter>
+    </None>
+    <None Include="..\src\Graphics\Shaders\depthMap.vert">
+      <Filter>Source Files\Graphics\Shaders</Filter>
+    </None>
+    <None Include="..\src\Graphics\Shaders\depthMapDraw.frag">
+      <Filter>Source Files\Graphics\Shaders</Filter>
+    </None>
+    <None Include="..\src\Graphics\Shaders\depthMapDraw.vert">
+      <Filter>Source Files\Graphics\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Graphics\Objects\Cube.cpp">
@@ -172,26 +184,30 @@
     <ClCompile Include="..\src\Graphics\ModelManager.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\client\GameOverState.cpp">
-      <Filter>Source Files\Game State</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\client\GameState.cpp">
-      <Filter>Source Files\Game State</Filter>
+      <Filter>Source Files\GameState</Filter>
     </ClCompile>
     <ClCompile Include="..\src\client\LobbyState.cpp">
-      <Filter>Source Files\Game State</Filter>
+      <Filter>Source Files\GameState</Filter>
     </ClCompile>
     <ClCompile Include="..\src\client\MenuState.cpp">
-      <Filter>Source Files\Game State</Filter>
+      <Filter>Source Files\GameState</Filter>
     </ClCompile>
     <ClCompile Include="..\src\client\PlayState.cpp">
-      <Filter>Source Files\Game State</Filter>
+      <Filter>Source Files\GameState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\client\StateManager.cpp">
+      <Filter>Source Files\GameState</Filter>
     </ClCompile>
     <ClCompile Include="..\src\client\StateManager.cpp">
       <Filter>Source Files\Game State</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\client\LoadState.cpp">
-      <Filter>Source Files\Game State</Filter>
+    <ClCompile Include="..\src\Graphics\Objects\Explosion.cpp">
+      <Filter>Source Files\Graphics\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\client\LoadState.cpp" />
+    <ClCompile Include="..\src\client\GameOverState.cpp">
+      <Filter>Source Files\GameState</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -205,9 +221,6 @@
       <Filter>Source Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Graphics\Nodes.h">
-      <Filter>Source Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Graphics\PointLight.h">
       <Filter>Source Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Graphics\Scene.h">
@@ -312,26 +325,30 @@
     <ClInclude Include="..\src\Graphics\ModelManager.h">
       <Filter>Source Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\client\GameOverState.h">
-      <Filter>Source Files\Game State</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\client\GameState.h">
-      <Filter>Source Files\Game State</Filter>
+      <Filter>Source Files\GameState</Filter>
     </ClInclude>
     <ClInclude Include="..\src\client\LobbyState.h">
-      <Filter>Source Files\Game State</Filter>
+      <Filter>Source Files\GameState</Filter>
     </ClInclude>
     <ClInclude Include="..\src\client\MenuState.h">
-      <Filter>Source Files\Game State</Filter>
+      <Filter>Source Files\GameState</Filter>
     </ClInclude>
     <ClInclude Include="..\src\client\PlayState.h">
-      <Filter>Source Files\Game State</Filter>
+      <Filter>Source Files\GameState</Filter>
     </ClInclude>
     <ClInclude Include="..\src\client\StateManager.h">
-      <Filter>Source Files\Game State</Filter>
+      <Filter>Source Files\GameState</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\client\LoadState.h">
-      <Filter>Source Files\Game State</Filter>
+    <ClInclude Include="..\src\Graphics\Lights.h">
+      <Filter>Source Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Graphics\Objects\Explosion.h">
+      <Filter>Source Files\Graphics\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\client\LoadState.h" />
+    <ClInclude Include="..\src\client\GameOverState.h">
+      <Filter>Source Files\GameState</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,10 +1,17 @@
 #version 330 core
 layout (location = 0) in vec4 vertex; // <vec2 position, vec2 texCoords>
 
-out vec2 TexCoords;
+// Uses a different projection matrix
+//layout (std140) uniform Matrices
+//{
+//    mat4 projection;
+//    mat4 view;      // Even though not used
+//};
 
 uniform mat4 model;
 uniform mat4 projection;
+
+out vec2 TexCoords;
 
 void main()
 {

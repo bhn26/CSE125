@@ -17,7 +17,7 @@ class ChickenAnim : public Entity
 {
     std::string m_walk, m_attack, m_jump, m_dance;
 public:
-    DirectionalLight m_directionalLight;
+    Animation::DirectionalLight m_directionalLight;
     Animation::AnimatedModel m_model;
 
     glm::mat4 m_toWorld;
@@ -25,13 +25,16 @@ public:
     ChickenAnim();
     ~ChickenAnim() {}
 
+    // Inherited via Entity
     void Draw() const override;
     void Update(float deltaTime) override;
+    virtual void SetShaderUniforms() const override;
     void Scale(float s);
 
     void Walk();
     void Attack();
     void Jump();
     void Dance();
+
 };
 

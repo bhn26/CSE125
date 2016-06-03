@@ -453,7 +453,7 @@ void CPlayState::Draw()
 		y = 20;
 
 		float health = Scene::Instance()->GetPlayer()->GetHealth();
-		Shader * shader = sprite_renderer->GetShader();
+		std::shared_ptr<Shader>& shader = sprite_renderer->GetShader();
 		GLint health_pos = shader->GetUniform("health_x_pos");
 		glUniform1i(health_pos, x + (hud_health->Width()*(health/100.0f)));
 		sprite_renderer->DrawSprite(*hud_health, glm::vec2(x, y), glm::vec2(hud_health->Width(), hud_health->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));

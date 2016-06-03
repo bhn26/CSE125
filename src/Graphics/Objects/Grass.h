@@ -22,7 +22,7 @@ class Model;
 class Grass : public Entity
 {
 public:
-	Grass();
+	Grass(const GLchar* path, GLuint num);
 	~Grass();
 
     //Model* grass;
@@ -33,8 +33,13 @@ public:
 	glm::vec3 color;
 	static GLfloat deltaTime;
 	static GLfloat lastFrame;
-	void Draw() const override;
+
+    // Inherited via Entity
+    void Draw() const override;
 	void Update(float deltaTime) override;
-	void SetColor(glm::vec3 color);
+    virtual void SetShaderUniforms() const override;
+
+    void SetColor(glm::vec3 color) {}
+
 };
 

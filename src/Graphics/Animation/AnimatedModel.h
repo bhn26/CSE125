@@ -33,7 +33,7 @@ namespace Animation
         bool ChangeMaterial(int index, Material& material);
 
         void Update(float deltaTime);
-        void Draw() const;
+        void Draw(bool useShader = true) const;
         void InitBones0() { m_animPlayer.InitBones0(); }
         void Reset() { m_animPlayer.Reset(); }
         void ToggleAnimating() { m_animPlayer.ToggleAnimation(); }

@@ -174,7 +174,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="..\src\Graphics\Shaders\depthMapDraw.frag" />
+    <None Include="..\src\Graphics\Shaders\depthMapDraw.vert" />
     <None Include="..\eggs.cfg" />
+    <None Include="..\src\Graphics\Shaders\depthMap.frag" />
+    <None Include="..\src\Graphics\Shaders\depthMap.vert" />
     <None Include="..\src\Graphics\Shaders\skinning.frag" />
     <None Include="..\src\Graphics\Shaders\skinning.vert" />
     <None Include="..\src\Graphics\Shaders\cubemap.frag" />
@@ -199,6 +203,7 @@
     <ClCompile Include="..\src\client\GameOverState.cpp" />
     <ClCompile Include="..\src\client\LoadState.cpp" />
     <ClCompile Include="..\src\Graphics\ModelManager.cpp" />
+    <ClCompile Include="..\src\Graphics\Objects\Explosion.cpp" />
     <ClCompile Include="..\src\Graphics\Objects\InstanceObject.cpp" />
     <ClCompile Include="..\src\Graphics\ShaderManager.cpp" />
     <ClCompile Include="..\src\Graphics\Objects\ModelEntity.cpp" />
@@ -243,6 +248,7 @@
     <ClInclude Include="..\src\client\GameOverState.h" />
     <ClInclude Include="..\src\client\LoadState.h" />
     <ClInclude Include="..\src\Graphics\ModelManager.h" />
+    <ClInclude Include="..\src\Graphics\Objects\Explosion.h" />
     <ClInclude Include="..\src\Graphics\Objects\InstanceObject.h" />
     <ClInclude Include="..\src\Graphics\ShaderManager.h" />
     <ClInclude Include="..\src\Graphics\Objects\ModelEntity.h" />
@@ -274,7 +280,7 @@
     <ClInclude Include="..\src\Graphics\Model.h" />
     <ClInclude Include="..\src\Graphics\Objects\Chicken.h" />
     <ClInclude Include="..\src\Graphics\Objects\StaticObject.h" />
-    <ClInclude Include="..\src\Graphics\PointLight.h" />
+    <ClInclude Include="..\src\Graphics\Lights.h" />
     <ClInclude Include="..\src\network\GameData.h" />
     <ClInclude Include="..\src\network\NetworkData.h" />
     <ClInclude Include="..\src\network\NetworkServices.h" />

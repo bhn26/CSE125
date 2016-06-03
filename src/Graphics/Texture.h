@@ -15,6 +15,7 @@ struct Material
     glm::vec3 _ambient;
     float _shininess;
     Material() : _diffuse(glm::vec3(1.0f)), _specular(glm::vec3(1.0f)), _ambient(glm::vec3(1.0f)), _shininess(0.0f) {}
+    bool Valid() const { return glm::length(_diffuse) > 0.0f; } // || glm::length(_specular) || glm::length(_ambient); }
 };
 
 class Texture

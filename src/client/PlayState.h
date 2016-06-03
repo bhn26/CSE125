@@ -12,13 +12,13 @@ class CPlayState : public CGameState
 public:
 	~CPlayState();
 
-	// Implementation of specific events
-	void OnMouseMove(float xoffset, float yoffset) override;
-	void OnClick(int button, int action, double x, double y) override;
-	void OnKeyDown(int action, int key) override;
-	void OnKeyUp(int action, int key) override;
-	void Update(DWORD dwCurrentTime) override;
-	void Draw() override;
+    // Implementation of specific events
+    void OnMouseMove(float xoffset, float yoffset) override;
+    void OnClick(int button, int action, double x, double y) override;
+    void OnKeyDown(int action, int key) override;
+    void OnKeyUp(int action, int key) override;
+    void Update(DWORD dwCurrentTime) override;
+    void Draw() override;
 
 	void Die() { dead = true; };
 	void Respawn() { dead = false; };

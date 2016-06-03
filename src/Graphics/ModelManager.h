@@ -15,7 +15,7 @@ class ModelManager
     std::vector<std::string> _modelNames;
 
     ModelManager() {}
-    bool LoadModel(const std::string& shaderName);
+    bool LoadModel(const std::string& modelName);
 
 public:
     void AddModelToLoad(std::string modelName);
@@ -26,5 +26,5 @@ public:
         return instance;
     }
 
-    static std::shared_ptr<Model> GetModel(std::string shaderName);
+    static std::shared_ptr<Model> GetModel(std::string modelName);
 };

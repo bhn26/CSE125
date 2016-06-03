@@ -22,15 +22,15 @@ LobbyState::LobbyState(CStateManager* pManager)
 
 LobbyState::~LobbyState()
 {
-	delete sprite_renderer;
-	delete bg;
-	delete start_button;
+    delete sprite_renderer;
+    delete bg;
+    delete start_button;
 
-	delete table_t1;
-	delete table_t2;
+    delete table_t1;
+    delete table_t2;
 
-	delete join;
-	delete join_disabled;
+    delete join;
+    delete join_disabled;
 }
 
 LobbyState* LobbyState::GetInstance(CStateManager* pManager)
@@ -76,8 +76,8 @@ void LobbyState::RenderSelection() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	////////////////// BACKGROUND//////////////////////////
-	float x = Texture::GetWindowCenter(bg->Width());
-	float y = Window::height / 2 - bg->Height() / 2;
+	float x = (float) Texture::GetWindowCenter(bg->Width());
+	float y = Window::height / 2.0f - bg->Height() / 2.0f;
 
 	////////////// START BUTTON /////////////////////////////////////
 	sprite_renderer->RenderSelection(1, *start_button, glm::vec2(x + 1000, y + 55), glm::vec2(start_button->Width(), start_button->Height()), 0.0f);
@@ -111,8 +111,8 @@ void LobbyState::Draw()
 	InitTextures();
 
 	////////////////// BACKGROUND//////////////////////////
-	float x = Texture::GetWindowCenter(bg->Width());
-	float y = Window::height / 2 - bg->Height() / 2;
+	float x = (float) Texture::GetWindowCenter(bg->Width());
+	float y = Window::height / 2.0f - bg->Height() / 2.0f;
 	sprite_renderer->DrawSprite(*bg, glm::vec2(x, y), glm::vec2(bg->Width(), bg->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 
 	////////////// START BUTTON /////////////////////////////////////

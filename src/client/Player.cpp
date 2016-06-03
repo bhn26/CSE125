@@ -7,7 +7,7 @@
 #include "Graphics/Objects/Chicken.h"
 #include "Graphics/Shader.h"
 #include "Graphics/Scene.h"
-#include "Graphics/PointLight.h"
+#include "Graphics/Lights.h"
 #include "Graphics/Model.h"
 #include "Graphics/Animation/AnimatedModel.h"
 #include "client/ClientGame.h"
@@ -22,7 +22,7 @@ Player::Player(float x, float y, float z, float rotW, float rotX, float rotY, fl
     Entity(glm::vec3(x,y,z), glm::vec3(0.01f)), camAngle(0.0f), modelFile("assets/chickens/objects/chicken.obj"),
     defaultCamFront(glm::normalize(glm::vec3(0.05f, -0.20f, 0.97f))), m_distanceThreshhold_t(1.0f)
 {
-    info_panel = new Texture(GL_TEXTURE_2D, "assets/ui/player_info_panel.png");
+    //info_panel = new Texture(GL_TEXTURE_2D, "assets/ui/player_info_panel.png");
 
     SetRelativeCamPosition(glm::vec3(-2.5f, 4.5f, -7.0f));
     camera = std::unique_ptr<Camera>(new Camera(Position() + relativeCamPosition));
@@ -39,18 +39,19 @@ Player::Player(float x, float y, float z, float rotW, float rotX, float rotY, fl
 
     m_model->RegisterListener(this);
 
-    DirectionalLight m_directionalLight;
+    Animation::DirectionalLight m_directionalLight;
     m_directionalLight.color = glm::vec3(1.0f, 1.0f, 1.0f);
     m_directionalLight.ambientIntensity = 0.55f;
     m_directionalLight.diffuseIntensity = 0.9f;
     m_directionalLight.direction = glm::vec3(1.0f, 0.0, 0.0);
 
-    SkinningTechnique* skinTechnique = m_model->GetMesh().GetSkinningTechnique();
+    Animation::SkinningTechnique* skinTechnique = m_model->GetMesh().GetSkinningTechnique();
 
     skinTechnique->Enable();
 
     skinTechnique->SetColorTextureUnit(0); // color texture unit index = 0
-    skinTechnique->SetDirectionalLight(m_directionalLight);
+    skinTechnique->SetDirectionalLight(*Scene::Instance()->GetDirectionalLight());
+    //skinTechnique->SetDirectionalLight(m_directionalLight);
     skinTechnique->SetMatSpecularIntensity(0.0f);
     skinTechnique->SetMatSpecularPower(0);
 
@@ -59,32 +60,52 @@ Player::Player(float x, float y, float z, float rotW, float rotX, float rotY, fl
 	health = 100;
 }
 
+////////////////////////////////////////////////////////////////////////////////
 Player::Player(int client_id) : Player()
 {
     obj_id = client_id;
 }
 
+////////////////////////////////////////////////////////////////////////////////
 Player::~Player()
 {
-    delete info_panel;
+    //delete info_panel;
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void Player::SetModelFile(std::string fileName){
     modelFile = fileName;
     //model = std::unique_ptr<Model>(new Model(modelFile.c_str()));
     //m_model = std::unique_ptr<Animation::AnimatedModel>(new Animation::AnimatedModel(fileName));
 }
 
+////////////////////////////////////////////////////////////////////////////////
+void Player::Update(float deltaTime)
+{
+    if (m_state == State::WALK)
+    {
+        if (Utils::CurrentTime() - m_lastTime_t > 0.3f)
+        {
+            if (DistanceFromLastPos(Position()) < m_distanceThreshhold_t)
+                ChangeState(State::IDLE);
+            m_lastTime_t = Utils::CurrentTime();
+        }
+        glm::vec3 position = Position();
+        m_lastPos_t.x = position.x;
+        m_lastPos_t.y = position.y;
+        m_lastPos_t.z = position.z;
+        m_lastPos_t = Position();
+    }
+    m_model->Update(deltaTime);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void Player::Draw() const
 {
-    SkinningTechnique* skinTechnique = m_model->GetMesh().GetSkinningTechnique();
-    skinTechnique->Enable(); // use shader
-
-    skinTechnique->SetEyeWorldPos(Scene::Instance()->GetCameraPosition());
-    skinTechnique->SetWVP(Scene::Instance()->GetPerspectiveMatrix() * Scene::Instance()->GetViewMatrix() * toWorld);
-    skinTechnique->SetWorldMatrix(toWorld);
-
-    m_model->Draw();
+    // Use the appropriate shader (depth or model)
+    UseShader();
+    // Draw the loaded model
+    m_model->Draw(!Scene::Instance()->IsRenderingDepth());
 
 	////////////// DRAW SCORE /////////////////////////
 	/*glm::vec2 screen_coords = Scene::Get2D(Position(),
@@ -100,6 +121,38 @@ void Player::Draw() const
 	TextRenderer::RenderText(score, screen_coords.x, screen_coords.y - 400, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));*/
 }
 
+void Player::UseShader() const
+{
+    Animation::SkinningTechnique* skinTechnique = m_model->GetMesh().GetSkinningTechnique();
+    skinTechnique->Enable(); // use shader
+    // For rendering Depth, only need model
+    if (Scene::Instance()->IsRenderingDepth())
+    {
+        skinTechnique->SetWorldMatrix(toWorld);
+        skinTechnique->SetRenderingDepth(true);
+        skinTechnique->SetLightSpaceMatrix(Scene::Instance()->LightSpaceMatrix());
+    }
+    else
+    {
+        this->SetShaderUniforms();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Player::SetShaderUniforms() const
+{
+    Animation::SkinningTechnique* skinTechnique = m_model->GetMesh().GetSkinningTechnique();
+    skinTechnique->Enable(); // use shader
+
+    skinTechnique->SetDepthMap("shadowMap", Scene::Instance()->ShadowMapIndex(), Scene::Instance()->DepthMap());
+    skinTechnique->SetRenderingDepth(false);
+
+    skinTechnique->SetEyeWorldPos(Scene::Instance()->GetCameraPosition());
+    skinTechnique->SetWVP(Scene::Instance()->GetPerspectiveMatrix() * Scene::Instance()->GetViewMatrix() * toWorld);
+    skinTechnique->SetWorldMatrix(toWorld);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void Player::MoveTo(float x, float y, float z)
 {
     if (DistanceFromLastPos(glm::vec3(x,y,z)) < m_distanceThreshhold_t)
@@ -115,6 +168,7 @@ void Player::MoveTo(float x, float y, float z)
     }
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void Player::RotateTo(const glm::quat& newOrientation)
 {
     glm::mat3 rotation = static_cast<glm::mat3>(glm::quat(newOrientation));
@@ -123,6 +177,7 @@ void Player::RotateTo(const glm::quat& newOrientation)
     CalculateCameraFront();
 }
 
+////////////////////////////////////////////////////////////////////////////////
 // Process movement
 void Player::ProcessKeyboard(DIRECTION direction, GLfloat deltaTime)
 {
@@ -141,6 +196,7 @@ void Player::ProcessKeyboard(DIRECTION direction, GLfloat deltaTime)
         this->toWorld[3] -= deltaTime * toWorld[1];
 }
 
+////////////////////////////////////////////////////////////////////////////////
 // Processes input received from a mouse input system. Expects the offset value in both the x and y direction.
 void Player::ProcessMouseMovement(GLfloat xoffset, GLfloat yoffset, GLboolean constrainPitch)
 {
@@ -165,6 +221,7 @@ void Player::ProcessMouseMovement(GLfloat xoffset, GLfloat yoffset, GLboolean co
     }
 }
 
+////////////////////////////////////////////////////////////////////////////////
 // Processes input received from a mouse input system. Expects the offset value in both the x and y direction.
 void Player::ProcessViewMovement(GLfloat xoffset, GLfloat yoffset, GLboolean constrainPitch)
 {
@@ -194,24 +251,28 @@ void Player::ProcessViewMovement(GLfloat xoffset, GLfloat yoffset, GLboolean con
     }
 }
 
+////////////////////////////////////////////////////////////////////////////////
 // Processes input received from a mouse scroll-wheel event. Only requires input on the vertical wheel-axis
 void Player::ProcessMouseScroll(GLfloat yoffset)
 {
     camera->ProcessMouseScroll(yoffset);
 }
 
+////////////////////////////////////////////////////////////////////////////////
 glm::vec3 Player::CameraPosition() const
 {
     //return glm::vec3(toWorld * glm::rotate(glm::mat4(1.0f), camAngle, glm::vec3(-1.0f, 0.0f, 0.0f)) * glm::vec4(camera->Position(), 1.0f));
     return camera->Position();
 }
 
+////////////////////////////////////////////////////////////////////////////////
 glm::mat4 Player::GetViewMatrix() const
 {
     //return camera->GetViewMatrix() * glm::rotate(glm::mat4(1.0f), camAngle, glm::vec3(1.0f, 0.0f, 0.0f)) * glm::inverse(toWorld);
     return camera->GetViewMatrix();
 }
 
+////////////////////////////////////////////////////////////////////////////////
 glm::vec3 Player::GetFront() const
 {
 	return camera->Front();
@@ -222,16 +283,19 @@ glm::mat4 Player::GetPerspectiveMatrix() const
     return camera->GetPerspectiveMatrix();
 }
 
+////////////////////////////////////////////////////////////////////////////////
 glm::mat3 Player::GetNormalMatrix() const
 {
     return this->normalMatrix;
 }
 
+////////////////////////////////////////////////////////////////////////////////
 float Player::GetCamAngle() const
 {
-	return this->camAngle;
+    return this->camAngle;
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void Player::ChangeState(State state)
 {
     if (state == m_state && !(state == State::DANCE || state == State::DEATH || state == State::PECK))
@@ -269,17 +333,19 @@ void Player::ChangeState(State state)
     }
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void Player::SetTeam(int team)
 {
     team_id = team;
     if (team == 1)
     {
         Material material = Material();
-        material._diffuse = glm::vec3(0.545f, 0.396f, 0.227f);
+        material._diffuse = glm::vec3(0.941f, 0.922f, 0.271f);
         m_model->ChangeMaterial(1, material);
     }
 }
 
+////////////////////////////////////////////////////////////////////////////////
 // AnimationPlayer::Listener
 void Player::OnFinish()
 {
@@ -287,12 +353,14 @@ void Player::OnFinish()
 		ChangeState(State::IDLE);
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void Player::SetRelativeCamPosition(glm::vec3 relativePos)
 {
     relativeCamPosition = relativePos;
     relativeCamPerpendicular = glm::cross(glm::vec3(0.0f, 1.0f, 0.0f), relativePos);    // Hardcoded world up
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void Player::CalculateCameraPosition()
 {
     camera->position = Position() + (glm::mat3(this->toWorld)
@@ -300,6 +368,7 @@ void Player::CalculateCameraPosition()
         * relativeCamPosition) / this->scale;     // Divide by scale
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void Player::CalculateCameraFront()
 {
     camera->front = glm::normalize(glm::mat3(this->toWorld)
@@ -308,26 +377,8 @@ void Player::CalculateCameraFront()
     camera->front = glm::normalize(camera->front);
 }
 
+////////////////////////////////////////////////////////////////////////////////
 float Player::DistanceFromLastPos(glm::vec3 newPosition) const
 {
     return glm::distance(m_lastPos_t, newPosition);
-}
-
-void Player::Update(float deltaTime)
-{
-    if (m_state == State::WALK)
-    {
-        if (Utils::CurrentTime() - m_lastTime_t > 0.3f)
-        {
-            if (DistanceFromLastPos(Position()) < m_distanceThreshhold_t)
-                ChangeState(State::IDLE);
-            m_lastTime_t = Utils::CurrentTime();
-        }
-        glm::vec3 position = Position();
-        m_lastPos_t.x = position.x;
-        m_lastPos_t.y = position.y;
-        m_lastPos_t.z = position.z;
-        m_lastPos_t = Position();
-    }
-    m_model->Update(deltaTime);
 }

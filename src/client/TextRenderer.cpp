@@ -5,17 +5,20 @@
 
 #include "TextRenderer.h"
 #include "Window.h"
+#include "Graphics/ShaderManager.h"
+#include "Graphics/Shader.h"
 
-Shader TextRenderer::shader; 
+std::shared_ptr<Shader> TextRenderer::shader; 
 std::map<GLchar, Character> TextRenderer::Characters;
 GLuint TextRenderer::VAO, TextRenderer::VBO;
 
 void TextRenderer::Initialize() {
-	shader = Shader("src/Graphics/Shaders/text.vert", "src/Graphics/Shaders/text.frag");
+	//shader = Shader("src/Graphics/Shaders/text.vert", "src/Graphics/Shaders/text.frag");
+    shader = ShaderManager::GetShader("Text");
 
 	glm::mat4 projection = glm::ortho(0.0f, static_cast<GLfloat>(Window::width), static_cast<GLfloat>(Window::height), 0.0f);
-	shader.Use();
-	glUniformMatrix4fv(glGetUniformLocation(shader.GetProgram(), "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+	shader->Use();
+	glUniformMatrix4fv(glGetUniformLocation(shader->GetProgram(), "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
 	// FreeType
 	FT_Library ft;
@@ -94,8 +97,8 @@ void TextRenderer::RenderText(std::string text, GLfloat x, GLfloat y, GLfloat sc
 {
 	glDisable(GL_CULL_FACE);
 	// Activate corresponding render state	
-	shader.Use();
-	glUniform3f(glGetUniformLocation(shader.GetProgram(), "textColor"), color.x, color.y, color.z);
+	shader->Use();
+	glUniform3f(glGetUniformLocation(shader->GetProgram(), "textColor"), color.x, color.y, color.z);
 	glActiveTexture(GL_TEXTURE0);
 	glBindVertexArray(VAO);
 

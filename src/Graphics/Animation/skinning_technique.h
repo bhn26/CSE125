@@ -14,146 +14,152 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-#ifndef SKINNING_TECHNIQUE_H
-#define	SKINNING_TECHNIQUE_H
+#pragma once
 
 #include "technique.h"
 #include <glm/glm.hpp>
 
+struct DirectionalLight;
+
 struct Material;
-
-struct BaseLight
+namespace Animation
 {
-    glm::vec3 color;
-    float ambientIntensity;
-    float diffuseIntensity;
-
-    BaseLight()
+    struct BaseLight
     {
-        color = glm::vec3(0.0f, 0.0f, 0.0f);
-        ambientIntensity = 0.0f;
-        diffuseIntensity = 0.0f;
-    }
-};
+        glm::vec3 color;
+        float ambientIntensity;
+        float diffuseIntensity;
 
-struct DirectionalLight : public BaseLight
-{        
-    glm::vec3 direction;
+        BaseLight()
+        {
+            color = glm::vec3(0.0f, 0.0f, 0.0f);
+            ambientIntensity = 0.0f;
+            diffuseIntensity = 0.0f;
+        }
+    };
 
-    DirectionalLight()
+    struct DirectionalLight : public BaseLight
+    {        
+        glm::vec3 direction;
+
+        DirectionalLight()
+        {
+            direction = glm::vec3(0.0f, 0.0f, 0.0f);
+        }
+    };
+
+    struct PointLight2 : public BaseLight
     {
-        direction = glm::vec3(0.0f, 0.0f, 0.0f);
-    }
-};
+        glm::vec3 position;
 
-struct PointLight2 : public BaseLight
-{
-    glm::vec3 position;
+        struct
+        {
+            float constant;
+            float linear;
+            float exp;
+        } attenuation;
 
-    struct
+        PointLight2()
+        {
+            position = glm::vec3(0.0f, 0.0f, 0.0f);
+            attenuation.constant = 1.0f;
+            attenuation.linear = 0.0f;
+            attenuation.exp = 0.0f;
+        }
+    };
+
+    struct SpotLight : public PointLight2
     {
-        float constant;
-        float linear;
-        float exp;
-    } attenuation;
+        glm::vec3 direction;
+        float cutoff;
 
-    PointLight2()
+        SpotLight()
+        {
+            direction = glm::vec3(0.0f, 0.0f, 0.0f);
+            cutoff = 0.0f;
+        }
+    };
+
+    class SkinningTechnique : public Technique
     {
-        position = glm::vec3(0.0f, 0.0f, 0.0f);
-        attenuation.constant = 1.0f;
-        attenuation.linear = 0.0f;
-        attenuation.exp = 0.0f;
-    }
-};
+    public:
 
-struct SpotLight : public PointLight2
-{
-    glm::vec3 direction;
-    float cutoff;
+        static const unsigned int MAX_POINT_LIGHTS = 2;
+        static const unsigned int MAX_SPOT_LIGHTS = 2;
+        static const unsigned int MAX_BONES = 100;
 
-    SpotLight()
-    {
-        direction = glm::vec3(0.0f, 0.0f, 0.0f);
-        cutoff = 0.0f;
-    }
-};
+        SkinningTechnique();
 
-class SkinningTechnique : public Technique
-{
-public:
+        virtual bool Init();
 
-    static const unsigned int MAX_POINT_LIGHTS = 2;
-    static const unsigned int MAX_SPOT_LIGHTS = 2;
-    static const unsigned int MAX_BONES = 100;
+        void SetWVP(const glm::mat4& WVP);
+        void SetWorldMatrix(const glm::mat4& WVP);
+        void SetLightSpaceMatrix(const glm::mat4& lightSpaceMatrix);
+        void SetRenderingDepth(bool renderingDepth = false);
+        void SetDepthMap(std::string depthMapName, GLuint ShadowMapIndex, GLuint textureID);
 
-    SkinningTechnique();
+        void SetColorTextureUnit(unsigned int textureUnit);
 
-    virtual bool Init();
+        void SetDirectionalLight(const DirectionalLight& light);
+        void SetDirectionalLight(const ::DirectionalLight& light);
+        void SetPointLights(unsigned int numLights, const PointLight2* lights);
+        void SetSpotLights(unsigned int numLights, const SpotLight* lights);
 
-    void SetWVP(const glm::mat4& WVP);
-    //void SeViewMatrix(const glm::mat4& view);
-    //void SetPerspectiveMatrix(const glm::mat4& perspective);
-    void SetWorldMatrix(const glm::mat4& WVP);
-    void SetColorTextureUnit(unsigned int textureUnit);
-    void SetDirectionalLight(const DirectionalLight& light);
-    void SetPointLights(unsigned int numLights, const PointLight2* lights);
-    void SetSpotLights(unsigned int numLights, const SpotLight* lights);
-    void SetEyeWorldPos(const glm::vec3& eyeWorldPos);
-    void SetMatSpecularIntensity(float intensity);
-    void SetMatSpecularPower(float power);
-    void SetBoneTransform(unsigned int index, const glm::mat4& transform);
-    void SetMaterial(const Material& material);
-    void SetUseTexture(bool useTexture);
+        void SetEyeWorldPos(const glm::vec3& eyeWorldPos);
+        void SetMatSpecularIntensity(float intensity);
+        void SetMatSpecularPower(float power);
+        void SetMaterial(const Material& material);
+        void SetUseTexture(bool useTexture);
 
-private:
+        void SetBoneTransform(unsigned int index, const glm::mat4& transform);
+
+    private:
     
-    GLuint m_WVPLocation;
-    //GLuint m_ViewLocation;
-    //GLuint m_PerspectiveLocation;
-    GLuint m_WorldMatrixLocation;
-    GLuint m_colorTextureLocation;
-    GLuint m_eyeWorldPosLocation;
-    GLuint m_matSpecularIntensityLocation;
-    GLuint m_matSpecularPowerLocation;
-    GLuint m_numPointLightsLocation;
-    GLuint m_numSpotLightsLocation;
+        GLuint m_WVPLocation;
+        GLuint m_WorldMatrixLocation;
+        GLuint m_lightSpaceMatrix;
+        GLuint m_colorTextureLocation;
+        GLuint m_eyeWorldPosLocation;
+        GLuint m_matSpecularIntensityLocation;
+        GLuint m_matSpecularPowerLocation;
+        GLuint m_numPointLightsLocation;
+        GLuint m_numSpotLightsLocation;
 
-    struct {
-        GLuint color;
-        GLuint ambientIntensity;
-        GLuint diffuseIntensity;
-        GLuint direction;
-    } m_dirLightLocation;
-
-    struct {
-        GLuint color;
-        GLuint ambientIntensity;
-        GLuint diffuseIntensity;
-        GLuint position;
         struct {
-            GLuint constant;
-            GLuint linear;
-            GLuint exp;
-        } atten;
-    } m_pointLightsLocation[MAX_POINT_LIGHTS];
+            GLuint color;
+            GLuint ambientIntensity;
+            GLuint diffuseIntensity;
+            GLuint direction;
+        } m_dirLightLocation;
 
-    struct {
-        GLuint color;
-        GLuint ambientIntensity;
-        GLuint diffuseIntensity;
-        GLuint position;
-        GLuint direction;
-        GLuint Cutoff;
         struct {
-            GLuint constant;
-            GLuint linear;
-            GLuint exp;
-        } atten;
-    } m_spotLightsLocation[MAX_SPOT_LIGHTS];
+            GLuint color;
+            GLuint ambientIntensity;
+            GLuint diffuseIntensity;
+            GLuint position;
+            struct {
+                GLuint constant;
+                GLuint linear;
+                GLuint exp;
+            } atten;
+        } m_pointLightsLocation[MAX_POINT_LIGHTS];
+
+        struct {
+            GLuint color;
+            GLuint ambientIntensity;
+            GLuint diffuseIntensity;
+            GLuint position;
+            GLuint direction;
+            GLuint Cutoff;
+            struct {
+                GLuint constant;
+                GLuint linear;
+                GLuint exp;
+            } atten;
+        } m_spotLightsLocation[MAX_SPOT_LIGHTS];
     
-    GLuint m_boneLocation[MAX_BONES];
-};
+        GLuint m_boneLocation[MAX_BONES];
+    };
+}
 
 
-#endif	/* SKINNING_TECHNIQUE_H */

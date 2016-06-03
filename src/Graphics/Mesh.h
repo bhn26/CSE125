@@ -12,6 +12,7 @@
 #include <glm/glm.hpp>
 
 #include "Shader.h"
+#include "Texture.h"
 
 class Mesh
 {
@@ -35,10 +36,11 @@ public:
     std::vector<Vertex> vertices;
     std::vector<GLuint> indices;
     std::vector<Texture> textures;
+    Material material;
 
     /*  Functions  */
     // Constructor
-    Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices, std::vector<Texture> textures);
+    Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices, std::vector<Texture> textures, Material material);
 	~Mesh();
 
 	GLuint VAO() const { return this->vao; }
@@ -55,6 +57,7 @@ private:
     /*  Functions    */
     // Initializes all the buffer objects/arrays
     void SetupMesh();
+    void SetMaterial(const Shader* shader, const Material& material) const;
 };
 
 

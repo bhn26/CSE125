@@ -84,8 +84,8 @@ namespace Animation
     }
 
     ///////////////////////////////////////////////////////////////////////
-    void AnimatedModel::Draw() const
+    void AnimatedModel::Draw(bool useShader) const
     {
-        m_mesh.Draw();
+        m_mesh.Draw(useShader);
     }
 }

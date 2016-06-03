@@ -320,12 +320,12 @@ void ServerGame::receiveStartPacket(int offset) {
 
 	printf("recieved start packet from %d\n", hdr->sender_id);
 	if (!game_started) {
-		printf("initializing world with %d players", client_id + 1);
+		printf("initializing world with %d players\n", client_id + 1);
 		engine->InitWorld(client_id + 1);
 		game_started = true;
 	}
 	/*else {
-		printf("re-initializing world with %d players", client_id + 1);
+		printf("re-initializing world with %d players\n", client_id + 1);
 		engine->InitWorld(client_id + 1);
 	}*/
 

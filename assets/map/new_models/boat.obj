@@ -1,7 +1,7 @@
 # 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
 # File Created: 23.11.2015 17:12:53
 
-mtllib 3d-model.mtl
+mtllib boat.mtl
 
 #
 # object Layer0_001
@@ -16760,4 +16760,3 @@ f 1458/907/1524 352/908/1522 4103/909/2556 1462/910/1532
 f 1459/903/1530 352/904/1522 1092/905/2040 1091/906/3672 
 f 4103/899/2556 352/900/1522 1459/901/1530 1462/902/1532 
 # 2702 polygons - 3203 triangles
-
