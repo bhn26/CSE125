@@ -45,6 +45,7 @@ Player::Player(int objectid, int teamid, PosInfo pos, btDiscreteDynamicsWorld* p
 	this->peckWeapon = new Peck(curWorld);
 	this->alive = true;
 	this->death_time = 0;
+	this->stun_count = 0;
 
 	// Set Base and Bonus speed and jump
 	this->baseJump = 20;
@@ -136,6 +137,9 @@ int Player::GetTeamId()
 	if (!alive)
 		return;
 
+	if(stun_count > 0)
+		return;
+
 	//printf("Player %u : attempting to use weapon\n", objectId);
 	// If player weapon doesn't exist, exit
 	if(!playerWeapon)
@@ -222,6 +226,9 @@ void Player::UsePeck()
 	if (!alive)
 		return;
 
+	if (stun_count > 0)
+		return;
+
 	btVector3 temp = this->GetEntityPosition();
 
 	btQuaternion * playerRotation = &(this->GetEntityRotation());
@@ -303,6 +310,7 @@ void Player::Move(btVector3* changeVelocity)
 {
 	if (!alive)
 		return;
+
 	Entity::Move(changeVelocity);
 }
 /*

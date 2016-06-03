@@ -487,6 +487,10 @@ void ServerGame::receiveMovePacket(int offset)
 
 	Player* player = (Player*)(EntitySpawner::instance()->GetEntity(ClassId::PLAYER, hdr->sender_id));
 
+	// don't take client input if stunned
+	if(player->GetStun() > 0)
+		return;
+	printf("attempting to move\n");
 	switch (pi->direction) 
 	{
 		case MOVE_FORWARD:
@@ -629,6 +633,10 @@ void ServerGame::receiveJumpPacket(int offset)
     struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset]);
 
 	Player* player = (Player*)(EntitySpawner::instance()->GetEntity(ClassId::PLAYER, hdr->sender_id));
+
+	// ignore client input if stunned
+	if(player->GetStun() > 0)
+		return;
 
 	player->JumpPlayer();
 }

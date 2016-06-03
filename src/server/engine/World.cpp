@@ -190,7 +190,7 @@ void World::UpdateWorld()
 				}
 				//printf("Pushed to delete!, hit playerB");
 				collideBullet->SetToMarked(world_tick);
-				if (collideBullet->handleBulletCollision(world_tick))
+				if (collideBullet->handleBulletCollision(world_tick, collidePlayer))
 				{
 					deleteList.push_back(collideBullet);
 					ServerGame::instance()->sendRemovePacket(ClassId::BULLET, collideBullet->GetObjectId());
@@ -213,7 +213,7 @@ void World::UpdateWorld()
 				continue;
 			}
 			else
-			{
+			{   // Collided with unknown object
 				// deletes bulletA regardless
 				//printf("Pushed to delete!, hit ground B,  %d", obB->getUserIndex());
 				btVector3 bulPos = collideBullet->GetEntityPosition();
@@ -225,7 +225,7 @@ void World::UpdateWorld()
 					continue;
 				}
 				collideBullet->SetToMarked(world_tick);
-				if (collideBullet->handleBulletCollision(world_tick))
+				if (collideBullet->handleBulletCollision(world_tick, nullptr))
 				{
 					deleteList.push_back(collideBullet);
 					ServerGame::instance()->sendRemovePacket(ClassId::BULLET, collideBullet->GetObjectId());
@@ -246,7 +246,7 @@ void World::UpdateWorld()
 			{
 				continue;
 			}
-
+			printf("collided with user index%d\n", obA->getUserIndex());
 			// Bullet hits player
 			if (obA->getUserIndex() == PLAYER)
 			{
@@ -258,7 +258,7 @@ void World::UpdateWorld()
 				}
 
 				collideBullet->SetToMarked(world_tick);
-				if (collideBullet->handleBulletCollision(world_tick))
+				if (collideBullet->handleBulletCollision(world_tick, collidePlayer))
 				{
 					deleteList.push_back(collideBullet);
 					ServerGame::instance()->sendRemovePacket(ClassId::BULLET, collideBullet->GetObjectId());
@@ -279,7 +279,7 @@ void World::UpdateWorld()
 			{
 				continue;
 			}
-			else
+			else // Collide with unknown object
 			{
 				if (collideBullet->GetMarked())
 				{
@@ -292,7 +292,7 @@ void World::UpdateWorld()
 				bulPos = collideBullet->GetRigidBody()->getLinearVelocity();
 				//printf("Current velocity:  x: %f, y: %f, z: %f  \n", bulPos.getX(), bulPos.getY(), bulPos.getZ());
 				collideBullet->SetToMarked(world_tick);
-				if (collideBullet->handleBulletCollision(world_tick))
+				if (collideBullet->handleBulletCollision(world_tick, nullptr))
 				{
 					deleteList.push_back(collideBullet);
 					ServerGame::instance()->sendRemovePacket(ClassId::BULLET, collideBullet->GetObjectId());
@@ -393,6 +393,7 @@ void World::UpdateWorld()
 		{
 			// Grab Player Object
 			Player * collidePlayer = (Player *)obB->getUserPointer();
+
 
 			// If Obj A is collectable, HandleCollectable();
 			if (obA->getUserIndex() == COLLECTABLE)
@@ -538,8 +539,11 @@ void World::UpdateWorld()
 			// don't send packets if the object is stationary?
 			if ((abs(vec.getX()) < thresh && abs(vec.getY()) < thresh && abs(vec.getZ()) < thresh))
 			{
-				if (it->second->GetClassId() == ClassId::PLAYER)
+				if (it->second->GetClassId() == ClassId::PLAYER){
 					ServerGame::instance()->sendMovePacket((ClassId)it->second->GetClassId(), it->second->GetObjectId());
+					if(((Player *)it->second)->GetStun() > 0)
+						((Player *) it->second)->SetStun(((Player *)it->second)->GetStun() - 4); // unstun the guy
+				}
 				//printf(" Dynamic object classid: %d, objid: %d, velocity (%f,%f,%f)\n", it->second->GetClassId(), it->second->GetObjectId(), vec.getX(), vec.getY(), vec.getZ());
 				continue;
 			}

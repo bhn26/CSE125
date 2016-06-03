@@ -20,6 +20,7 @@ private:
 	std::vector<Flag*> *flags;
 	int jumpSem;
 	int hitPoints;
+	int stun_count;
 	Weapon* playerWeapon;
 	Weapon* peckWeapon;
 	bool alive;   // am i alive?
@@ -78,6 +79,16 @@ public:
 
 	int GetHP() { return hitPoints; };
 
+	void GainHP(int gain) { 
+		if(hitPoints + gain > 100) 
+			hitPoints = 100;
+		else
+			hitPoints += gain;
+	}
+
+	int GetStun() {return stun_count;}
+	void SetStun(int stun) {stun_count = stun;}
+
 	// How much damage did they take, what is the world tick when they took this damage?
 	int takeDamage(int damage, unsigned int world_tick);
 
@@ -86,7 +97,7 @@ public:
 	// Which tick did this player die on? Disperses the player's flags then schedules his respawn for later
 	void HandleDeath(unsigned int death_tick);
 
-	void Move(btVector3* changeVelocity);
+	void Move(btVector3* changeVelocity) override;
 
 	void SetCamAngle(float yos);
 

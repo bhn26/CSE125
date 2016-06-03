@@ -265,7 +265,7 @@ void ClientGame::receiveMovePacket(int offset)
 	if (pi->cid == ClassId::PLAYER)
 	{
 		Scene::Instance()->GetEntity(pi->cid, pi->oid)->SetScore(pi->num_eggs);
-		if(pi->jump == 0)
+		if(pi->jump == 0 || pi->jump == 1)
 			((Player *)(Scene::Instance()->GetEntity(pi->cid, pi->oid).get()))->Jump();
 	}
 
