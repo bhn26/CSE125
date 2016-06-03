@@ -39,6 +39,7 @@ CPlayState::~CPlayState()
 	delete hud_tomato;
 	delete hud_potato;
 	delete hud_pumpkin_seed;
+	delete weapon_missing;
 
 	delete death_overlay;
 }
@@ -479,8 +480,17 @@ void CPlayState::Draw()
 		case GRENADELAUNCHER:
 			hud_weapon = hud_potato;
 			break;
+		case TELEPORTGUN:
+			hud_weapon = hud_bb;
+			break;
+		case BLASTMINE:
+			hud_weapon = hud_mine;
+			break;
+		case SHOTGUN:
+			hud_weapon = hud_seeds;
+			break;
 		default: 
-			hud_weapon = hud_tomato;
+			hud_weapon = weapon_missing;
 			break;
 		}
 
@@ -543,9 +553,15 @@ void CPlayState::InitTextures() {
 		hud_power = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/hud_power_up.png");
 
 		hud_weapon_and_timer = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/hud_weapon&timer.png");
-		hud_tomato = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/tomato_icon.png");
-		hud_potato = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/potato_icon.png");
-		hud_pumpkin_seed = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/pumpkin_seed_icon.png");
+
+		hud_tomato = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/weapons/tomato_icon.png");
+		hud_potato = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/weapons/potato_icon.png");
+		hud_pumpkin_seed = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/weapons/pumpkin_seed_icon.png");
+		hud_bb = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/weapons/blueberry_icon.png");
+		hud_mine = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/weapons/mine_icon.png");
+		hud_seeds = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/weapons/seeds_icon.png");
+
+		weapon_missing = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/weapons/missing_icon.png");
 
 		death_overlay = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/death.png");
 
