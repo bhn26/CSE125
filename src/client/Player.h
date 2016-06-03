@@ -61,7 +61,7 @@ public:
     void Jump() { ChangeState(State::JUMP); }
     void Dance() { ChangeState(State::DANCE); }
     void Attack() { ChangeState(State::ATTACK); }
-    void Die() { ChangeState(State::DEATH); alive = false; }
+    void Die() { ChangeState(State::DEATH); alive = false;}
     void Peck() { ChangeState(State::PECK); }
 
 

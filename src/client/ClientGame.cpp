@@ -463,10 +463,18 @@ void ClientGame::receiveDeathPacket(int offset)
 {
 	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
 	struct EmoteInfo* e = (struct EmoteInfo *) &(dat->buf);
+
+	// model
 	((Player *)(Scene::Instance()->GetEntity(ClassId::PLAYER, e->id).get()))->Die();
 
+	// score
 	decScore(((Player *)(Scene::Instance()->GetEntity(ClassId::PLAYER, e->id).get()))->GetTeam(), 
 		((Player *)(Scene::Instance()->GetEntity(ClassId::PLAYER, e->id).get()))->GetScore());
+
+	// death overlay
+	if (e->id == client_id) {
+		CPlayState::GetInstance(Window::m_pStateManager)->Die();
+	}
 }
 
 void ClientGame::receiveRespawnPacket(int offset) 
