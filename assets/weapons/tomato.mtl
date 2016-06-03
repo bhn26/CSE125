@@ -1,13 +1,13 @@
-newmtl Tomato:Material
+newmtl tomato:Material
 illum 4
 Kd 0.00 0.00 0.00
 Ka 0.00 0.00 0.00
 Tf 1.00 1.00 1.00
-map_Kd Tomato_texture.tga
+map_Kd Tomato_texture.png
 Ni 1.00
 Ks 1.00 1.00 1.00
 Ns 264.71
-newmtl Tomato:Material_001
+newmtl tomato:Material_001
 illum 4
 Kd 0.00 0.00 0.00
 Ka 0.00 0.00 0.00

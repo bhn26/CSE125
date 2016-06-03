@@ -412,7 +412,7 @@ void Scene::AddEntity(PosInfo p)
 			switch (p.sub_id)
 			{
 				case(SEEDGUN):
-					bullet = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Tomato")));
+					bullet = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Pumpkin_Seed")));
 					bullet->Translate(glm::vec3(p.x, p.y, p.z));
 					//bullet->GetShader() = modelShader;        // Set in ModelEntity
 					AddEntity(p.cid, p.oid, std::move(bullet));
@@ -424,7 +424,7 @@ void Scene::AddEntity(PosInfo p)
 					AddEntity(p.cid, p.oid, std::move(bullet));
 					break;
 				case(GRENADELAUNCHER):
-					bullet = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Tomato")));
+					bullet = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Potato")));
 					bullet->Translate(glm::vec3(p.x, p.y, p.z));
 					//bullet->GetShader() = modelShader;        // Set in ModelEntity
 					AddEntity(p.cid, p.oid, std::move(bullet));
