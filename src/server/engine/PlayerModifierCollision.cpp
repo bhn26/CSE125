@@ -15,15 +15,15 @@ bool PlayerModifierCollision::HandleBulletCollision(unsigned int world_tick, Ent
 	
 	// stay in bounds
 	btVector3 bul_pos = bullet->GetEntityPosition();
-	if(bul_pos.getX() > WORLD_WIDTH - 5)
-		bul_pos.setX(WORLD_WIDTH - 5);
-	if(bul_pos.getX() < (WORLD_WIDTH * (-1)) + 5)
-		bul_pos.setX((WORLD_WIDTH * (-1)) + 5);
+	if(bul_pos.getX() > Constants::worldWidth - 5)
+		bul_pos.setX(Constants::worldWidth - 5);
+	if(bul_pos.getX() < (Constants::worldWidth * (-1)) + 5)
+		bul_pos.setX((Constants::worldWidth * (-1)) + 5);
 
-	if (bul_pos.getZ() > WORLD_WIDTH - 5)
-			bul_pos.setZ(WORLD_WIDTH - 5);
-	if (bul_pos.getZ() < (WORLD_WIDTH * (-1)) + 5)
-		bul_pos.setZ((WORLD_WIDTH * (-1)) + 5);
+	if (bul_pos.getZ() > Constants::worldWidth - 5)
+			bul_pos.setZ(Constants::worldWidth - 5);
+	if (bul_pos.getZ() < (Constants::worldWidth * (-1)) + 5)
+		bul_pos.setZ((Constants::worldWidth * (-1)) + 5);
 
 	if (bul_pos.getY() < 2)
 		bul_pos.setY(2);

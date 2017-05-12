@@ -40,7 +40,7 @@ void World::Init() {
 
 	// Add Ground Object
 	//btCollisionShape* groundShape = new btStaticPlaneShape(btVector3(btScalar(0.), btScalar(1.), btScalar(0.)), 0);
-	btCollisionShape* groundShape = new btBoxShape(btVector3(WORLD_WIDTH+50, 1, WORLD_WIDTH+50));
+	btCollisionShape* groundShape = new btBoxShape(btVector3(Constants::worldWidth+50, 1, Constants::worldWidth+50));
 	btDefaultMotionState* groundMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, -1, 0)));
 	btRigidBody::btRigidBodyConstructionInfo groundRigidBodyCI(0, groundMotionState, groundShape, btVector3(0, 0, 0));
 	groundRigidBodyCI.m_friction = 1.0;
@@ -53,8 +53,8 @@ void World::Init() {
 	WorldObstacle* groundwall = new WorldObstacle(z++, groundRigidBody, curWorld);
 	
 	// Add Sky Object
-	btCollisionShape* skyShape = new btBoxShape(btVector3(WORLD_WIDTH + 50, 1, WORLD_WIDTH + 50));
-	btDefaultMotionState* skyMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, WORLD_HEIGHT, 0)));
+	btCollisionShape* skyShape = new btBoxShape(btVector3(Constants::worldWidth + 50, 1, Constants::worldWidth + 50));
+	btDefaultMotionState* skyMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, Constants::worldHeight, 0)));
 	btRigidBody::btRigidBodyConstructionInfo skyRigidBodyCI(0, skyMotionState, skyShape, btVector3(0, 0, 0));
 	skyRigidBodyCI.m_friction = .4;
 	btRigidBody* skyRigidBody = new btRigidBody(skyRigidBodyCI);
@@ -66,8 +66,8 @@ void World::Init() {
 
 	// Add Pos X Wall
 	//btCollisionShape* xWallShape = new btStaticPlaneShape(btVector3(btScalar(-1.), btScalar(0.), btScalar(0.)), 0);
-	btCollisionShape* xWallShape = new btBoxShape(btVector3(1, WORLD_HEIGHT, WORLD_WIDTH));
-	btDefaultMotionState* xWallMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(WORLD_WIDTH+1, 0, 0)));
+	btCollisionShape* xWallShape = new btBoxShape(btVector3(1, Constants::worldHeight, Constants::worldWidth));
+	btDefaultMotionState* xWallMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(Constants::worldWidth+1, 0, 0)));
 	btRigidBody::btRigidBodyConstructionInfo xWallRigidBodyCI(0, xWallMotionState, xWallShape, btVector3(0, 0, 0));
 	xWallRigidBodyCI.m_friction = .5;
 	btRigidBody* xWallRigidBody = new btRigidBody(xWallRigidBodyCI);
@@ -79,8 +79,8 @@ void World::Init() {
 
 	// Add Neg X Wall
 	//btCollisionShape* nxWallShape = new btStaticPlaneShape(btVector3(btScalar(1.), btScalar(0.), btScalar(0.)), 0);
-	btCollisionShape* nxWallShape = new btBoxShape(btVector3(1, WORLD_HEIGHT, WORLD_WIDTH));
-	btDefaultMotionState* nxWallMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(-(WORLD_WIDTH+1), 0, 0)));
+	btCollisionShape* nxWallShape = new btBoxShape(btVector3(1, Constants::worldHeight, Constants::worldWidth));
+	btDefaultMotionState* nxWallMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(-(Constants::worldWidth+1), 0, 0)));
 	btRigidBody::btRigidBodyConstructionInfo nxWallRigidBodyCI(0, nxWallMotionState, nxWallShape, btVector3(0, 0, 0));
 	nxWallRigidBodyCI.m_friction = .5;
 	btRigidBody* nxWallRigidBody = new btRigidBody(nxWallRigidBodyCI);
@@ -92,8 +92,8 @@ void World::Init() {
 
 	// Add Pos Z Wall
 	//btCollisionShape* zWallShape = new btStaticPlaneShape(btVector3(btScalar(0.), btScalar(0.), btScalar(-1.)), 0);
-	btCollisionShape* zWallShape = new btBoxShape(btVector3(WORLD_WIDTH, WORLD_HEIGHT, 1));
-	btDefaultMotionState* zWallMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 0, WORLD_WIDTH+1)));
+	btCollisionShape* zWallShape = new btBoxShape(btVector3(Constants::worldWidth, Constants::worldHeight, 1));
+	btDefaultMotionState* zWallMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 0, Constants::worldWidth+1)));
 	btRigidBody::btRigidBodyConstructionInfo zWallRigidBodyCI(0, zWallMotionState, zWallShape, btVector3(0, 0, 0));
 	zWallRigidBodyCI.m_friction = .5;
 	btRigidBody* zWallRigidBody = new btRigidBody(zWallRigidBodyCI);
@@ -105,8 +105,8 @@ void World::Init() {
 
 	// Add Neg Z Wall
 	//btCollisionShape* nzWallShape = new btStaticPlaneShape(btVector3(btScalar(0.), btScalar(0.), btScalar(1.)), 0);
-	btCollisionShape* nzWallShape = new btBoxShape(btVector3(WORLD_WIDTH, WORLD_HEIGHT, 1));
-	btDefaultMotionState* nzWallMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 0, -(WORLD_WIDTH+1))));
+	btCollisionShape* nzWallShape = new btBoxShape(btVector3(Constants::worldWidth, Constants::worldHeight, 1));
+	btDefaultMotionState* nzWallMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 0, -(Constants::worldWidth+1))));
 	btRigidBody::btRigidBodyConstructionInfo nzWallRigidBodyCI(0, nzWallMotionState, zWallShape, btVector3(0, 0, 0));
 	nzWallRigidBodyCI.m_friction = .5;
 	btRigidBody* nzWallRigidBody = new btRigidBody(nzWallRigidBodyCI);

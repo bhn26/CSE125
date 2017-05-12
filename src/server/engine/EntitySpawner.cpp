@@ -299,23 +299,23 @@ std::pair<int, int> EntitySpawner::getRandomLoc()
 	{
 		if (rand() % 4 == 0)
 		{
-			loc.first = (rand() % WORLD_WIDTH + 1);
-			loc.second = (rand() % WORLD_WIDTH + 1);
+			loc.first = (rand() % Constants::worldWidth + 1);
+			loc.second = (rand() % Constants::worldWidth + 1);
 		}
 		else if (rand() % 4 == 1)
 		{
-			loc.first = (rand() % WORLD_WIDTH + 1);
-			loc.second = (-1 * rand() % WORLD_WIDTH + 1);
+			loc.first = (rand() % Constants::worldWidth + 1);
+			loc.second = (-1 * rand() % Constants::worldWidth + 1);
 		}
 		else if (rand() % 4 == 2)
 		{
-			loc.first = (-1 * rand() % WORLD_WIDTH + 1);
-			loc.second = (rand() % WORLD_WIDTH + 1);
+			loc.first = (-1 * rand() % Constants::worldWidth + 1);
+			loc.second = (rand() % Constants::worldWidth + 1);
 		}
 		else if (rand() % 4 == 3)
 		{
-			loc.first = (-1 * rand() % WORLD_WIDTH + 1);
-			loc.second = (-1 * rand() % WORLD_WIDTH + 1);
+			loc.first = (-1 * rand() % Constants::worldWidth + 1);
+			loc.second = (-1 * rand() % Constants::worldWidth + 1);
 		}
 	}
 	return loc;

@@ -1,9 +1,8 @@
 #pragma once
 
-#include <string.h>
 #include <string>
-#include <stdio.h>
-#include "../server/engine/ObjectId.h"
+#include <cstdint>
+#include "server/engine/ObjectId.h"
 
 const int WORLD_WIDTH = 230;
 const int WORLD_HEIGHT = 500;
@@ -18,14 +17,14 @@ enum MoveType {
 
     MOVE_LEFT = 2,
 
-    MOVE_RIGHT = 3
+    MOVE_RIGHT = 3,
 };
 
 static const int NUM_COLLECT_TYPES = 2; // Types of collectables there are
 
 enum CollectType {
 	WEAPONCOLLECT,
-	POWERUPCOLLECT
+	POWERUPCOLLECT,
 };
 
 static const int NUM_WEAPON_TYPES = 6; // number of types of weapons there are
@@ -36,21 +35,21 @@ enum WeaponType {
 	GRENADELAUNCHER,
 	TELEPORTGUN,
 	BLASTMINE,
-	SHOTGUN
+	SHOTGUN,
 };
 
 static const int NUM_POWER_TYPES = 2;
 
 enum PowerupType {
 	HEALTHGAIN,
-	JUMPUP
-	//SPEEDUP
+	JUMPUP,
+	//SPEEDUP,
 };
 
 enum AttackType {
 	PECK,
 
-	WEAPON_ATTACK
+	WEAPON_ATTACK,
 };
 
 enum GameDataId 
@@ -59,7 +58,7 @@ enum GameDataId
 	REM_OBJ,
 	SCORE_OBJ,
 	EMOTE_OBJ,
-	NAME_OBJ
+	NAME_OBJ,
 };
 
 struct GameInfo
@@ -68,13 +67,8 @@ struct GameInfo
 
     // NETWORKING NOTE:
     // Usually, you want to serialize into PacketData's buf before you send
-    void serialize(char * data) {
-        memcpy(data, this, sizeof(GameInfo));
-    }
-
-    void deserialize(char * data) {
-        memcpy(this, data, sizeof(GameInfo));
-    }
+    virtual void Serialize(std::uint8_t* data);
+    virtual void Deserialize(std::uint8_t* data);
 };
 
 // Position info of object
@@ -110,13 +104,8 @@ struct PosInfo : GameInfo
 	int num_eggs; // num eggs this player has 
 	int jump;     // jumping semaphore of the player
 
-    void serialize(char * data) {
-        memcpy(data, this, sizeof(PosInfo));
-    }
-
-    void deserialize(char * data) {
-        memcpy(this, data, sizeof(PosInfo));
-    }
+    void Serialize(std::uint8_t* data) override;
+    void Deserialize(std::uint8_t* data) override;
 };
 
 // What needs to get removed
@@ -132,13 +121,8 @@ struct RemInfo : GameInfo
 	int sub_id;   // For removing collectable of type sub_id
 	int sub_id2;  // For removing subtype of collectable, like subtypes of the weapon or powerup
 
-	void serialize(char * data) {
-		memcpy(data, this, sizeof(RemInfo));
-	}
-
-	void deserialize(char * data) {
-		memcpy(this, data, sizeof(RemInfo));
-	}
+	void Serialize(std::uint8_t* data) override;
+	void Deserialize(std::uint8_t* data) override;
 };
 
 // team scores
@@ -146,26 +130,16 @@ struct ScoreInfo : GameInfo {
 	int t0_score;
 	int t1_score;
 
-	void serialize(char * data) {
-		memcpy(data, this, sizeof(ScoreInfo));
-	}
-
-	void deserialize(char * data) {
-		memcpy(this, data, sizeof(ScoreInfo));
-	}
+	void Serialize(std::uint8_t* data) override;
+	void Deserialize(std::uint8_t* data) override;
 };
 
 // Who's emoting, also will include death
 struct EmoteInfo : GameInfo {
 	int id;
 
-	void serialize(char * data) {
-		memcpy(data, this, sizeof(EmoteInfo));
-	}
-
-	void deserialize(char * data) {
-		memcpy(this, data, sizeof(EmoteInfo));
-	}
+	void Serialize(std::uint8_t* data) override;
+	void Deserialize(std::uint8_t* data) override;
 };
 
 // Anything that just needs some ints, i.e. attacktype
@@ -174,24 +148,14 @@ struct MiscInfo : GameInfo {
 	int misc2;
 	float misc3;
 
-	void serialize(char * data) {
-		memcpy(data, this, sizeof(MiscInfo));
-	}
-
-	void deserialize(char * data) {
-		memcpy(this, data, sizeof(MiscInfo));
-	}
+	void Serialize(std::uint8_t* data) override;
+	void Deserialize(std::uint8_t* data) override;
 };
 
 struct NameInfo : GameInfo {
 	int player_id;
 	std::string name;
 
-	void serialize(char * data) {
-		memcpy(data, this, sizeof(NameInfo));
-	}
-
-	void deserialize(char * data) {
-		memcpy(this, data, sizeof(NameInfo));
-	}
+	void Serialize(std::uint8_t* data) override;
+	void Deserialize(std::uint8_t* data) override;
 };
