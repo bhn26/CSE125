@@ -63,9 +63,10 @@ GLFWwindow* Window::Create_window(int width, int height)
 
     // Create the GLFW window
 
-#ifdef _DEBUG
+// #ifdef _DEBUG
+#if 1
 	GLFWwindow* window = glfwCreateWindow(width, height, window_title, NULL, NULL);
-#else
+#else // FULL SCREEN
 	GLFWmonitor * monitor = glfwGetPrimaryMonitor();
 	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
 	glfwWindowHint(GLFW_RED_BITS, mode->redBits);

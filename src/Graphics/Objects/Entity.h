@@ -29,7 +29,6 @@ enum POSITION
 
 class Entity
 {
-    sf::Music musicPlayer;      // Remove?
 protected:
     glm::mat4 toWorld;
     glm::mat3 normalMatrix;
@@ -53,7 +52,6 @@ public:
     Entity(float x, float y, float z, float sx = 1.0f, float sy = 1.0f, float sz = 1.0f);
 
     ////////////////////////////////////////////////////////////////////////////////
-    bool PlaySound(std::string soundFile);
 
     // Basic Rendering functions
     virtual void Draw() const = 0;

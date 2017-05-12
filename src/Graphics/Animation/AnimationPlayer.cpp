@@ -109,7 +109,7 @@ namespace Animation
     ///////////////////////////////////////////////////////////////////////
     // Add an animation from the assimp scene. Will not override any 
     // previous animation. Uses The name in the aiAnimation object
-    std::string AnimationPlayer::AddAnimFromScene(const aiScene* scene, bool loops, std::string animName)
+    std::string AnimationPlayer::AddAnimFromScene(const aiScene* scene, bool loops, const std::string animName)
     {
         if (scene->mNumAnimations < 1)
         {
@@ -137,7 +137,7 @@ namespace Animation
 
     ///////////////////////////////////////////////////////////////////////
     // Start playing the given animation from the beginning.
-    bool AnimationPlayer::PlayAnimation(std::string name)
+    bool AnimationPlayer::PlayAnimation(const std::string& name)
     {
         SetAnimation(name);
         m_animating = true;     // Set to update and evaluate
@@ -146,7 +146,7 @@ namespace Animation
 
     ///////////////////////////////////////////////////////////////////////
     // Sets the current animation
-    bool AnimationPlayer::SetAnimation(std::string name)
+    bool AnimationPlayer::SetAnimation(const std::string& name)
     {
         auto it = m_animMap.find(name);
         if (it == m_animMap.end())

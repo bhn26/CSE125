@@ -40,15 +40,6 @@ Entity::Entity(float x, float y, float z, float sx, float sy, float sz) : Entity
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Entity::PlaySound(std::string soundFile)
-{
-    if (!musicPlayer.openFromFile(soundFile))
-        return false; // error
-    musicPlayer.play();
-    return true;
-}
-
-////////////////////////////////////////////////////////////////////////////////
 void Entity::RotateTo(const glm::quat & newOrientation)
 {
     glm::mat4 temp = static_cast<glm::mat4>(glm::quat(newOrientation));
