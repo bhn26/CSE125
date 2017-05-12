@@ -33,7 +33,7 @@ public:
     ClientNetwork(void);
     ~ClientNetwork(void);
 
-	int receivePackets(char *);
+	int receivePackets(std::uint8_t*);
 
 private:
 	std::string ip;

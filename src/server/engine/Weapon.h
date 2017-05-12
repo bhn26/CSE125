@@ -1,9 +1,10 @@
 #pragma once
 
-#include "../../network/GameData.h"
+#include "network/GameData.h"
+#include "FireRateReset.h"
+
 #include <vector>
 #include <memory>
-#include "FireRateReset.h"
 
 #ifndef BULLET_PHYSICS
 #define BULLET_PHYSICS
@@ -35,7 +36,7 @@ public:
 	~Weapon();
 
 	// returns the ammo left in the weapon
-	int virtual UseWeapon(btVector3 * position, btMatrix3x3* rotation, int playerid, int teamid, Entity* owner);
+	virtual int UseWeapon(btVector3 * position, btMatrix3x3* rotation, int playerid, int teamid, Entity* owner);
 
 	WeaponType virtual GetWeaponType() { return wt; }
 

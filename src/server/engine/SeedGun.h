@@ -10,5 +10,9 @@ public:
 	SeedGun(btDiscreteDynamicsWorld* curworld);
 	~SeedGun();
 
-	int virtual UseWeapon(btVector3 * position, btMatrix3x3* rotation, int playerid, int teamid, Entity* owner);
+    virtual int UseWeapon(btVector3* position,
+                          btMatrix3x3* rotation,
+                          int playerid,
+                          int teamid,
+                          Entity* owner) override;
 };

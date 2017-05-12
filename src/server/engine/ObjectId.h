@@ -1,15 +1,13 @@
 #pragma once
-enum ClassId {
-	PLAYER = 0,
 
-	//Collectable
-	FLAG = 1,
+enum class ClassId
+{
+    Player = 0,
 
-	BULLET = 2,
-
-	COLLECTABLE = 3,
-
-	OBSTACLE = 4,
-
-	FIELD = 5
+    // Collectable
+    Flag = 1,
+    Bullet = 2,
+    Collectable = 3,
+    Obstacle = 4,
+    Field = 5,
 };

@@ -9,5 +9,9 @@ public:
 	TeleportGun(btDiscreteDynamicsWorld* curworld);
 	~TeleportGun();
 
-	int UseWeapon(btVector3 * position, btMatrix3x3* rotation, int playerid, int teamid, Entity* owner);
+    virtual int UseWeapon(btVector3* position,
+                          btMatrix3x3* rotation,
+                          int playerid,
+                          int teamid,
+                          Entity* owner) override;
 };

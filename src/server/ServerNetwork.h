@@ -1,18 +1,19 @@
 #pragma once
-#include <winsock2.h>
-#include <Windows.h>
-#include "../network/NetworkServices.h"
-#include <ws2tcpip.h>
+
+#include "network/NetworkData.h"
+#include "network/NetworkServices.h"
+
 #include <map>
 #include <string>
-#include "../network/NetworkData.h"
-using namespace std; 
+
+#include <winsock2.h>
+#include <Windows.h>
+#include <ws2tcpip.h>
+
 #pragma comment (lib, "Ws2_32.lib")
 
 #define DEFAULT_BUFLEN 512
 #define DEFAULT_PORT "6881" 
-
-
 
 class ServerNetwork
 {
@@ -21,16 +22,16 @@ public:
     ~ServerNetwork(void);
 
 	// send data to all clients
-    void sendToAll(char * packets, int totalSize);
+    void sendToAll(std::uint8_t* packets, int totalSize);
 
     // send data to one client
-    void sendToClient(char * packets, int totalSize, unsigned int clientId);
+    void sendToClient(std::uint8_t* packets, int totalSize, unsigned int clientId);
 
 	// receive incoming data
-    int receiveData(unsigned int client_id, char * recvbuf);
+    int receiveData(unsigned int client_id, std::uint8_t* recvbuf);
 	
 	// accept new connections
-    bool acceptNewClient(unsigned int & id);
+    bool acceptNewClient(unsigned int& id);
 
     // Socket to listen for new connections
     SOCKET ListenSocket;

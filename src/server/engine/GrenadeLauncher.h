@@ -12,9 +12,13 @@ public:
 	GrenadeLauncher(btDiscreteDynamicsWorld* curworld);
 	~GrenadeLauncher();
 
-	int UseWeapon(btVector3 * position, btMatrix3x3* rotation, int playerid, int teamid, Entity* owner);
+    virtual int UseWeapon(btVector3* position,
+                          btMatrix3x3* rotation,
+                          int playerid,
+                          int teamid,
+                          Entity* owner) override;
 
-	static const int EXPLOSION_SIZE = 17;
+    static const int EXPLOSION_SIZE = 17;
 	static const int EXPLOSION_DUR = 90;
 
 	void ReloadWeapon();

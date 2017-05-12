@@ -85,7 +85,7 @@ public:
 	void receiveRemovePacket(int offset);
 
     void receiveMovePacket(int offset);
-    void sendMovePacket(int direction);
+    void sendMovePacket(MoveType direction);
 
 	void receiveTimeStampPacket(int offset);
 
@@ -119,7 +119,7 @@ public:
 	void decScore(int team, int amount) { scores[team] -= amount; }
 	void incScore(int team, int amount) { scores[team] += amount; }
 
-    char network_data[MAX_PACKET_SIZE];
+    std::uint8_t m_networkData[g_maxPacketSize];
 
     void update();
 #endif

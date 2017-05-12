@@ -5,7 +5,7 @@
 
 TeleportGun::TeleportGun(btDiscreteDynamicsWorld* curworld) : Weapon(fireRate, damage, curworld)
 {
-	wt = WeaponType::TELEPORTGUN;
+	wt = WeaponType::TeleportGun;
 	nextFireTick = 0;
 	fireRate = 600;
 	damage = 1;

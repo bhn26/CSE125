@@ -3,7 +3,7 @@
 
 BounceGun::BounceGun(btDiscreteDynamicsWorld* curworld) : Weapon(fireRate, damage, curworld)
 {
-	wt = WeaponType::BOUNCEGUN;
+	wt = WeaponType::BounceGun;
 	nextFireTick = 0;
 	fireRate = 10;
 	damage = 14;

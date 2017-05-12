@@ -15,7 +15,6 @@
 #include "client/SpriteRenderer.h"
 #include "network/GameData.h"
 
-
 class Camera;
 class Player;
 class Shader;
@@ -28,46 +27,46 @@ struct DirectionalLight;
 
 class Scene
 {
-    enum UBOIndex
+    enum class UboIndex
     {
         Matrices = 0,
         Lights = 1,
     };
 
-    //const GLuint SHADOW_DEPTH_WIDTH = 4096, SHADOW_DEPTH_HEIGHT = 4096;
-    const GLuint SHADOW_DEPTH_WIDTH = 1024, SHADOW_DEPTH_HEIGHT = 1024;
-    unsigned int shadowMapIndex = 7;
-    float lastTime;
-    GLuint uboMatricesBuffer;
-    GLuint depthMapFBO;
-    GLuint depthMap;
-    bool renderingDepthMap = false;
-    std::shared_ptr<Shader> depthShader;
-    glm::mat4 lightSpaceMatrix;
+    // const GLuint shadowDepthWidth = 4096, shadowDepthHeight = 4096;
+    const GLuint shadowDepthWidth = 1024, shadowDepthHeight = 1024;
+    unsigned int m_shadowMapIndex = 7;
+    float m_lastTime;
+    GLuint m_uboMatricesBuffer;
+    GLuint m_depthMapFbo;
+    GLuint m_depthMap;
+    bool m_renderingDepthMap = false;
+    std::shared_ptr<Shader> m_depthShader;
+    glm::mat4 m_lightSpaceMatrix;
 
-    std::unique_ptr<Camera> camera;
-    std::unique_ptr<PointLight> pLight;
-    std::unique_ptr<DirectionalLight> dLight;
-	std::unique_ptr<CubeMap> cubeMap;
-	std::unique_ptr<Ground> ground;
-	std::unique_ptr<InstanceObject> grass;
-	std::unique_ptr<InstanceObject> pumpkin;
+    std::unique_ptr<Camera> m_camera;
+    std::unique_ptr<PointLight> m_pointLight;
+    std::unique_ptr<DirectionalLight> m_dirLight;
+    std::unique_ptr<CubeMap> m_cubeMap;
+    std::unique_ptr<Ground> m_ground;
+    std::unique_ptr<InstanceObject> m_grass;
+    std::unique_ptr<InstanceObject> m_pumpkin;
 
-    Player* player;
+    Player* player = nullptr;
 
-    static const int WIDTH;
-    static const int HEIGHT;
+    static const int s_width;
+    static const int s_height;
 
-	std::map<std::pair<int, int>, std::unique_ptr<Entity> > entities;
-	std::vector<std::unique_ptr<StaticObject> > static_objects;
+    std::map<std::pair<ClassId, int>, std::unique_ptr<Entity>> entities;
+    std::vector<std::unique_ptr<StaticObject>> m_staticObjects;
 
     Scene();
     void Setup();
-    void InitializeUBOs();
-    void InitializeFBO();
-    void SetViewUBO();
-    void SetLightSpaceUBO();
-    void SetProjectionUBO();
+    void InitializeUbos();
+    void InitializeFbo();
+    void SetViewUbo();
+    void SetLightSpaceUbo();
+    void SetProjectionUbo();
     void ConfigureShaderAndMatrices();
     void RenderDepthMap();
     void DrawDepthMap();
@@ -75,7 +74,7 @@ class Scene
     void RenderQuad();
 
 public:
-    static SpriteRenderer * sprite_renderer;
+    static SpriteRenderer* sprite_renderer;
 
     static Scene* Instance()
     {
@@ -84,11 +83,10 @@ public:
     }
 
     static void Initialize() { Instance()->Setup(); }
-
-	void AddEntity(int cid, int oid, std::unique_ptr<Entity> ent);
-	void AddEntity(PosInfo p);
-	void RemoveEntity(int cid, int oid);
-	std::unique_ptr<Entity>& GetEntity(int cid, int oid);
+    void AddEntity(ClassId cid, int oid, std::unique_ptr<Entity> ent);
+    void AddEntity(PosInfo p);
+    void RemoveEntity(ClassId cid, int oid);
+    std::unique_ptr<Entity>& GetEntity(ClassId cid, int oid);
 
     void Update();
 
@@ -99,24 +97,27 @@ public:
     glm::vec3 GetCameraPosition();
     glm::mat4 GetPerspectiveMatrix();
 
-    std::unique_ptr<PointLight>& GetPointLight() { return pLight; }
-	Player*& GetPlayer() { return player; }
-	StaticObject* GetStaticObject(int i) { return static_objects[i].get(); }
-    DirectionalLight* GetDirectionalLight() { return dLight.get(); }
-    int NumberOfStaticObjects() { return static_objects.size(); }
-
-    bool IsRenderingDepth() const { return renderingDepthMap; }
-    std::shared_ptr<Shader>& GetDepthShader() { return depthShader; }
-
-    unsigned int ShadowMapIndex() const { return shadowMapIndex; }
-    GLuint DepthMap() const { return depthMap; }
-    const glm::mat4& LightSpaceMatrix()
+    std::unique_ptr<PointLight>& GetPointLight() { return m_pointLight; }
+    Player* GetPlayer() { return player; }
+    StaticObject* GetStaticObject(int i) { return m_staticObjects[i].get(); }
+    DirectionalLight* GetDirectionalLight() { return m_dirLight.get(); }
+    int NumStaticObjects() const { return m_staticObjects.size(); }
+    bool IsRenderingDepth() const { return m_renderingDepthMap; }
+    std::shared_ptr<Shader>& GetDepthShader() { return m_depthShader; }
+    unsigned int ShadowMapIndex() const { return m_shadowMapIndex; }
+    GLuint DepthMap() const { return m_depthMap; }
+    const glm::mat4& LightSpaceMatrix() const
     {
-        //lightSpaceMatrix = glm::ortho(-100.0f, 100.0f, -100.0f, 100.0f, 1.0f, 500.0f) * GetViewMatrix();
-        return lightSpaceMatrix;
+        // lightSpaceMatrix = glm::ortho(-100.0f, 100.0f, -100.0f, 100.0f, 1.0f, 500.0f) *
+        // GetViewMatrix();
+        return m_lightSpaceMatrix;
     }
 
 private:
-    // helpers 
-    static glm::vec2 Get2D(glm::vec3 coords, glm::mat4 view, glm::mat4 projection/*perspective matrix */, int width, int height);
+    // helpers
+    static glm::vec2 Get2D(glm::vec3 coords,
+                           glm::mat4 view,
+                           glm::mat4 projection /*perspective matrix */,
+                           int width,
+                           int height);
 };

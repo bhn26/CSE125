@@ -3,7 +3,7 @@
 
 SeedGun::SeedGun(btDiscreteDynamicsWorld* curworld): Weapon(fireRate, damage, curworld)
 {
-	wt = WeaponType::SEEDGUN;
+	wt = WeaponType::SeedGun;
 	nextFireTick = 0;
 	fireRate = 5;
 	damage = 20;

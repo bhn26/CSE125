@@ -115,7 +115,7 @@ bool ServerNetwork::acceptNewClient(unsigned int & id)
         setsockopt( ClientSocket, IPPROTO_TCP, TCP_NODELAY, &value, sizeof( value ) );
 
         // insert new client into session id table
-        sessions.insert( pair<unsigned int, SOCKET>(id, ClientSocket) );
+        sessions.insert(std::pair<unsigned int, SOCKET>(id, ClientSocket));
 
         return true;
     }
@@ -124,12 +124,12 @@ bool ServerNetwork::acceptNewClient(unsigned int & id)
 }
 
 // receive incoming data
-int ServerNetwork::receiveData(unsigned int client_id, char * recvbuf)
+int ServerNetwork::receiveData(unsigned int client_id, std::uint8_t* recvbuf)
 {
     if( sessions.find(client_id) != sessions.end() )
     {
         SOCKET currentSocket = sessions[client_id];
-        iResult = NetworkServices::receiveMessage(currentSocket, recvbuf, MAX_PACKET_SIZE);
+        iResult = NetworkServices::receiveMessage(currentSocket, recvbuf, g_maxPacketSize);
 
         if (iResult == 0)
         {
@@ -149,7 +149,7 @@ int ServerNetwork::receiveData(unsigned int client_id, char * recvbuf)
 }
 
 // send data to all clients
-void ServerNetwork::sendToAll(char * packets, int totalSize)
+void ServerNetwork::sendToAll(std::uint8_t* packets, int totalSize)
 {
     SOCKET currentSocket;
     std::map<unsigned int, SOCKET>::iterator iter;
@@ -169,7 +169,7 @@ void ServerNetwork::sendToAll(char * packets, int totalSize)
 }
 
 // send to specific client
-void ServerNetwork::sendToClient(char * packets, int totalSize, unsigned int clientId)
+void ServerNetwork::sendToClient(std::uint8_t* packets, int totalSize, unsigned int clientId)
 {
     std::map<unsigned int, SOCKET>::iterator iter;
     int iSendResult;

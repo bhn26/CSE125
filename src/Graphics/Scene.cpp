@@ -26,12 +26,18 @@
 #include <glm/gtc/type_ptr.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////
-const int Scene::WIDTH = 100;
-const int Scene::HEIGHT = 100;
+const int Scene::s_width = 100;
+const int Scene::s_height = 100;
 
 ////////////////////////////////////////////////////////////////////////////////
-Scene::Scene() : camera(std::unique_ptr<Camera>(nullptr)), pLight(nullptr),
-    dLight(nullptr), player(nullptr)
+Scene::Scene()
+    : m_camera(nullptr)
+    , m_pointLight(nullptr)
+    , m_dirLight(nullptr)
+    , m_cubeMap(nullptr)
+    , m_ground(nullptr)
+    , m_grass(nullptr)
+    , m_pumpkin(nullptr)
 {
 }
 
@@ -41,171 +47,209 @@ void Scene::Setup()
     printf("\n=== Setting up Scene ===\n");
     entities.clear();
 
-    InitializeUBOs();
-    InitializeFBO();
+    InitializeUbos();
+    InitializeFbo();
 
     glm::vec3 pos = glm::vec3(std::stof(ConfigManager::instance()->GetConfigValue("Light_Pos_X")),
-        std::stof(ConfigManager::instance()->GetConfigValue("Light_Pos_Y")),
-        std::stof(ConfigManager::instance()->GetConfigValue("Light_Pos_Z")));
+                              std::stof(ConfigManager::instance()->GetConfigValue("Light_Pos_Y")),
+                              std::stof(ConfigManager::instance()->GetConfigValue("Light_Pos_Z")));
     glm::vec3 camPos = pos + glm::vec3(-75.0f, 0.0f, 0.0f);
 
-    pLight = std::unique_ptr<PointLight>(new PointLight(glm::vec3(0.0f, 20.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)));
-    dLight = std::unique_ptr<DirectionalLight>(new DirectionalLight(glm::vec3(0.5, -sqrt(3)/2.0f, 0.0f)));
-    dLight->_ambientIntensity = 0.3f;
-    camera = std::unique_ptr<Camera>(new Camera(camPos, glm::vec3(0.0f, 1.0f, 0.0f), dLight->_direction));
+    m_pointLight = std::unique_ptr<PointLight>(
+        new PointLight(glm::vec3(0.0f, 20.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)));
+    m_dirLight = std::unique_ptr<DirectionalLight>(
+        new DirectionalLight(glm::vec3(0.5, -sqrt(3) / 2.0f, 0.0f)));
+    m_dirLight->_ambientIntensity = 0.3f;
+    m_camera = std::unique_ptr<Camera>(
+        new Camera(camPos, glm::vec3(0.0f, 1.0f, 0.0f), m_dirLight->_direction));
 
-    //glm::vec3 pos = glm::vec3(0.0f, 250.0f, 0.0f);
-    //lightSpaceMatrix = glm::ortho(-425.0f, 350.0f, -500.0f, 300.0f, 10.0f, 500.0f) *
-    //    glm::lookAt(pos, pos + dLight->_direction, glm::vec3(0.0f, 1.0f, 0.0));
-    lightSpaceMatrix = glm::ortho(std::stof(ConfigManager::instance()->GetConfigValue("Light_Ortho_Left")),
-                                std::stof(ConfigManager::instance()->GetConfigValue("Light_Ortho_Right")),
-                                std::stof(ConfigManager::instance()->GetConfigValue("Light_Ortho_Bottom")),
-                                std::stof(ConfigManager::instance()->GetConfigValue("Light_Ortho_Top")),
-                                std::stof(ConfigManager::instance()->GetConfigValue("Light_Ortho_Near")),
-                                std::stof(ConfigManager::instance()->GetConfigValue("Light_Ortho_Far"))) *
-        glm::lookAt(pos, pos + dLight->_direction, glm::vec3(0.0f, 1.0f, 0.0));
+    // glm::vec3 pos = glm::vec3(0.0f, 250.0f, 0.0f);
+    // m_lightSpaceMatrix = glm::ortho(-425.0f, 350.0f, -500.0f, 300.0f, 10.0f, 500.0f) *
+    //    glm::lookAt(pos, pos + m_dirLight->_direction, glm::vec3(0.0f, 1.0f, 0.0));
+    m_lightSpaceMatrix =
+        glm::ortho(std::stof(ConfigManager::instance()->GetConfigValue("Light_Ortho_Left")),
+                   std::stof(ConfigManager::instance()->GetConfigValue("Light_Ortho_Right")),
+                   std::stof(ConfigManager::instance()->GetConfigValue("Light_Ortho_Bottom")),
+                   std::stof(ConfigManager::instance()->GetConfigValue("Light_Ortho_Top")),
+                   std::stof(ConfigManager::instance()->GetConfigValue("Light_Ortho_Near")),
+                   std::stof(ConfigManager::instance()->GetConfigValue("Light_Ortho_Far")))
+        * glm::lookAt(pos, pos + m_dirLight->_direction, glm::vec3(0.0f, 1.0f, 0.0));
 
-    depthShader = ShaderManager::GetShader("Depth_Map");
+    m_depthShader = ShaderManager::GetShader("Depth_Map");
 
-	//std::unique_ptr<StaticObject> map = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Map")));
+    // std::unique_ptr<StaticObject> map = std::unique_ptr<StaticObject>(new
+    // StaticObject(ModelManager::GetModel("Map")));
 
-	// Barn
-    std::unique_ptr<StaticObject> barn = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Barn")));
+    // Barn
+    std::unique_ptr<StaticObject> barn =
+        std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Barn")));
 
-	// Tractors
-    std::unique_ptr<StaticObject> red_tractor = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Tractor_Red")));
-	red_tractor->Rotate(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-	red_tractor->Translate(glm::vec3(17.0f, 0.0f, -13.0f));
+    // Tractors
+    std::unique_ptr<StaticObject> red_tractor =
+        std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Tractor_Red")));
+    red_tractor->Rotate(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    red_tractor->Translate(glm::vec3(17.0f, 0.0f, -13.0f));
 
-    std::unique_ptr<StaticObject> green_tractor = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Tractor_Green")));
-	green_tractor->Rotate(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-	green_tractor->Translate(glm::vec3(34.0f, 0.0f, 13.0f));
+    std::unique_ptr<StaticObject> green_tractor =
+        std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Tractor_Green")));
+    green_tractor->Rotate(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    green_tractor->Translate(glm::vec3(34.0f, 0.0f, 13.0f));
 
-    std::unique_ptr<StaticObject> orange_tractor = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Tractor_Orange")));
-	orange_tractor->Rotate(90.0f, glm::vec3(0.0f, -1.0f, 0.0f));
-	orange_tractor->Translate(glm::vec3(-17.0f, 0.0f, -13.0f));
+    std::unique_ptr<StaticObject> orange_tractor =
+        std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Tractor_Orange")));
+    orange_tractor->Rotate(90.0f, glm::vec3(0.0f, -1.0f, 0.0f));
+    orange_tractor->Translate(glm::vec3(-17.0f, 0.0f, -13.0f));
 
-	// Silo
-    std::unique_ptr<StaticObject> silo = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Silo")));
+    // Silo
+    std::unique_ptr<StaticObject> silo =
+        std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Silo")));
 
-	// Construction
-	std::unique_ptr<StaticObject> construction_site = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Construction_Site")));
+    // Construction
+    std::unique_ptr<StaticObject> construction_site = std::unique_ptr<StaticObject>(
+        new StaticObject(ModelManager::GetModel("Construction_Site")));
 
-	// House
-	std::unique_ptr<StaticObject> house = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("House")));
-	
-	// Patio
-	std::unique_ptr<StaticObject> patio = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Patio")));
+    // House
+    std::unique_ptr<StaticObject> house =
+        std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("House")));
 
-	// Maze
-	std::unique_ptr<StaticObject> maze = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Maze")));
+    // Patio
+    std::unique_ptr<StaticObject> patio =
+        std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Patio")));
 
-	// Fence
-	std::unique_ptr<StaticObject> fence = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Fence")));
+    // Maze
+    std::unique_ptr<StaticObject> maze =
+        std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Maze")));
 
-	// Bench
-    std::unique_ptr<StaticObject> bench = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Bench")));
+    // Fence
+    std::unique_ptr<StaticObject> fence =
+        std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Fence")));
 
+    // Bench
+    std::unique_ptr<StaticObject> bench =
+        std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Bench")));
 
-
-	// Pumpkin
+    // Pumpkin
     // TODO NO IDEA WHY PUMPKIN HACK WORKS HERE
     ModelManager::Instance()->AddModelToLoad("Pumpkin");
-	ModelManager::Instance()->AddModelToLoad("Pumpkin_Patch");
-	ModelManager::Instance()->LoadModels();
-//    std::unique_ptr<StaticObject> pumpkinObj = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Pumpkin")));
-	// Pumpkin Patch
-	std::unique_ptr<StaticObject> pumpkin_patch = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Pumpkin_Patch")));
+    ModelManager::Instance()->AddModelToLoad("Pumpkin_Patch");
+    ModelManager::Instance()->LoadModels();
+    //    std::unique_ptr<StaticObject> pumpkinObj = std::unique_ptr<StaticObject>(new
+    //    StaticObject(ModelManager::GetModel("Pumpkin")));
+    // Pumpkin Patch
+    std::unique_ptr<StaticObject> pumpkin_patch =
+        std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Pumpkin_Patch")));
 
-	// Rocks
-    //std::unique_ptr<StaticObject> rocks = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Rocks")));
-	//rocks->Translate(glm::vec3(28.0f, 0.2f, -20.0f));
+    // Rocks
+    // std::unique_ptr<StaticObject> rocks = std::unique_ptr<StaticObject>(new
+    // StaticObject(ModelManager::GetModel("Rocks")));
+    // rocks->Translate(glm::vec3(28.0f, 0.2f, -20.0f));
 
-	// Stump
-    std::unique_ptr<StaticObject> stump = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Stump")));
-	//stump->Translate(glm::vec3(-28.0f, 0.2f, -20.0f));
+    // Stump
+    std::unique_ptr<StaticObject> stump =
+        std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Stump")));
+    // stump->Translate(glm::vec3(-28.0f, 0.2f, -20.0f));
 
-	// Ground
-    std::unique_ptr<StaticObject> ground = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Ground")));
-	//ground->Translate(glm::vec3(0.0f, 100.4f, 0.0f));
+    // Ground
+    std::unique_ptr<StaticObject> ground =
+        std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Ground")));
+    // ground->Translate(glm::vec3(0.0f, 100.4f, 0.0f));
 
-	// Seed
-    std::unique_ptr<StaticObject> seed = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Pumpkin_Seed")));
+    // Seed
+    std::unique_ptr<StaticObject> seed =
+        std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Pumpkin_Seed")));
     seed->SetScale(0.5f);
-	seed->Translate(glm::vec3(0.0f, 1.0f, 0.0f));
+    seed->Translate(glm::vec3(0.0f, 1.0f, 0.0f));
 
-	// Boat
-    std::unique_ptr<StaticObject> hot_tub = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Boat")));
+    // Boat
+    std::unique_ptr<StaticObject> hot_tub =
+        std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Boat")));
 
-	// Hot Tub
-	std::unique_ptr<StaticObject> boat = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Hot_Tub")));
+    // Hot Tub
+    std::unique_ptr<StaticObject> boat =
+        std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Hot_Tub")));
 
-    std::unique_ptr<StaticObject> windmill = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Windmill")));
-    //windmill->SetScale(1/3.0f);
-    //windmill->Translate(glm::vec3(-125.0f, 0.0f, 0.0f));
-    
+    std::unique_ptr<StaticObject> windmill =
+        std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Windmill")));
+    // windmill->SetScale(1/3.0f);
+    // windmill->Translate(glm::vec3(-125.0f, 0.0f, 0.0f));
 
-	grass = std::unique_ptr<InstanceObject>(new InstanceObject(ModelManager::GetModel("Grass"), 10000, 1.0f));
-//	pumpkin = std::unique_ptr<InstanceObject>(new InstanceObject(ModelManager::GetModel("Pumpkin"), 20, 10.0f, 20.0f));
+    m_grass = std::unique_ptr<InstanceObject>(
+        new InstanceObject(ModelManager::GetModel("Grass"), 10000, 1.0f));
+    //	pumpkin = std::unique_ptr<InstanceObject>(new
+    //InstanceObject(ModelManager::GetModel("Pumpkin"), 20, 10.0f, 20.0f));
 
-    cubeMap = std::unique_ptr<CubeMap>(new CubeMap);
-    cubeMap->LoadCubeMap();
-    cubeMap->GetShader() = ShaderManager::GetShader("CubeMap");
-    grass->GetShader() = ShaderManager::GetShader("Instancing");
+    m_cubeMap = std::unique_ptr<CubeMap>(new CubeMap);
+    m_cubeMap->LoadCubeMap();
+    m_cubeMap->GetShader() = ShaderManager::GetShader("CubeMap");
+    m_grass->GetShader() = ShaderManager::GetShader("Instancing");
 
-//	static_objects.push_back(std::move(map));
-	static_objects.push_back(std::move(boat));
-	static_objects.push_back(std::move(patio));
-	static_objects.push_back(std::move(hot_tub));
-	static_objects.push_back(std::move(barn));
-	static_objects.push_back(std::move(ground));
-	static_objects.push_back(std::move(pumpkin_patch));
-	static_objects.push_back(std::move(house));
-	static_objects.push_back(std::move(red_tractor));
-	static_objects.push_back(std::move(green_tractor));
-	static_objects.push_back(std::move(orange_tractor));
-	static_objects.push_back(std::move(construction_site));
-	static_objects.push_back(std::move(windmill));
-	static_objects.push_back(std::move(maze));
-	static_objects.push_back(std::move(silo));
-	//static_objects.push_back(std::move(rocks));
-	static_objects.push_back(std::move(fence));
-	static_objects.push_back(std::move(bench));
-	//static_objects.push_back(std::move(pumpkinObj));
-	static_objects.push_back(std::move(seed));
+    //	m_staticObjects.push_back(std::move(map));
+    m_staticObjects.push_back(std::move(boat));
+    m_staticObjects.push_back(std::move(patio));
+    m_staticObjects.push_back(std::move(hot_tub));
+    m_staticObjects.push_back(std::move(barn));
+    m_staticObjects.push_back(std::move(ground));
+    m_staticObjects.push_back(std::move(pumpkin_patch));
+    m_staticObjects.push_back(std::move(house));
+    m_staticObjects.push_back(std::move(red_tractor));
+    m_staticObjects.push_back(std::move(green_tractor));
+    m_staticObjects.push_back(std::move(orange_tractor));
+    m_staticObjects.push_back(std::move(construction_site));
+    m_staticObjects.push_back(std::move(windmill));
+    m_staticObjects.push_back(std::move(maze));
+    m_staticObjects.push_back(std::move(silo));
+    // m_staticObjects.push_back(std::move(rocks));
+    m_staticObjects.push_back(std::move(fence));
+    m_staticObjects.push_back(std::move(bench));
+    // m_staticObjects.push_back(std::move(pumpkinObj));
+    m_staticObjects.push_back(std::move(seed));
     printf("=== Done setting up Scene! ===\n\n");
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // Projection, View, Lightspace
-void Scene::InitializeUBOs()
+void Scene::InitializeUbos()
 {
-    ShaderManager::Instance()->ApplyUBOToAllShaders("Matrices", UBOIndex::Matrices);
+    ShaderManager::Instance()->ApplyUboToAllShaders("Matrices",
+                                                    static_cast<int>(UboIndex::Matrices));
 
-    glGenBuffers(1, &this->uboMatricesBuffer);
+    glGenBuffers(1, &m_uboMatricesBuffer);
 
-    glBindBuffer(GL_UNIFORM_BUFFER, uboMatricesBuffer);
-    glBufferData(GL_UNIFORM_BUFFER, 3*sizeof(glm::mat4), NULL, GL_STATIC_DRAW);
+    glBindBuffer(GL_UNIFORM_BUFFER, m_uboMatricesBuffer);
+    glBufferData(GL_UNIFORM_BUFFER, 3 * sizeof(glm::mat4), NULL, GL_STATIC_DRAW);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
-    glBindBufferRange(GL_UNIFORM_BUFFER, UBOIndex::Matrices, uboMatricesBuffer, 0, 3*sizeof(glm::mat4));
-    //glBindBufferBase(GL_UNIFORM_BUFFER, UBOIndex::Matrices, uboMatricesBuffer);
+    glBindBufferRange(GL_UNIFORM_BUFFER,
+                      static_cast<int>(UboIndex::Matrices),
+                      m_uboMatricesBuffer,
+                      0,
+                      3 * sizeof(glm::mat4));
+    // glBindBufferBase(GL_UNIFORM_BUFFER, UboIndex::Matrices, m_uboMatricesBuffer);
 
-    SetProjectionUBO();
+    SetProjectionUbo();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Scene::InitializeFBO()
+void Scene::InitializeFbo()
 {
-    if (this->depthMapFBO)
+    if (m_depthMapFbo)
+    {
         return;
+    }
 
-    glGenFramebuffers(1, &this->depthMapFBO);
+    glGenFramebuffers(1, &m_depthMapFbo);
 
     // Generate the Depth Map texture
-    glGenTextures(1, &this->depthMap);
-    glBindTexture(GL_TEXTURE_2D, this->depthMap);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_DEPTH_WIDTH, SHADOW_DEPTH_HEIGHT,
-        0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+    glGenTextures(1, &m_depthMap);
+    glBindTexture(GL_TEXTURE_2D, m_depthMap);
+    glTexImage2D(GL_TEXTURE_2D,
+                 0,
+                 GL_DEPTH_COMPONENT,
+                 shadowDepthWidth,
+                 shadowDepthHeight,
+                 0,
+                 GL_DEPTH_COMPONENT,
+                 GL_FLOAT,
+                 NULL);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
@@ -214,38 +258,43 @@ void Scene::InitializeFBO()
     glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
 
     // Bind depth map texture to frame buffer
-    glBindFramebuffer(GL_FRAMEBUFFER, this->depthMapFBO);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, this->depthMap, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, m_depthMapFbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_depthMap, 0);
     glDrawBuffer(GL_NONE);
     glReadBuffer(GL_NONE);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Scene::SetViewUBO()
+void Scene::SetViewUbo()
 {
     if (GetPlayer())
     {
         glm::mat4 view = GetPlayer()->GetViewMatrix();
-        glBindBuffer(GL_UNIFORM_BUFFER, uboMatricesBuffer);
-        glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(view));
+        glBindBuffer(GL_UNIFORM_BUFFER, m_uboMatricesBuffer);
+        glBufferSubData(
+            GL_UNIFORM_BUFFER, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(view));
         glBindBuffer(GL_UNIFORM_BUFFER, 0);
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Scene::SetLightSpaceUBO()
+void Scene::SetLightSpaceUbo()
 {
-    glBindBuffer(GL_UNIFORM_BUFFER, uboMatricesBuffer);
-    glBufferSubData(GL_UNIFORM_BUFFER, 2*sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(LightSpaceMatrix()));
+    glBindBuffer(GL_UNIFORM_BUFFER, m_uboMatricesBuffer);
+    glBufferSubData(GL_UNIFORM_BUFFER,
+                    2 * sizeof(glm::mat4),
+                    sizeof(glm::mat4),
+                    glm::value_ptr(LightSpaceMatrix()));
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Scene::SetProjectionUBO()
+void Scene::SetProjectionUbo()
 {
-    glm::mat4 projection = glm::perspective(45.0f, (float)Window::width/(float)Window::height, 0.1f, 1000.0f);
-    glBindBuffer(GL_UNIFORM_BUFFER, uboMatricesBuffer);
+    glm::mat4 projection =
+        glm::perspective(45.0f, (float)Window::width / (float)Window::height, 0.1f, 1000.0f);
+    glBindBuffer(GL_UNIFORM_BUFFER, m_uboMatricesBuffer);
     glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), glm::value_ptr(projection));
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
@@ -253,34 +302,37 @@ void Scene::SetProjectionUBO()
 ////////////////////////////////////////////////////////////////////////////////
 void Scene::ConfigureShaderAndMatrices()
 {
-    depthShader->Use();
-    glUniformMatrix4fv(depthShader->GetUniform("lightSpaceMatrix"), 1, GL_FALSE, glm::value_ptr(LightSpaceMatrix()));
+    m_depthShader->Use();
+    glUniformMatrix4fv(m_depthShader->GetUniform("m_lightSpaceMatrix"),
+                       1,
+                       GL_FALSE,
+                       glm::value_ptr(LightSpaceMatrix()));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void Scene::RenderDepthMap()
 {
-    renderingDepthMap = true;
-    glViewport(0, 0, SHADOW_DEPTH_WIDTH, SHADOW_DEPTH_HEIGHT);
-    glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+    m_renderingDepthMap = true;
+    glViewport(0, 0, shadowDepthWidth, shadowDepthHeight);
+    glBindFramebuffer(GL_FRAMEBUFFER, m_depthMapFbo);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        ConfigureShaderAndMatrices();
-        RenderScene();
+    ConfigureShaderAndMatrices();
+    RenderScene();
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    renderingDepthMap = false;
+    m_renderingDepthMap = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void Scene::DrawDepthMap()
 {
-    glViewport(0, 0, Window::width/3, Window::height/3);
+    glViewport(0, 0, Window::width / 3, Window::height / 3);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     std::shared_ptr<Shader>& shader = ShaderManager::Instance()->GetShader("Depth_Draw");
     shader->Use();
     glUniform1f(shader->GetUniform("near_plane"), 0.1f);
     glUniform1f(shader->GetUniform("far_plane"), 1000.0f);
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, depthMap);
+    glBindTexture(GL_TEXTURE_2D, m_depthMap);
     RenderQuad();
 }
 
@@ -288,23 +340,24 @@ void Scene::DrawDepthMap()
 void Scene::RenderScene()
 {
     // Clear the color and depth buffers
-    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     if (!IsRenderingDepth())
         glViewport(0, 0, Window::width, Window::height);
-    SetViewUBO();
-    SetLightSpaceUBO();
-    cubeMap->Draw();
-    grass->Draw();
-    //pumpkin->Draw();
+    SetViewUbo();
+    SetLightSpaceUbo();
+    m_cubeMap->Draw();
+    m_grass->Draw();
+    // pumpkin->Draw();
 
-    for (auto& const obj : static_objects)
+    for (auto& const obj : m_staticObjects)
         obj->Draw();
 
-    //ground->Draw();
+    // ground->Draw();
     for (auto& const entity : entities)
     {
         entity.second->Draw();
-        //printf("entity ids are %d, %d\n", entity.second->GetClassId(), entity.second->GetObjId());
+        // printf("entity ids are %d, %d\n", entity.second->GetClassId(),
+        // entity.second->GetObjId());
     }
 }
 
@@ -313,14 +366,12 @@ void Scene::RenderQuad()
 {
     static GLuint quadVAO = 0;
     static GLuint quadVBO = 0;
-    if (quadVAO == 0)       // Initialize
+    if (quadVAO == 0) // Initialize
     {
         GLfloat quadVertices[] = {
             // Positions        // Texture Coords
-            -1.0f,  1.0f, 0.0f,  0.0f, 1.0f,
-            -1.0f, -1.0f, 0.0f,  0.0f, 0.0f,
-            1.0f,  1.0f, 0.0f,  1.0f, 1.0f,
-            1.0f, -1.0f, 0.0f,  1.0f, 0.0f,
+            -1.0f, 1.0f, 0.0f, 0.0f, 1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+            1.0f,  1.0f, 0.0f, 1.0f, 1.0f, 1.0f,  -1.0f, 0.0f, 1.0f, 0.0f,
         };
         // Setup plane VAO
         glGenVertexArrays(1, &quadVAO);
@@ -331,7 +382,8 @@ void Scene::RenderQuad()
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)0);
         glEnableVertexAttribArray(1);
-        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+        glVertexAttribPointer(
+            1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
     }
     glBindVertexArray(quadVAO);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
@@ -342,212 +394,225 @@ void Scene::RenderQuad()
 void Scene::Update()
 {
     double nextTime = Utils::CurrentTime();
-    float deltaTime = (float)(nextTime - lastTime);
-    lastTime = nextTime;
+    float deltaTime = (float)(nextTime - m_lastTime);
+    m_lastTime = nextTime;
 
-	cubeMap->Update(deltaTime);
-	//ground->Update();
-	for (auto& const entity : entities)
-		entity.second->Update(deltaTime);
+    m_cubeMap->Update(deltaTime);
+    // ground->Update();
+    for (auto& const entity : entities)
+        entity.second->Update(deltaTime);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void Scene::Draw()
 {
     RenderDepthMap();
-    //DrawDepthMap();
+    // DrawDepthMap();
     RenderScene();
 }
-
 
 ////////////////////////////////////////////////////////////////////////////////
 glm::mat4 Scene::GetViewMatrix()
 {
-    if (renderingDepthMap)
+    if (m_renderingDepthMap)
     {
     }
-    if (player) return player->GetViewMatrix();
-    return camera->GetViewMatrix();
+    if (player)
+        return player->GetViewMatrix();
+    return m_camera->GetViewMatrix();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 glm::vec3 Scene::GetCameraPosition()
 {
-    if (player) return player->CameraPosition();
-    return camera->Position();
+    if (player)
+        return player->CameraPosition();
+    return m_camera->Position();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 glm::mat4 Scene::GetPerspectiveMatrix()
 {
-    if (player) return player->GetPerspectiveMatrix();
-    return camera->GetPerspectiveMatrix();
+    if (player)
+        return player->GetPerspectiveMatrix();
+    return m_camera->GetPerspectiveMatrix();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Scene::AddEntity(int cid, int oid, std::unique_ptr<Entity> ent)
+void Scene::AddEntity(ClassId cid, int oid, std::unique_ptr<Entity> ent)
 {
-	std::pair<int, int> p = std::pair<int, int>(cid, oid);
-	entities[p] = std::move(ent);
+    std::pair<ClassId, int> p(cid, oid);
+    entities.emplace(p, std::move(ent));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void Scene::AddEntity(PosInfo p)
 {
-	std::unique_ptr<Player> player;
-	std::unique_ptr<Egg> egg;
-	std::string skin_type;
-	int eggtype = 0;
+    std::unique_ptr<Player> player;
+    std::unique_ptr<Egg> egg;
+    std::string skin_type;
+    int eggtype = 0;
 
-	switch (p.cid) {
-		case ClassId::PLAYER:
-			player = std::unique_ptr<Player>(new Player(p.x, p.y, p.z, p.rotw, p.rotx, p.roty, p.rotz));
-			if (p.skin == 0)
-			{
-				skin_type = "assets/chickens/objects/chicken.obj";
-			}
-			else if (p.skin == 1)
-			{
-				skin_type = "assets/chickens/objects/robot_chicken.obj";
-			}
-			else if (p.skin == 2)
-			{
-				skin_type = "assets/chickens/objects/pinocchio_chicken.obj";
-			}
-			player->SetModelFile(skin_type);
-			player->GetShader() = ShaderManager::Instance()->GetShader("Model");
-			player->SetObjId(p.oid);
-			player->SetClassId(p.cid);
-			player->SetTeam(p.team_id);
-			//player->RotateTo(rotw, rotx, roty, rotz);
-			// set main player if the oid matches
-			if (p.oid == ClientGame::instance()->GetClientId())
-				Scene::player = player.get();
-			//players.push_back(player);
-			AddEntity(p.cid, p.oid, std::move(player));
-			break;
-		case ClassId::FLAG:
-			egg = std::unique_ptr<Egg>(new Egg(p.x, p.y, p.z, "Easter_Egg"));
-			egg->SetColor(glm::vec3(0.27f, 0.16f, 0.0f));
-			egg->GetShader() = ShaderManager::GetShader("Model");
-			egg->SetClassId(p.cid);
-			egg->SetObjId(p.oid);
-			AddEntity(p.cid, p.oid, std::move(egg));
-			break;
-		case ClassId::BULLET:
-		{
-			//std::unique_ptr<StaticObject> bullet = std::unique_ptr<StaticObject>(new StaticObject("assets/weapons/pumpkinseed.obj"));
-			std::unique_ptr<StaticObject> bullet;
-			switch (p.sub_id)
-			{
-				case(SEEDGUN):
-					bullet = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Pumpkin_Seed")));
-					bullet->Translate(glm::vec3(p.x, p.y, p.z));
-					//bullet->GetShader() = modelShader;        // Set in ModelEntity
-					AddEntity(p.cid, p.oid, std::move(bullet));
-					break;
-				case(BOUNCEGUN):
-					bullet = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Tomato")));
-					bullet->Translate(glm::vec3(p.x, p.y, p.z));
-					//bullet->GetShader() = modelShader;        // Set in ModelEntity
-					AddEntity(p.cid, p.oid, std::move(bullet));
-					break;
-				case(GRENADELAUNCHER):
-					bullet = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Potato")));
-					bullet->Translate(glm::vec3(p.x, p.y, p.z));
-					//bullet->GetShader() = modelShader;        // Set in ModelEntity
-					AddEntity(p.cid, p.oid, std::move(bullet));
-					break;
-				case(TELEPORTGUN):
-					bullet = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Teleport")));
-					bullet->Translate(glm::vec3(p.x, p.y, p.z));
-					//bullet->GetShader() = modelShader;        // Set in ModelEntity
-					AddEntity(p.cid, p.oid, std::move(bullet));
-					break;
-				case(BLASTMINE):
-					eggtype = rand() % 2;
-					if(eggtype == 1)
-						egg = std::unique_ptr<Egg>(new Egg(p.x, p.y, p.z, "Easter_Egg"));
-					else
-						egg = std::unique_ptr<Egg>(new Egg(p.x, p.y, p.z, "Wood_Egg"));
-					egg->SetColor(glm::vec3(0.27f, 0.16f, 0.0f));
-					egg->GetShader() = ShaderManager::GetShader("Model");
-					egg->SetClassId(p.cid);
-					egg->SetObjId(p.oid);
-					AddEntity(p.cid, p.oid, std::move(egg));
-					break;
-				case(SHOTGUN):
-					bullet = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Pumpkin_Seed")));
-					bullet->Translate(glm::vec3(p.x, p.y, p.z));
-					//bullet->GetShader() = modelShader;        // Set in ModelEntity
-					AddEntity(p.cid, p.oid, std::move(bullet));
-					break;
-				default:
-					std::unique_ptr<StaticObject> bullet = std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Tomato")));
-					bullet->Translate(glm::vec3(p.x, p.y, p.z));
-					//bullet->GetShader() = modelShader;        // Set in ModelEntity
-					AddEntity(p.cid, p.oid, std::move(bullet));
-					break;
-			}
+    switch (p.cid)
+    {
+    case ClassId::Player:
+        player = std::unique_ptr<Player>(new Player(p.x, p.y, p.z, p.rotw, p.rotx, p.roty, p.rotz));
+        if (p.skin == 0)
+        {
+            skin_type = "assets/chickens/objects/chicken.obj";
+        }
+        else if (p.skin == 1)
+        {
+            skin_type = "assets/chickens/objects/robot_chicken.obj";
+        }
+        else if (p.skin == 2)
+        {
+            skin_type = "assets/chickens/objects/pinocchio_chicken.obj";
+        }
+        player->SetModelFile(skin_type);
+        player->GetShader() = ShaderManager::Instance()->GetShader("Model");
+        player->SetObjId(p.oid);
+        player->SetClassId(static_cast<int>(p.cid));
+        player->SetTeam(p.team_id);
+        // player->RotateTo(rotw, rotx, roty, rotz);
+        // set main player if the oid matches
+        if (p.oid == ClientGame::instance()->GetClientId())
+            Scene::player = player.get();
+        // players.push_back(player);
+        AddEntity(p.cid, p.oid, std::move(player));
+        break;
+    case ClassId::Flag:
+        egg = std::unique_ptr<Egg>(new Egg(p.x, p.y, p.z, "Easter_Egg"));
+        egg->SetColor(glm::vec3(0.27f, 0.16f, 0.0f));
+        egg->GetShader() = ShaderManager::GetShader("Model");
+        egg->SetClassId(static_cast<int>(p.cid));
+        egg->SetObjId(p.oid);
+        AddEntity(p.cid, p.oid, std::move(egg));
+        break;
+    case ClassId::Bullet:
+    {
+        // std::unique_ptr<StaticObject> bullet = std::unique_ptr<StaticObject>(new
+        // StaticObject("assets/weapons/pumpkinseed.obj"));
+        std::unique_ptr<StaticObject> bullet;
+        switch (static_cast<WeaponType>(p.sub_id))
+        {
+        case WeaponType::SeedGun:
+            bullet = std::unique_ptr<StaticObject>(
+                new StaticObject(ModelManager::GetModel("Pumpkin_Seed")));
+            bullet->Translate(glm::vec3(p.x, p.y, p.z));
+            // bullet->GetShader() = modelShader;        // Set in ModelEntity
+            AddEntity(p.cid, p.oid, std::move(bullet));
+            break;
+        case WeaponType::BounceGun:
+            bullet =
+                std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Tomato")));
+            bullet->Translate(glm::vec3(p.x, p.y, p.z));
+            // bullet->GetShader() = modelShader;        // Set in ModelEntity
+            AddEntity(p.cid, p.oid, std::move(bullet));
+            break;
+        case WeaponType::GrenadeLauncher:
+            bullet =
+                std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Potato")));
+            bullet->Translate(glm::vec3(p.x, p.y, p.z));
+            // bullet->GetShader() = modelShader;        // Set in ModelEntity
+            AddEntity(p.cid, p.oid, std::move(bullet));
+            break;
+        case WeaponType::TeleportGun:
+            bullet =
+                std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Teleport")));
+            bullet->Translate(glm::vec3(p.x, p.y, p.z));
+            // bullet->GetShader() = modelShader;        // Set in ModelEntity
+            AddEntity(p.cid, p.oid, std::move(bullet));
+            break;
+        case WeaponType::BlastMine:
+            eggtype = rand() % 2;
+            if (eggtype == 1)
+                egg = std::unique_ptr<Egg>(new Egg(p.x, p.y, p.z, "Easter_Egg"));
+            else
+                egg = std::unique_ptr<Egg>(new Egg(p.x, p.y, p.z, "Wood_Egg"));
+            egg->SetColor(glm::vec3(0.27f, 0.16f, 0.0f));
+            egg->GetShader() = ShaderManager::GetShader("Model");
+            egg->SetClassId(static_cast<int>(p.cid));
+            egg->SetObjId(p.oid);
+            AddEntity(p.cid, p.oid, std::move(egg));
+            break;
+        case WeaponType::Shotgun:
+            bullet = std::unique_ptr<StaticObject>(
+                new StaticObject(ModelManager::GetModel("Pumpkin_Seed")));
+            bullet->Translate(glm::vec3(p.x, p.y, p.z));
+            // bullet->GetShader() = modelShader;        // Set in ModelEntity
+            AddEntity(p.cid, p.oid, std::move(bullet));
+            break;
+        default:
+            std::unique_ptr<StaticObject> bullet =
+                std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Tomato")));
+            bullet->Translate(glm::vec3(p.x, p.y, p.z));
+            // bullet->GetShader() = modelShader;        // Set in ModelEntity
+            AddEntity(p.cid, p.oid, std::move(bullet));
+            break;
+        }
 
-			break;
-		}
-		case ClassId::COLLECTABLE:
-		{
-			//std::unique_ptr<StaticObject> bullet = std::unique_ptr<StaticObject>(new StaticObject("assets/weapons/pumpkinseed.obj"));
-			if(p.sub_id == CollectType::WEAPONCOLLECT)
-			{ 
-				egg = std::unique_ptr<Egg>(new Egg(p.x, p.y, p.z, "Robot_Egg"));
-				egg->SetColor(glm::vec3(0.27f, 0.16f, 0.0f));
-				egg->GetShader() = ShaderManager::GetShader("Model");
-				egg->SetClassId(p.cid);
-				egg->SetObjId(p.oid);
-				//bullet->GetShader() = modelShader;        // Set in ModelEntity
-				AddEntity(p.cid, p.oid, std::move(egg));
-			}
-			else if (p.sub_id == CollectType::POWERUPCOLLECT)
-			{
-				egg = std::unique_ptr<Egg>(new Egg(p.x, p.y, p.z, "Wood_Egg"));
-				egg->SetColor(glm::vec3(0.27f, 0.16f, 0.0f));
-				egg->GetShader() = ShaderManager::GetShader("Model");
-				egg->SetClassId(p.cid);
-				egg->SetObjId(p.oid);
-				//bullet->GetShader() = modelShader;        // Set in ModelEntity
-				AddEntity(p.cid, p.oid, std::move(egg));
-			}
-			break;
-		}
-		default:
-			break;
-	}
-	
+        break;
+    }
+    case ClassId::Collectable:
+    {
+        // std::unique_ptr<StaticObject> bullet = std::unique_ptr<StaticObject>(new
+        // StaticObject("assets/weapons/pumpkinseed.obj"));
+        if (static_cast<CollectType>(p.sub_id) == CollectType::Weapon)
+        {
+            egg = std::unique_ptr<Egg>(new Egg(p.x, p.y, p.z, "Robot_Egg"));
+            egg->SetColor(glm::vec3(0.27f, 0.16f, 0.0f));
+            egg->GetShader() = ShaderManager::GetShader("Model");
+            egg->SetClassId(static_cast<int>(p.cid));
+            egg->SetObjId(p.oid);
+            // bullet->GetShader() = modelShader;        // Set in ModelEntity
+            AddEntity(p.cid, p.oid, std::move(egg));
+        }
+        else if (static_cast<CollectType>(p.sub_id) == CollectType::PowerUp)
+        {
+            egg = std::unique_ptr<Egg>(new Egg(p.x, p.y, p.z, "Wood_Egg"));
+            egg->SetColor(glm::vec3(0.27f, 0.16f, 0.0f));
+            egg->GetShader() = ShaderManager::GetShader("Model");
+            egg->SetClassId(static_cast<int>(p.cid));
+            egg->SetObjId(p.oid);
+            // bullet->GetShader() = modelShader;        // Set in ModelEntity
+            AddEntity(p.cid, p.oid, std::move(egg));
+        }
+        break;
+    }
+    default:
+        break;
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Scene::RemoveEntity(int cid, int oid)
+void Scene::RemoveEntity(ClassId cid, int oid)
 {
-	int removed = entities.erase(std::make_pair(cid, oid));
+    int removed = entities.erase(std::make_pair(cid, oid));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::unique_ptr<Entity>& Scene::GetEntity(int cid, int oid)
+std::unique_ptr<Entity>& Scene::GetEntity(ClassId cid, int oid)
 {
-	std::pair<int, int> p = std::pair<int, int>(cid, oid);
-	return entities.find(p)->second;
+    std::pair<ClassId, int> p(cid, oid);
+    return entities.find(p)->second;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-glm::vec2 Scene::Get2D(glm::vec3 coords, glm::mat4 view, glm::mat4 projection/*perspective matrix */, int width, int height)
+glm::vec2 Scene::Get2D(glm::vec3 coords,
+                       glm::mat4 view,
+                       glm::mat4 projection /*perspective matrix */,
+                       int width,
+                       int height)
 {
-	glm::mat4 viewProjectionMatrix = projection * view;
-	
-	//transform world to clipping coordinates
-	glm::vec3 clipping = glm::normalize(glm::vec3(viewProjectionMatrix * glm::vec4(coords, 1.0f)));
-	int winX = (int)std::round(((clipping.x + 1) / 2.0) * width);
-	
-	//we calculate -point3D.getY() because the screen Y axis is
-	//oriented top->down
-	int winY = (int)std::round(((1 - clipping.y) / 2.0) * height);
-	return glm::vec2(winX, winY);
-}
+    glm::mat4 viewProjectionMatrix = projection * view;
 
+    // transform world to clipping coordinates
+    glm::vec3 clipping = glm::normalize(glm::vec3(viewProjectionMatrix * glm::vec4(coords, 1.0f)));
+    int winX = (int)std::round(((clipping.x + 1) / 2.0) * width);
+
+    // we calculate -point3D.getY() because the screen Y axis is
+    // oriented top->down
+    int winY = (int)std::round(((1 - clipping.y) / 2.0) * height);
+    return glm::vec2(winX, winY);
+}

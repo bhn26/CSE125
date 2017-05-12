@@ -1,113 +1,124 @@
 #include "Collectable.h"
+
 #include "CollectableSpawner.h"
 //#include "EntitySpawner.h"
 #include "Player.h"
-#include <time.h>
+#include "Weapon.h"
 
-//List of weapons
+// List of m_weapons
 #include "SeedGun.h"
 
-Collectable::Collectable(int objectid, PosInfo pos, btDiscreteDynamicsWorld* curworld, Weapon* wp) : Entity(ClassId::COLLECTABLE, objectid, curworld)
+#include <ctime>
+
+Collectable::Collectable(int objectid, PosInfo pos, btDiscreteDynamicsWorld* curworld, Weapon* wp)
+    : Entity(ClassId::Collectable, objectid, curworld)
 {
-	this->weapon = wp;
-	btCollisionShape* collectableShape = new btBoxShape(btVector3(1, 1, 1));
+    m_weapon = wp;
+    btCollisionShape* collectableShape = new btBoxShape(btVector3(1, 1, 1));
 
-	// Create Collectable physics object
-	btDefaultMotionState*collectableMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(pos.x, pos.y, pos.z)));
-	btScalar mass = 1;
-	btVector3 collectableInertia(0, 0, 0);
-	collectableShape->calculateLocalInertia(mass, collectableInertia);
-	btRigidBody::btRigidBodyConstructionInfo collectableRigidBodyCI(mass, collectableMotionState, collectableShape, collectableInertia);
-	btRigidBody* pRigidBody = new btRigidBody(collectableRigidBodyCI);
-	curWorld->addRigidBody(pRigidBody);
+    // Create Collectable physics object
+    btDefaultMotionState* collectableMotionState = new btDefaultMotionState(
+        btTransform(btQuaternion(0, 0, 0, 1), btVector3(pos.x, pos.y, pos.z)));
+    btScalar mass = 1;
+    btVector3 collectableInertia(0, 0, 0);
+    collectableShape->calculateLocalInertia(mass, collectableInertia);
+    btRigidBody::btRigidBodyConstructionInfo collectableRigidBodyCI(
+        mass, collectableMotionState, collectableShape, collectableInertia);
+    btRigidBody* pRigidBody = new btRigidBody(collectableRigidBodyCI);
+    m_curWorld->addRigidBody(pRigidBody);
 
-	// Set Collectable's protected fields
-	this->entityRigidBody = pRigidBody;
-	this->type = CollectType::WEAPONCOLLECT;
+    // Set Collectable's protected fields
+    m_entityRigidBody = pRigidBody;
+    m_type = CollectType::Weapon;
 
-	// Set RigidBody to point to Collectable
-	pRigidBody->setUserPointer(this);
-	pRigidBody->setUserIndex(COLLECTABLE);
+    // Set RigidBody to point to Collectable
+    pRigidBody->setUserPointer(this);
+    pRigidBody->setUserIndex(static_cast<int>(ClassId::Collectable));
 }
 
-Collectable::Collectable(int objectid, PosInfo pos, btDiscreteDynamicsWorld* curworld, Powerup* powerup) : Entity(ClassId::COLLECTABLE, objectid, curworld)
+Collectable::Collectable(int objectid,
+                         PosInfo pos,
+                         btDiscreteDynamicsWorld* curworld,
+                         PowerUp* powerup)
+    : Entity(ClassId::Collectable, objectid, curworld)
 {
-	this->powerup = powerup;
-	btCollisionShape* collectableShape = new btBoxShape(btVector3(1, 1, 1));
+    m_powerup = powerup;
+    btCollisionShape* collectableShape = new btBoxShape(btVector3(1, 1, 1));
 
-	// Create Collectable physics object
-	btDefaultMotionState*collectableMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(pos.x, pos.y, pos.z)));
-	btScalar mass = 1;
-	btVector3 collectableInertia(0, 0, 0);
-	collectableShape->calculateLocalInertia(mass, collectableInertia);
-	btRigidBody::btRigidBodyConstructionInfo collectableRigidBodyCI(mass, collectableMotionState, collectableShape, collectableInertia);
-	btRigidBody* pRigidBody = new btRigidBody(collectableRigidBodyCI);
-	curWorld->addRigidBody(pRigidBody);
+    // Create Collectable physics object
+    btDefaultMotionState* collectableMotionState = new btDefaultMotionState(
+        btTransform(btQuaternion(0, 0, 0, 1), btVector3(pos.x, pos.y, pos.z)));
+    btScalar mass = 1;
+    btVector3 collectableInertia(0, 0, 0);
+    collectableShape->calculateLocalInertia(mass, collectableInertia);
+    btRigidBody::btRigidBodyConstructionInfo collectableRigidBodyCI(
+        mass, collectableMotionState, collectableShape, collectableInertia);
+    btRigidBody* pRigidBody = new btRigidBody(collectableRigidBodyCI);
+    m_curWorld->addRigidBody(pRigidBody);
 
-	// Set Collectable's protected fields
-	this->entityRigidBody = pRigidBody;
-	this->type = CollectType::POWERUPCOLLECT;
+    // Set Collectable's protected fields
+    m_entityRigidBody = pRigidBody;
+    m_type = CollectType::PowerUp;
 
-	// Set RigidBody to point to Collectable
-	pRigidBody->setUserPointer(this);
-	pRigidBody->setUserIndex(COLLECTABLE);
+    // Set RigidBody to point to Collectable
+    pRigidBody->setUserPointer(this);
+    pRigidBody->setUserIndex(static_cast<int>(ClassId::Collectable));
 }
 
-//NOTE***  Version if Weapon is only thing collectable
+// NOTE***  Version if Weapon is only thing collectable
 void Collectable::HandleCollect(Player* collidedPlayer)
 {
+    // Remove collectable object from EntitySpawner Map
+    EntitySpawner::instance()->RemoveEntity(ClassId::Collectable, m_objectId);
+    CollectableSpawner::instance()->DecCollectables();
 
-	//Remove collectable object from EntitySpawner Map
-	EntitySpawner::instance()->RemoveEntity(ClassId::COLLECTABLE, objectId);
-	CollectableSpawner::instance()->DecCollectables();
+    if (m_type == CollectType::Weapon)
+    {
+        // If player already has usable
+        if (collidedPlayer->HasWeapon())
+        {
+            if (m_weapon->GetWeaponType() == collidedPlayer->GetPlayerWeaponType())
+            {
+                collidedPlayer->GetWeapon()->ReloadWeapon();
+            }
 
-	if(type == CollectType::WEAPONCOLLECT)
-	{ 
-		// If player already has usable
-		if (collidedPlayer->HasWeapon())
-		{
-			if (this->weapon->GetWeaponType() == collidedPlayer->GetPlayerWeaponType())
-			{
-				collidedPlayer->GetWeapon()->ReloadWeapon();
-			}
+            return;
+        }
 
-			return;
-		}
+        printf("acquired weapon of m_type %d\n", m_weapon->GetWeaponType());
+        collidedPlayer->EquipWeapon(m_weapon);
+    }
+    else if (m_type == CollectType::PowerUp)
+    {
+        // always apply health gain
+        if (m_powerup->getType() == PowerUpType::HealthGain)
+        {
+            m_powerup->applyPower(collidedPlayer);
+            return;
+        }
 
-		printf("acquired weapon of type %d\n", weapon->GetWeaponType());
-		collidedPlayer->EquipWeapon(weapon);
-	}
-	else if (type == CollectType::POWERUPCOLLECT)
-	{
-		// always apply health gain
-		if (powerup->getType() == PowerupType::HEALTHGAIN)
-		{
-			powerup->applyPower(collidedPlayer);
-			return;
-		}
+        if (collidedPlayer->HasPower())
+        {
+            if (m_powerup->getType() == collidedPlayer->GetPower()->getType())
+            {
+                m_powerup->applyPower(collidedPlayer);
+            }
+            return;
+        }
 
-		if (collidedPlayer->HasPower())
-		{
-			if (this->powerup->getType() == collidedPlayer->GetPower()->getType())
-			{
-				powerup->applyPower(collidedPlayer);
-			}
-			return;
-		}
+        m_powerup->applyPower(collidedPlayer);
 
-		powerup->applyPower(collidedPlayer);
-
-		printf("acquired powerup of type %d\n", powerup->getType());
-	}
+        printf("acquired powerup of type %d\n", m_powerup->getType());
+    }
 }
 
 Collectable::~Collectable()
-{	
-	if (entityRigidBody)
-	{
-		this->curWorld->removeCollisionObject(entityRigidBody);
-		delete entityRigidBody->getMotionState();
-		delete entityRigidBody->getCollisionShape();
-		delete entityRigidBody;
-	}
+{
+    if (m_entityRigidBody)
+    {
+        m_curWorld->removeCollisionObject(m_entityRigidBody);
+        delete m_entityRigidBody->getMotionState();
+        delete m_entityRigidBody->getCollisionShape();
+        delete m_entityRigidBody;
+    }
 }

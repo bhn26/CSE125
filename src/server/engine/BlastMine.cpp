@@ -5,7 +5,7 @@
 
 BlastMine::BlastMine(btDiscreteDynamicsWorld* curworld) : Weapon(fireRate, damage, curworld)
 {
-	wt = WeaponType::BLASTMINE;
+	wt = WeaponType::BlastMine;
 	nextFireTick = 0;
 	fireRate = 50;
 	damage = 6;

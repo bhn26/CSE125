@@ -2,20 +2,16 @@
 
 #include "Collectable.h"
 
-#include "../../network/GameData.h"
-
+#include "network/GameData.h"
 
 class Flag : public Entity
 {
-
 public:
+    PosInfo p;
 
-	PosInfo p;
+    Flag(int objid, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld);
 
-	Flag(int objid, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld);
+    ~Flag();
 
-	~Flag();
-
-	void HandleCollectable(Player* collidedPlayer);
-
+    void HandleCollectable(Player* collidedPlayer);
 };

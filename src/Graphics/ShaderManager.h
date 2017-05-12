@@ -36,5 +36,5 @@ public:
 
     static std::shared_ptr<Shader> GetShader(std::string shaderName);
 
-    void ApplyUBOToAllShaders(std::string blockName, int binding);
+    void ApplyUboToAllShaders(std::string blockName, int binding);
 };

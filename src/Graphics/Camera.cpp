@@ -18,20 +18,20 @@ Camera::Camera(glm::vec3 position, glm::vec3 up, glm::vec3 front)
     this->UpdateCameraVectors();
 }
 
-void Camera::ProcessKeyboard(Camera_Movement direction, GLfloat deltaTime)
+void Camera::ProcessKeyboard(CameraMovement direction, GLfloat deltaTime)
 {
     GLfloat velocity = this->movementSpeed * deltaTime;
-    if (direction == FORWARD)
+    if (direction == CameraMovement::Forward)
         this->position += this->front * velocity;
-    if (direction == BACKWARD)
+    if (direction == CameraMovement::Backward)
         this->position -= this->front * velocity;
-    if (direction == LEFT)
+    if (direction == CameraMovement::Left)
         this->position -= this->right * velocity;
-    if (direction == RIGHT)
+    if (direction == CameraMovement::Right)
         this->position += this->right * velocity;
-    if (direction == UP)
+    if (direction == CameraMovement::Up)
         this->position += this->up * velocity;
-    if (direction == DOWN)
+    if (direction == CameraMovement::Down)
         this->position -= this->up * velocity;
 }
 

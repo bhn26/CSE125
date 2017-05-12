@@ -91,7 +91,7 @@ void MapLoader::loadMap()
 		btRigidBody* pRigidBody = new btRigidBody(playerRigidBodyCI);
 		pRigidBody->setFriction((btScalar)0.5);
 		pRigidBody->setDamping((btScalar)100, (btScalar)100);
-		pRigidBody->setUserIndex(ClassId::OBSTACLE);
+		pRigidBody->setUserIndex(static_cast<int>(ClassId::Obstacle));
 		curWorld->addRigidBody(pRigidBody);
 
 	}
@@ -104,7 +104,7 @@ void MapLoader::loadMap()
 	btRigidBody* pRigidBody = new btRigidBody(playerRigidBodyCIz);
 	pRigidBody->setFriction((btScalar)0.5);
 	pRigidBody->setDamping((btScalar)100, (btScalar)100);
-	pRigidBody->setUserIndex(ClassId::OBSTACLE);
+	pRigidBody->setUserIndex(static_cast<int>(ClassId::Obstacle));
 	curWorld->addRigidBody(pRigidBody);
 
 	btCollisionShape* windmill_plat = new btCylinderShape(btVector3(33, 2, 33));
@@ -113,7 +113,7 @@ void MapLoader::loadMap()
 	pRigidBody = new btRigidBody(platRigidBodyCIy);
 	pRigidBody->setFriction((btScalar)0.5);
 	pRigidBody->setDamping((btScalar)100, (btScalar)100);
-	pRigidBody->setUserIndex(ClassId::OBSTACLE);
+	pRigidBody->setUserIndex(static_cast<int>(ClassId::Obstacle));
 	curWorld->addRigidBody(pRigidBody);
 	
 	// patio
@@ -123,7 +123,7 @@ void MapLoader::loadMap()
 	pRigidBody = new btRigidBody(patioCI);
 	pRigidBody->setFriction((btScalar)0.5);
 	pRigidBody->setDamping((btScalar)100, (btScalar)100);
-	pRigidBody->setUserIndex(ClassId::OBSTACLE);
+	pRigidBody->setUserIndex(static_cast<int>(ClassId::Obstacle));
 	curWorld->addRigidBody(pRigidBody);
 
 	patio = new btBoxShape(btVector3(10, 15, 6));
@@ -132,7 +132,7 @@ void MapLoader::loadMap()
 	pRigidBody = new btRigidBody(patio4CI);
 	pRigidBody->setFriction((btScalar)0.5);
 	pRigidBody->setDamping((btScalar)100, (btScalar)100);
-	pRigidBody->setUserIndex(ClassId::OBSTACLE);
+	pRigidBody->setUserIndex(static_cast<int>(ClassId::Obstacle));
 	curWorld->addRigidBody(pRigidBody);
 
 	patio = new btBoxShape(btVector3(10, 15, 6));
@@ -141,7 +141,7 @@ void MapLoader::loadMap()
 	pRigidBody = new btRigidBody(patio1CI);
 	pRigidBody->setFriction((btScalar)0.5);
 	pRigidBody->setDamping((btScalar)100, (btScalar)100);
-	pRigidBody->setUserIndex(ClassId::OBSTACLE);
+	pRigidBody->setUserIndex(static_cast<int>(ClassId::Obstacle));
 	curWorld->addRigidBody(pRigidBody);
 
 	
@@ -151,7 +151,7 @@ void MapLoader::loadMap()
 	pRigidBody = new btRigidBody(patio2CI);
 	pRigidBody->setFriction((btScalar)0.5);
 	pRigidBody->setDamping((btScalar)100, (btScalar)100);
-	pRigidBody->setUserIndex(ClassId::OBSTACLE);
+	pRigidBody->setUserIndex(static_cast<int>(ClassId::Obstacle));
 	curWorld->addRigidBody(pRigidBody);
 
 	patio = new btBoxShape(btVector3(5, 15, 7));
@@ -160,7 +160,7 @@ void MapLoader::loadMap()
 	pRigidBody = new btRigidBody(patio3CI);
 	pRigidBody->setFriction((btScalar)0.5);
 	pRigidBody->setDamping((btScalar)100, (btScalar)100);
-	pRigidBody->setUserIndex(ClassId::OBSTACLE);
+	pRigidBody->setUserIndex(static_cast<int>(ClassId::Obstacle));
 	curWorld->addRigidBody(pRigidBody);
 
 
@@ -171,7 +171,7 @@ void MapLoader::loadMap()
 	pRigidBody = new btRigidBody(platRigidBodyCI);
 	pRigidBody->setFriction((btScalar)0.5);
 	pRigidBody->setDamping((btScalar)100, (btScalar)100);
-	pRigidBody->setUserIndex(ClassId::OBSTACLE);
+	pRigidBody->setUserIndex(static_cast<int>(ClassId::Obstacle));
 	curWorld->addRigidBody(pRigidBody);
 
 	//boat
@@ -181,7 +181,7 @@ void MapLoader::loadMap()
 	pRigidBody = new btRigidBody(boatCI);
 	pRigidBody->setFriction((btScalar)0.5);
 	pRigidBody->setDamping((btScalar)100, (btScalar)100);
-	pRigidBody->setUserIndex(ClassId::OBSTACLE);
+	pRigidBody->setUserIndex(static_cast<int>(ClassId::Obstacle));
 	curWorld->addRigidBody(pRigidBody);
 
 	
@@ -192,7 +192,7 @@ void MapLoader::loadMap()
 	pRigidBody = new btRigidBody(houseCI);
 	pRigidBody->setFriction((btScalar)0.5);
 	pRigidBody->setDamping((btScalar)100, (btScalar)100);
-	pRigidBody->setUserIndex(ClassId::OBSTACLE);
+	pRigidBody->setUserIndex(static_cast<int>(ClassId::Obstacle));
 	curWorld->addRigidBody(pRigidBody);
 	
 
@@ -202,7 +202,7 @@ void MapLoader::loadMap()
 	pRigidBody = new btRigidBody(roof1);
 	pRigidBody->setFriction((btScalar)0.5);
 	pRigidBody->setDamping((btScalar)100, (btScalar)100);
-	pRigidBody->setUserIndex(ClassId::OBSTACLE);
+	pRigidBody->setUserIndex(static_cast<int>(ClassId::Obstacle));
 	curWorld->addRigidBody(pRigidBody);
 
 	patio = new btBoxShape(btVector3(22, 2, 60));
@@ -211,7 +211,7 @@ void MapLoader::loadMap()
 	pRigidBody = new btRigidBody(roof2);
 	pRigidBody->setFriction((btScalar)0.5);
 	pRigidBody->setDamping((btScalar)100, (btScalar)100);
-	pRigidBody->setUserIndex(ClassId::OBSTACLE);
+	pRigidBody->setUserIndex(static_cast<int>(ClassId::Obstacle));
 	curWorld->addRigidBody(pRigidBody);
 
 	// Construction House
@@ -221,7 +221,7 @@ void MapLoader::loadMap()
 	pRigidBody = new btRigidBody(conH);
 	pRigidBody->setFriction((btScalar)0.5);
 	pRigidBody->setDamping((btScalar)100, (btScalar)100);
-	pRigidBody->setUserIndex(ClassId::OBSTACLE);
+	pRigidBody->setUserIndex(static_cast<int>(ClassId::Obstacle));
 	curWorld->addRigidBody(pRigidBody);
 	
 	patio = new btBoxShape(btVector3(36, 1, 55));
@@ -230,7 +230,7 @@ void MapLoader::loadMap()
 	pRigidBody = new btRigidBody(conH0);
 	pRigidBody->setFriction((btScalar)0.5);
 	pRigidBody->setDamping((btScalar)100, (btScalar)100);
-	pRigidBody->setUserIndex(ClassId::OBSTACLE);
+	pRigidBody->setUserIndex(static_cast<int>(ClassId::Obstacle));
 	curWorld->addRigidBody(pRigidBody);
 
 	// Silo
@@ -240,7 +240,7 @@ void MapLoader::loadMap()
 	pRigidBody = new btRigidBody(siloc);
 	pRigidBody->setFriction((btScalar)0.5);
 	pRigidBody->setDamping((btScalar)100, (btScalar)100);
-	pRigidBody->setUserIndex(ClassId::OBSTACLE);
+	pRigidBody->setUserIndex(static_cast<int>(ClassId::Obstacle));
 	curWorld->addRigidBody(pRigidBody);
 
 	// barn
@@ -250,7 +250,7 @@ void MapLoader::loadMap()
 	pRigidBody = new btRigidBody(barnCI);
 	pRigidBody->setFriction((btScalar)0.5);
 	pRigidBody->setDamping((btScalar)100, (btScalar)100);
-	pRigidBody->setUserIndex(ClassId::OBSTACLE);
+	pRigidBody->setUserIndex(static_cast<int>(ClassId::Obstacle));
 	curWorld->addRigidBody(pRigidBody);
 
 	// barbara
@@ -260,7 +260,7 @@ void MapLoader::loadMap()
 	pRigidBody = new btRigidBody(bbCI);
 	pRigidBody->setFriction((btScalar)0.5);
 	pRigidBody->setDamping((btScalar)100, (btScalar)100);
-	pRigidBody->setUserIndex(ClassId::OBSTACLE);
+	pRigidBody->setUserIndex(static_cast<int>(ClassId::Obstacle));
 	curWorld->addRigidBody(pRigidBody);
 
 	btCollisionShape* bb1 = new btBoxShape(btVector3(20, 2, 10));
@@ -269,7 +269,7 @@ void MapLoader::loadMap()
 	pRigidBody = new btRigidBody(bbCI1);
 	pRigidBody->setFriction((btScalar)0.5);
 	pRigidBody->setDamping((btScalar)100, (btScalar)100);
-	pRigidBody->setUserIndex(ClassId::OBSTACLE);
+	pRigidBody->setUserIndex(static_cast<int>(ClassId::Obstacle));
 	curWorld->addRigidBody(pRigidBody);
 }
 

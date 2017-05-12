@@ -3,7 +3,7 @@
 
 GrenadeLauncher::GrenadeLauncher(btDiscreteDynamicsWorld* curworld) : Weapon(fireRate, damage, curworld)
 {
-	wt = WeaponType::GRENADELAUNCHER;
+	wt = WeaponType::GrenadeLauncher;
 	nextFireTick = 0;
 	fireRate = 100;
 	damage = 1;

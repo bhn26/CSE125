@@ -1,23 +1,20 @@
 #pragma once
 
 #include "EntitySpawner.h"
+#include "network/GameData.h"
+
 #include <vector>
 #include <memory>
 #include <map>
 
-#include "../../network/GameData.h"
-
 class WorldObstacle;
 class MapLoader;
 
-using namespace std;
+typedef std::vector<PosInfo> pos_list;
 
-typedef vector<PosInfo> pos_list;
-
-class World {
-
+class World
+{
 private:
-
 	// list of game world objects
 	std::vector<std::shared_ptr<Flag>> flags;
 	// Delete list, mainly for bullets
@@ -35,11 +32,11 @@ private:
 	btSequentialImpulseConstraintSolver* solv;
 
 	// Map objects
-	WorldObstacle * ground;
-	WorldObstacle * frontWall;
-	WorldObstacle * backWall;
-	WorldObstacle * leftWall;
-	WorldObstacle * rightWall;
+	WorldObstacle* ground;
+	WorldObstacle* frontWall;
+	WorldObstacle* backWall;
+	WorldObstacle* leftWall;
+	WorldObstacle* rightWall;
 
 	// object ids
 	int oid;
@@ -48,7 +45,6 @@ private:
 	MapLoader* worldMapLoader;
 
 	// list of fields to check.  Explosions and mounts.  Maybe decouple into a class of it's own.  Have a TTL
-
 
 public:
 	World();

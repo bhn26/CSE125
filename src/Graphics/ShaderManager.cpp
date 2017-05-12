@@ -69,7 +69,7 @@ std::shared_ptr<Shader> ShaderManager::GetShader(std::string shaderName)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ShaderManager::ApplyUBOToAllShaders(std::string blockName, int binding)
+void ShaderManager::ApplyUboToAllShaders(std::string blockName, int binding)
 {
     for (auto& shaderPair : _shaderMap)
     {

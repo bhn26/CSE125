@@ -15,13 +15,15 @@
     #typedef int SOCKET;
 #endif
 
+#include <cstdint>
+
 #define SERVER_ID -1
 
 class NetworkServices
 {
 public:
-	static int sendMessage(SOCKET curSocket, char * message, int messageSize);
-	static int receiveMessage(SOCKET curSocket, char * buffer, int bufSize);
+	static int sendMessage(SOCKET curSocket, std::uint8_t* message, int messageSize);
+	static int receiveMessage(SOCKET curSocket, std::uint8_t* buffer, int bufSize);
     static int sockInit();
     static int sockQuit();
     static int sockClose();

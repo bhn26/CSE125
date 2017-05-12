@@ -143,19 +143,19 @@ void Entity::LoadDirectionalLight(DirectionalLight * dLight) const
 }
 
 // Process movement
-void Entity::ProcessKeyboard(POSITION position, GLfloat deltaTime)
+void Entity::ProcessKeyboard(PositionKey position, GLfloat deltaTime)
 {
     // Update the translation component of the world matrix
-    if (position == P_FORWARD)
+    if (position == PositionKey::Forward)
         this->toWorld[3] += 0.1f * toWorld[2];
-    if (position == P_BACKWARD)
+    if (position == PositionKey::Backward)
         this->toWorld[3] -= 0.1f * toWorld[2];
-    if (position == P_LEFT)
+    if (position == PositionKey::Left)
         this->toWorld[3] += 0.1f * toWorld[0];
-    if (position == P_RIGHT)
+    if (position == PositionKey::Right)
         this->toWorld[3] -= 0.1f * toWorld[0];
-    if (position == P_UP)
+    if (position == PositionKey::Up)
         this->toWorld[3] += 0.1f * toWorld[1];
-    if (position == P_DOWN)
+    if (position == PositionKey::Down)
         this->toWorld[3] -= 0.1f * toWorld[1];
 }

@@ -111,9 +111,9 @@ ClientNetwork::~ClientNetwork(void)
 {
 }
 
-int ClientNetwork::receivePackets(char * recvbuf) 
+int ClientNetwork::receivePackets(std::uint8_t* recvbuf) 
 {
-    iResult = NetworkServices::receiveMessage(ConnectSocket, recvbuf, MAX_PACKET_SIZE);
+    iResult = NetworkServices::receiveMessage(ConnectSocket, recvbuf, g_maxPacketSize);
 
     if ( iResult == 0 )
     {

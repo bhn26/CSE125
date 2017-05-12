@@ -3,7 +3,7 @@
 
 Shotgun::Shotgun(btDiscreteDynamicsWorld* curworld) : Weapon(fireRate, damage, curworld)
 {
-	wt = WeaponType::SHOTGUN;
+	wt = WeaponType::Shotgun;
 	nextFireTick = 0;
 	fireRate = 30;
 	damage = 20;
