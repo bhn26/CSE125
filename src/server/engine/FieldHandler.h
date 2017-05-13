@@ -1,24 +1,23 @@
 #pragma once
+#include "Basic/Singleton.h"
 
 #include <vector>
 #include <memory>
 
 class FieldObject;
 
-class FieldHandler
+class FieldHandler : public Singleton<FieldHandler>
 {
+    friend class Singleton<FieldHandler>;
+
 private:
-	std::vector<FieldObject*>* activeFields;
-	static FieldHandler *fh;
-	FieldHandler();
+    std::vector<FieldObject*> m_activeFields;
+    FieldHandler() = default;
 
 public:
+    ~FieldHandler();
 
-	~FieldHandler();
+    void HandleFields();
 
-	static FieldHandler *instance();
-
-	void HandleFields();
-
-	void AddField(FieldObject* newField);
+    void AddField(FieldObject* newField);
 };

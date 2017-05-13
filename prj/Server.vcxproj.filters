@@ -13,17 +13,20 @@
     <Filter Include="Source Files\Network">
       <UniqueIdentifier>{44bf970c-bd1d-410d-bf90-b6d3f44267e8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\engine">
+    <Filter Include="Source Files\Engine">
       <UniqueIdentifier>{f6c08102-e4c8-4092-94a8-f8597e05712e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\engine\Weapons">
+    <Filter Include="Source Files\Engine\Weapons">
       <UniqueIdentifier>{1aab9e0f-af05-47a9-b076-49c11569e2b3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\engine\FieldDetection">
+    <Filter Include="Source Files\Engine\FieldDetection">
       <UniqueIdentifier>{9b8f5fb6-c9f1-40f5-bd13-c43bead33a60}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\engine\Powerups">
+    <Filter Include="Source Files\Engine\Powerups">
       <UniqueIdentifier>{5e35aea3-989c-40a9-80b3-ab3926952a04}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Basic">
+      <UniqueIdentifier>{1aaa8d7e-4d87-4021-834f-34c3ed36f184}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -43,115 +46,118 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\server\engine\engine.h">
-      <Filter>Source Files\engine</Filter>
+      <Filter>Source Files\Engine</Filter>
     </ClInclude>
     <ClInclude Include="..\src\server\engine\World.h">
-      <Filter>Source Files\engine</Filter>
+      <Filter>Source Files\Engine</Filter>
     </ClInclude>
     <ClInclude Include="..\src\server\engine\Player.h">
-      <Filter>Source Files\engine</Filter>
+      <Filter>Source Files\Engine</Filter>
     </ClInclude>
     <ClInclude Include="..\src\server\engine\Flag.h">
-      <Filter>Source Files\engine</Filter>
+      <Filter>Source Files\Engine</Filter>
     </ClInclude>
     <ClInclude Include="..\src\server\engine\ObjectId.h">
-      <Filter>Source Files\engine</Filter>
+      <Filter>Source Files\Engine</Filter>
     </ClInclude>
     <ClInclude Include="..\src\server\engine\WorldObstacle.h">
-      <Filter>Source Files\engine</Filter>
+      <Filter>Source Files\Engine</Filter>
     </ClInclude>
     <ClInclude Include="..\src\server\engine\Entity.h">
-      <Filter>Source Files\engine</Filter>
+      <Filter>Source Files\Engine</Filter>
     </ClInclude>
     <ClInclude Include="..\src\server\engine\EntitySpawner.h">
-      <Filter>Source Files\engine</Filter>
+      <Filter>Source Files\Engine</Filter>
     </ClInclude>
     <ClInclude Include="..\src\server\engine\Collectable.h">
-      <Filter>Source Files\engine</Filter>
+      <Filter>Source Files\Engine</Filter>
     </ClInclude>
     <ClInclude Include="..\src\server\engine\FireRateReset.h">
-      <Filter>Source Files\engine\Weapons</Filter>
+      <Filter>Source Files\Engine\Weapons</Filter>
     </ClInclude>
     <ClInclude Include="..\src\server\engine\Weapon.h">
-      <Filter>Source Files\engine\Weapons</Filter>
+      <Filter>Source Files\Engine\Weapons</Filter>
     </ClInclude>
     <ClInclude Include="..\src\server\engine\SeedGun.h">
-      <Filter>Source Files\engine\Weapons</Filter>
+      <Filter>Source Files\Engine\Weapons</Filter>
     </ClInclude>
     <ClInclude Include="..\src\server\engine\Bullet.h">
-      <Filter>Source Files\engine\Weapons</Filter>
+      <Filter>Source Files\Engine\Weapons</Filter>
     </ClInclude>
     <ClInclude Include="..\src\server\engine\DamageField.h">
-      <Filter>Source Files\engine\FieldDetection</Filter>
+      <Filter>Source Files\Engine\FieldDetection</Filter>
     </ClInclude>
     <ClInclude Include="..\src\server\engine\FieldObject.h">
-      <Filter>Source Files\engine\FieldDetection</Filter>
+      <Filter>Source Files\Engine\FieldDetection</Filter>
     </ClInclude>
     <ClInclude Include="..\src\server\engine\Peck.h">
-      <Filter>Source Files\engine\Weapons</Filter>
+      <Filter>Source Files\Engine\Weapons</Filter>
     </ClInclude>
     <ClInclude Include="..\src\ConfigManager.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\server\engine\RespawnHandler.h">
-      <Filter>Source Files\engine</Filter>
+      <Filter>Source Files\Engine</Filter>
     </ClInclude>
     <ClInclude Include="..\src\server\engine\FieldHandler.h">
-      <Filter>Source Files\engine\FieldDetection</Filter>
+      <Filter>Source Files\Engine\FieldDetection</Filter>
     </ClInclude>
     <ClInclude Include="..\src\server\engine\GrenadeLauncher.h">
-      <Filter>Source Files\engine\Weapons</Filter>
+      <Filter>Source Files\Engine\Weapons</Filter>
     </ClInclude>
     <ClInclude Include="..\src\server\engine\CollectableSpawner.h">
-      <Filter>Source Files\engine</Filter>
+      <Filter>Source Files\Engine</Filter>
     </ClInclude>
     <ClInclude Include="..\src\server\engine\BulletCollisionHandler.h">
-      <Filter>Source Files\engine\Weapons</Filter>
+      <Filter>Source Files\Engine\Weapons</Filter>
     </ClInclude>
     <ClInclude Include="..\src\server\engine\SimpleBulletCollision.h">
-      <Filter>Source Files\engine\Weapons</Filter>
+      <Filter>Source Files\Engine\Weapons</Filter>
     </ClInclude>
     <ClInclude Include="..\src\server\engine\BounceGun.h">
-      <Filter>Source Files\engine\Weapons</Filter>
+      <Filter>Source Files\Engine\Weapons</Filter>
     </ClInclude>
     <ClInclude Include="..\src\server\engine\BounceBulletCollision.h">
-      <Filter>Source Files\engine\Weapons</Filter>
+      <Filter>Source Files\Engine\Weapons</Filter>
     </ClInclude>
     <ClInclude Include="..\src\server\engine\ExplosiveBulletCollision.h">
-      <Filter>Source Files\engine\Weapons</Filter>
+      <Filter>Source Files\Engine\Weapons</Filter>
     </ClInclude>
     <ClInclude Include="..\src\server\engine\TeleportGun.h">
-      <Filter>Source Files\engine\Weapons</Filter>
+      <Filter>Source Files\Engine\Weapons</Filter>
     </ClInclude>
     <ClInclude Include="..\src\server\engine\PlayerModifierCollision.h">
-      <Filter>Source Files\engine\Weapons</Filter>
+      <Filter>Source Files\Engine\Weapons</Filter>
     </ClInclude>
     <ClInclude Include="..\src\server\engine\BlastMine.h">
-      <Filter>Source Files\engine\Weapons</Filter>
+      <Filter>Source Files\Engine\Weapons</Filter>
     </ClInclude>
     <ClInclude Include="..\src\server\engine\MineBulletHandler.h">
-      <Filter>Source Files\engine\Weapons</Filter>
+      <Filter>Source Files\Engine\Weapons</Filter>
     </ClInclude>
     <ClInclude Include="..\src\server\engine\BlastField.h">
-      <Filter>Source Files\engine\FieldDetection</Filter>
+      <Filter>Source Files\Engine\FieldDetection</Filter>
     </ClInclude>
     <ClInclude Include="..\src\server\engine\MapLoader.h">
-      <Filter>Source Files\engine</Filter>
+      <Filter>Source Files\Engine</Filter>
     </ClInclude>
     <ClInclude Include="..\src\server\engine\Shotgun.h">
-      <Filter>Source Files\engine\Weapons</Filter>
+      <Filter>Source Files\Engine\Weapons</Filter>
     </ClInclude>
     <ClInclude Include="..\src\server\engine\Powerup.h">
-      <Filter>Source Files\engine\Powerups</Filter>
+      <Filter>Source Files\Engine\Powerups</Filter>
     </ClInclude>
     <ClInclude Include="..\src\server\engine\HealthGain.h">
-      <Filter>Source Files\engine\Powerups</Filter>
+      <Filter>Source Files\Engine\Powerups</Filter>
     </ClInclude>
     <ClInclude Include="..\src\server\engine\JumpUp.h">
-      <Filter>Source Files\engine\Powerups</Filter>
+      <Filter>Source Files\Engine\Powerups</Filter>
     </ClInclude>
     <ClInclude Include="..\src\server\engine\SpeedUp.h">
-      <Filter>Source Files\engine\Powerups</Filter>
+      <Filter>Source Files\Engine\Powerups</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\Basic\Singleton.h">
+      <Filter>Source Files\Basic</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -168,91 +174,91 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\server\engine\engine.cpp">
-      <Filter>Source Files\engine</Filter>
+      <Filter>Source Files\Engine</Filter>
     </ClCompile>
     <ClCompile Include="..\src\server\engine\World.cpp">
-      <Filter>Source Files\engine</Filter>
+      <Filter>Source Files\Engine</Filter>
     </ClCompile>
     <ClCompile Include="..\src\server\engine\Player.cpp">
-      <Filter>Source Files\engine</Filter>
+      <Filter>Source Files\Engine</Filter>
     </ClCompile>
     <ClCompile Include="..\src\server\engine\Flag.cpp">
-      <Filter>Source Files\engine</Filter>
+      <Filter>Source Files\Engine</Filter>
     </ClCompile>
     <ClCompile Include="..\src\server\engine\WorldObstacle.cpp">
-      <Filter>Source Files\engine</Filter>
+      <Filter>Source Files\Engine</Filter>
     </ClCompile>
     <ClCompile Include="..\src\server\engine\Entity.cpp">
-      <Filter>Source Files\engine</Filter>
+      <Filter>Source Files\Engine</Filter>
     </ClCompile>
     <ClCompile Include="..\src\server\engine\EntitySpawner.cpp">
-      <Filter>Source Files\engine</Filter>
+      <Filter>Source Files\Engine</Filter>
     </ClCompile>
     <ClCompile Include="..\src\server\engine\Collectable.cpp">
-      <Filter>Source Files\engine</Filter>
+      <Filter>Source Files\Engine</Filter>
     </ClCompile>
     <ClCompile Include="..\src\server\engine\FireRateReset.cpp">
-      <Filter>Source Files\engine\Weapons</Filter>
+      <Filter>Source Files\Engine\Weapons</Filter>
     </ClCompile>
     <ClCompile Include="..\src\server\engine\Weapon.cpp">
-      <Filter>Source Files\engine\Weapons</Filter>
+      <Filter>Source Files\Engine\Weapons</Filter>
     </ClCompile>
     <ClCompile Include="..\src\server\engine\SeedGun.cpp">
-      <Filter>Source Files\engine\Weapons</Filter>
+      <Filter>Source Files\Engine\Weapons</Filter>
     </ClCompile>
     <ClCompile Include="..\src\server\engine\Bullet.cpp">
-      <Filter>Source Files\engine\Weapons</Filter>
+      <Filter>Source Files\Engine\Weapons</Filter>
     </ClCompile>
     <ClCompile Include="..\src\server\engine\DamageField.cpp">
-      <Filter>Source Files\engine\FieldDetection</Filter>
+      <Filter>Source Files\Engine\FieldDetection</Filter>
     </ClCompile>
     <ClCompile Include="..\src\server\engine\FieldObject.cpp">
-      <Filter>Source Files\engine\FieldDetection</Filter>
+      <Filter>Source Files\Engine\FieldDetection</Filter>
     </ClCompile>
     <ClCompile Include="..\src\server\engine\Peck.cpp">
-      <Filter>Source Files\engine\Weapons</Filter>
+      <Filter>Source Files\Engine\Weapons</Filter>
     </ClCompile>
     <ClCompile Include="..\src\ConfigManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\server\engine\RespawnHandler.cpp">
-      <Filter>Source Files\engine</Filter>
+      <Filter>Source Files\Engine</Filter>
     </ClCompile>
     <ClCompile Include="..\src\server\engine\FieldHandler.cpp">
-      <Filter>Source Files\engine\FieldDetection</Filter>
+      <Filter>Source Files\Engine\FieldDetection</Filter>
     </ClCompile>
     <ClCompile Include="..\src\server\engine\GrenadeLauncher.cpp">
-      <Filter>Source Files\engine\Weapons</Filter>
+      <Filter>Source Files\Engine\Weapons</Filter>
     </ClCompile>
     <ClCompile Include="..\src\server\engine\CollectableSpawner.cpp">
-      <Filter>Source Files\engine</Filter>
+      <Filter>Source Files\Engine</Filter>
     </ClCompile>
     <ClCompile Include="..\src\server\engine\BounceGun.cpp">
-      <Filter>Source Files\engine\Weapons</Filter>
+      <Filter>Source Files\Engine\Weapons</Filter>
     </ClCompile>
     <ClCompile Include="..\src\server\engine\ExplosiveBulletCollision.cpp">
-      <Filter>Source Files\engine\Weapons</Filter>
+      <Filter>Source Files\Engine\Weapons</Filter>
     </ClCompile>
     <ClCompile Include="..\src\server\engine\TeleportGun.cpp">
-      <Filter>Source Files\engine\Weapons</Filter>
+      <Filter>Source Files\Engine\Weapons</Filter>
     </ClCompile>
     <ClCompile Include="..\src\server\engine\PlayerModifierCollision.cpp">
-      <Filter>Source Files\engine\Weapons</Filter>
+      <Filter>Source Files\Engine\Weapons</Filter>
     </ClCompile>
     <ClCompile Include="..\src\server\engine\BlastMine.cpp">
-      <Filter>Source Files\engine\Weapons</Filter>
+      <Filter>Source Files\Engine\Weapons</Filter>
     </ClCompile>
     <ClCompile Include="..\src\server\engine\MineBulletHandler.cpp">
-      <Filter>Source Files\engine\Weapons</Filter>
+      <Filter>Source Files\Engine\Weapons</Filter>
     </ClCompile>
     <ClCompile Include="..\src\server\engine\BlastField.cpp">
-      <Filter>Source Files\engine\FieldDetection</Filter>
+      <Filter>Source Files\Engine\FieldDetection</Filter>
     </ClCompile>
     <ClCompile Include="..\src\server\engine\MapLoader.cpp">
-      <Filter>Source Files\engine</Filter>
+      <Filter>Source Files\Engine</Filter>
     </ClCompile>
     <ClCompile Include="..\src\server\engine\Shotgun.cpp">
-      <Filter>Source Files\engine\Weapons</Filter>
+      <Filter>Source Files\Engine\Weapons</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\Network\GameData.cpp">
       <Filter>Source Files\Network</Filter>

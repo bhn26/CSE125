@@ -29,7 +29,7 @@ Bullet::~Bullet()
     delete m_entityRigidBody->getCollisionShape();
     delete m_entityRigidBody;
     delete m_c_handler;
-    EntitySpawner::instance()->RemoveEntity(ClassId::Bullet, m_objectId);
+    EntitySpawner::Instance()->RemoveEntity(ClassId::Bullet, m_objectId);
 }
 
 btVector3 Bullet::GetBulletPosition()

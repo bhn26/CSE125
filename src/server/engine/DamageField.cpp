@@ -37,7 +37,7 @@ int DamageField::handleField()
             if (collidedPlayer->GetTeamId() != m_teamId)
             {
                 if (collidedPlayer->takeDamage(m_fieldDamage,
-                                               FireRateReset::instance()->currentWorldTick))
+                                               FireRateReset::Instance()->currentWorldTick))
                 {
                 }
             }

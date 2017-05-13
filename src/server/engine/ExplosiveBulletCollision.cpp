@@ -14,7 +14,7 @@ bool ExplosiveBulletCollision::HandleBulletCollision(unsigned int world_tick, En
 	DamageField* explosionField = new DamageField(ttl, bullet->GetDamage(), position, expSphere, bullet->GetTeamId(), bullet->GetPhysicsWorld());
 
 	//TODO: Add to damage field checker. Add this new field to the checker
-	FieldHandler::instance()->AddField(explosionField);
+	FieldHandler::Instance()->AddField(explosionField);
 
 	return true;
 }

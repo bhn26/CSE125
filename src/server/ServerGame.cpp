@@ -497,10 +497,10 @@ void ServerGame::receiveMovePacket(int offset)
     PacketHeader* hdr = reinterpret_cast<PacketHeader*>(&m_networkData[offset]);
     PacketData* dat = reinterpret_cast<PacketData*>(&m_networkData[offset + sizeof(PacketHeader)]);
     PosInfo* pi = reinterpret_cast<PosInfo*>(&dat->buf);
-    Entity* ent = reinterpret_cast<Entity*>(EntitySpawner::instance()->GetEntity(ClassId::Player, hdr->sender_id));
+    Entity* ent = reinterpret_cast<Entity*>(EntitySpawner::Instance()->GetEntity(ClassId::Player, hdr->sender_id));
 
     Player* player =
-        reinterpret_cast<Player*>(EntitySpawner::instance()->GetEntity(ClassId::Player, hdr->sender_id));
+        reinterpret_cast<Player*>(EntitySpawner::Instance()->GetEntity(ClassId::Player, hdr->sender_id));
 
     // don't take client input if stunned
     if (player->GetStun() > 0)
@@ -545,7 +545,7 @@ void ServerGame::receiveMovePacket(int offset)
 
 void ServerGame::sendMovePacket(ClassId class_id, int obj_id)
 {
-    Entity* ent = reinterpret_cast<Entity*>(EntitySpawner::instance()->GetEntity(class_id, obj_id));
+    Entity* ent = reinterpret_cast<Entity*>(EntitySpawner::Instance()->GetEntity(class_id, obj_id));
 
     // If this is not a player and the player is dead, don't update
     if (class_id == ClassId::Player && !((Player*)ent)->IsAlive())
@@ -594,7 +594,7 @@ void ServerGame::receiveRotationPacket(int offset)
     PacketHeader* hdr = reinterpret_cast<PacketHeader*>(&m_networkData[offset - sizeof(PacketHeader)]);
 
     // All rotation packets will be player type, since it's from client
-    Entity* ent = reinterpret_cast<Entity*>(EntitySpawner::instance()->GetEntity(ClassId::Player, hdr->sender_id));
+    Entity* ent = reinterpret_cast<Entity*>(EntitySpawner::Instance()->GetEntity(ClassId::Player, hdr->sender_id));
 
     ent->SetEntityRotation(0, pi->roty, 0, pi->rotw);
     sendRotationPacket(ClassId::Player, hdr->sender_id);
@@ -605,7 +605,7 @@ void ServerGame::sendRotationPacket(ClassId class_id, int obj_id)
     const unsigned int packetSize = sizeof(Packet);
     std::uint8_t packetData[packetSize];
 
-    Entity* ent = reinterpret_cast<Entity*>(EntitySpawner::instance()->GetEntity(class_id, obj_id));
+    Entity* ent = reinterpret_cast<Entity*>(EntitySpawner::Instance()->GetEntity(class_id, obj_id));
 
     // If this is not a player and the player is dead, don't update
     if (class_id == ClassId::Player && !((Player*)ent)->IsAlive())
@@ -646,7 +646,7 @@ void ServerGame::receiveJumpPacket(int offset)
     PacketHeader* hdr = reinterpret_cast<PacketHeader*>(&m_networkData[offset]);
 
     Player* player =
-        reinterpret_cast<Player*>(EntitySpawner::instance()->GetEntity(ClassId::Player, hdr->sender_id));
+        reinterpret_cast<Player*>(EntitySpawner::Instance()->GetEntity(ClassId::Player, hdr->sender_id));
 
     // ignore client input if stunned
     if (player->GetStun() > 0)
@@ -708,7 +708,7 @@ void ServerGame::receiveAttackPacket(int offset)
     PacketData* dat = reinterpret_cast<PacketData*>(&m_networkData[offset + sizeof(PacketHeader)]);
     MiscInfo* m = reinterpret_cast<MiscInfo*>(&dat->buf);
     Player* player =
-        reinterpret_cast<Player*>(EntitySpawner::instance()->GetEntity(ClassId::Player, hdr->sender_id));
+        reinterpret_cast<Player*>(EntitySpawner::Instance()->GetEntity(ClassId::Player, hdr->sender_id));
 
     player->SetCamAngle(m->misc3);
 
@@ -767,7 +767,7 @@ void ServerGame::receiveDiscardPacket(int offset)
     // shared_ptr<Player> player = m_engine->GetWorld()->GetPlayer(hdr->sender_id);
     PacketHeader* hdr = reinterpret_cast<PacketHeader*>(&m_networkData[offset]);
     Player* player =
-        reinterpret_cast<Player*>(EntitySpawner::instance()->GetEntity(ClassId::Player, hdr->sender_id));
+        reinterpret_cast<Player*>(EntitySpawner::Instance()->GetEntity(ClassId::Player, hdr->sender_id));
     player->DiscardWeapon();
 }
 
@@ -861,7 +861,7 @@ void ServerGame::receiveNamePacket(int offset)
     NameInfo* n = reinterpret_cast<NameInfo*>(&dat->buf);
 
     m_nameMap[hdr->sender_id] = n->name;
-    /*Player* player = reinterpret_cast<Player*>(EntitySpawner::instance()->GetEntity(ClassId::Player,
+    /*Player* player = reinterpret_cast<Player*>(EntitySpawner::Instance()->GetEntity(ClassId::Player,
     hdr->sender_id));
     player->SetName(n->name);*/
 

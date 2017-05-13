@@ -32,7 +32,7 @@ void Engine::SpawnRandomPlayer(int player, int team, int skin)
 	p.x = loc.first;
 	p.z = loc.second;
 	p.y = 3;
-	EntitySpawner::instance()->spawnPlayer(team, p, world->GetPhysicsWorld());
+	EntitySpawner::Instance()->spawnPlayer(team, p, world->GetPhysicsWorld());
 }
 
 void Engine::SpawnRandomFlag()
@@ -42,7 +42,7 @@ void Engine::SpawnRandomFlag()
 	p.x = loc.first;
 	p.z = loc.second;
 	p.y = 3;
-	EntitySpawner::instance()->spawnFlag(p, world->GetPhysicsWorld());
+	EntitySpawner::Instance()->spawnFlag(p, world->GetPhysicsWorld());
 }
 
 int Engine::RandomNum(int mod)

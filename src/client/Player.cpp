@@ -249,7 +249,7 @@ void Player::ProcessMouseMovement(GLfloat xoffset, GLfloat yoffset, GLboolean co
     // Don't send me stuff unless you're alive
     if (++tick % 10 == 0 && alive)
     {
-        ClientGame::instance()->sendRotationPacket();
+        ClientGame::Instance()->sendRotationPacket();
         tick = 0;
     }
 }
@@ -289,7 +289,7 @@ void Player::ProcessViewMovement(GLfloat xoffset, GLfloat yoffset, GLboolean con
 
     if (++tick % 10 == 0)
     {
-        ClientGame::instance()->sendRotationPacket();
+        ClientGame::Instance()->sendRotationPacket();
         tick = 0;
     }
 }
@@ -371,7 +371,7 @@ void Player::ChangeState(State state)
         m_lastPos_t = Position();
         auto& position = Position();
         SoundsHandler::SoundOptions options(position.x, position.y, position.z);
-        ClientGame::instance()->PlaySound("Jump", options);
+        ClientGame::Instance()->PlaySound("Jump", options);
         break;
     }
     case State::Attack:
@@ -380,7 +380,7 @@ void Player::ChangeState(State state)
         auto& position = Position();
         SoundsHandler::SoundOptions options(
             position.x, position.y, position.z);             // Play at own position
-        ClientGame::instance()->PlaySound("Melee", options); // Play at own position
+        ClientGame::Instance()->PlaySound("Melee", options); // Play at own position
         break;
     }
     case State::Dance:
@@ -390,7 +390,7 @@ void Player::ChangeState(State state)
         SoundsHandler::SoundOptions options(
             position.x, position.y, position.z); // Play at own position
         options.m_loops = true;
-        m_danceSoundIndices.push(ClientGame::instance()->PlaySound("Dance", options));
+        m_danceSoundIndices.push(ClientGame::Instance()->PlaySound("Dance", options));
         break;
     }
     case State::Death:
@@ -399,7 +399,7 @@ void Player::ChangeState(State state)
         glm::vec3 position = Position();
         SoundsHandler::SoundOptions options(
             position.x, position.y, position.z); // Play at own position
-        ClientGame::instance()->PlaySound("Death", options);
+        ClientGame::Instance()->PlaySound("Death", options);
         break;
     }
     case State::Peck:
@@ -449,7 +449,7 @@ void Player::CheckStopDanceSound()
         m_danceSoundIndices.pop();
         if (index != -1)
         {
-            ClientGame::instance()->StopSound(index);
+            ClientGame::Instance()->StopSound(index);
         }
     }
 }

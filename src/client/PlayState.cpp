@@ -50,14 +50,14 @@ void CPlayState::EnterState()
     SoundsHandler::SoundOptions option;
     option.m_isRelativeToListener = true;
     option.m_loops = true;
-    m_backgroundMusicID = ClientGame::instance()->PlaySound("Background", option);
+    m_backgroundMusicID = ClientGame::Instance()->PlaySound("Background", option);
 }
 
 void CPlayState::LeaveState()
 {
     if (m_backgroundMusicID != -1)
     {
-        ClientGame::instance()->StopSound(m_backgroundMusicID);
+        ClientGame::Instance()->StopSound(m_backgroundMusicID);
         m_backgroundMusicID = -1;
     }
 }
@@ -83,24 +83,24 @@ void CPlayState::OnClick(int button, int action, double x, double y)
     {
         Window::s_mouseCaptured = true;
         Window::s_firstMouse = true;
-        glfwSetInputMode(ClientGame::instance()->window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        glfwSetInputMode(ClientGame::Instance()->window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
     else if (button == GLFW_MOUSE_BUTTON_MIDDLE && Window::s_mouseCaptured)
     {
         Window::s_mouseCaptured = false;
-        glfwSetInputMode(ClientGame::instance()->window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        glfwSetInputMode(ClientGame::Instance()->window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
     else if (button == GLFW_MOUSE_BUTTON_RIGHT && Window::s_mouseCaptured)
     {
         if (action == GLFW_PRESS || action == GLFW_REPEAT)
-            ClientGame::instance()->HandleButtonEvent(
-                ConfigManager::instance()->GetConfigValue("PC_Right_Click"));
+            ClientGame::Instance()->HandleButtonEvent(
+                ConfigManager::Instance()->GetConfigValue("PC_Right_Click"));
     }
     else if (button == GLFW_MOUSE_BUTTON_LEFT && Window::s_mouseCaptured)
     {
         if (action == GLFW_PRESS || action == GLFW_REPEAT)
-            ClientGame::instance()->HandleButtonEvent(
-                ConfigManager::instance()->GetConfigValue("PC_Left_Click"));
+            ClientGame::Instance()->HandleButtonEvent(
+                ConfigManager::Instance()->GetConfigValue("PC_Left_Click"));
     }
 }
 
@@ -109,161 +109,161 @@ void CPlayState::OnKeyDown(int action, int key)
     switch (key)
     {
     case GLFW_KEY_ESCAPE:
-        ClientGame::instance()->HandleButtonEvent(
-            ConfigManager::instance()->GetConfigValue("PC_Esc"));
+        ClientGame::Instance()->HandleButtonEvent(
+            ConfigManager::Instance()->GetConfigValue("PC_Esc"));
         break;
     case GLFW_KEY_A:
-        ClientGame::instance()->HandleButtonEvent(
-            ConfigManager::instance()->GetConfigValue("PC_A"));
+        ClientGame::Instance()->HandleButtonEvent(
+            ConfigManager::Instance()->GetConfigValue("PC_A"));
         break;
     case GLFW_KEY_B:
-        ClientGame::instance()->HandleButtonEvent(
-            ConfigManager::instance()->GetConfigValue("PC_B"));
+        ClientGame::Instance()->HandleButtonEvent(
+            ConfigManager::Instance()->GetConfigValue("PC_B"));
         break;
     case GLFW_KEY_C:
-        ClientGame::instance()->HandleButtonEvent(
-            ConfigManager::instance()->GetConfigValue("PC_C"));
+        ClientGame::Instance()->HandleButtonEvent(
+            ConfigManager::Instance()->GetConfigValue("PC_C"));
         break;
     case GLFW_KEY_D:
-        ClientGame::instance()->HandleButtonEvent(
-            ConfigManager::instance()->GetConfigValue("PC_D"));
+        ClientGame::Instance()->HandleButtonEvent(
+            ConfigManager::Instance()->GetConfigValue("PC_D"));
         break;
     case GLFW_KEY_E:
-        ClientGame::instance()->HandleButtonEvent(
-            ConfigManager::instance()->GetConfigValue("PC_E"));
+        ClientGame::Instance()->HandleButtonEvent(
+            ConfigManager::Instance()->GetConfigValue("PC_E"));
         break;
     case GLFW_KEY_F:
-        ClientGame::instance()->HandleButtonEvent(
-            ConfigManager::instance()->GetConfigValue("PC_F"));
+        ClientGame::Instance()->HandleButtonEvent(
+            ConfigManager::Instance()->GetConfigValue("PC_F"));
         break;
     case GLFW_KEY_G:
-        ClientGame::instance()->HandleButtonEvent(
-            ConfigManager::instance()->GetConfigValue("PC_G"));
+        ClientGame::Instance()->HandleButtonEvent(
+            ConfigManager::Instance()->GetConfigValue("PC_G"));
         break;
     case GLFW_KEY_H:
-        ClientGame::instance()->HandleButtonEvent(
-            ConfigManager::instance()->GetConfigValue("PC_H"));
+        ClientGame::Instance()->HandleButtonEvent(
+            ConfigManager::Instance()->GetConfigValue("PC_H"));
         break;
     case GLFW_KEY_I:
-        ClientGame::instance()->HandleButtonEvent(
-            ConfigManager::instance()->GetConfigValue("PC_I"));
+        ClientGame::Instance()->HandleButtonEvent(
+            ConfigManager::Instance()->GetConfigValue("PC_I"));
         break;
     case GLFW_KEY_J:
-        ClientGame::instance()->HandleButtonEvent(
-            ConfigManager::instance()->GetConfigValue("PC_J"));
+        ClientGame::Instance()->HandleButtonEvent(
+            ConfigManager::Instance()->GetConfigValue("PC_J"));
         break;
     case GLFW_KEY_K:
-        ClientGame::instance()->HandleButtonEvent(
-            ConfigManager::instance()->GetConfigValue("PC_K"));
+        ClientGame::Instance()->HandleButtonEvent(
+            ConfigManager::Instance()->GetConfigValue("PC_K"));
         break;
     case GLFW_KEY_L:
-        ClientGame::instance()->HandleButtonEvent(
-            ConfigManager::instance()->GetConfigValue("PC_L"));
+        ClientGame::Instance()->HandleButtonEvent(
+            ConfigManager::Instance()->GetConfigValue("PC_L"));
         break;
     case GLFW_KEY_M:
-        ClientGame::instance()->HandleButtonEvent(
-            ConfigManager::instance()->GetConfigValue("PC_M"));
+        ClientGame::Instance()->HandleButtonEvent(
+            ConfigManager::Instance()->GetConfigValue("PC_M"));
         break;
     case GLFW_KEY_N:
-        ClientGame::instance()->HandleButtonEvent(
-            ConfigManager::instance()->GetConfigValue("PC_N"));
+        ClientGame::Instance()->HandleButtonEvent(
+            ConfigManager::Instance()->GetConfigValue("PC_N"));
         break;
     case GLFW_KEY_O:
-        ClientGame::instance()->HandleButtonEvent(
-            ConfigManager::instance()->GetConfigValue("PC_O"));
+        ClientGame::Instance()->HandleButtonEvent(
+            ConfigManager::Instance()->GetConfigValue("PC_O"));
         break;
     case GLFW_KEY_P:
-        ClientGame::instance()->HandleButtonEvent(
-            ConfigManager::instance()->GetConfigValue("PC_P"));
+        ClientGame::Instance()->HandleButtonEvent(
+            ConfigManager::Instance()->GetConfigValue("PC_P"));
         break;
     case GLFW_KEY_Q:
-        ClientGame::instance()->HandleButtonEvent(
-            ConfigManager::instance()->GetConfigValue("PC_Q"));
+        ClientGame::Instance()->HandleButtonEvent(
+            ConfigManager::Instance()->GetConfigValue("PC_Q"));
         break;
     case GLFW_KEY_R:
-        ClientGame::instance()->HandleButtonEvent(
-            ConfigManager::instance()->GetConfigValue("PC_R"));
+        ClientGame::Instance()->HandleButtonEvent(
+            ConfigManager::Instance()->GetConfigValue("PC_R"));
         break;
     case GLFW_KEY_S:
-        ClientGame::instance()->HandleButtonEvent(
-            ConfigManager::instance()->GetConfigValue("PC_S"));
+        ClientGame::Instance()->HandleButtonEvent(
+            ConfigManager::Instance()->GetConfigValue("PC_S"));
         break;
     case GLFW_KEY_T:
-        ClientGame::instance()->HandleButtonEvent(
-            ConfigManager::instance()->GetConfigValue("PC_T"));
+        ClientGame::Instance()->HandleButtonEvent(
+            ConfigManager::Instance()->GetConfigValue("PC_T"));
         break;
     case GLFW_KEY_U:
-        ClientGame::instance()->HandleButtonEvent(
-            ConfigManager::instance()->GetConfigValue("PC_U"));
+        ClientGame::Instance()->HandleButtonEvent(
+            ConfigManager::Instance()->GetConfigValue("PC_U"));
         break;
     case GLFW_KEY_V:
-        ClientGame::instance()->HandleButtonEvent(
-            ConfigManager::instance()->GetConfigValue("PC_V"));
+        ClientGame::Instance()->HandleButtonEvent(
+            ConfigManager::Instance()->GetConfigValue("PC_V"));
         break;
     case GLFW_KEY_W:
-        ClientGame::instance()->HandleButtonEvent(
-            ConfigManager::instance()->GetConfigValue("PC_W"));
+        ClientGame::Instance()->HandleButtonEvent(
+            ConfigManager::Instance()->GetConfigValue("PC_W"));
         break;
     case GLFW_KEY_X:
-        ClientGame::instance()->HandleButtonEvent(
-            ConfigManager::instance()->GetConfigValue("PC_X"));
+        ClientGame::Instance()->HandleButtonEvent(
+            ConfigManager::Instance()->GetConfigValue("PC_X"));
         break;
     case GLFW_KEY_Y:
-        ClientGame::instance()->HandleButtonEvent(
-            ConfigManager::instance()->GetConfigValue("PC_Y"));
+        ClientGame::Instance()->HandleButtonEvent(
+            ConfigManager::Instance()->GetConfigValue("PC_Y"));
         break;
     case GLFW_KEY_Z:
-        ClientGame::instance()->HandleButtonEvent(
-            ConfigManager::instance()->GetConfigValue("PC_Z"));
+        ClientGame::Instance()->HandleButtonEvent(
+            ConfigManager::Instance()->GetConfigValue("PC_Z"));
         break;
     case GLFW_KEY_0:
-        ClientGame::instance()->HandleButtonEvent(
-            ConfigManager::instance()->GetConfigValue("PC_0"));
+        ClientGame::Instance()->HandleButtonEvent(
+            ConfigManager::Instance()->GetConfigValue("PC_0"));
         break;
     case GLFW_KEY_1:
-        ClientGame::instance()->HandleButtonEvent(
-            ConfigManager::instance()->GetConfigValue("PC_1"));
+        ClientGame::Instance()->HandleButtonEvent(
+            ConfigManager::Instance()->GetConfigValue("PC_1"));
         break;
     case GLFW_KEY_2:
-        ClientGame::instance()->HandleButtonEvent(
-            ConfigManager::instance()->GetConfigValue("PC_2"));
+        ClientGame::Instance()->HandleButtonEvent(
+            ConfigManager::Instance()->GetConfigValue("PC_2"));
         break;
     case GLFW_KEY_3:
-        ClientGame::instance()->HandleButtonEvent(
-            ConfigManager::instance()->GetConfigValue("PC_3"));
+        ClientGame::Instance()->HandleButtonEvent(
+            ConfigManager::Instance()->GetConfigValue("PC_3"));
         break;
     case GLFW_KEY_4:
-        ClientGame::instance()->HandleButtonEvent(
-            ConfigManager::instance()->GetConfigValue("PC_4"));
+        ClientGame::Instance()->HandleButtonEvent(
+            ConfigManager::Instance()->GetConfigValue("PC_4"));
         break;
     case GLFW_KEY_5:
-        ClientGame::instance()->HandleButtonEvent(
-            ConfigManager::instance()->GetConfigValue("PC_5"));
+        ClientGame::Instance()->HandleButtonEvent(
+            ConfigManager::Instance()->GetConfigValue("PC_5"));
         break;
     case GLFW_KEY_6:
-        ClientGame::instance()->HandleButtonEvent(
-            ConfigManager::instance()->GetConfigValue("PC_6"));
+        ClientGame::Instance()->HandleButtonEvent(
+            ConfigManager::Instance()->GetConfigValue("PC_6"));
         break;
     case GLFW_KEY_7:
-        ClientGame::instance()->HandleButtonEvent(
-            ConfigManager::instance()->GetConfigValue("PC_7"));
+        ClientGame::Instance()->HandleButtonEvent(
+            ConfigManager::Instance()->GetConfigValue("PC_7"));
         break;
     case GLFW_KEY_8:
-        ClientGame::instance()->HandleButtonEvent(
-            ConfigManager::instance()->GetConfigValue("PC_8"));
+        ClientGame::Instance()->HandleButtonEvent(
+            ConfigManager::Instance()->GetConfigValue("PC_8"));
         break;
     case GLFW_KEY_9:
-        ClientGame::instance()->HandleButtonEvent(
-            ConfigManager::instance()->GetConfigValue("PC_9"));
+        ClientGame::Instance()->HandleButtonEvent(
+            ConfigManager::Instance()->GetConfigValue("PC_9"));
         break;
     case GLFW_KEY_SPACE:
-        ClientGame::instance()->HandleButtonEvent(
-            ConfigManager::instance()->GetConfigValue("PC_Space"));
+        ClientGame::Instance()->HandleButtonEvent(
+            ConfigManager::Instance()->GetConfigValue("PC_Space"));
         break;
     case GLFW_KEY_TAB:
         // Check if escape was pressed
-        ClientGame::instance()->HandleButtonEvent(
-            ConfigManager::instance()->GetConfigValue("PC_Tab"));
+        ClientGame::Instance()->HandleButtonEvent(
+            ConfigManager::Instance()->GetConfigValue("PC_Tab"));
         break;
     default:
         break;
@@ -275,161 +275,161 @@ void CPlayState::OnKeyUp(int action, int key)
     switch (key)
     {
     case GLFW_KEY_ESCAPE:
-        ClientGame::instance()->HandleButtonEvent(
-            ConfigManager::instance()->GetConfigValue("PC_Esc"), false);
+        ClientGame::Instance()->HandleButtonEvent(
+            ConfigManager::Instance()->GetConfigValue("PC_Esc"), false);
         break;
     case GLFW_KEY_A:
-        ClientGame::instance()->HandleButtonEvent(ConfigManager::instance()->GetConfigValue("PC_A"),
+        ClientGame::Instance()->HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("PC_A"),
                                                   false);
         break;
     case GLFW_KEY_B:
-        ClientGame::instance()->HandleButtonEvent(ConfigManager::instance()->GetConfigValue("PC_B"),
+        ClientGame::Instance()->HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("PC_B"),
                                                   false);
         break;
     case GLFW_KEY_C:
-        ClientGame::instance()->HandleButtonEvent(ConfigManager::instance()->GetConfigValue("PC_C"),
+        ClientGame::Instance()->HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("PC_C"),
                                                   false);
         break;
     case GLFW_KEY_D:
-        ClientGame::instance()->HandleButtonEvent(ConfigManager::instance()->GetConfigValue("PC_D"),
+        ClientGame::Instance()->HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("PC_D"),
                                                   false);
         break;
     case GLFW_KEY_E:
-        ClientGame::instance()->HandleButtonEvent(ConfigManager::instance()->GetConfigValue("PC_E"),
+        ClientGame::Instance()->HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("PC_E"),
                                                   false);
         break;
     case GLFW_KEY_F:
-        ClientGame::instance()->HandleButtonEvent(ConfigManager::instance()->GetConfigValue("PC_F"),
+        ClientGame::Instance()->HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("PC_F"),
                                                   false);
         break;
     case GLFW_KEY_G:
-        ClientGame::instance()->HandleButtonEvent(ConfigManager::instance()->GetConfigValue("PC_G"),
+        ClientGame::Instance()->HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("PC_G"),
                                                   false);
         break;
     case GLFW_KEY_H:
-        ClientGame::instance()->HandleButtonEvent(ConfigManager::instance()->GetConfigValue("PC_H"),
+        ClientGame::Instance()->HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("PC_H"),
                                                   false);
         break;
     case GLFW_KEY_I:
-        ClientGame::instance()->HandleButtonEvent(ConfigManager::instance()->GetConfigValue("PC_I"),
+        ClientGame::Instance()->HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("PC_I"),
                                                   false);
         break;
     case GLFW_KEY_J:
-        ClientGame::instance()->HandleButtonEvent(ConfigManager::instance()->GetConfigValue("PC_J"),
+        ClientGame::Instance()->HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("PC_J"),
                                                   false);
         break;
     case GLFW_KEY_K:
-        ClientGame::instance()->HandleButtonEvent(ConfigManager::instance()->GetConfigValue("PC_K"),
+        ClientGame::Instance()->HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("PC_K"),
                                                   false);
         break;
     case GLFW_KEY_L:
-        ClientGame::instance()->HandleButtonEvent(ConfigManager::instance()->GetConfigValue("PC_L"),
+        ClientGame::Instance()->HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("PC_L"),
                                                   false);
         break;
     case GLFW_KEY_M:
-        ClientGame::instance()->HandleButtonEvent(ConfigManager::instance()->GetConfigValue("PC_M"),
+        ClientGame::Instance()->HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("PC_M"),
                                                   false);
         break;
     case GLFW_KEY_N:
-        ClientGame::instance()->HandleButtonEvent(ConfigManager::instance()->GetConfigValue("PC_N"),
+        ClientGame::Instance()->HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("PC_N"),
                                                   false);
         break;
     case GLFW_KEY_O:
-        ClientGame::instance()->HandleButtonEvent(ConfigManager::instance()->GetConfigValue("PC_O"),
+        ClientGame::Instance()->HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("PC_O"),
                                                   false);
         break;
     case GLFW_KEY_P:
-        ClientGame::instance()->HandleButtonEvent(ConfigManager::instance()->GetConfigValue("PC_P"),
+        ClientGame::Instance()->HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("PC_P"),
                                                   false);
         break;
     case GLFW_KEY_Q:
-        ClientGame::instance()->HandleButtonEvent(ConfigManager::instance()->GetConfigValue("PC_Q"),
+        ClientGame::Instance()->HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("PC_Q"),
                                                   false);
         break;
     case GLFW_KEY_R:
-        ClientGame::instance()->HandleButtonEvent(ConfigManager::instance()->GetConfigValue("PC_R"),
+        ClientGame::Instance()->HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("PC_R"),
                                                   false);
         break;
     case GLFW_KEY_S:
-        ClientGame::instance()->HandleButtonEvent(ConfigManager::instance()->GetConfigValue("PC_S"),
+        ClientGame::Instance()->HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("PC_S"),
                                                   false);
         break;
     case GLFW_KEY_T:
-        ClientGame::instance()->HandleButtonEvent(ConfigManager::instance()->GetConfigValue("PC_T"),
+        ClientGame::Instance()->HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("PC_T"),
                                                   false);
         break;
     case GLFW_KEY_U:
-        ClientGame::instance()->HandleButtonEvent(ConfigManager::instance()->GetConfigValue("PC_U"),
+        ClientGame::Instance()->HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("PC_U"),
                                                   false);
         break;
     case GLFW_KEY_V:
-        ClientGame::instance()->HandleButtonEvent(ConfigManager::instance()->GetConfigValue("PC_V"),
+        ClientGame::Instance()->HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("PC_V"),
                                                   false);
         break;
     case GLFW_KEY_W:
-        ClientGame::instance()->HandleButtonEvent(ConfigManager::instance()->GetConfigValue("PC_W"),
+        ClientGame::Instance()->HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("PC_W"),
                                                   false);
         break;
     case GLFW_KEY_X:
-        ClientGame::instance()->HandleButtonEvent(ConfigManager::instance()->GetConfigValue("PC_X"),
+        ClientGame::Instance()->HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("PC_X"),
                                                   false);
         break;
     case GLFW_KEY_Y:
-        ClientGame::instance()->HandleButtonEvent(ConfigManager::instance()->GetConfigValue("PC_Y"),
+        ClientGame::Instance()->HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("PC_Y"),
                                                   false);
         break;
     case GLFW_KEY_Z:
-        ClientGame::instance()->HandleButtonEvent(ConfigManager::instance()->GetConfigValue("PC_Z"),
+        ClientGame::Instance()->HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("PC_Z"),
                                                   false);
         break;
     case GLFW_KEY_0:
-        ClientGame::instance()->HandleButtonEvent(ConfigManager::instance()->GetConfigValue("PC_0"),
+        ClientGame::Instance()->HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("PC_0"),
                                                   false);
         break;
     case GLFW_KEY_1:
-        ClientGame::instance()->HandleButtonEvent(ConfigManager::instance()->GetConfigValue("PC_1"),
+        ClientGame::Instance()->HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("PC_1"),
                                                   false);
         break;
     case GLFW_KEY_2:
-        ClientGame::instance()->HandleButtonEvent(ConfigManager::instance()->GetConfigValue("PC_2"),
+        ClientGame::Instance()->HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("PC_2"),
                                                   false);
         break;
     case GLFW_KEY_3:
-        ClientGame::instance()->HandleButtonEvent(ConfigManager::instance()->GetConfigValue("PC_3"),
+        ClientGame::Instance()->HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("PC_3"),
                                                   false);
         break;
     case GLFW_KEY_4:
-        ClientGame::instance()->HandleButtonEvent(ConfigManager::instance()->GetConfigValue("PC_4"),
+        ClientGame::Instance()->HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("PC_4"),
                                                   false);
         break;
     case GLFW_KEY_5:
-        ClientGame::instance()->HandleButtonEvent(ConfigManager::instance()->GetConfigValue("PC_5"),
+        ClientGame::Instance()->HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("PC_5"),
                                                   false);
         break;
     case GLFW_KEY_6:
-        ClientGame::instance()->HandleButtonEvent(ConfigManager::instance()->GetConfigValue("PC_6"),
+        ClientGame::Instance()->HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("PC_6"),
                                                   false);
         break;
     case GLFW_KEY_7:
-        ClientGame::instance()->HandleButtonEvent(ConfigManager::instance()->GetConfigValue("PC_7"),
+        ClientGame::Instance()->HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("PC_7"),
                                                   false);
         break;
     case GLFW_KEY_8:
-        ClientGame::instance()->HandleButtonEvent(ConfigManager::instance()->GetConfigValue("PC_8"),
+        ClientGame::Instance()->HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("PC_8"),
                                                   false);
         break;
     case GLFW_KEY_9:
-        ClientGame::instance()->HandleButtonEvent(ConfigManager::instance()->GetConfigValue("PC_9"),
+        ClientGame::Instance()->HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("PC_9"),
                                                   false);
         break;
     case GLFW_KEY_SPACE:
-        ClientGame::instance()->HandleButtonEvent(
-            ConfigManager::instance()->GetConfigValue("PC_Space"), false);
+        ClientGame::Instance()->HandleButtonEvent(
+            ConfigManager::Instance()->GetConfigValue("PC_Space"), false);
         break;
     case GLFW_KEY_TAB:
         // Check if escape was pressed
-        ClientGame::instance()->HandleButtonEvent(
-            ConfigManager::instance()->GetConfigValue("PC_Tab"), false);
+        ClientGame::Instance()->HandleButtonEvent(
+            ConfigManager::Instance()->GetConfigValue("PC_Tab"), false);
         break;
     default:
         break;
@@ -451,7 +451,7 @@ void CPlayState::Draw()
     //////////////// SCOREBOARD ///////////////////////////////////
     if (m_showScoreboard)
     {
-        int our_team = ClientGame::instance()->GetClientTeam();
+        int our_team = ClientGame::Instance()->GetClientTeam();
 
         ////////////////// BACKGROUND//////////////////////////
         int x = Window::s_width - m_sbChick->Width();
@@ -505,7 +505,7 @@ void CPlayState::Draw()
                 (Player*)Scene::Instance()->GetEntity(ClassId::Player, team0.at(i)).get();
 
             std::string score;
-            score += ClientGame::instance()->GetName(team0.at(i)).c_str();
+            score += ClientGame::Instance()->GetName(team0.at(i)).c_str();
             score += ": ";
             score += std::to_string(player->GetScore());
 
@@ -522,7 +522,7 @@ void CPlayState::Draw()
                 (Player*)Scene::Instance()->GetEntity(ClassId::Player, team1.at(i)).get();
 
             std::string score;
-            score += ClientGame::instance()->GetName(team1.at(i)).c_str();
+            score += ClientGame::Instance()->GetName(team1.at(i)).c_str();
             score += ": ";
             score += std::to_string(player->GetScore());
 
@@ -535,7 +535,7 @@ void CPlayState::Draw()
         printf("our team: %d\n", our_team);
         // us
         TextRenderer::RenderText(
-            std::to_string(ClientGame::instance()->GetScores()[our_team]).c_str(),
+            std::to_string(ClientGame::Instance()->GetScores()[our_team]).c_str(),
             25,
             side_y + 325,
             1.0f,
@@ -543,18 +543,18 @@ void CPlayState::Draw()
 
         // them
         TextRenderer::RenderText(
-            std::to_string(ClientGame::instance()->GetScores()[1 - our_team]).c_str(),
+            std::to_string(ClientGame::Instance()->GetScores()[1 - our_team]).c_str(),
             25,
             side_y + 560,
             1.0f,
             glm::vec3(0.0f, 0.0f, 0.0f));
 
         // neutral
-        int n = ClientGame::instance()->TotalEggs();
+        int n = ClientGame::Instance()->TotalEggs();
         printf("total eggs: %d\n", n);
-        printf("score 0: %d\n", ClientGame::instance()->GetScores()[0]);
-        printf("score 1: %d\n", ClientGame::instance()->GetScores()[1]);
-        n = n - ClientGame::instance()->GetScores()[0] - ClientGame::instance()->GetScores()[1];
+        printf("score 0: %d\n", ClientGame::Instance()->GetScores()[0]);
+        printf("score 1: %d\n", ClientGame::Instance()->GetScores()[1]);
+        n = n - ClientGame::Instance()->GetScores()[0] - ClientGame::Instance()->GetScores()[1];
         TextRenderer::RenderText(
             std::to_string(n).c_str(), 25, side_y + 805, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f));
     }
@@ -647,7 +647,7 @@ void CPlayState::Draw()
                                         glm::vec3(1.0f, 1.0f, 1.0f));
         }
 
-        int timer = ClientGame::instance()->GetCountdown();
+        int timer = ClientGame::Instance()->GetCountdown();
         int minutes = timer / 60;
         int seconds = timer % 60;
         std::string time;

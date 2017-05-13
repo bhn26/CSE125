@@ -30,7 +30,7 @@ bool SoundBufferManager::LoadSoundBuffer(const std::string& soundName)
     }
 
     const static std::string soundPrefix = std::string("Sound_");
-    std::string soundPath = ConfigManager::instance()->GetConfigValue(soundPrefix + soundName);
+    std::string soundPath = ConfigManager::Instance()->GetConfigValue(soundPrefix + soundName);
     if (!soundPath.length())   // Make sure we get the soundbuffer paths
     {
         printf("Error: No sound in config files!\n");

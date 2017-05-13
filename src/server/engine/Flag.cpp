@@ -47,5 +47,5 @@ void Flag::HandleCollectable(Player* collidedPlayer)
     // Give player flag AND remove flag from entity map
     // NOTE: Remove flag from physics world after Tick has been processed
     collidedPlayer->AcquireFlag(this);
-    EntitySpawner::instance()->RemoveEntity(ClassId::Flag, m_objectId);
+    EntitySpawner::Instance()->RemoveEntity(ClassId::Flag, m_objectId);
 }

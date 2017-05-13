@@ -1,35 +1,35 @@
 #pragma once
 
-// NOTE:  Only use by  EntitySpawner::instance()->"...methodcall..."
-#include <map>
+#include "Basic/Singleton.h"
 #include "Entity.h"
 #include "Weapon.h"
 #include "PowerUp.h"
 #include "BulletCollisionHandler.h"
 #include "network/GameData.h"
+
+#include <map>
 // class Entity;
 class Player;
 class Flag;
 class Bullet;
 class Collectable;
 
-class EntitySpawner
+class EntitySpawner : public Singleton<EntitySpawner>
 {
+    friend class Singleton<EntitySpawner>;
+
 private:
     std::map<std::pair<ClassId, unsigned int>, Entity*> m_entities;
-    static EntitySpawner* spawnInstance;
 
-    EntitySpawner();
-    unsigned int oid_player;      // player
-    unsigned int oid_flag;        // flag
-    unsigned int oid_bullet;      // bullet
-    unsigned int oid_collectable; // collectable
+    EntitySpawner() = default;
+    ~EntitySpawner() = default;
+
+    unsigned int oid_player = 0;      // player
+    unsigned int oid_flag = 0;        // flag
+    unsigned int oid_bullet = 0;      // bullet
+    unsigned int oid_collectable = 0; // collectable
 
 public:
-    ~EntitySpawner();
-
-    static EntitySpawner* instance();
-
     Player* spawnPlayer(int teamid, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld);
 
     Flag* spawnFlag(PosInfo pos, btDiscreteDynamicsWorld* physicsWorld);

@@ -20,29 +20,6 @@
 #include "JumpUp.h"
 #include "SpeedUp.h"
 
-EntitySpawner* EntitySpawner::spawnInstance = nullptr;
-
-EntitySpawner* EntitySpawner::instance()
-{
-    if (!spawnInstance)
-    {
-        spawnInstance = new EntitySpawner();
-    }
-    return spawnInstance;
-}
-
-EntitySpawner::EntitySpawner()
-{
-    oid_player = 0;
-    oid_flag = 0;
-    oid_bullet = 0;
-    oid_collectable = 0;
-}
-
-EntitySpawner::~EntitySpawner()
-{
-}
-
 Player* EntitySpawner::spawnPlayer(int teamid, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld)
 {
     // Create player and add to Entity Map
@@ -76,7 +53,7 @@ Player* EntitySpawner::spawnPlayer(int teamid, PosInfo pos, btDiscreteDynamicsWo
     out.roty = quat.getY();
     out.rotz = quat.getZ();
 
-    ServerGame::instance()->sendSpawnPacket(out);
+    ServerGame::Instance()->sendSpawnPacket(out);
     return newPlayer;
 }
 
@@ -101,7 +78,7 @@ Flag* EntitySpawner::spawnFlag(PosInfo pos, btDiscreteDynamicsWorld* physicsWorl
     out.rotx = quat.getX();
     out.roty = quat.getY();
     out.rotz = quat.getZ();
-    ServerGame::instance()->sendSpawnPacket(out);
+    ServerGame::Instance()->sendSpawnPacket(out);
     return newFlag;
 }
 
@@ -137,7 +114,7 @@ Bullet* EntitySpawner::spawnBullet(int playerid,
     out.rotx = quat.getX();
     out.roty = quat.getY();
     out.rotz = quat.getZ();
-    ServerGame::instance()->sendSpawnPacket(out);
+    ServerGame::Instance()->sendSpawnPacket(out);
     return fireProjectile;
 }
 
@@ -206,7 +183,7 @@ void EntitySpawner::spawnCollectable(btDiscreteDynamicsWorld* curWorld, WeaponTy
     out.rotx = quat.getX();
     out.roty = quat.getY();
     out.rotz = quat.getZ();
-    ServerGame::instance()->sendSpawnPacket(out);
+    ServerGame::Instance()->sendSpawnPacket(out);
 }
 
 void EntitySpawner::spawnCollectable(btDiscreteDynamicsWorld* curWorld, PowerUpType p_type)
@@ -260,7 +237,7 @@ void EntitySpawner::spawnCollectable(btDiscreteDynamicsWorld* curWorld, PowerUpT
     out.rotx = quat.getX();
     out.roty = quat.getY();
     out.rotz = quat.getZ();
-    ServerGame::instance()->sendSpawnPacket(out);
+    ServerGame::Instance()->sendSpawnPacket(out);
 }
 
 void EntitySpawner::AddEntity(ClassId cid, unsigned int oid, Entity* ent)

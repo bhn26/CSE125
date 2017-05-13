@@ -25,10 +25,6 @@ World::~World()
 
 void World::Init()
 {
-    // Init Fire Rate Reseter and World Tick Counter
-    FireRateReset::instance();
-    FieldHandler::instance();
-
     int z = 1000; // this is a random number for the walls right now, we need to change this
 
     // Create Physics world
@@ -170,7 +166,7 @@ btDiscreteDynamicsWorld* World::GetPhysicsWorld()
 
 void World::PreSpawn()
 {
-    ServerGame::instance()->sendReadyToSpawnPacket();
+    ServerGame::Instance()->sendReadyToSpawnPacket();
 }
 
 void World::UpdateWorld()
@@ -179,11 +175,11 @@ void World::UpdateWorld()
     curWorld->stepSimulation(1 / 60.f, 4); // 60
     //    curWorld->stepSimulation(1 / 30.f, 4);   // 30 frames
 
-    FireRateReset::instance()->currentWorldTick++;
+    FireRateReset::Instance()->currentWorldTick++;
 
     // Process Weapon Fire Rate Reset and field collisions
-    FireRateReset::instance()->ResetWeapons();
-    FieldHandler::instance()->HandleFields();
+    FireRateReset::Instance()->ResetWeapons();
+    FieldHandler::Instance()->HandleFields();
 
     // Process all collisions
     int numManifolds = curWorld->getDispatcher()->getNumManifolds();
@@ -219,7 +215,7 @@ void World::UpdateWorld()
                 if (collideBullet->handleBulletCollision(world_tick, collidePlayer))
                 {
                     deleteList.push_back(collideBullet);
-                    ServerGame::instance()->sendRemovePacket(ClassId::Bullet,
+                    ServerGame::Instance()->sendRemovePacket(ClassId::Bullet,
                                                              collideBullet->GetObjectId());
                 }
                 else
@@ -258,7 +254,7 @@ void World::UpdateWorld()
                 if (collideBullet->handleBulletCollision(world_tick, nullptr))
                 {
                     deleteList.push_back(collideBullet);
-                    ServerGame::instance()->sendRemovePacket(ClassId::Bullet,
+                    ServerGame::Instance()->sendRemovePacket(ClassId::Bullet,
                                                              collideBullet->GetObjectId());
                 }
                 else
@@ -291,7 +287,7 @@ void World::UpdateWorld()
                 if (collideBullet->handleBulletCollision(world_tick, collidePlayer))
                 {
                     deleteList.push_back(collideBullet);
-                    ServerGame::instance()->sendRemovePacket(ClassId::Bullet,
+                    ServerGame::Instance()->sendRemovePacket(ClassId::Bullet,
                                                              collideBullet->GetObjectId());
                 }
                 else
@@ -329,7 +325,7 @@ void World::UpdateWorld()
                 if (collideBullet->handleBulletCollision(world_tick, nullptr))
                 {
                     deleteList.push_back(collideBullet);
-                    ServerGame::instance()->sendRemovePacket(ClassId::Bullet,
+                    ServerGame::Instance()->sendRemovePacket(ClassId::Bullet,
                                                              collideBullet->GetObjectId());
                 }
                 else
@@ -363,7 +359,7 @@ void World::UpdateWorld()
                 collectObj->HandleCollect(collidePlayer);
                 if (collectObj->GetType() == CollectType::Weapon)
                 {
-                    ServerGame::instance()->sendRemovePacket(
+                    ServerGame::Instance()->sendRemovePacket(
                         ClassId::Collectable,
                         collectObj->GetObjectId(),
                         ClassId::Player,
@@ -373,7 +369,7 @@ void World::UpdateWorld()
                 }
                 else if (collectObj->GetType() == CollectType::PowerUp)
                 {
-                    ServerGame::instance()->sendRemovePacket(
+                    ServerGame::Instance()->sendRemovePacket(
                         ClassId::Collectable,
                         collectObj->GetObjectId(),
                         ClassId::Player,
@@ -400,7 +396,7 @@ void World::UpdateWorld()
                 }
 
                 collideFlag->HandleCollectable(collidePlayer);
-                ServerGame::instance()->sendRemovePacket(ClassId::Flag,
+                ServerGame::Instance()->sendRemovePacket(ClassId::Flag,
                                                          collideFlag->GetObjectId(),
                                                          ClassId::Player,
                                                          collidePlayer->GetObjectId());
@@ -467,7 +463,7 @@ void World::UpdateWorld()
                 collectObj->HandleCollect(collidePlayer);
                 if (collectObj->GetType() == CollectType::Weapon)
                 {
-                    ServerGame::instance()->sendRemovePacket(
+                    ServerGame::Instance()->sendRemovePacket(
                         ClassId::Collectable,
                         collectObj->GetObjectId(),
                         ClassId::Player,
@@ -477,7 +473,7 @@ void World::UpdateWorld()
                 }
                 else if (collectObj->GetType() == CollectType::PowerUp)
                 {
-                    ServerGame::instance()->sendRemovePacket(
+                    ServerGame::Instance()->sendRemovePacket(
                         ClassId::Collectable,
                         collectObj->GetObjectId(),
                         ClassId::Player,
@@ -503,7 +499,7 @@ void World::UpdateWorld()
                     continue;
                 }
                 collideFlag->HandleCollectable(collidePlayer);
-                ServerGame::instance()->sendRemovePacket(ClassId::Flag,
+                ServerGame::Instance()->sendRemovePacket(ClassId::Flag,
                                                          collideFlag->GetObjectId(),
                                                          ClassId::Player,
                                                          collidePlayer->GetObjectId());
@@ -584,7 +580,7 @@ void World::UpdateWorld()
         printf(" back wall at (%f,%f,%f)\n", vecg.getX(), vecg.getY(), vecg.getZ());
         */
 
-        auto& dynamicMap = EntitySpawner::instance()->GetMap();
+        auto& dynamicMap = EntitySpawner::Instance()->GetMap();
         for (auto it = dynamicMap.begin(); it != dynamicMap.end(); it++)
         {
             btVector3 vec = it->second->GetEntityPosition();
@@ -604,14 +600,14 @@ void World::UpdateWorld()
     }
 
     // Handle spawning for this tick
-    RespawnHandler::instance()->RespawnPlayers(world_tick);
-    CollectableSpawner::instance()->SpawnRandomCollectables(curWorld, world_tick);
+    RespawnHandler::Instance()->RespawnPlayers(world_tick);
+    CollectableSpawner::Instance()->SpawnRandomCollectables(curWorld, world_tick);
 
     // Send position updates of all dynamic objects
     if (world_tick % 4 == 0)
     {
         // Iterates through all dynamic objects in the Map and sends position updates to client
-        auto& dynamicMap = EntitySpawner::instance()->GetMap();
+        auto& dynamicMap = EntitySpawner::Instance()->GetMap();
         for (auto it = dynamicMap.begin(); it != dynamicMap.end(); it++)
         {
             // btVector3 vec = it->second->GetEntityPosition();
@@ -622,7 +618,7 @@ void World::UpdateWorld()
             {
                 if (static_cast<ClassId>(it->second->GetClassId()) == ClassId::Player)
                 {
-                    ServerGame::instance()->sendMovePacket((ClassId)it->second->GetClassId(),
+                    ServerGame::Instance()->sendMovePacket((ClassId)it->second->GetClassId(),
                                                            it->second->GetObjectId());
                 }
                 // printf(" Dynamic object classid: %d, objid: %d, velocity (%f,%f,%f)\n",
@@ -652,7 +648,7 @@ void World::UpdateWorld()
                 }
             }
 
-            ServerGame::instance()->sendMovePacket((ClassId)it->second->GetClassId(),
+            ServerGame::Instance()->sendMovePacket((ClassId)it->second->GetClassId(),
                                                    it->second->GetObjectId());
         }
     }

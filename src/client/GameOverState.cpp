@@ -32,7 +32,7 @@ void GOState::OnKeyDown(int action, int key)
     switch (key)
     {
     case GLFW_KEY_ESCAPE:
-        glfwSetWindowShouldClose(ClientGame::instance()->window, GL_TRUE);
+        glfwSetWindowShouldClose(ClientGame::Instance()->window, GL_TRUE);
         break;
     default:
         break;
@@ -64,7 +64,8 @@ void GOState::OnClick(int button, int action, double x, double y)
             m_stateManager->ChangeState(CMenuState::GetInstance(m_stateManager));
             break;
         default:
-            printf("%d clicked%s\n", res[0]);
+            //printf("%d clicked%s\n", res[0]);
+            printf("%d clicked\n", res[0]); // Is this the right format string??
         }
     }
 }
@@ -95,7 +96,7 @@ void GOState::Draw()
     glClear(GL_DEPTH_BUFFER_BIT); // remove depth info so text and buttons go on top
 
     //////////////// DISPLAY WINNER ////////////////////////////////
-    if (ClientGame::instance()->GetWinner() == -1)
+    if (ClientGame::Instance()->GetWinner() == -1)
     { // tie
         m_spriteRenderer->DrawSprite(*m_tied,
                                     glm::vec2(x, y),
@@ -103,7 +104,7 @@ void GOState::Draw()
                                     0.0f,
                                     glm::vec3(1.0f, 1.0f, 1.0f));
     }
-    else if (ClientGame::instance()->GetWinner() == ClientGame::instance()->GetClientTeam())
+    else if (ClientGame::Instance()->GetWinner() == ClientGame::Instance()->GetClientTeam())
     {
         m_spriteRenderer->DrawSprite(*m_win,
                                     glm::vec2(x, y),
@@ -123,9 +124,9 @@ void GOState::Draw()
 
 void GOState::EnterState()
 {
-    ClientGame::instance()->StopMenuSound();
+    ClientGame::Instance()->StopMenuSound();
     Window::s_mouseCaptured = false;
-    glfwSetInputMode(ClientGame::instance()->window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    glfwSetInputMode(ClientGame::Instance()->window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 }
 
 void GOState::Update(DWORD dwCurrentTime)

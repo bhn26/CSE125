@@ -372,6 +372,9 @@
     <ClInclude Include="..\src\Audio\SoundsHandler.h">
       <Filter>Source Files\Audio</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\Basic\Singleton.h">
+      <Filter>Source Files\Basic</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\src\Graphics\Shaders\basic_shader.frag">

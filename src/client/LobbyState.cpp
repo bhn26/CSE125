@@ -13,7 +13,7 @@ LobbyState::LobbyState(CStateManager* pManager)
     : CGameState(pManager), m_spriteRenderer(new SpriteRenderer())
 {
     // Create the text controls of the menu.
-    ClientGame::instance()->sendJoinPacket(ClientGame::GetClientId() % 2);
+    ClientGame::Instance()->sendJoinPacket(ClientGame::GetClientId() % 2);
 }
 
 LobbyState::~LobbyState()
@@ -64,22 +64,23 @@ void LobbyState::OnClick(int button, int action, double x, double y)
                 break;
             case 1:
                 printf("Start Button clicked\n");
-                ClientGame::instance()->PlaySound("Button_Click", options);
-                ClientGame::instance()->sendStartPacket();
+                ClientGame::Instance()->PlaySound("Button_Click", options);
+                ClientGame::Instance()->sendStartPacket();
                 break;
             case 2:
                 printf("Join T0 clicked\n"); // team 1
-                ClientGame::instance()->PlaySound("Button_Click", options);
-                ClientGame::instance()->sendJoinPacket(0);
+                ClientGame::Instance()->PlaySound("Button_Click", options);
+                ClientGame::Instance()->sendJoinPacket(0);
                 break;
             case 3:
                 printf("Join T1 clicked\n"); // team 2
-                ClientGame::instance()->PlaySound("Button_Click", options);
-                ClientGame::instance()->sendJoinPacket(1);
+                ClientGame::Instance()->PlaySound("Button_Click", options);
+                ClientGame::Instance()->sendJoinPacket(1);
                 break;
             default:
-                printf("%d clicked%s\n", res[0]);
-                ClientGame::instance()->PlaySound("Button_Click", options);
+                //printf("%d clicked%s\n", res[0]);
+                printf("%d clicked\n", res[0]); // Is this the right format string??
+                ClientGame::Instance()->PlaySound("Button_Click", options);
             }
         }
     }
@@ -190,7 +191,7 @@ void LobbyState::Draw()
 
         for (int i = 0; i < team0.size(); i++)
         {
-            TextRenderer::RenderText(ClientGame::instance()->GetName(team0.at(i)).c_str(),
+            TextRenderer::RenderText(ClientGame::Instance()->GetName(team0.at(i)).c_str(),
                                      x,
                                      y,
                                      1.0f,
@@ -224,7 +225,7 @@ void LobbyState::Draw()
 
         for (int i = 0; i < team1.size(); i++)
         {
-            TextRenderer::RenderText(ClientGame::instance()->GetName(team1.at(i)).c_str(),
+            TextRenderer::RenderText(ClientGame::Instance()->GetName(team1.at(i)).c_str(),
                                      x,
                                      y,
                                      1.0f,
@@ -263,7 +264,7 @@ void LobbyState::EnterState()
 
 void LobbyState::LeaveState()
 {
-    ClientGame::instance()->StopMenuSound();
+    ClientGame::Instance()->StopMenuSound();
 }
 
 void LobbyState::InitTextures()
@@ -296,5 +297,5 @@ void LobbyState::ShowLoadingScreen()
                                  0.0f,
                                  glm::vec3(1.0f, 1.0f, 1.0f));
 
-    // glfwSwapBuffers(ClientGame::instance()->window);
+    // glfwSwapBuffers(ClientGame::Instance()->window);
 }

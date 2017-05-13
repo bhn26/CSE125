@@ -1,18 +1,22 @@
 #pragma once
-#include <stdlib.h>
+#include "Basic/Singleton.h"
+
 #include "ServerNetwork.h"
 #include "network/NetworkData.h"
 #include "engine/engine.h"
 #include <btBulletDynamicsCommon.h>
 
-#include <map>
 #include <iostream>
 #include <chrono>
+#include <map>
 #include <ratio>
+#include <stdlib.h>
 #include <thread>
 
-class ServerGame
+class ServerGame : public Singleton<ServerGame>
 {
+    friend class Singleton<ServerGame>;
+
 public:
     static unsigned int NumClients() { return m_clientId; }
     void update();
@@ -87,12 +91,6 @@ public:
 
     void sendNamePacket(int player_id);
     void receiveNamePacket(int offset);
-
-    static ServerGame* instance()
-    {
-        static ServerGame* instance = new ServerGame();
-        return instance;
-    }
 
     void IncScore(int team, int n) { m_scores[team] += n; };
     void DecScore(int team, int n)

@@ -47,7 +47,7 @@ int BlastField::handleField()
                 if (collidedPlayer->GetTeamId() != m_teamId || m_nonFriendly)
                 { // If the player is an enemy or if this field is nonfriendly
                     collidedPlayer->takeDamage(m_fieldDamage,
-                                               FireRateReset::instance()->currentWorldTick);
+                                               FireRateReset::Instance()->currentWorldTick);
                     collidedPlayer->SetStun(m_stun);
                 }
                 else

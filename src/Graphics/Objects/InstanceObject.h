@@ -19,6 +19,7 @@
 
 class Model;
 
+// An instance-rendered object
 class InstanceObject : public Entity
 {
 public:

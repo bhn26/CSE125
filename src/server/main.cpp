@@ -13,13 +13,13 @@ void serverLoop(void* arg)
 {
     while (true)
     {
-        ServerGame::instance()->update();
+        ServerGame::Instance()->update();
     }
 }
 
 int main()
 {
-    ConfigManager::instance()->LoadConfigs("eggs.cfg");
+    ConfigManager::Instance()->LoadConfigs("eggs.cfg");
 
     serverLoop(nullptr);
 }

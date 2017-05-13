@@ -25,8 +25,8 @@ ServerNetwork::ServerNetwork(void)
     hints.ai_protocol = IPPROTO_TCP; // TCP connection!!!
     hints.ai_flags = AI_PASSIVE;
 
-    ConfigManager::instance()->LoadConfigs("../eggs.cfg");
-    m_port = ConfigManager::instance()->GetConfigValue("m_port");
+    ConfigManager::Instance()->LoadConfigs("../eggs.cfg");
+    m_port = ConfigManager::Instance()->GetConfigValue("m_port");
 
     // resolve server address and m_port
     if (m_port.empty())

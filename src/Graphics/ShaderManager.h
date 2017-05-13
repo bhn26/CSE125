@@ -1,4 +1,6 @@
 #pragma once
+#include "Basic/Singleton.h"
+
 #include <glm/glm.hpp>
 #include <memory>
 #include <map>
@@ -11,8 +13,9 @@ class Shader;
 // ShaderManager owns all shaders and allows others to use them as well.
 // ShaderManager gets all shaders via config files in the form of Shader_<name>_Vert and Shader_<name>_Frag pairs.
 // Shader_<name>_Geom should be optional and is not yet supported
-class ShaderManager
+class ShaderManager : public Singleton<ShaderManager>
 {
+    friend class Singleton<ShaderManager>;
     friend class ConfigManager;
 
     std::map<std::string, std::shared_ptr<Shader>> _shaderMap;
@@ -27,12 +30,6 @@ public:
     const static std::string shaderPath;
 
     void LoadShaders();
-
-    static ShaderManager* Instance()
-    {
-        static ShaderManager* instance = new ShaderManager();
-        return instance;
-    }
 
     static std::shared_ptr<Shader> GetShader(std::string shaderName);
 

@@ -34,7 +34,7 @@ bool MineBulletHandler::HandleBulletCollision(unsigned int world_tick, Entity* c
             btTransform currentTrans = field->GetFieldGhostObject()->getWorldTransform();
             currentTrans.setOrigin(temp);
             field->GetFieldGhostObject()->setWorldTransform(currentTrans);
-            FieldHandler::instance()->AddField(field);
+            FieldHandler::Instance()->AddField(field);
             return true;
         }
     }

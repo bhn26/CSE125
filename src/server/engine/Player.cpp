@@ -120,29 +120,29 @@ void Player::AcquireFlag(Flag* flag)
     printf("Flag ACQUIRED\n");
 
     // note - individual scores are updated with move packets
-    ServerGame::instance()->IncScore(m_teamId, 1);
-    // ServerGame::instance()->sendScorePacket();
+    ServerGame::Instance()->IncScore(m_teamId, 1);
+    // ServerGame::Instance()->sendScorePacket();
 
     // check if your team won
-    int* scores = ServerGame::instance()->GetScores();
+    int* scores = ServerGame::Instance()->GetScores();
     printf("Team %d has %d out of %d eggs\n",
            m_teamId,
            scores[m_teamId],
-           ServerGame::instance()->GetTotalEggs());
-    if (scores[m_teamId] == ServerGame::instance()->GetTotalEggs())
+           ServerGame::Instance()->GetTotalEggs());
+    if (scores[m_teamId] == ServerGame::Instance()->GetTotalEggs())
     {
         printf("sending game over packet\n");
-        ServerGame::instance()->sendGameOverPacket(m_teamId);
+        ServerGame::Instance()->sendGameOverPacket(m_teamId);
     }
 }
 
 void Player::LoseFlags()
 {
-    ServerGame::instance()->DecScore(m_teamId, m_flags.size());
+    ServerGame::Instance()->DecScore(m_teamId, m_flags.size());
 
     // Change this, we need the flags to come out of the player back into the world
     m_flags.clear();
-    // ServerGame::instance()->sendScorePacket();
+    // ServerGame::Instance()->sendScorePacket();
 }
 
 int Player::GetTeamId()
@@ -174,15 +174,15 @@ void Player::UseWeapon()
 
     btMatrix3x3* currentOrientation = new btMatrix3x3(*playerRotation);
 
-    // ServerGame::instance()->sendShootPacket(m_objectId);
+    // ServerGame::Instance()->sendShootPacket(m_objectId);
     if (m_playerWeapon->UseWeapon(position, currentOrientation, m_objectId, m_teamId, this)
         == 0)
     {
-        ServerGame::instance()->sendDiscardPacket(GetObjectId());
+        ServerGame::Instance()->sendDiscardPacket(GetObjectId());
         delete m_playerWeapon;
         m_playerWeapon = nullptr;
     }
-    ServerGame::instance()->sendAttackPacket(m_objectId);
+    ServerGame::Instance()->sendAttackPacket(m_objectId);
 }
 
 void Player::SetCamAngle(float yos)
@@ -225,7 +225,7 @@ void Player::DiscardWeapon()
     {
         delete m_playerWeapon;
         m_playerWeapon = nullptr;
-        ServerGame::instance()->sendDiscardPacket(m_objectId);
+        ServerGame::Instance()->sendDiscardPacket(m_objectId);
     }
 
     // if(m_alive) send packet for discard animation
@@ -283,7 +283,7 @@ void Player::UsePeck()
     btMatrix3x3* currentOrientation = new btMatrix3x3(*playerRotation);
 
     m_peckWeapon->UseWeapon(position, currentOrientation, m_objectId, m_teamId, this);
-    ServerGame::instance()->sendAttackPacket(m_objectId);
+    ServerGame::Instance()->sendAttackPacket(m_objectId);
     //	peckWeapon->UseWeapon(&(m_entityRigidBody->getCenterOfMassPosition()), &currentOrientation,
     //m_objectId, m_teamId, this);
     // printf("player with objId: %d used peck! \n", m_objectId);
@@ -297,10 +297,10 @@ void Player::HandleDeath(unsigned int death_tick)
     DiscardWeapon();
     LosePower();
     m_deathTime = death_tick;
-    ServerGame::instance()->sendDeathPacket(m_objectId);
-    // EntitySpawner::instance()->RemoveEntity(classId, m_objectId);
+    ServerGame::Instance()->sendDeathPacket(m_objectId);
+    // EntitySpawner::Instance()->RemoveEntity(classId, m_objectId);
 
-    RespawnHandler::instance()->KillPlayer(this); // Schedule this guy to respawn in the future
+    RespawnHandler::Instance()->KillPlayer(this); // Schedule this guy to respawn in the future
 
     btVector3 deathPos = m_entityRigidBody->getCenterOfMassPosition();
     deathPos.setY((deathPos.getY() + 4));
@@ -336,18 +336,18 @@ void Player::HandleDeath(unsigned int death_tick)
         out.roty = quat.getY();
         out.rotz = quat.getZ();
         // add Flag to Entity Map
-        ServerGame::instance()->sendSpawnPacket(out);
-        EntitySpawner::instance()->AddEntity(
+        ServerGame::Instance()->sendSpawnPacket(out);
+        EntitySpawner::Instance()->AddEntity(
             curFlag->GetClassId(), curFlag->GetObjectId(), curFlag);
 
         // erase flag from player
         it = m_flags.erase(it);
-        ServerGame::instance()->DecScore(m_teamId, 1);
+        ServerGame::Instance()->DecScore(m_teamId, 1);
     }
     // m_flags.clear(); //Actually calls delete on flags... didn't seem to correctly work for bullet
     // deletion anways... maybe cause of void pointer
     // LoseFlags();
-    // ServerGame::instance()->sendScorePacket();
+    // ServerGame::Instance()->sendScorePacket();
 }
 
 void Player::Move(btVector3* changeVelocity)

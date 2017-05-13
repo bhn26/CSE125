@@ -8,6 +8,8 @@
 #include <Windows.h>
 #endif
 
+#include "Basic/Singleton.h"
+
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <memory>
@@ -53,8 +55,9 @@ namespace Controller
     };
 }
 
-class ClientGame
+class ClientGame : public Singleton<ClientGame>
 {
+    friend class Singleton<ClientGame>;
     friend class Window;
     friend class CPlayState;
 
@@ -129,15 +132,10 @@ public:
     void Destroy();
     void GameLoop();
 
-    static ClientGame* instance()
-    {
-        static ClientGame* instance = new ClientGame();
-        return instance;
-    }
-    static int GetClientId() { return instance()->m_clientId; }
+    static int GetClientId() { return Instance()->m_clientId; }
 
-    static const std::vector<int>& Team0() { return instance()->m_team0; }
-    static const std::vector<int>& Team1() { return instance()->m_team1; }
+    static const std::vector<int>& Team0() { return Instance()->m_team0; }
+    static const std::vector<int>& Team1() { return Instance()->m_team1; }
 
     int TotalEggs() { return m_totalEggs; };
     int* GetScores() { return m_scores; };

@@ -47,13 +47,13 @@ int SeedGun::UseWeapon(btVector3* position, btMatrix3x3* rotation, int playerid,
 		SimpleBulletCollision* handler = new SimpleBulletCollision();
 
 		// Spawns bullet with this gun's damage, speed, and necessary ids into world
-		Bullet* fireProjectile = EntitySpawner::instance()->spawnBullet(playerid, teamid, this->damage, wt, handler, bRigidBody, curWorld);
+		Bullet* fireProjectile = EntitySpawner::Instance()->spawnBullet(playerid, teamid, this->damage, wt, handler, bRigidBody, curWorld);
 
 		this->fireFlag = 0;
-		this->nextFireTick = FireRateReset::instance()->currentWorldTick + fireRate;
+		this->nextFireTick = FireRateReset::Instance()->currentWorldTick + fireRate;
 
 		// add used weapon to "used" list in FireRateReset static object
-		FireRateReset::instance()->AddWeapon(this);
+		FireRateReset::Instance()->AddWeapon(this);
 		currentAmmo--;
 	}
 	return currentAmmo;

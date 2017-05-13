@@ -31,8 +31,8 @@ bool ShaderManager::LoadShader(const std::string& shaderName)
     const static std::string shaderPrefix = std::string("Shader_");
     const static std::string vertSuffix = std::string("_Vert");
     const static std::string fragSuffix = std::string("_Frag");
-    std::string vertShaderPath = ConfigManager::instance()->GetConfigValue(shaderPrefix + shaderName + vertSuffix);
-    std::string fragShaderPath = ConfigManager::instance()->GetConfigValue(shaderPrefix + shaderName + fragSuffix);
+    std::string vertShaderPath = ConfigManager::Instance()->GetConfigValue(shaderPrefix + shaderName + vertSuffix);
+    std::string fragShaderPath = ConfigManager::Instance()->GetConfigValue(shaderPrefix + shaderName + fragSuffix);
     if (!vertShaderPath.length() || !fragShaderPath.length())   // Make sure we get the shader paths
     {
         printf("Error: No vertex/fragment shader pair in config files!\n");

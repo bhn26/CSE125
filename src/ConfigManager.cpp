@@ -26,7 +26,7 @@ void ConfigManager::LoadConfigs(const std::string& file_name)
         std::string field, equal, value;
         if (!(iss >> field >> equal >> value)) { continue; } // error, skip this line
         if (field.substr(0, 2) == "//") { continue; }   // It's a comment
-        cfg_map.insert(std::pair<std::string, std::string>(field, value));
+        m_configs.insert(std::pair<std::string, std::string>(field, value));
 
 #ifdef EGGS_CLIENT
         // Tell the ShaderManager what shaders to load
@@ -60,11 +60,12 @@ void ConfigManager::LoadConfigs(const std::string& file_name)
 // use this to get the value read from the config file
 std::string ConfigManager::GetConfigValue(const std::string& key)
 {
-    const ConfigManager* manager = instance();
-    if (manager->cfg_map.find(key) != manager->cfg_map.end())
-        return manager->cfg_map.at(key);
-    else
-        return "";
+    const ConfigManager* manager = Instance();
+    if (manager->m_configs.find(key) != manager->m_configs.end())
+    {
+        return manager->m_configs.at(key);
+    }
+    return "";
 }
 
 ////////////////////////////////////////////////////////////////////////////////

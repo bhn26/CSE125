@@ -69,8 +69,8 @@ Collectable::Collectable(int objectid,
 void Collectable::HandleCollect(Player* collidedPlayer)
 {
     // Remove collectable object from EntitySpawner Map
-    EntitySpawner::instance()->RemoveEntity(ClassId::Collectable, m_objectId);
-    CollectableSpawner::instance()->DecCollectables();
+    EntitySpawner::Instance()->RemoveEntity(ClassId::Collectable, m_objectId);
+    CollectableSpawner::Instance()->DecCollectables();
 
     if (m_type == CollectType::Weapon)
     {

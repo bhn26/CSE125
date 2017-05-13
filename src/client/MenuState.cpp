@@ -78,19 +78,20 @@ void CMenuState::OnClick(int button, int action, double x, double y)
             printf("Textbox clicked\n");
             if (m_username == m_defaultName)
             {
-                ClientGame::instance()->PlaySound("Button_Click", options);
+                ClientGame::Instance()->PlaySound("Button_Click", options);
                 m_username.clear();
             }
             m_typing = true;
             break;
         case 2:
             printf("Button clicked\n");
-            ClientGame::instance()->PlaySound("Button_Click", options);
+            ClientGame::Instance()->PlaySound("Button_Click", options);
             StartGame();
             break;
         default:
-            printf("%d clicked%s\n", res[0]);
-            ClientGame::instance()->PlaySound("Button_Click", options);
+            //printf("%d clicked%s\n", res[0]);
+            printf("%d clicked\n", res[0]); // Is this the right format string??
+            ClientGame::Instance()->PlaySound("Button_Click", options);
             m_typing = false;
         }
     }
@@ -132,7 +133,7 @@ void CMenuState::RenderSelection()
 
 void CMenuState::Update(DWORD)
 {
-    ClientGame::instance()->SetName(m_username);
+    ClientGame::Instance()->SetName(m_username);
 }
 
 void CMenuState::Draw()
@@ -171,7 +172,7 @@ void CMenuState::EnterState()
 
     m_username += m_defaultName;
     m_typing = true;
-    // ClientGame::instance()->PlayMenuSound();      // DO NOT CALL HERE. Loops
+    // ClientGame::Instance()->PlayMenuSound();      // DO NOT CALL HERE. Loops
 }
 
 void ::CMenuState::InitTextures()
@@ -190,7 +191,7 @@ void ::CMenuState::InitTextures()
 void CMenuState::StartGame()
 {
     // send chicken name
-    ClientGame::instance()->sendNamePacket();
+    ClientGame::Instance()->sendNamePacket();
     // change state
     m_stateManager->ChangeState(LobbyState::GetInstance(m_stateManager));
 }

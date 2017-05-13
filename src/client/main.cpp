@@ -13,6 +13,6 @@
 
 int main()
 {
-    ClientGame::instance()->GameLoop();
+    ClientGame::Instance()->GameLoop();
 }
 #endif      // _WIN32

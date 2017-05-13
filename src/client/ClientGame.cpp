@@ -894,7 +894,7 @@ void ClientGame::GameLoop()
 
         if (++m_tick % 15 == 0 && m_iSpawned)
         {
-            ClientGame::instance()->sendRotationPacket();
+            ClientGame::Instance()->sendRotationPacket();
             m_tick = 0;
         }
     }
@@ -910,7 +910,7 @@ void ClientGame::Error_callback(int error, const char* description)
 ////////////////////////////////////////////////////////////////////////////////
 void ClientGame::LoadConfigs()
 {
-    ConfigManager::instance()->LoadConfigs("eggs.cfg");
+    ConfigManager::Instance()->LoadConfigs("eggs.cfg");
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1021,13 +1021,13 @@ void ClientGame::CheckController()
     const unsigned char* buttons = glfwGetJoystickButtons(GLFW_JOYSTICK_1, &buttonCount);
 
     // Check if we're starting the game
-    if (!ClientGame::instance()->hasStarted())
+    if (!ClientGame::Instance()->hasStarted())
     {
         if (buttons[static_cast<int>(Buttons::Start)]) // Start
         {
             printf("client will send start game\n");
             printf("sending start packet\n");
-            ClientGame::instance()->sendStartPacket();
+            ClientGame::Instance()->sendStartPacket();
         }
         return;
     }
@@ -1047,11 +1047,11 @@ void ClientGame::HandleTriggers(const float* axes)
     static const float threshold = 0.5f;
     if (axes[2] < -threshold)
     {
-        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_L_Trigger"));
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_L_Trigger"));
     }
     if (axes[2] > threshold)
     {
-        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_R_Trigger"));
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_R_Trigger"));
     }
 }
 
@@ -1091,21 +1091,21 @@ void ClientGame::HandleLeftAnalog(const float* axes)
         case static_cast<int>(Axes::LHorizontal): // Right
             if (axes[greatestAxis] > 0)
             {
-                ClientGame::instance()->sendMovePacket(MoveType::Right);
+                ClientGame::Instance()->sendMovePacket(MoveType::Right);
             }
             else
             {
-                ClientGame::instance()->sendMovePacket(MoveType::Left);
+                ClientGame::Instance()->sendMovePacket(MoveType::Left);
             }
             break;
         case static_cast<int>(Axes::LVertical): // DOWN
             if (axes[greatestAxis] > 0)
             {
-                ClientGame::instance()->sendMovePacket(MoveType::Backward);
+                ClientGame::Instance()->sendMovePacket(MoveType::Backward);
             }
             else
             {
-                ClientGame::instance()->sendMovePacket(MoveType::Forward);
+                ClientGame::Instance()->sendMovePacket(MoveType::Forward);
             }
 
             break;
@@ -1119,61 +1119,61 @@ void ClientGame::HandleButtonPress(const unsigned char* buttons)
 {
     using namespace Controller;
     if (buttons[static_cast<int>(Buttons::A)])
-        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_A"));
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_A"));
     else
-        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_A"), false);
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_A"), false);
     if (buttons[static_cast<int>(Buttons::B)])
-        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_B"));
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_B"));
     else
-        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_B"), false);
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_B"), false);
     if (buttons[static_cast<int>(Buttons::X)])
-        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_X"));
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_X"));
     else
-        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_X"), false);
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_X"), false);
     if (buttons[static_cast<int>(Buttons::Y)])
-        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_Y"));
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_Y"));
     else
-        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_Y"), false);
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_Y"), false);
     if (buttons[static_cast<int>(Buttons::Back)])
-        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_Back"));
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_Back"));
     else
-        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_Back"), false);
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_Back"), false);
     if (buttons[static_cast<int>(Buttons::Start)])
-        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_Start"));
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_Start"));
     else
-        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_Start"), false);
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_Start"), false);
     if (buttons[static_cast<int>(Buttons::LAnalog)])
-        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_L_Analog"));
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_L_Analog"));
     else
-        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_L_Analog"), false);
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_L_Analog"), false);
     if (buttons[static_cast<int>(Buttons::RAnalog)])
-        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_R_Analog"));
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_R_Analog"));
     else
-        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_R_Analog"), false);
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_R_Analog"), false);
     if (buttons[static_cast<int>(Buttons::LBumper)])
-        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_L_Bumper"));
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_L_Bumper"));
     else
-        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_L_Bumper"), false);
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_L_Bumper"), false);
     if (buttons[static_cast<int>(Buttons::RBumper)])
-        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_R_Bumper"));
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_R_Bumper"));
     else
-        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_R_Bumper"), false);
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_R_Bumper"), false);
     if (buttons[static_cast<int>(Buttons::DPadUp)])
-        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_D_Pad_Up"));
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_D_Pad_Up"));
     else
-        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_D_Pad_Up"), false);
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_D_Pad_Up"), false);
     if (buttons[static_cast<int>(Buttons::DPadRight)])
-        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_D_Pad_Right"));
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_D_Pad_Right"));
     else
-        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_D_Pad_Right"), false);
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_D_Pad_Right"), false);
     if (buttons[static_cast<int>(Buttons::DPadDown)])
-        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_D_Pad_Down"));
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_D_Pad_Down"));
     else
-        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_D_Pad_Down"), false);
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_D_Pad_Down"), false);
     if (buttons[static_cast<int>(Buttons::DPadLeft)])
-        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_D_Pad_Left"));
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_D_Pad_Left"));
     else
-        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_D_Pad_Left"), false);
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_D_Pad_Left"), false);
 }
 
 void ClientGame::HandleButtonEvent(const std::string& event, bool buttonDown)

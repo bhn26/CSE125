@@ -25,8 +25,10 @@ class StaticObject;
 struct PointLight;
 struct DirectionalLight;
 
-class Scene
+class Scene : public Singleton<Scene>
 {
+    friend class Singleton<Scene>;
+
     enum class UboIndex
     {
         Matrices = 0,
@@ -75,12 +77,6 @@ class Scene
 
 public:
     static SpriteRenderer* sprite_renderer;
-
-    static Scene* Instance()
-    {
-        static Scene* instance = new Scene();
-        return instance;
-    }
 
     static void Initialize() { Instance()->Setup(); }
     void AddEntity(ClassId cid, int oid, std::unique_ptr<Entity> ent);

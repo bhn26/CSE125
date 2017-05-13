@@ -24,9 +24,9 @@ ClientNetwork::ClientNetwork(void) : m_connectSocket(INVALID_SOCKET)
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_protocol = IPPROTO_TCP; // TCP connection!!!
 
-    ConfigManager::instance()->LoadConfigs("eggs.cfg");
-    m_ip = ConfigManager::instance()->GetConfigValue("m_ip");
-    m_port = ConfigManager::instance()->GetConfigValue("m_port");
+    ConfigManager::Instance()->LoadConfigs("eggs.cfg");
+    m_ip = ConfigManager::Instance()->GetConfigValue("m_ip");
+    m_port = ConfigManager::Instance()->GetConfigValue("m_port");
 
     // resolve server address and m_port
     if (std::string(m_ip).size() == 0 || std::string(m_port).size() == 0)

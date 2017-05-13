@@ -50,9 +50,9 @@ void Scene::Setup()
     InitializeUbos();
     InitializeFbo();
 
-    glm::vec3 pos = glm::vec3(std::stof(ConfigManager::instance()->GetConfigValue("Light_Pos_X")),
-                              std::stof(ConfigManager::instance()->GetConfigValue("Light_Pos_Y")),
-                              std::stof(ConfigManager::instance()->GetConfigValue("Light_Pos_Z")));
+    glm::vec3 pos = glm::vec3(std::stof(ConfigManager::Instance()->GetConfigValue("Light_Pos_X")),
+                              std::stof(ConfigManager::Instance()->GetConfigValue("Light_Pos_Y")),
+                              std::stof(ConfigManager::Instance()->GetConfigValue("Light_Pos_Z")));
     glm::vec3 camPos = pos + glm::vec3(-75.0f, 0.0f, 0.0f);
 
     m_pointLight = std::unique_ptr<PointLight>(
@@ -67,12 +67,12 @@ void Scene::Setup()
     // m_lightSpaceMatrix = glm::ortho(-425.0f, 350.0f, -500.0f, 300.0f, 10.0f, 500.0f) *
     //    glm::lookAt(pos, pos + m_dirLight->_direction, glm::vec3(0.0f, 1.0f, 0.0));
     m_lightSpaceMatrix =
-        glm::ortho(std::stof(ConfigManager::instance()->GetConfigValue("Light_Ortho_Left")),
-                   std::stof(ConfigManager::instance()->GetConfigValue("Light_Ortho_Right")),
-                   std::stof(ConfigManager::instance()->GetConfigValue("Light_Ortho_Bottom")),
-                   std::stof(ConfigManager::instance()->GetConfigValue("Light_Ortho_Top")),
-                   std::stof(ConfigManager::instance()->GetConfigValue("Light_Ortho_Near")),
-                   std::stof(ConfigManager::instance()->GetConfigValue("Light_Ortho_Far")))
+        glm::ortho(std::stof(ConfigManager::Instance()->GetConfigValue("Light_Ortho_Left")),
+                   std::stof(ConfigManager::Instance()->GetConfigValue("Light_Ortho_Right")),
+                   std::stof(ConfigManager::Instance()->GetConfigValue("Light_Ortho_Bottom")),
+                   std::stof(ConfigManager::Instance()->GetConfigValue("Light_Ortho_Top")),
+                   std::stof(ConfigManager::Instance()->GetConfigValue("Light_Ortho_Near")),
+                   std::stof(ConfigManager::Instance()->GetConfigValue("Light_Ortho_Far")))
         * glm::lookAt(pos, pos + m_dirLight->_direction, glm::vec3(0.0f, 1.0f, 0.0));
 
     m_depthShader = ShaderManager::GetShader("Depth_Map");
@@ -478,7 +478,7 @@ void Scene::AddEntity(PosInfo p)
         player->SetTeam(p.team_id);
         // player->RotateTo(rotw, rotx, roty, rotz);
         // set main player if the oid matches
-        if (p.oid == ClientGame::instance()->GetClientId())
+        if (p.oid == ClientGame::Instance()->GetClientId())
             Scene::player = player.get();
         // players.push_back(player);
         AddEntity(p.cid, p.oid, std::move(player));

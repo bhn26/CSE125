@@ -31,7 +31,7 @@ bool ModelManager::LoadModel(const std::string& modelName)
     }
 
     const static std::string modelPrefix = std::string("Model_");
-    std::string modelPath = ConfigManager::instance()->GetConfigValue(modelPrefix + modelName);
+    std::string modelPath = ConfigManager::Instance()->GetConfigValue(modelPrefix + modelName);
     if (!modelPath.length())   // Make sure we get the model paths
     {
         printf("Error: No model in config files!\n");
