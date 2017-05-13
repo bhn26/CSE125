@@ -61,7 +61,7 @@ void GOState::OnClick(int button, int action, double x, double y)
             printf("play again clicked\n");
             // todo - reset game
             // change state
-            m_pStateManager->ChangeState(CMenuState::GetInstance(m_pStateManager));
+            m_stateManager->ChangeState(CMenuState::GetInstance(m_stateManager));
             break;
         default:
             printf("%d clicked%s\n", res[0]);

@@ -36,7 +36,7 @@ protected:
 
 private:
     // The current score
-    int m_scores[2] = [0,0];
+    int m_scores[2] = {0,0};
 
     bool m_dead = false;
     bool m_showScoreboard = false;

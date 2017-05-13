@@ -56,7 +56,7 @@ void LobbyState::OnClick(int button, int action, double x, double y)
         if (action == GLFW_PRESS)
         {
             SoundsHandler::SoundOptions options;
-            options._isRelativeToListener = true;
+            options.m_isRelativeToListener = true;
             switch (res[0])
             {
             case 0:
@@ -96,7 +96,7 @@ void LobbyState::RenderSelection()
 
         ////////////////// BACKGROUND//////////////////////////
         float x = (float)Texture::GetWindowCenter(m_bg->Width());
-        float y = Window::height / 2.0f - m_bg->Height() / 2.0f;
+        float y = Window::s_height / 2.0f - m_bg->Height() / 2.0f;
 
         ////////////// START BUTTON /////////////////////////////////////
         m_spriteRenderer->RenderSelection(
@@ -147,7 +147,7 @@ void LobbyState::Draw()
 
         ////////////////// BACKGROUND//////////////////////////
         float x = (float)Texture::GetWindowCenter(m_bg->Width());
-        float y = Window::height / 2.0f - m_bg->Height() / 2.0f;
+        float y = Window::s_height / 2.0f - m_bg->Height() / 2.0f;
         m_spriteRenderer->DrawSprite(*m_bg,
                                      glm::vec2(x, y),
                                      glm::vec2(m_bg->Width(), m_bg->Height()),
@@ -288,7 +288,7 @@ void LobbyState::InitTextures()
 void LobbyState::ShowLoadingScreen()
 {
     int x = Texture::GetWindowCenter(m_loadScreen->Width());
-    int y = Window::height / 2 - m_loadScreen->Height() / 2;
+    int y = Window::s_height / 2 - m_loadScreen->Height() / 2;
 
     m_spriteRenderer->DrawSprite(*m_loadScreen,
                                  glm::vec2(x, y),

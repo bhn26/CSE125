@@ -7,7 +7,7 @@ ClientNetwork::ClientNetwork(void) : m_connectSocket(INVALID_SOCKET)
     WSADATA wsaData;
 
     // holds address info for socket to connect to
-    struct addrinfo *result = NULL, *ptr = NULL, hints;
+    addrinfo *result = nullptr, *ptr = nullptr, hints;
 
     // Initialize Winsock
     m_iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);

@@ -63,8 +63,8 @@ void ClientGame::PlayMenuSound()
     {
         // loop and set to origin
         SoundsHandler::SoundOptions options;
-        options._loops = true;
-        options._isRelativeToListener = true;
+        options.m_loops = true;
+        options.m_isRelativeToListener = true;
         m_menuSound = m_soundsHandler.Play(*soundBuffer, options);
     }
 }
@@ -130,7 +130,7 @@ void ClientGame::sendInitPacket()
 
     packet.Serialize(packetData);
 
-    NetworkServices::sendMessage(network->ConnectSocket, packetData, packetSize);
+    NetworkServices::sendMessage(network->m_connectSocket, packetData, packetSize);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -153,7 +153,7 @@ void ClientGame::receiveJoinPacket(int offset)
     if (team == 0)
     {
         m_team0.erase(std::remove(m_team0.begin(), m_team0.end(), player),
-                    m_team0.end()); // erase from both lists
+                      m_team0.end()); // erase from both lists
         m_team1.erase(std::remove(m_team1.begin(), m_team1.end(), player), m_team1.end());
 
         m_team0.push_back(player);
@@ -185,7 +185,7 @@ void ClientGame::sendJoinPacket(int team)
     pi.Serialize(packet.dat.buf);
 
     packet.Serialize(packetData);
-    NetworkServices::sendMessage(network->ConnectSocket, packetData, packetSize);
+    NetworkServices::sendMessage(network->m_connectSocket, packetData, packetSize);
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -203,7 +203,7 @@ void ClientGame::sendReadyPacket()
 
     packet.Serialize(packetData);
 
-    NetworkServices::sendMessage(network->ConnectSocket, packetData, packetSize);
+    NetworkServices::sendMessage(network->m_connectSocket, packetData, packetSize);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -241,7 +241,7 @@ void ClientGame::sendStartPacket()
     packet.Serialize(packetData);
 
     m_startSent = true;
-    NetworkServices::sendMessage(network->ConnectSocket, packetData, packetSize);
+    NetworkServices::sendMessage(network->m_connectSocket, packetData, packetSize);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -265,7 +265,7 @@ void ClientGame::receiveReadyToSpawnPacket(int offset)
     pi.Serialize(packet.dat.buf);
 
     packet.Serialize(packetData);
-    NetworkServices::sendMessage(network->ConnectSocket, packetData, packetSize);
+    NetworkServices::sendMessage(network->m_connectSocket, packetData, packetSize);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -387,7 +387,7 @@ void ClientGame::sendMovePacket(MoveType direction)
     pi.Serialize(packet.dat.buf);
 
     packet.Serialize(packetData);
-    NetworkServices::sendMessage(network->ConnectSocket, packetData, packetSize);
+    NetworkServices::sendMessage(network->m_connectSocket, packetData, packetSize);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -452,7 +452,7 @@ void ClientGame::sendRotationPacket()
 
     packet.Serialize(packetData);
 
-    NetworkServices::sendMessage(network->ConnectSocket, packetData, packetSize);
+    NetworkServices::sendMessage(network->m_connectSocket, packetData, packetSize);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -468,7 +468,7 @@ void ClientGame::sendJumpPacket()
 
     packet.Serialize(packetData);
 
-    NetworkServices::sendMessage(network->ConnectSocket, packetData, packetSize);
+    NetworkServices::sendMessage(network->m_connectSocket, packetData, packetSize);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -545,7 +545,7 @@ void ClientGame::sendAttackPacket(AttackType t)
 
     packet.Serialize(packetData);
 
-    NetworkServices::sendMessage(network->ConnectSocket, packetData, packetSize);
+    NetworkServices::sendMessage(network->m_connectSocket, packetData, packetSize);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -571,7 +571,7 @@ void ClientGame::sendDiscardPacket()
 
     packet.Serialize(packetData);
 
-    NetworkServices::sendMessage(network->ConnectSocket, packetData, packetSize);
+    NetworkServices::sendMessage(network->m_connectSocket, packetData, packetSize);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -609,7 +609,7 @@ void ClientGame::sendDancePacket()
 
     packet.Serialize(packetData);
 
-    NetworkServices::sendMessage(network->ConnectSocket, packetData, packetSize);
+    NetworkServices::sendMessage(network->m_connectSocket, packetData, packetSize);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -667,11 +667,11 @@ void ClientGame::sendNamePacket()
 
     packet.Serialize(packetData);
 
-    NetworkServices::sendMessage(network->ConnectSocket, packetData, packetSize);
+    NetworkServices::sendMessage(network->m_connectSocket, packetData, packetSize);
 
     packet.Serialize(packetData);
 
-    NetworkServices::sendMessage(network->ConnectSocket, packetData, packetSize);
+    NetworkServices::sendMessage(network->m_connectSocket, packetData, packetSize);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -839,7 +839,7 @@ void ClientGame::ShowLoadingScreen()
     SpriteRenderer* sprite_renderer = new SpriteRenderer();
     Texture* bg = new Texture(GL_TEXTURE_2D, "assets/ui/loading/loading.png");
     int x = Texture::GetWindowCenter(bg->Width());
-    int y = Window::height / 2 - bg->Height() / 2;
+    int y = Window::s_height / 2 - bg->Height() / 2;
 
     sprite_renderer->DrawSprite(*bg,
                                 glm::vec2(x, y),
@@ -1223,7 +1223,7 @@ void ClientGame::HandleButtonEvent(const std::string& event, bool buttonDown)
             if (Window::m_pStateManager->GetActiveState()
                 == CPlayState::GetInstance(Window::m_pStateManager))
             {
-                CPlayState::GetInstance(Window::m_pStateManager)->show_scoreboard = true;
+                CPlayState::GetInstance(Window::m_pStateManager)->m_showScoreboard = true;
             }
         }
         else if (event == EventTauntDance)
@@ -1247,7 +1247,7 @@ void ClientGame::HandleButtonEvent(const std::string& event, bool buttonDown)
             if (Window::m_pStateManager->GetActiveState()
                 == CPlayState::GetInstance(Window::m_pStateManager))
             {
-                CPlayState::GetInstance(Window::m_pStateManager)->show_scoreboard = false;
+                CPlayState::GetInstance(Window::m_pStateManager)->m_showScoreboard = false;
             }
         }
     }

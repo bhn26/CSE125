@@ -176,7 +176,7 @@ void Scene::Setup()
     m_grass = std::unique_ptr<InstanceObject>(
         new InstanceObject(ModelManager::GetModel("Grass"), 10000, 1.0f));
     //	pumpkin = std::unique_ptr<InstanceObject>(new
-    //InstanceObject(ModelManager::GetModel("Pumpkin"), 20, 10.0f, 20.0f));
+    // InstanceObject(ModelManager::GetModel("Pumpkin"), 20, 10.0f, 20.0f));
 
     m_cubeMap = std::unique_ptr<CubeMap>(new CubeMap);
     m_cubeMap->LoadCubeMap();
@@ -293,7 +293,7 @@ void Scene::SetLightSpaceUbo()
 void Scene::SetProjectionUbo()
 {
     glm::mat4 projection =
-        glm::perspective(45.0f, (float)Window::width / (float)Window::height, 0.1f, 1000.0f);
+        glm::perspective(45.0f, (float)Window::s_width / (float)Window::s_height, 0.1f, 1000.0f);
     glBindBuffer(GL_UNIFORM_BUFFER, m_uboMatricesBuffer);
     glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), glm::value_ptr(projection));
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
@@ -325,7 +325,7 @@ void Scene::RenderDepthMap()
 ////////////////////////////////////////////////////////////////////////////////
 void Scene::DrawDepthMap()
 {
-    glViewport(0, 0, Window::width / 3, Window::height / 3);
+    glViewport(0, 0, Window::s_width / 3, Window::s_height / 3);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     std::shared_ptr<Shader>& shader = ShaderManager::Instance()->GetShader("Depth_Draw");
     shader->Use();
@@ -342,7 +342,9 @@ void Scene::RenderScene()
     // Clear the color and depth buffers
     // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     if (!IsRenderingDepth())
-        glViewport(0, 0, Window::width, Window::height);
+    {
+        glViewport(0, 0, Window::s_width, Window::s_height);
+    }
     SetViewUbo();
     SetLightSpaceUbo();
     m_cubeMap->Draw();

@@ -132,7 +132,7 @@ void ServerGame::receiveFromClients()
     // go through all clients
     std::map<unsigned int, SOCKET>::iterator iter;
 
-    for (iter = m_network->sessions.begin(); iter != m_network->sessions.end(); iter++)
+    for (iter = m_network->m_sessions.begin(); iter != m_network->m_sessions.end(); iter++)
     {
         int data_length = m_network->receiveData(iter->first, m_networkData);
 

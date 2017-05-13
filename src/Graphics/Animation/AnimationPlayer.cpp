@@ -24,8 +24,8 @@ namespace Animation
             VectorKey posKey;
             posKey.m_time = (float)nodeAnim->mPositionKeys[i].mTime;
             posKey.m_value = glm::vec3(nodeAnim->mPositionKeys[i].mValue.x,
-                                      nodeAnim->mPositionKeys[i].mValue.y,
-                                      nodeAnim->mPositionKeys[i].mValue.z);
+                                       nodeAnim->mPositionKeys[i].mValue.y,
+                                       nodeAnim->mPositionKeys[i].mValue.z);
             m_positionKeys.push_back(std::move(posKey));
         }
         // Parse scaling keys
@@ -34,8 +34,8 @@ namespace Animation
             VectorKey scaleKey;
             scaleKey.m_time = (float)nodeAnim->mScalingKeys[i].mTime;
             scaleKey.m_value = glm::vec3(nodeAnim->mScalingKeys[i].mValue.x,
-                                        nodeAnim->mScalingKeys[i].mValue.y,
-                                        nodeAnim->mScalingKeys[i].mValue.z);
+                                         nodeAnim->mScalingKeys[i].mValue.y,
+                                         nodeAnim->mScalingKeys[i].mValue.z);
             m_scaleKeys.push_back(std::move(scaleKey));
         }
         // Parse rotation keys
@@ -44,9 +44,9 @@ namespace Animation
             QuatKey rotKey;
             rotKey.m_time = (float)nodeAnim->mScalingKeys[i].mTime;
             rotKey.m_value = glm::quat(nodeAnim->mRotationKeys[i].mValue.w,
-                                      nodeAnim->mRotationKeys[i].mValue.x,
-                                      nodeAnim->mRotationKeys[i].mValue.y,
-                                      nodeAnim->mRotationKeys[i].mValue.z);
+                                       nodeAnim->mRotationKeys[i].mValue.x,
+                                       nodeAnim->mRotationKeys[i].mValue.y,
+                                       nodeAnim->mRotationKeys[i].mValue.z);
             m_rotationKeys.push_back(std::move(rotKey));
         }
     }
@@ -87,29 +87,30 @@ namespace Animation
 
     ///////////////////////////////////////////////////////////////////////
     // Constructor from an assimp animation object
-    Animation::Animation(const aiAnimation* animation, bool loops) : m_duration((float)animation->mDuration),
-        m_ticksPerSecond((float)animation->mTicksPerSecond), m_loops(loops)
+    Animation::Animation(const aiAnimation* animation, bool loops)
+        : m_duration((float)animation->mDuration)
+        , m_ticksPerSecond((float)animation->mTicksPerSecond)
+        , m_loops(loops)
     {
         // Create each channel and add to vector
         for (unsigned int i = 0; i < animation->mNumChannels; i++)
         {
             Channel channel = Channel(animation->mChannels[i]);
             m_channels.push_back(std::move(channel));
-            m_channelMap[std::string(animation->mChannels[i]->mNodeName.C_Str())] = i;   // Map name -> index in channelMap
+            m_channelMap[std::string(animation->mChannels[i]->mNodeName.C_Str())] =
+                i; // Map name -> index in channelMap
         }
     }
 
     ///////////////////////////////////////////////////////////////////////
     // Set the 0 time transforms
-    void AnimationPlayer::InitBones0()
-    {
-        EvaluateChildren(m_mesh->m_rootNode, 0.0f);
-    }
+    void AnimationPlayer::InitBones0() { EvaluateChildren(m_mesh->m_rootNode, 0.0f); }
 
     ///////////////////////////////////////////////////////////////////////
-    // Add an animation from the assimp scene. Will not override any 
+    // Add an animation from the assimp scene. Will not override any
     // previous animation. Uses The name in the aiAnimation object
-    std::string AnimationPlayer::AddAnimFromScene(const aiScene* scene, bool loops, std::string animName)
+    std::string
+        AnimationPlayer::AddAnimFromScene(const aiScene* scene, bool loops, std::string animName)
     {
         if (scene->mNumAnimations < 1)
         {
@@ -119,17 +120,17 @@ namespace Animation
 
         aiAnimation& aiAnim = *scene->mAnimations[0];
         std::string name = (animName.length() == 0) ? std::string(aiAnim.mName.C_Str()) : animName;
-        if (m_animMap.find(name) != m_animMap.end())      // Don't override an animation
+        if (m_animMap.find(name) != m_animMap.end()) // Don't override an animation
         {
             fprintf(stderr, "Will not override animation: %s\n", name.c_str());
             do
             {
-                name[name.length()-1]++;
+                name[name.length() - 1]++;
             } while (m_animMap.find(name) != m_animMap.end());
-            //return "";
+            // return "";
         }
 
-        Animation animation = Animation(scene->mAnimations[0], loops);      // Pass in the only animation
+        Animation animation = Animation(scene->mAnimations[0], loops); // Pass in the only animation
         m_animMap[name] = m_animations.size();
         m_animations.push_back(std::move(animation));
         return name;
@@ -140,7 +141,7 @@ namespace Animation
     bool AnimationPlayer::PlayAnimation(std::string name)
     {
         SetAnimation(name);
-        m_animating = true;     // Set to update and evaluate
+        m_animating = true; // Set to update and evaluate
         return true;
     }
 
@@ -177,7 +178,7 @@ namespace Animation
     {
         const Animation& currAnim = m_animations[m_currAnimationIndex];
         float ticksPerSecond = (currAnim.m_ticksPerSecond != 0) ? currAnim.m_ticksPerSecond : 25.0f;
-        float timeInTicks = m_playTimer * ticksPerSecond;       // Timer in seconds
+        float timeInTicks = m_playTimer * ticksPerSecond; // Timer in seconds
         if (timeInTicks > currAnim.m_duration)
         {
             if (currAnim.m_loops)
@@ -185,7 +186,7 @@ namespace Animation
             else
             {
                 Finish();
-                //m_animating = false;
+                // m_animating = false;
                 return;
             }
         }
@@ -196,18 +197,25 @@ namespace Animation
     ///////////////////////////////////////////////////////////////////////
     // Recursive Evaluate. Give the node to evaluate at given time in ticks
     // with parent transform
-    void AnimationPlayer::EvaluateChildren(const std::unique_ptr<Mesh::Node>& node, float time, glm::mat4 parentTransform) const
+    void AnimationPlayer::EvaluateChildren(const std::unique_ptr<Mesh::Node>& node,
+                                           float time,
+                                           glm::mat4 parentTransform) const
     {
-        const Channel& channel = m_animations[m_currAnimationIndex].GetChannel(node->_name);
+        const Channel& channel = m_animations[m_currAnimationIndex].GetChannel(node->m_name);
 
-        glm::mat4 globalTransform = parentTransform * (channel.Valid() ? channel.Evaluate(time, m_animations[m_currAnimationIndex].m_duration) : node->_nodeTransform);
-        if (m_mesh->m_boneMapping.find(node->_name) != m_mesh->m_boneMapping.end())
+        glm::mat4 globalTransform =
+            parentTransform
+            * (channel.Valid()
+                   ? channel.Evaluate(time, m_animations[m_currAnimationIndex].m_duration)
+                   : node->m_nodeTransform);
+        if (m_mesh->m_boneMapping.find(node->m_name) != m_mesh->m_boneMapping.end())
         {
-            Mesh::BoneInfo& boneInfo = m_mesh->m_boneInfo[m_mesh->m_boneMapping[node->_name]];
-            boneInfo.finalTransformation = m_mesh->m_globalInverseTransform * globalTransform * boneInfo.boneOffset;
+            Mesh::BoneInfo& boneInfo = m_mesh->m_boneInfo[m_mesh->m_boneMapping[node->m_name]];
+            boneInfo.m_finalTransformation =
+                m_mesh->m_globalInverseTransform * globalTransform * boneInfo.m_boneOffset;
         }
 
-        for (std::unique_ptr<Mesh::Node>& child : node->_children)
+        for (std::unique_ptr<Mesh::Node>& child : node->m_children)
         {
             EvaluateChildren(child, time, globalTransform);
         }

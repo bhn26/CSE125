@@ -389,7 +389,7 @@ void Player::ChangeState(State state)
         glm::vec3 position = Position();
         SoundsHandler::SoundOptions options(
             position.x, position.y, position.z); // Play at own position
-        options._loops = true;
+        options.m_loops = true;
         m_danceSoundIndices.push(ClientGame::instance()->PlaySound("Dance", options));
         break;
     }

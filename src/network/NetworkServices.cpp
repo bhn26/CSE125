@@ -36,10 +36,16 @@ int NetworkServices::sockClose(SOCKET sock)
 
 #ifdef _WIN32
     status = shutdown(sock, SD_BOTH);
-    if (status == 0) { status = closesocket(sock); }
+    if (status == 0)
+    {
+        status = closesocket(sock);
+    }
 #else
     status = shutdown(sock, SHUT_RDWR);
-    if (status == 0) { status = close(sock); }
+    if (status == 0)
+    {
+        status = close(sock);
+    }
 #endif
 
     return status;
