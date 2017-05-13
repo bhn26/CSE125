@@ -14,7 +14,7 @@
 class ServerGame
 {
 public:
-    static unsigned int NumClients() { return client_id; }
+    static unsigned int NumClients() { return m_clientId; }
     void update();
 
     void receiveFromClients();
@@ -94,19 +94,21 @@ public:
         return instance;
     }
 
-    void IncScore(int team, int n) { scores[team] += n; };
+    void IncScore(int team, int n) { m_scores[team] += n; };
     void DecScore(int team, int n)
     {
-        scores[team] -= n;
-        ;
+        m_scores[team] -= n;
     }
 
-    int* GetScores() { return scores; }
-    int GetTotalEggs() { return total_eggs; };
+    int* GetScores() { return m_scores; }
+    int GetTotalEggs() { return m_totalEggs; };
     int GetTeam(int player) const
     {
-        if (team_map.find(player) != team_map.end())
-            return team_map.at(player);
+        auto it = m_teamMap.find(player);
+        if ( it != m_teamMap.end())
+        {
+            return it->second;
+        }
         return -1;
     };
 
@@ -115,31 +117,31 @@ private:
     ~ServerGame(void);
 
     // IDs for the clients connecting for table in ServerNetwork
-    static unsigned int client_id;
+    static unsigned int m_clientId;
 
-    std::map<int, std::string> name_map;
-    std::map<int, int> team_map; // <player, team>
+    std::map<int, std::string> m_nameMap;
+    std::map<int, int> m_teamMap; // <player, team>
 
     // variables for starting the game
 
-    bool game_started = false;
-    bool game_over = false;
-    bool eggs_spawned = false;
-    int ready_clients = 0; // # of clients ready for the game
-    int spawned_clients = 0;
+    bool m_gameStarted = false;
+    bool m_gameOver = false;
+    bool m_eggsSpawned = false;
+    unsigned int m_readyClients = 0; // # of clients ready for the game
+    unsigned int m_spawnedClients = 0;
 
     std::chrono::time_point<std::chrono::steady_clock> m_startTime;
 
-    int total_eggs = 0;
+    unsigned int m_totalEggs = 0;
 
-    Engine* engine;
+    Engine* m_engine;
 
     // The ServerNetwork object
-    ServerNetwork* network;
+    ServerNetwork* m_network;
 
     // data buffer
     std::uint8_t m_networkData[g_maxPacketSize];
 
     // SCORES
-    int scores[2];
+    int m_scores[2];
 };

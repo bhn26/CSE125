@@ -3,21 +3,21 @@
 #include "engine/Player.h"
 #include <algorithm>
 
-unsigned int ServerGame::client_id;
+unsigned int ServerGame::m_clientId;
 
 ServerGame::ServerGame(void)
 {
     // id's to assign clients for our table
-    client_id = 0;
-    game_started = false;
+    m_clientId = 0;
+    m_gameStarted = false;
 
-    scores[0] = 0;
-    scores[1] = 0;
+    m_scores[0] = 0;
+    m_scores[1] = 0;
 
-    // set up the server network to listen
-    network = new ServerNetwork();
+    // set up the server m_network to listen
+    m_network = new ServerNetwork();
 
-    engine = new Engine();
+    m_engine = new Engine();
 }
 
 ServerGame::~ServerGame(void)
@@ -27,11 +27,11 @@ ServerGame::~ServerGame(void)
 void ServerGame::update()
 {
     // get new clients only if the game hasn't started
-    if (!game_started)
+    if (!m_gameStarted)
     {
-        if (network->acceptNewClient(client_id))
+        if (m_network->acceptNewClient(m_clientId))
         {
-            printf("client %d has been connected to the server\n", client_id);
+            printf("client %d has been connected to the server\n", m_clientId);
 
             // This will be an INIT_CONNECTION packet
             receiveFromClients();
@@ -44,14 +44,14 @@ void ServerGame::update()
 
     int diff = fp_stamp.count();
 
-    if (game_over == false && eggs_spawned && diff >= 300000)
+    if (!m_gameOver && m_eggsSpawned && diff >= 300000)
     {
-        game_over = true;
-        if (scores[0] == scores[1])
+        m_gameOver = true;
+        if (m_scores[0] == m_scores[1])
         {
             sendGameOverPacket(-1);
         }
-        else if (scores[0] > scores[1])
+        else if (m_scores[0] > m_scores[1])
         {
             sendGameOverPacket(0);
         }
@@ -62,7 +62,7 @@ void ServerGame::update()
     }
     else
     {
-        if (game_over == false && eggs_spawned && ((diff % 10000) <= 16))
+        if (m_gameOver == false && m_eggsSpawned && ((diff % 10000) <= 16))
         {
             sendTimeStampPacket(diff);
         }
@@ -72,37 +72,37 @@ void ServerGame::update()
 
     // Check that all clients are ready
 
-    if (game_started && ready_clients >= client_id)
+    if (m_gameStarted && m_readyClients >= m_clientId)
     {
-        if (game_over)
+        if (m_gameOver)
             return;
 
-        if (spawned_clients == ready_clients && !eggs_spawned)
+        if (m_spawnedClients == m_readyClients && !m_eggsSpawned)
         {
-            total_eggs = 2 * ready_clients + 1;
-            for (int i = 0; i < total_eggs; i++)
+            m_totalEggs = 2 * m_readyClients + 1;
+            for (int i = 0; i < m_totalEggs; i++)
             {
-                engine->SpawnRandomFlag();
+                m_engine->SpawnRandomFlag();
             }
-            eggs_spawned = true;
+            m_eggsSpawned = true;
             Sleep(2000); // should wait for clients to respond
             m_startTime = std::chrono::steady_clock::now();
         }
-        if (!engine->hasInitialSpawned())
-            engine->SendPreSpawn(ready_clients);
+        if (!m_engine->hasInitialSpawned())
+            m_engine->SendPreSpawn(m_readyClients);
 
         // once eggs has spawned, everything has spawned and we can begin the world cycle
         auto t1 = std::chrono::steady_clock::now();
 
-        if (eggs_spawned)
+        if (m_eggsSpawned)
         {
-            engine->GetWorld()->UpdateWorld();
+            m_engine->GetWorld()->UpdateWorld();
         }
 
         auto t2 = std::chrono::steady_clock::now();
 
-        float thresh = 16.67; // 60
-                              // float thresh = 33;   // 30 frames
+        float thresh = 16.67f; // 60 FPS
+        //float thresh = 33;   // 30 frames
         std::chrono::duration<double, std::milli> fp_ms = t2 - t1;
         //("DIFFERENCE: %f\n", fp_ms.count());
 
@@ -132,9 +132,9 @@ void ServerGame::receiveFromClients()
     // go through all clients
     std::map<unsigned int, SOCKET>::iterator iter;
 
-    for (iter = network->sessions.begin(); iter != network->sessions.end(); iter++)
+    for (iter = m_network->sessions.begin(); iter != m_network->sessions.end(); iter++)
     {
-        int data_length = network->receiveData(iter->first, m_networkData);
+        int data_length = m_network->receiveData(iter->first, m_networkData);
 
         if (data_length <= 0)
         {
@@ -164,12 +164,12 @@ void ServerGame::receiveFromClients()
                 receiveJoinPacket(i);
                 break;
             case PacketTypes::ReadyGame:
-                ready_clients++;
-                // printf("ready clients: %d\nclient_id: %d\n", ready_clients, client_id);
+                m_readyClients++;
+                // printf("ready clients: %d\nm_clientId: %d\n", m_readyClients, m_clientId);
                 break;
             case PacketTypes::SpawnEvent:
                 receiveIndSpawnPacket(i + sizeof(PacketHeader));
-                spawned_clients++;
+                m_spawnedClients++;
                 break;
             case PacketTypes::StartGame:
                 receiveStartPacket(i);
@@ -217,14 +217,14 @@ void ServerGame::receiveInitPacket(int offset)
     packet.hdr.packet_type = static_cast<int>(PacketTypes::InitConnection);
 
     // Send back to the client and assign client id
-    packet.hdr.receiver_id = client_id;
+    packet.hdr.receiver_id = m_clientId;
     packet.hdr.sender_id = SERVER_ID;
 
     packet.Serialize(packetData);
 
-    network->sendToClient(packetData, packetSize, client_id);
-    printf("server sent init packet to client %d\n", client_id);
-    client_id++;
+    m_network->sendToClient(packetData, packetSize, m_clientId);
+    printf("server sent init packet to client %d\n", m_clientId);
+    m_clientId++;
 }
 
 // Unused, we send the init back right away in receive
@@ -241,7 +241,7 @@ void ServerGame::sendInitPacket()
 
     packet.Serialize(packetData);
 
-    network->sendToClient(packetData, packetSize, client_id);
+    m_network->sendToClient(packetData, packetSize, m_clientId);
 }
 
 void ServerGame::receiveJoinPacket(int offset)
@@ -255,17 +255,17 @@ void ServerGame::receiveJoinPacket(int offset)
 
     int client = hdr->sender_id;
 
-    if (team_map.find(client) == team_map.end())
+    if (m_teamMap.find(client) == m_teamMap.end())
     { // if new client send all client team data
-        for (std::map<int, int>::iterator it = team_map.begin(); it != team_map.end(); it++)
+        for (std::map<int, int>::iterator it = m_teamMap.begin(); it != m_teamMap.end(); it++)
         {
             sendJoinPacket(it->first);
         }
     }
 
-    printf("(before) team_map size = %d", team_map.size());
-    team_map[client] = pi->team_id;
-    printf("team_map size = %d", team_map.size());
+    printf("(before) m_teamMap size = %d", m_teamMap.size());
+    m_teamMap[client] = pi->team_id;
+    printf("m_teamMap size = %d", m_teamMap.size());
     sendJoinPacket(client);
 };
 
@@ -281,7 +281,7 @@ void ServerGame::sendJoinPacket(int client)
 
     PosInfo p;
     p.id = client;
-    p.team_id = team_map[client];
+    p.team_id = m_teamMap[client];
 
     printf("sending join packet for client %d in team %d\n", client, p.team_id);
 
@@ -294,7 +294,7 @@ void ServerGame::sendJoinPacket(int client)
 
     packet.Serialize(packetData);
 
-    network->sendToAll(packetData, packetSize);
+    m_network->sendToAll(packetData, packetSize);
 };
 
 void ServerGame::receiveStartPacket(int offset)
@@ -304,15 +304,15 @@ void ServerGame::receiveStartPacket(int offset)
     PacketHeader* hdr = reinterpret_cast<PacketHeader*>(&m_networkData[offset]);
 
     printf("recieved start packet from %d\n", hdr->sender_id);
-    if (!game_started)
+    if (!m_gameStarted)
     {
-        printf("initializing world with %d players\n", client_id + 1);
-        engine->InitWorld(client_id + 1);
-        game_started = true;
+        printf("initializing world with %d players\n", m_clientId + 1);
+        m_engine->InitWorld(m_clientId + 1);
+        m_gameStarted = true;
     }
     /*else {
-        printf("re-initializing world with %d players\n", client_id + 1);
-        engine->InitWorld(client_id + 1);
+        printf("re-initializing world with %d players\n", m_clientId + 1);
+        m_engine->InitWorld(m_clientId + 1);
     }*/
 
     // add player
@@ -327,11 +327,11 @@ void ServerGame::sendStartPacket()
     packet.hdr.packet_type = static_cast<int>(PacketTypes::StartGame);
 
     PosInfo p;
-    // p.id = client_id + 1;
+    // p.id = m_clientId + 1;
 
     packet.dat.game_data_id = GameDataId::Position;
 
-    printf("sending start packet with client_id %d\n", client_id + 1);
+    printf("sending start packet with m_clientId %d\n", m_clientId + 1);
 
     p.Serialize(packet.dat.buf);
     packet.Serialize(packetData);
@@ -340,7 +340,7 @@ void ServerGame::sendStartPacket()
 
     packet.Serialize(packetData);
 
-    network->sendToAll(packetData, packetSize);
+    m_network->sendToAll(packetData, packetSize);
 }
 
 void ServerGame::sendLoadPacket()
@@ -354,7 +354,7 @@ void ServerGame::sendLoadPacket()
 
     packet.Serialize(packetData);
 
-    network->sendToAll(packetData, packetSize);
+    m_network->sendToAll(packetData, packetSize);
 }
 
 void ServerGame::sendReadyToSpawnPacket()
@@ -368,7 +368,7 @@ void ServerGame::sendReadyToSpawnPacket()
 
     packet.Serialize(packetData);
 
-    network->sendToAll(packetData, packetSize);
+    m_network->sendToAll(packetData, packetSize);
 }
 
 void ServerGame::receiveIndSpawnPacket(int offset)
@@ -376,7 +376,7 @@ void ServerGame::receiveIndSpawnPacket(int offset)
     PacketData* dat = reinterpret_cast<PacketData*>(&m_networkData[offset]);
     PosInfo* pi = reinterpret_cast<PosInfo*>(&dat->buf);
 
-    engine->SpawnRandomPlayer(pi->id, pi->team_id, pi->skin);
+    m_engine->SpawnRandomPlayer(pi->id, pi->team_id, pi->skin);
 }
 
 void ServerGame::sendSpawnPacket(PosInfo pi)
@@ -393,7 +393,7 @@ void ServerGame::sendSpawnPacket(PosInfo pi)
 
     packet.Serialize(packetData);
 
-    network->sendToAll(packetData, packetSize);
+    m_network->sendToAll(packetData, packetSize);
 }
 
 void ServerGame::sendRemovePacket(ClassId rem_cid, int rem_oid)
@@ -415,7 +415,7 @@ void ServerGame::sendRemovePacket(ClassId rem_cid, int rem_oid)
 
     packet.Serialize(packetData);
 
-    network->sendToAll(packetData, packetSize);
+    m_network->sendToAll(packetData, packetSize);
 }
 
 void ServerGame::sendRemovePacket(ClassId rem_cid, int rem_oid, ClassId rec_cid, int rec_oid)
@@ -439,7 +439,7 @@ void ServerGame::sendRemovePacket(ClassId rem_cid, int rem_oid, ClassId rec_cid,
 
     packet.Serialize(packetData);
 
-    network->sendToAll(packetData, packetSize);
+    m_network->sendToAll(packetData, packetSize);
 }
 
 void ServerGame::sendDiscardPacket(int id)
@@ -458,7 +458,7 @@ void ServerGame::sendDiscardPacket(int id)
 
     packet.Serialize(packetData);
 
-    network->sendToAll(packetData, packetSize);
+    m_network->sendToAll(packetData, packetSize);
 }
 
 void ServerGame::sendRemovePacket(ClassId rem_cid,
@@ -489,7 +489,7 @@ void ServerGame::sendRemovePacket(ClassId rem_cid,
 
     packet.Serialize(packetData);
 
-    network->sendToAll(packetData, packetSize);
+    m_network->sendToAll(packetData, packetSize);
 }
 
 void ServerGame::receiveMovePacket(int offset)
@@ -583,7 +583,7 @@ void ServerGame::sendMovePacket(ClassId class_id, int obj_id)
 
     packet.Serialize(packetData);
 
-    network->sendToAll(packetData, packetSize);
+    m_network->sendToAll(packetData, packetSize);
 }
 
 void ServerGame::receiveRotationPacket(int offset)
@@ -638,7 +638,7 @@ void ServerGame::sendRotationPacket(ClassId class_id, int obj_id)
 
     packet.Serialize(packetData);
 
-    network->sendToAll(packetData, packetSize);
+    m_network->sendToAll(packetData, packetSize);
 }
 
 void ServerGame::receiveJumpPacket(int offset)
@@ -667,22 +667,22 @@ void ServerGame::sendScorePacket()
     packet.dat.game_data_id = GameDataId::Score;
 
     ScoreInfo s;
-    s.t0_score = scores[0];
-    s.t1_score = scores[1];
+    s.t0_score = m_scores[0];
+    s.t1_score = m_scores[1];
 
     printf("sending score packet: %d, %d\n", s.t0_score, s.t1_score);
     s.Serialize(packet.dat.buf);
 
     packet.Serialize(packetData);
 
-    network->sendToAll(packetData, packetSize);
+    m_network->sendToAll(packetData, packetSize);
 }
 
 void ServerGame::sendGameOverPacket(int winner)
 {
     Packet packet;
     packet.hdr.packet_type = static_cast<int>(PacketTypes::GameOver);
-    game_over = true;
+    m_gameOver = true;
 
     const unsigned int packetSize = sizeof(Packet);
 
@@ -691,15 +691,15 @@ void ServerGame::sendGameOverPacket(int winner)
     packet.dat.game_data_id = GameDataId::Score;
 
     ScoreInfo s;
-    s.t0_score = scores[0];
-    s.t1_score = scores[1];
+    s.t0_score = m_scores[0];
+    s.t1_score = m_scores[1];
 
     printf("sending game over\n");
     s.Serialize(packet.dat.buf);
 
     packet.Serialize(packetData);
 
-    network->sendToAll(packetData, packetSize);
+    m_network->sendToAll(packetData, packetSize);
 }
 
 void ServerGame::receiveAttackPacket(int offset)
@@ -738,7 +738,7 @@ void ServerGame::sendTimeStampPacket(int diff)
 
     packet.Serialize(packetData);
 
-    network->sendToAll(packetData, packetSize);
+    m_network->sendToAll(packetData, packetSize);
 }
 
 void ServerGame::sendAttackPacket(int id)
@@ -757,14 +757,14 @@ void ServerGame::sendAttackPacket(int id)
     e.Serialize(packet.dat.buf);
 
     packet.Serialize(packetData);
-    network->sendToAll(packetData, packetSize);
+    m_network->sendToAll(packetData, packetSize);
 }
 
 void ServerGame::receiveDiscardPacket(int offset)
 {
     // PacketHeader* hdr = (PacketHeader *) &(m_networkData[offset]);
 
-    // shared_ptr<Player> player = engine->GetWorld()->GetPlayer(hdr->sender_id);
+    // shared_ptr<Player> player = m_engine->GetWorld()->GetPlayer(hdr->sender_id);
     PacketHeader* hdr = reinterpret_cast<PacketHeader*>(&m_networkData[offset]);
     Player* player =
         reinterpret_cast<Player*>(EntitySpawner::instance()->GetEntity(ClassId::Player, hdr->sender_id));
@@ -793,7 +793,7 @@ void ServerGame::sendDancePacket(int id)
     e.Serialize(packet.dat.buf);
 
     packet.Serialize(packetData);
-    network->sendToAll(packetData, packetSize);
+    m_network->sendToAll(packetData, packetSize);
 }
 
 void ServerGame::sendDeathPacket(int id)
@@ -812,7 +812,7 @@ void ServerGame::sendDeathPacket(int id)
     e.Serialize(packet.dat.buf);
 
     packet.Serialize(packetData);
-    network->sendToAll(packetData, packetSize);
+    m_network->sendToAll(packetData, packetSize);
 }
 
 void ServerGame::sendRespawnPacket(int id)
@@ -831,7 +831,7 @@ void ServerGame::sendRespawnPacket(int id)
     e.Serialize(packet.dat.buf);
 
     packet.Serialize(packetData);
-    network->sendToAll(packetData, packetSize);
+    m_network->sendToAll(packetData, packetSize);
 }
 
 void ServerGame::sendNamePacket(int player_id)
@@ -847,11 +847,11 @@ void ServerGame::sendNamePacket(int player_id)
 
     NameInfo n;
     n.player_id = player_id;
-    n.name = name_map.at(player_id);
+    n.name = m_nameMap.at(player_id);
     n.Serialize(packet.dat.buf);
 
     packet.Serialize(packetData);
-    network->sendToAll(packetData, packetSize);
+    m_network->sendToAll(packetData, packetSize);
 }
 
 void ServerGame::receiveNamePacket(int offset)
@@ -860,7 +860,7 @@ void ServerGame::receiveNamePacket(int offset)
     PacketData* dat = reinterpret_cast<PacketData*>(&m_networkData[offset + sizeof(PacketHeader)]);
     NameInfo* n = reinterpret_cast<NameInfo*>(&dat->buf);
 
-    name_map[hdr->sender_id] = n->name;
+    m_nameMap[hdr->sender_id] = n->name;
     /*Player* player = reinterpret_cast<Player*>(EntitySpawner::instance()->GetEntity(ClassId::Player,
     hdr->sender_id));
     player->SetName(n->name);*/

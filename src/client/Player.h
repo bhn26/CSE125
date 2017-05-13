@@ -20,34 +20,39 @@ namespace Animation
     class AnimatedModel;
 }
 
-enum DIRECTION
+enum class Direction
 {
-    D_FORWARD,
-    D_BACKWARD,
-    D_LEFT,
-    D_RIGHT,
-    D_UP,
-    D_DOWN
+    Forward,
+    Backward,
+    Left,
+    Right,
+    Up,
+    Down,
 };
 
 
 class Player : public Entity, public Animation::AnimationPlayer::Listener
 {
 public:
-    enum State
+    enum class State
     {
-        IDLE,
-        JUMP,
-        WALK,
-        DANCE,
-        ATTACK,
-        DEATH,
-        TAUNT,
-        PECK,
+        Idle,
+        Jump,
+        Walk,
+        Dance,
+        Attack,
+        Death,
+        Taunt,
+        Peck,
     };
 
-    Player(float x = 0.0f, float y = 0.0f, float z = 0.0f,
-           float rotW = 0.0f, float rotX = 0.0f, float rotY = 0.0f, float rotZ = 0.0f);
+    Player(float x = 0.0f,
+           float y = 0.0f,
+           float z = 0.0f,
+           float rotW = 0.0f,
+           float rotX = 0.0f,
+           float rotY = 0.0f,
+           float rotZ = 0.0f);
     Player(int client_id);
     ~Player();
 
@@ -59,18 +64,18 @@ public:
 
     virtual void MoveTo(float x, float y, float z) override;
     virtual void RotateTo(const glm::quat& newOrientation) override;
-    void Jump() { ChangeState(State::JUMP); }
-    void Dance() { ChangeState(State::DANCE); }
-    void Attack() { ChangeState(State::ATTACK); }
-    void TauntDie() { ChangeState(State::DEATH); }
-    void Die() { ChangeState(State::DEATH); alive = false; health = 0; }
-    void Peck() { ChangeState(State::PECK); }
+    void Jump() { ChangeState(State::Jump); }
+    void Dance() { ChangeState(State::Dance); }
+    void Attack() { ChangeState(State::Attack); }
+    void TauntDie() { ChangeState(State::Death); }
+    void Die() { ChangeState(State::Death); alive = false; health = 0; }
+    void Peck() { ChangeState(State::Peck); }
 
 
     void SetModelFile(std::string fileName);
 
     // Process movement
-    void ProcessKeyboard(DIRECTION direction, GLfloat deltaTime);
+    void ProcessKeyboard(Direction direction, GLfloat deltaTime);
 
     // Processes input received from a mouse input system. Expects the offset value in both the x and y direction.
     void ProcessMouseMovement(GLfloat xoffset, GLfloat yoffset, GLboolean constrainPitch = true);

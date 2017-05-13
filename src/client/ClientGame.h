@@ -26,30 +26,30 @@ class Window;
 
 namespace Controller
 {
-    enum Buttons
+    enum class Buttons
     {
         A = 0,
         B = 1,
         X = 2,
         Y = 3,
-        L_BUMPER = 4,
-        R_BUMPER = 5,
-        BACK = 6,
-        START = 7,
-        L_ANALOG = 8,
-        R_ANALOG = 9,
-        D_PAD_UP = 10,
-        D_PAD_RIGHT = 11,
-        D_PAD_DOWN = 12,
-        D_PAD_LEFT = 13,
+        LBumper = 4,
+        RBumper = 5,
+        Back = 6,
+        Start = 7,
+        LAnalog = 8,
+        RAnalog = 9,
+        DPadUp = 10,
+        DPadRight = 11,
+        DPadDown = 12,
+        DPadLeft = 13,
     };
 
-    enum Axes
+    enum class Axes
     {
-        L_HORIZONTAL = 0,
-        L_VERTICAL = 1,
-        R_HORIZONTAL = 4,
-        R_VERTICAL = 3,
+        LHorizontal = 0,
+        LVertical = 1,
+        RHorizontal = 4,
+        RVertical = 3,
     };
 }
 
@@ -159,20 +159,20 @@ public:
     void StopMenuSound();
 
 private:
-    const static std::string EVENT_QUIT;
-    const static std::string EVENT_JUMP;
-    const static std::string EVENT_WEAPON_ATTACK;
-	const static std::string EVENT_PECK_ATTACK;
-	const static std::string EVENT_DISCARD_WEAPON;
-    const static std::string EVENT_START;
-    const static std::string EVENT_MOVE_FORWARD;
-    const static std::string EVENT_MOVE_BACKWARD;
-    const static std::string EVENT_MOVE_LEFT;
-    const static std::string EVENT_MOVE_RIGHT;
-    const static std::string EVENT_SCOREBOARD;
-    const static std::string EVENT_TAUNT_DANCE;
-    const static std::string EVENT_TAUNT_DEATH;
-    const static std::string EVENT_TAUNT_PECK;
+    const static std::string EventQuit;
+    const static std::string EventJump;
+    const static std::string EventWeaponAttack;
+	const static std::string EventPeckAttack;
+	const static std::string EventDiscardWeapon;
+    const static std::string EventStart;
+    const static std::string EventMoveForward;
+    const static std::string EventMoveBackward;
+    const static std::string EventMoveLeft;
+    const static std::string EventMoveRight;
+    const static std::string EventScoreboard;
+    const static std::string EventTauntDance;
+    const static std::string EventTauntDeath;
+    const static std::string EventTauntPeck;
 
     ClientGame(void);
     ~ClientGame(void);

@@ -24,20 +24,20 @@
 #include "Graphics/ModelManager.h"
 #include "Audio/SoundBufferManager.h"
 
-const std::string ClientGame::EVENT_QUIT = "Quit";
-const std::string ClientGame::EVENT_JUMP = "Jump";
-const std::string ClientGame::EVENT_WEAPON_ATTACK = "Weapon_Attack";
-const std::string ClientGame::EVENT_PECK_ATTACK = "Peck_Attack";
-const std::string ClientGame::EVENT_DISCARD_WEAPON = "Discard_Weapon";
-const std::string ClientGame::EVENT_START = "Start";
-const std::string ClientGame::EVENT_MOVE_FORWARD = "Move_Forward";
-const std::string ClientGame::EVENT_MOVE_BACKWARD = "Move_Backward";
-const std::string ClientGame::EVENT_MOVE_LEFT = "Move_Left";
-const std::string ClientGame::EVENT_MOVE_RIGHT = "Move_Right";
-const std::string ClientGame::EVENT_SCOREBOARD = "Scoreboard";
-const std::string ClientGame::EVENT_TAUNT_DANCE = "Taunt_Dance";
-const std::string ClientGame::EVENT_TAUNT_DEATH = "Taunt_Death";
-const std::string ClientGame::EVENT_TAUNT_PECK = "Taunt_Peck";
+const std::string ClientGame::EventQuit = "Quit";
+const std::string ClientGame::EventJump = "Jump";
+const std::string ClientGame::EventWeaponAttack = "Weapon_Attack";
+const std::string ClientGame::EventPeckAttack = "Peck_Attack";
+const std::string ClientGame::EventDiscardWeapon = "Discard_Weapon";
+const std::string ClientGame::EventStart = "Start";
+const std::string ClientGame::EventMoveForward = "Move_Forward";
+const std::string ClientGame::EventMoveBackward = "Move_Backward";
+const std::string ClientGame::EventMoveLeft = "Move_Left";
+const std::string ClientGame::EventMoveRight = "Move_Right";
+const std::string ClientGame::EventScoreboard = "Scoreboard";
+const std::string ClientGame::EventTauntDance = "Taunt_Dance";
+const std::string ClientGame::EventTauntDeath = "Taunt_Death";
+const std::string ClientGame::EventTauntPeck = "Taunt_Peck";
 
 ////////////////////////////////////////////////////////////////////////////////
 int ClientGame::PlaySound(const std::string& soundName, SoundsHandler::SoundOptions options)
@@ -698,7 +698,7 @@ void ClientGame::update()
         return; // no data recieved
     }
 
-    int i = 0;
+    unsigned int i = 0;
     while (i < (unsigned int)data_length)
     {
         packet.Deserialize(&m_networkData[i]);
@@ -828,7 +828,7 @@ void ClientGame::Initialize()
 
     double lastTime = glfwGetTime();
     int nbFrames = 0;
-    srand(time(NULL));
+    srand(static_cast<unsigned int>(time(NULL)));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1023,7 +1023,7 @@ void ClientGame::CheckController()
     // Check if we're starting the game
     if (!ClientGame::instance()->hasStarted())
     {
-        if (buttons[Buttons::START]) // Start
+        if (buttons[static_cast<int>(Buttons::Start)]) // Start
         {
             printf("client will send start game\n");
             printf("sending start packet\n");
@@ -1061,11 +1061,16 @@ void ClientGame::HandleRightAnalog(const float* axes)
 {
     using namespace Controller;
     const float rotThreshold = 0.2f;
-    if (abs(axes[Axes::R_HORIZONTAL]) > rotThreshold || abs(axes[Axes::R_VERTICAL]) > rotThreshold)
+    if (abs(axes[static_cast<int>(Axes::RHorizontal)]) > rotThreshold
+        || abs(axes[static_cast<int>(Axes::RVertical)]) > rotThreshold)
     {
         Scene::Instance()->GetPlayer()->ProcessViewMovement(
-            abs(axes[Axes::R_HORIZONTAL]) > rotThreshold ? axes[Axes::R_HORIZONTAL] : 0.0f,
-            abs(axes[Axes::R_VERTICAL]) > rotThreshold ? -axes[Axes::R_VERTICAL] : 0.0f);
+            abs(axes[static_cast<int>(Axes::RHorizontal)]) > rotThreshold
+                ? axes[static_cast<int>(Axes::RHorizontal)]
+                : 0.0f,
+            abs(axes[static_cast<int>(Axes::RVertical)]) > rotThreshold
+                ? -axes[static_cast<int>(Axes::RVertical)]
+                : 0.0f);
     }
 }
 
@@ -1075,14 +1080,15 @@ void ClientGame::HandleLeftAnalog(const float* axes)
 {
     using namespace Controller;
     const float threshold = 0.7f;
-    int greatestAxis = abs(axes[Axes::L_HORIZONTAL]) > abs(axes[Axes::L_VERTICAL])
-                           ? Axes::L_HORIZONTAL
-                           : Axes::L_VERTICAL;
+    int greatestAxis = abs(axes[static_cast<int>(Axes::LHorizontal)])
+                               > abs(axes[static_cast<int>(Axes::LVertical)])
+                           ? static_cast<int>(Axes::LHorizontal)
+                           : static_cast<int>(Axes::LVertical);
     if (abs(axes[greatestAxis]) > threshold)
     {
         switch (greatestAxis)
         {
-        case Axes::L_HORIZONTAL: // Right
+        case static_cast<int>(Axes::LHorizontal): // Right
             if (axes[greatestAxis] > 0)
             {
                 ClientGame::instance()->sendMovePacket(MoveType::Right);
@@ -1092,7 +1098,7 @@ void ClientGame::HandleLeftAnalog(const float* axes)
                 ClientGame::instance()->sendMovePacket(MoveType::Left);
             }
             break;
-        case Axes::L_VERTICAL: // DOWN
+        case static_cast<int>(Axes::LVertical): // DOWN
             if (axes[greatestAxis] > 0)
             {
                 ClientGame::instance()->sendMovePacket(MoveType::Backward);
@@ -1112,59 +1118,59 @@ void ClientGame::HandleLeftAnalog(const float* axes)
 void ClientGame::HandleButtonPress(const unsigned char* buttons)
 {
     using namespace Controller;
-    if (buttons[Buttons::A])
+    if (buttons[static_cast<int>(Buttons::A)])
         HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_A"));
     else
         HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_A"), false);
-    if (buttons[Buttons::B])
+    if (buttons[static_cast<int>(Buttons::B)])
         HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_B"));
     else
         HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_B"), false);
-    if (buttons[Buttons::X])
+    if (buttons[static_cast<int>(Buttons::X)])
         HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_X"));
     else
         HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_X"), false);
-    if (buttons[Buttons::Y])
+    if (buttons[static_cast<int>(Buttons::Y)])
         HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_Y"));
     else
         HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_Y"), false);
-    if (buttons[Buttons::BACK])
+    if (buttons[static_cast<int>(Buttons::Back)])
         HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_Back"));
     else
         HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_Back"), false);
-    if (buttons[Buttons::START])
+    if (buttons[static_cast<int>(Buttons::Start)])
         HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_Start"));
     else
         HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_Start"), false);
-    if (buttons[Buttons::L_ANALOG])
+    if (buttons[static_cast<int>(Buttons::LAnalog)])
         HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_L_Analog"));
     else
         HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_L_Analog"), false);
-    if (buttons[Buttons::R_ANALOG])
+    if (buttons[static_cast<int>(Buttons::RAnalog)])
         HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_R_Analog"));
     else
         HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_R_Analog"), false);
-    if (buttons[Buttons::L_BUMPER])
+    if (buttons[static_cast<int>(Buttons::LBumper)])
         HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_L_Bumper"));
     else
         HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_L_Bumper"), false);
-    if (buttons[Buttons::R_BUMPER])
+    if (buttons[static_cast<int>(Buttons::RBumper)])
         HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_R_Bumper"));
     else
         HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_R_Bumper"), false);
-    if (buttons[Buttons::D_PAD_UP])
+    if (buttons[static_cast<int>(Buttons::DPadUp)])
         HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_D_Pad_Up"));
     else
         HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_D_Pad_Up"), false);
-    if (buttons[Buttons::D_PAD_RIGHT])
+    if (buttons[static_cast<int>(Buttons::DPadRight)])
         HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_D_Pad_Right"));
     else
         HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_D_Pad_Right"), false);
-    if (buttons[Buttons::D_PAD_DOWN])
+    if (buttons[static_cast<int>(Buttons::DPadDown)])
         HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_D_Pad_Down"));
     else
         HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_D_Pad_Down"), false);
-    if (buttons[Buttons::D_PAD_LEFT])
+    if (buttons[static_cast<int>(Buttons::DPadLeft)])
         HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_D_Pad_Left"));
     else
         HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_D_Pad_Left"), false);
@@ -1176,43 +1182,43 @@ void ClientGame::HandleButtonEvent(const std::string& event, bool buttonDown)
         return;
     if (buttonDown)
     {
-        if (event == EVENT_QUIT)
+        if (event == EventQuit)
         {
             glfwSetWindowShouldClose(this->window, GL_TRUE);
         }
-        else if (event == EVENT_WEAPON_ATTACK)
+        else if (event == EventWeaponAttack)
         {
             sendAttackPacket(AttackType::Weapon);
         }
-        else if (event == EVENT_PECK_ATTACK)
+        else if (event == EventPeckAttack)
         {
             sendAttackPacket(AttackType::Peck);
         }
-        else if (event == EVENT_DISCARD_WEAPON)
+        else if (event == EventDiscardWeapon)
         {
             sendDiscardPacket(); // TODOCHANGETHIS
         }
-        else if (event == EVENT_JUMP)
+        else if (event == EventJump)
         {
             sendJumpPacket();
         }
-        else if (event == EVENT_MOVE_FORWARD)
+        else if (event == EventMoveForward)
         {
             sendMovePacket(MoveType::Forward);
         }
-        else if (event == EVENT_MOVE_BACKWARD)
+        else if (event == EventMoveBackward)
         {
             sendMovePacket(MoveType::Backward);
         }
-        else if (event == EVENT_MOVE_LEFT)
+        else if (event == EventMoveLeft)
         {
             sendMovePacket(MoveType::Left);
         }
-        else if (event == EVENT_MOVE_RIGHT)
+        else if (event == EventMoveRight)
         {
             sendMovePacket(MoveType::Right);
         }
-        else if (event == EVENT_SCOREBOARD)
+        else if (event == EventScoreboard)
         {
             if (Window::m_pStateManager->GetActiveState()
                 == CPlayState::GetInstance(Window::m_pStateManager))
@@ -1220,23 +1226,23 @@ void ClientGame::HandleButtonEvent(const std::string& event, bool buttonDown)
                 CPlayState::GetInstance(Window::m_pStateManager)->show_scoreboard = true;
             }
         }
-        else if (event == EVENT_TAUNT_DANCE)
+        else if (event == EventTauntDance)
         {
             printf("dance event triggered\n");
             sendDancePacket();
         }
-        else if (event == EVENT_TAUNT_DEATH)
+        else if (event == EventTauntDeath)
         {
             Scene::Instance()->GetPlayer()->TauntDie();
         }
-        else if (event == EVENT_TAUNT_PECK)
+        else if (event == EventTauntPeck)
         {
             Scene::Instance()->GetPlayer()->Peck();
         }
     }
     else // !buttonDown
     {
-        if (event == EVENT_SCOREBOARD)
+        if (event == EventScoreboard)
         {
             if (Window::m_pStateManager->GetActiveState()
                 == CPlayState::GetInstance(Window::m_pStateManager))

@@ -183,9 +183,9 @@ void EntitySpawner::spawnCollectable(btDiscreteDynamicsWorld* curWorld, WeaponTy
 
     std::pair<int, int> p = getRandomLoc();
     PosInfo pos;
-    pos.x = p.first;
-    pos.y = 90;
-    pos.z = p.second;
+    pos.x = (float)p.first;
+    pos.y = 90.0f;
+    pos.z = (float)p.second;
 
     Collectable* ranCollectable = new Collectable(oid_collectable, pos, curWorld, wp);
     AddEntity(ClassId::Collectable, oid_collectable, ranCollectable);
