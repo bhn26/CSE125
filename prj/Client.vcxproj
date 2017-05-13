@@ -200,7 +200,7 @@
     <None Include="..\src\Graphics\Shaders\text.vert" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\Network\GameData.cpp" />
+    <ClCompile Include="..\src\Network\GameData.cpp" />
     <ClCompile Include="..\src\Audio\SoundBufferManager.cpp" />
     <ClCompile Include="..\src\Audio\SoundsHandler.cpp" />
     <ClCompile Include="..\src\client\GameOverState.cpp" />
@@ -248,7 +248,7 @@
     <ClCompile Include="..\src\Graphics\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\Basic\Singleton.h" />
+    <ClInclude Include="..\src\Basic\Singleton.h" />
     <ClInclude Include="..\src\Audio\SoundBufferManager.h" />
     <ClInclude Include="..\src\Audio\SoundsHandler.h" />
     <ClInclude Include="..\src\client\GameOverState.h" />
