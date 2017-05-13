@@ -1,6 +1,6 @@
 #include "AnimationMesh.h"
 
-#include <assimp/Importer.hpp>      // C++ importer interface
+#include <assimp/Importer.hpp>  // C++ importer interface
 #include <assimp/scene.h>       // Output data structure
 #include <assimp/postprocess.h> // Post processing flags
 
@@ -12,10 +12,22 @@
 // aiMatrix4x4 is a row-major matrix!!! Assign the transpose
 void Animation::Assign(glm::mat4& m, const aiMatrix4x4& aimatrix)
 {
-    m[0][0] = aimatrix.a1;  m[1][0] = aimatrix.a2;  m[2][0] = aimatrix.a3;  m[3][0] = aimatrix.a4;
-    m[0][1] = aimatrix.b1;  m[1][1] = aimatrix.b2;  m[2][1] = aimatrix.b3;  m[3][1] = aimatrix.b4;
-    m[0][2] = aimatrix.c1;  m[1][2] = aimatrix.c2;  m[2][2] = aimatrix.c3;  m[3][2] = aimatrix.c4;
-    m[0][3] = aimatrix.d1;  m[1][3] = aimatrix.d2;  m[2][3] = aimatrix.d3;  m[3][3] = aimatrix.d4;
+    m[0][0] = aimatrix.a1;
+    m[1][0] = aimatrix.a2;
+    m[2][0] = aimatrix.a3;
+    m[3][0] = aimatrix.a4;
+    m[0][1] = aimatrix.b1;
+    m[1][1] = aimatrix.b2;
+    m[2][1] = aimatrix.b3;
+    m[3][1] = aimatrix.b4;
+    m[0][2] = aimatrix.c1;
+    m[1][2] = aimatrix.c2;
+    m[2][2] = aimatrix.c3;
+    m[3][2] = aimatrix.c4;
+    m[0][3] = aimatrix.d1;
+    m[1][3] = aimatrix.d2;
+    m[2][3] = aimatrix.d3;
+    m[3][3] = aimatrix.d4;
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -23,10 +35,10 @@ void Animation::Mesh::VertexBoneData::AddBoneData(unsigned int boneID, float wei
 {
     for (unsigned int i = 0; i < NUM_BONES_PER_VERTEX; i++)
     {
-        if (weights[i] == 0.0)
+        if (m_weights[i] == 0.0)
         {
-            IDs[i] = boneID;
-            weights[i] = weight;
+            m_IDs[i] = boneID;
+            m_weights[i] = weight;
             return;
         }
     }
@@ -36,7 +48,8 @@ void Animation::Mesh::VertexBoneData::AddBoneData(unsigned int boneID, float wei
 }
 
 ///////////////////////////////////////////////////////////////////////
-Animation::Mesh::Mesh() : m_VAO(0), m_VBO(0), m_EBO(0), m_numBones(0), m_rootNode(std::unique_ptr<Node>(new Node()))
+Animation::Mesh::Mesh()
+    : m_VAO(0), m_VBO(0), m_EBO(0), m_numBones(0), m_rootNode(std::unique_ptr<Node>(new Node()))
 {
     m_skinningTechnique = std::shared_ptr<SkinningTechnique>(new SkinningTechnique());
 
@@ -46,13 +59,11 @@ Animation::Mesh::Mesh() : m_VAO(0), m_VBO(0), m_EBO(0), m_numBones(0), m_rootNod
     }
 }
 
-
 ///////////////////////////////////////////////////////////////////////
 Animation::Mesh::~Mesh()
 {
     Clear();
 }
-
 
 ///////////////////////////////////////////////////////////////////////
 void Animation::Mesh::Clear()
@@ -100,19 +111,19 @@ bool Animation::Mesh::InitFromScene(const aiScene* scene, const std::string& fil
     m_numVertices = 0;
     m_numIndices = 0;
 
-    Assign(m_GlobalInverseTransform, scene->mRootNode->mTransformation);
-    m_GlobalInverseTransform = glm::inverse(m_GlobalInverseTransform);
+    Assign(m_globalInverseTransform, scene->mRootNode->mTransformation);
+    m_globalInverseTransform = glm::inverse(m_globalInverseTransform);
 
     // Count the number of vertices and indices
     for (unsigned int i = 0; i < m_meshes.size(); i++)
     {
-        m_meshes[i].materialIndex = scene->mMeshes[i]->mMaterialIndex;
-        m_meshes[i].numIndices = scene->mMeshes[i]->mNumFaces * 3;
-        m_meshes[i].baseVertex = m_numVertices;
-        m_meshes[i].baseIndex = m_numIndices;
+        m_meshes[i].m_materialIndex = scene->mMeshes[i]->mMaterialIndex;
+        m_meshes[i].m_numIndices = scene->mMeshes[i]->mNumFaces * 3;
+        m_meshes[i].m_baseVertex = m_numVertices;
+        m_meshes[i].m_baseIndex = m_numIndices;
 
         m_numVertices += scene->mMeshes[i]->mNumVertices;
-        m_numIndices += m_meshes[i].numIndices;
+        m_numIndices += m_meshes[i].m_numIndices;
     }
 
     // Reserve space in the vectors for the vertex attributes and indices
@@ -133,33 +144,49 @@ bool Animation::Mesh::InitFromScene(const aiScene* scene, const std::string& fil
 
     // Populate the buffers with vertex attributes and the indices
     glBindVertexArray(m_VAO);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices[0]) * indices.size(), &indices[0], GL_STATIC_DRAW);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
+    glBufferData(
+        GL_ELEMENT_ARRAY_BUFFER, sizeof(indices[0]) * indices.size(), &indices[0], GL_STATIC_DRAW);
 
-        // Load data
-        glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(VertexInfo) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
+    // Load data
+    glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
+    glBufferData(
+        GL_ARRAY_BUFFER, sizeof(VertexInfo) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
 
-        glEnableVertexAttribArray(POSITION_LOCATION);
-        glVertexAttribPointer(POSITION_LOCATION, 3, GL_FLOAT, GL_FALSE, sizeof(VertexInfo),
-            (GLvoid*)0);
+    glEnableVertexAttribArray(POSITION_LOCATION);
+    glVertexAttribPointer(POSITION_LOCATION, 3, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), (GLvoid*)0);
 
-        glEnableVertexAttribArray(TEX_COORD_LOCATION);
-        glVertexAttribPointer(TEX_COORD_LOCATION, 2, GL_FLOAT, GL_FALSE, sizeof(VertexInfo),
-            (GLvoid*)offsetof(VertexInfo, texCoords));
+    glEnableVertexAttribArray(TEX_COORD_LOCATION);
+    glVertexAttribPointer(TEX_COORD_LOCATION,
+                          2,
+                          GL_FLOAT,
+                          GL_FALSE,
+                          sizeof(VertexInfo),
+                          (GLvoid*)offsetof(VertexInfo, m_texCoords));
 
-        glEnableVertexAttribArray(NORMAL_LOCATION);
-        glVertexAttribPointer(NORMAL_LOCATION, 3, GL_FLOAT, GL_FALSE, sizeof(VertexInfo),
-            (GLvoid*)offsetof(VertexInfo, normal));
+    glEnableVertexAttribArray(NORMAL_LOCATION);
+    glVertexAttribPointer(NORMAL_LOCATION,
+                          3,
+                          GL_FLOAT,
+                          GL_FALSE,
+                          sizeof(VertexInfo),
+                          (GLvoid*)offsetof(VertexInfo, m_normal));
 
-        glEnableVertexAttribArray(BONE_ID_LOCATION);
-        glVertexAttribIPointer(BONE_ID_LOCATION, 4, GL_UNSIGNED_INT, sizeof(VertexInfo),    // Cannot pass more than 4!!
-            (GLvoid*)offsetof(VertexInfo, boneData.IDs));
+    glEnableVertexAttribArray(BONE_ID_LOCATION);
+    glVertexAttribIPointer(BONE_ID_LOCATION,
+                           4,
+                           GL_UNSIGNED_INT,
+                           sizeof(VertexInfo), // Cannot pass more than 4!!
+                           (GLvoid*)offsetof(VertexInfo, m_boneData.m_IDs));
 
-        glEnableVertexAttribArray(BONE_WEIGHT_LOCATION);
-        glVertexAttribPointer(BONE_WEIGHT_LOCATION, 4, GL_FLOAT, GL_FALSE, sizeof(VertexInfo),    // Cannot pass more than 4!!
-            (GLvoid*)offsetof(VertexInfo, boneData.weights));
-    glBindVertexArray(0);       // Make sure the VAO is not changed from the outside
+    glEnableVertexAttribArray(BONE_WEIGHT_LOCATION);
+    glVertexAttribPointer(BONE_WEIGHT_LOCATION,
+                          4,
+                          GL_FLOAT,
+                          GL_FALSE,
+                          sizeof(VertexInfo), // Cannot pass more than 4!!
+                          (GLvoid*)offsetof(VertexInfo, m_boneData.m_weights));
+    glBindVertexArray(0); // Make sure the VAO is not changed from the outside
 
     return glGetError() == GL_NO_ERROR;
 }
@@ -167,18 +194,20 @@ bool Animation::Mesh::InitFromScene(const aiScene* scene, const std::string& fil
 ///////////////////////////////////////////////////////////////////////
 void Animation::Mesh::InitNodeHierarchy(std::unique_ptr<Node>& node, aiNode* ainode)
 {
-    node->_name = std::string(ainode->mName.C_Str());
-    Assign(node->_nodeTransform, ainode->mTransformation);
+    node->m_name = std::string(ainode->mName.C_Str());
+    Assign(node->m_nodeTransform, ainode->mTransformation);
     for (unsigned int i = 0; i < ainode->mNumChildren; i++)
     {
-        node->_children.push_back(std::unique_ptr<Node>(new Node()));
-        InitNodeHierarchy(node->_children[i], ainode->mChildren[i]);
+        node->m_children.push_back(std::unique_ptr<Node>(new Node()));
+        InitNodeHierarchy(node->m_children[i], ainode->mChildren[i]);
     }
 }
 
 ///////////////////////////////////////////////////////////////////////
-void Animation::Mesh::InitMesh(unsigned int meshIndex, const aiMesh* aiMesh,
-    std::vector<VertexInfo>& vertices, std::vector<unsigned int>& indices)
+void Animation::Mesh::InitMesh(unsigned int meshIndex,
+                               const aiMesh* aiMesh,
+                               std::vector<VertexInfo>& vertices,
+                               std::vector<unsigned int>& indices)
 {
     const aiVector3D zero3D(0.0f, 0.0f, 0.0f);
 
@@ -188,11 +217,12 @@ void Animation::Mesh::InitMesh(unsigned int meshIndex, const aiMesh* aiMesh,
         VertexInfo vertex;
         const aiVector3D* pos = &(aiMesh->mVertices[i]);
         const aiVector3D* normal = &(aiMesh->mNormals[i]);
-        const aiVector3D* texCoord = aiMesh->HasTextureCoords(0) ? &(aiMesh->mTextureCoords[0][i]) : &zero3D;
+        const aiVector3D* texCoord =
+            aiMesh->HasTextureCoords(0) ? &(aiMesh->mTextureCoords[0][i]) : &zero3D;
 
-        vertex.position = glm::vec3(pos->x, pos->y, pos->z);
-        vertex.normal = glm::vec3(normal->x, normal->y, normal->z);
-        vertex.texCoords = glm::vec2(texCoord->x, texCoord->y);
+        vertex.m_position = glm::vec3(pos->x, pos->y, pos->z);
+        vertex.m_normal = glm::vec3(normal->x, normal->y, normal->z);
+        vertex.m_texCoords = glm::vec2(texCoord->x, texCoord->y);
         vertices.push_back(vertex);
     }
 
@@ -211,7 +241,9 @@ void Animation::Mesh::InitMesh(unsigned int meshIndex, const aiMesh* aiMesh,
 }
 
 ///////////////////////////////////////////////////////////////////////
-void Animation::Mesh::LoadBones(unsigned int meshIndex, const aiMesh* mesh, std::vector<VertexInfo>& vertices)
+void Animation::Mesh::LoadBones(unsigned int meshIndex,
+                                const aiMesh* mesh,
+                                std::vector<VertexInfo>& vertices)
 {
     for (unsigned int i = 0; i < mesh->mNumBones; i++)
     {
@@ -225,7 +257,7 @@ void Animation::Mesh::LoadBones(unsigned int meshIndex, const aiMesh* mesh, std:
             m_numBones++;
             BoneInfo bi;
             m_boneInfo.push_back(bi);
-            Assign(m_boneInfo[boneIndex].boneOffset, mesh->mBones[i]->mOffsetMatrix);
+            Assign(m_boneInfo[boneIndex].m_boneOffset, mesh->mBones[i]->mOffsetMatrix);
             m_boneMapping[boneName] = boneIndex;
         }
         else
@@ -235,9 +267,10 @@ void Animation::Mesh::LoadBones(unsigned int meshIndex, const aiMesh* mesh, std:
 
         for (unsigned int j = 0; j < mesh->mBones[i]->mNumWeights; j++)
         {
-            unsigned int vertexID = m_meshes[meshIndex].baseVertex + mesh->mBones[i]->mWeights[j].mVertexId;
+            unsigned int vertexID =
+                m_meshes[meshIndex].m_baseVertex + mesh->mBones[i]->mWeights[j].mVertexId;
             float weight = mesh->mBones[i]->mWeights[j].mWeight;
-            vertices[vertexID].boneData.AddBoneData(boneIndex, weight);
+            vertices[vertexID].m_boneData.AddBoneData(boneIndex, weight);
         }
     }
 }
@@ -273,7 +306,9 @@ bool Animation::Mesh::InitMaterials(const aiScene* scene, const std::string& fil
         {
             aiString path;
 
-            if (aimaterial->GetTexture(aiTextureType_DIFFUSE, 0, &path, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS)
+            if (aimaterial->GetTexture(
+                    aiTextureType_DIFFUSE, 0, &path, NULL, NULL, NULL, NULL, NULL)
+                == AI_SUCCESS)
             {
                 std::string p(path.data);
 
@@ -289,7 +324,7 @@ bool Animation::Mesh::InitMaterials(const aiScene* scene, const std::string& fil
                 if (!m_textures[i].Load())
                 {
                     printf("Error loading texture '%s'\n", fullPath.c_str());
-                    m_textures.erase(m_textures.find(i));       // Remove
+                    m_textures.erase(m_textures.find(i)); // Remove
                     ret = false;
                 }
                 else
@@ -298,7 +333,7 @@ bool Animation::Mesh::InitMaterials(const aiScene* scene, const std::string& fil
                 }
             }
         }
-        else        // Use a material instead of texture
+        else // Use a material instead of texture
         {
             Material& material = m_materials[i];
             aiColor3D diffuse;
@@ -325,35 +360,35 @@ void Animation::Mesh::Draw(bool useShader) const
 
     for (unsigned int i = 0; i < m_boneInfo.size(); i++)
     {
-        m_skinningTechnique->SetBoneTransform(i, m_boneInfo[i].finalTransformation);
+        m_skinningTechnique->SetBoneTransform(i, m_boneInfo[i].m_finalTransformation);
     }
 
     for (unsigned int i = 0; i < m_meshes.size(); i++)
     {
         if (useShader)
         {
-            const unsigned int materialIndex = m_meshes[i].materialIndex;
+            const unsigned int m_materialIndex = m_meshes[i].m_materialIndex;
 
-            if (m_textures.find(materialIndex) != m_textures.end())
+            if (m_textures.find(m_materialIndex) != m_textures.end())
             {
-                m_textures.at(materialIndex).Bind(GL_TEXTURE0);
+                m_textures.at(m_materialIndex).Bind(GL_TEXTURE0);
                 m_skinningTechnique->SetUseTexture(true);
             }
-            else if (m_materials.find(materialIndex) != m_materials.end())
+            else if (m_materials.find(m_materialIndex) != m_materials.end())
             {
-                m_skinningTechnique->SetMaterial(m_materials.at(materialIndex));
+                m_skinningTechnique->SetMaterial(m_materials.at(m_materialIndex));
                 m_skinningTechnique->SetUseTexture(false);
             }
         }
 
         glDrawElementsBaseVertex(GL_TRIANGLES,
-            m_meshes[i].numIndices,
-            GL_UNSIGNED_INT,
-            (void*)(sizeof(unsigned int) * m_meshes[i].baseIndex),
-            m_meshes[i].baseVertex);
+                                 m_meshes[i].m_numIndices,
+                                 GL_UNSIGNED_INT,
+                                 (void*)(sizeof(unsigned int) * m_meshes[i].m_baseIndex),
+                                 m_meshes[i].m_baseVertex);
     }
 
-    // Make sure the VAO is not changed from the outside    
+    // Make sure the VAO is not changed from the outside
     glBindVertexArray(0);
 }
 
@@ -366,7 +401,7 @@ bool Animation::Mesh::SameMesh(const aiScene* scene) const
     for (unsigned int i = 0; i < m_meshes.size(); i++)
     {
         numVerts += scene->mMeshes[i]->mNumVertices;
-        numInd += m_meshes[i].numIndices;
+        numInd += m_meshes[i].m_numIndices;
     }
 
     if (m_numVertices != numVerts || m_numIndices != numInd)

@@ -4,13 +4,14 @@
 #include "GameState.h"
 
 #include "SpriteRenderer.h"
-#include "../Graphics/Texture.h"
+#include "Graphics/Texture.h"
 
 class CPlayState : public CGameState
 {
     friend class ClientGame;
+
 public:
-	~CPlayState();
+    ~CPlayState();
 
     // Implementation of specific events
     void OnMouseMove(float xoffset, float yoffset) override;
@@ -20,55 +21,55 @@ public:
     void Update(DWORD dwCurrentTime) override;
     void Draw() override;
 
-	void Die() { dead = true; };
-	void Respawn() { dead = false; };
+    void Die() { m_dead = true; };
+    void Respawn() { m_dead = false; };
 
-	void EnterState() override;
-	void LeaveState() override;
-	void Reset();
+    void EnterState() override;
+    void LeaveState() override;
+    void Reset();
 
-	// Returns the single instance
-	static CPlayState* GetInstance(CStateManager* pManager);
+    // Returns the single instance
+    static CPlayState* GetInstance(CStateManager* pManager);
 
 protected:
-	CPlayState(CStateManager* pManager);
+    CPlayState(CStateManager* pManager);
 
 private:
-	// The current score
-	int scores[2];
+    // The current score
+    int m_scores[2] = [0,0];
 
-	bool dead;
-	bool show_scoreboard;
+    bool m_dead = false;
+    bool m_showScoreboard = false;
 
-	int backgroundMusicID = -1;
+    int m_backgroundMusicID = -1;
 
-	////// HUD ////////////
-	bool initialized;
-	void InitTextures();
+    ////// HUD ////////////
+    bool m_initialized = false;
+    void InitTextures();
 
-	SpriteRenderer * sprite_renderer;
+    SpriteRenderer* m_spriteRenderer = nullptr;
 
-	Texture * sb_chick;
-	Texture * sb_side;
-	Texture * sb_table;
+    Texture* m_sbChick = nullptr;
+    Texture* m_sbSide = nullptr;
+    Texture* m_sbTable = nullptr;
 
-	Texture * hud_egg;
-	Texture * hud_health;
-	Texture * hud_power;
-	Texture * hud_weapon_and_timer;
-	
-	Texture * hud_tomato;
-	Texture * hud_potato;
-	Texture * hud_pumpkin_seed;
-	Texture * hud_bb;
-	Texture * hud_mine;
-	Texture * hud_seeds;
+    Texture* m_hudEgg = nullptr;
+    Texture* m_hudHealth = nullptr;
+    Texture* m_hudPower = nullptr;
+    Texture* m_hudWeaponAndTimer = nullptr;
 
-	Texture * weapon_missing;
+    Texture* m_hudTomato = nullptr;
+    Texture* m_hudPotato = nullptr;
+    Texture* m_hudPumpkinSeed = nullptr;
+    Texture* m_hudBB = nullptr;
+    Texture* m_hudMine = nullptr;
+    Texture* m_hudSeeds = nullptr;
 
-	Texture * hud_weapon;
+    Texture* m_weaponMissing = nullptr;
 
-	Texture * death_overlay;
+    Texture* m_hudWeapon = nullptr;
+
+    Texture* m_deathOverlay = nullptr;
 };
 
-#endif  // _PLAYSTATE_H_
+#endif // _PLAYSTATE_H_

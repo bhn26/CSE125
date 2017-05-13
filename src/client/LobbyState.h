@@ -5,52 +5,51 @@
 #include "PlayState.h"
 
 #include "SpriteRenderer.h"
-#include "../Graphics/Texture.h"
+#include "Graphics/Texture.h"
 
-
-// Specialization of the CGameState class for 
+// Specialization of the CGameState class for
 // the menu state. This displays a menu in which
-// the player can start a new game, continue an 
+// the player can start a new game, continue an
 // existing game, see the high-scores or exit the game.
 class LobbyState : public CGameState
 {
 public:
-	~LobbyState();
+    ~LobbyState();
 
-	void OnKeyDown(WPARAM wKey);
-	void OnClick(int button, int action, double x, double y) override;
-	void Draw() override;
-	void EnterState() override;
+    void OnKeyDown(WPARAM wKey);
+    void OnClick(int button, int action, double x, double y) override;
+    void Draw() override;
+    void EnterState() override;
     void LeaveState() override;
 
-	static LobbyState* GetInstance(CStateManager* pManager);
+    static LobbyState* GetInstance(CStateManager* pManager);
 
-	void ServerLoading() { loading = true; }
+    void ServerLoading() { m_loading = true; }
 
 protected:
-	LobbyState(CStateManager* pManager);
+    LobbyState(CStateManager* pManager);
 
 private:
-	void RenderSelection();
-	void InitTextures();
-	void ShowLoadingScreen();
+    void RenderSelection();
+    void InitTextures();
+    void ShowLoadingScreen();
 
-	SpriteRenderer * sprite_renderer;
+    SpriteRenderer* m_spriteRenderer;
 
-	// stuff below is for optimization later
-	Texture *bg;
-	Texture *start_button;
+    // stuff below is for optimization later
+    Texture* m_bg = nullptr;
+    Texture* m_startButton = nullptr;
 
-	Texture *table_t1;
-	Texture *table_t2;
+    Texture* m_tableT1 = nullptr;
+    Texture* m_tableT2 = nullptr;
 
-	Texture *join;
-	Texture *join_disabled;
+    Texture* m_join = nullptr;
+    Texture* m_joinDisabled = nullptr;
 
-	Texture * load_screen;
+    Texture* m_loadScreen = nullptr;
 
-	bool initialized;
-	bool loading;
+    bool m_initialized = false;
+    bool m_loading = false;
 };
 
-#endif  // _LOBBYSTATE_H_
+#endif // _LOBBYSTATE_H_

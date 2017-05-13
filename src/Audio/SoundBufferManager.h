@@ -9,14 +9,14 @@
 // SoundBufferManager gets all sounds via config files in the form of Sound_<name>
 class SoundBufferManager
 {
-    std::map<std::string, std::shared_ptr<sf::SoundBuffer>> _soundBufferMap;
-    std::vector<std::string> _soundBufferNames;
+    std::map<std::string, std::shared_ptr<sf::SoundBuffer>> m_soundBufferMap;
+    std::vector<std::string> m_soundBufferNames;
 
     SoundBufferManager() {}
     bool LoadSoundBuffer(const std::string& bufferName);
 
 public:
-    const static std::string soundDirectory;
+    const static std::string s_soundDirectory;
 
     void AddSoundBufferToLoad(std::string bufferName);
     void LoadSoundBuffers();

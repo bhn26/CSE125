@@ -9,7 +9,7 @@
 #include "ConfigManager.h"
 #include <iostream>
 
-void serverLoop(void * arg)
+void serverLoop(void* arg)
 {
     while (true)
     {
@@ -21,6 +21,6 @@ int main()
 {
     ConfigManager::instance()->LoadConfigs("eggs.cfg");
 
-    serverLoop((void*)12);
+    serverLoop(nullptr);
 }
 

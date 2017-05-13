@@ -5,49 +5,48 @@
 #include "PlayState.h"
 
 #include "SpriteRenderer.h"
-#include "../Graphics/Texture.h"
+#include "Graphics/Texture.h"
 
-
-// Specialization of the CGameState class for 
+// Specialization of the CGameState class for
 // the menu state. This displays a menu in which
-// the player can start a new game, continue an 
+// the player can start a new game, continue an
 // existing game, see the high-scores or exit the game.
 class CMenuState : public CGameState
 {
 public:
-	~CMenuState();
+    ~CMenuState();
 
-	void OnKeyDown(int action, int key) override;
-	void OnClick(int button, int action, double x, double y) override;
-	void OnChar(unsigned int codepoint) override;
+    void OnKeyDown(int action, int key) override;
+    void OnClick(int button, int action, double x, double y) override;
+    void OnChar(unsigned int codepoint) override;
 
-	void Update(DWORD) override;
-	void Draw() override;
-	void EnterState() override;
+    void Update(DWORD) override;
+    void Draw() override;
+    void EnterState() override;
 
-	static CMenuState* GetInstance(CStateManager* pManager);
+    static CMenuState* GetInstance(CStateManager* manager);
 
 protected:
-	CMenuState(CStateManager* pManager);
+    CMenuState(CStateManager* manager);
 
 private:
-	void StartGame();
-	void RenderSelection();
-	void InitTextures();
+    void StartGame();
+    void RenderSelection();
+    void InitTextures();
 
-	SpriteRenderer * sprite_renderer;
+    SpriteRenderer* m_spriteRenderer = nullptr;
 
-	// stuff below is for optimization later
-	Texture *bg;
-	Texture *textbox;
-	Texture *join;
+    // stuff below is for optimization later
+    Texture* m_bg = nullptr;
+    Texture* m_textbox = nullptr;
+    Texture* m_join = nullptr;
 
-	std::string default_name;
-	std::string username;
+    std::string m_defaultName;
+    std::string m_username;
 
-	bool typing; // true when player selects textbox
-	
-	bool initialized;
+    bool m_typing = false; // true when player selects textbox
+
+    bool m_initialized = false;
 };
 
-#endif  // _MENUSTATE_H_
+#endif // _MENUSTATE_H_

@@ -30,7 +30,7 @@ int NetworkServices::sockQuit()
 #endif
 }
 
-int sockClose(SOCKET sock)
+int NetworkServices::sockClose(SOCKET sock)
 {
     int status = 0;
 

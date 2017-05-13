@@ -28,7 +28,9 @@ namespace Animation
         const aiScene* scene = importer.ReadFile(filename.c_str(), aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs);
 
         if (!scene)   // If failed, return
+        {
             return "";
+        }
         
         // Should not fail
         m_mesh.InitFromScene(scene, filename);

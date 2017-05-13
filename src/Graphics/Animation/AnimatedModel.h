@@ -17,7 +17,7 @@ namespace Animation
 
         glm::mat4 m_toWorld;
 
-        double lastTime;        // TODO Remove
+        double lastTime = 0.0;        // TODO Remove
 
     public:
         ///////////////////////////////////////////////////////////////////////

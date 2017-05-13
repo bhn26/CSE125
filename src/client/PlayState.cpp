@@ -14,32 +14,29 @@
 #include <sstream>
 #include <math.h>
 
-CPlayState::CPlayState(CStateManager* pManager) : CGameState(pManager), show_scoreboard(false)
+CPlayState::CPlayState(CStateManager* pManager) : CGameState(pManager), m_spriteRenderer(new SpriteRenderer())
 {
-    sprite_renderer = new SpriteRenderer();
-    initialized = false;
-    dead = false;
 }
 
 CPlayState::~CPlayState()
 {
-    delete sprite_renderer;
+    delete m_spriteRenderer;
 
-    delete sb_chick;
-    delete sb_side;
-    delete sb_table;
+    delete m_sbChick;
+    delete m_sbSide;
+    delete m_sbTable;
 
-    delete hud_egg;
-    delete hud_health;
-    delete hud_power;
+    delete m_hudEgg;
+    delete m_hudHealth;
+    delete m_hudPower;
 
-    delete hud_weapon_and_timer;
-    delete hud_tomato;
-    delete hud_potato;
-    delete hud_pumpkin_seed;
-    delete weapon_missing;
+    delete m_hudWeaponAndTimer;
+    delete m_hudTomato;
+    delete m_hudPotato;
+    delete m_hudPumpkinSeed;
+    delete m_weaponMissing;
 
-    delete death_overlay;
+    delete m_deathOverlay;
 }
 
 CPlayState* CPlayState::GetInstance(CStateManager* pManager)
@@ -51,24 +48,24 @@ CPlayState* CPlayState::GetInstance(CStateManager* pManager)
 void CPlayState::EnterState()
 {
     SoundsHandler::SoundOptions option;
-    option._isRelativeToListener = true;
-    option._loops = true;
-    backgroundMusicID = ClientGame::instance()->PlaySound("Background", option);
+    option.m_isRelativeToListener = true;
+    option.m_loops = true;
+    m_backgroundMusicID = ClientGame::instance()->PlaySound("Background", option);
 }
 
 void CPlayState::LeaveState()
 {
-    if (backgroundMusicID != -1)
+    if (m_backgroundMusicID != -1)
     {
-        ClientGame::instance()->StopSound(backgroundMusicID);
-        backgroundMusicID = -1;
+        ClientGame::instance()->StopSound(m_backgroundMusicID);
+        m_backgroundMusicID = -1;
     }
 }
 
 void CPlayState::Reset()
 {
-    dead = false;
-    show_scoreboard = false;
+    m_dead = false;
+    m_showScoreboard = false;
 }
 
 void CPlayState::OnMouseMove(float xoffset, float yoffset)
@@ -82,24 +79,24 @@ void CPlayState::OnMouseMove(float xoffset, float yoffset)
 
 void CPlayState::OnClick(int button, int action, double x, double y)
 {
-    if (button == GLFW_MOUSE_BUTTON_LEFT && !Window::mouseCaptured)
+    if (button == GLFW_MOUSE_BUTTON_LEFT && !Window::s_mouseCaptured)
     {
-        Window::mouseCaptured = true;
-        Window::firstMouse = true;
+        Window::s_mouseCaptured = true;
+        Window::s_firstMouse = true;
         glfwSetInputMode(ClientGame::instance()->window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
-    else if (button == GLFW_MOUSE_BUTTON_MIDDLE && Window::mouseCaptured)
+    else if (button == GLFW_MOUSE_BUTTON_MIDDLE && Window::s_mouseCaptured)
     {
-        Window::mouseCaptured = false;
+        Window::s_mouseCaptured = false;
         glfwSetInputMode(ClientGame::instance()->window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
-    else if (button == GLFW_MOUSE_BUTTON_RIGHT && Window::mouseCaptured)
+    else if (button == GLFW_MOUSE_BUTTON_RIGHT && Window::s_mouseCaptured)
     {
         if (action == GLFW_PRESS || action == GLFW_REPEAT)
             ClientGame::instance()->HandleButtonEvent(
                 ConfigManager::instance()->GetConfigValue("PC_Right_Click"));
     }
-    else if (button == GLFW_MOUSE_BUTTON_LEFT && Window::mouseCaptured)
+    else if (button == GLFW_MOUSE_BUTTON_LEFT && Window::s_mouseCaptured)
     {
         if (action == GLFW_PRESS || action == GLFW_REPEAT)
             ClientGame::instance()->HandleButtonEvent(
@@ -452,35 +449,35 @@ void CPlayState::Draw()
     Scene::Instance()->Draw();
 
     //////////////// SCOREBOARD ///////////////////////////////////
-    if (show_scoreboard)
+    if (m_showScoreboard)
     {
         int our_team = ClientGame::instance()->GetClientTeam();
 
         ////////////////// BACKGROUND//////////////////////////
-        int x = Window::width - sb_chick->Width();
-        int y = Window::height - sb_chick->Height();
-        sprite_renderer->DrawSprite(*sb_chick,
+        int x = Window::s_width - m_sbChick->Width();
+        int y = Window::s_height - m_sbChick->Height();
+        m_spriteRenderer->DrawSprite(*m_sbChick,
                                     glm::vec2(x, y),
-                                    glm::vec2(sb_chick->Width(), sb_chick->Height()),
+                                    glm::vec2(m_sbChick->Width(), m_sbChick->Height()),
                                     0.0f,
                                     glm::vec3(1.0f, 1.0f, 1.0f));
 
         int side_x = 0;
-        int side_y = Window::height / 2 - sb_side->Height() / 2;
-        sprite_renderer->DrawSprite(*sb_side,
+        int side_y = Window::s_height / 2 - m_sbSide->Height() / 2;
+        m_spriteRenderer->DrawSprite(*m_sbSide,
                                     glm::vec2(side_x, side_y),
-                                    glm::vec2(sb_side->Width(), sb_side->Height()),
+                                    glm::vec2(m_sbSide->Width(), m_sbSide->Height()),
                                     0.0f,
                                     glm::vec3(1.0f, 1.0f, 1.0f));
 
         glClear(GL_DEPTH_BUFFER_BIT);
 
         ///////////////// TABLES ////////////////////////////////////////
-        x = Texture::GetWindowCenter(sb_table->Width());
-        y = Window::height / 2 - sb_table->Height() / 2;
-        sprite_renderer->DrawSprite(*sb_table,
+        x = Texture::GetWindowCenter(m_sbTable->Width());
+        y = Window::s_height / 2 - m_sbTable->Height() / 2;
+        m_spriteRenderer->DrawSprite(*m_sbTable,
                                     glm::vec2(x, y),
-                                    glm::vec2(sb_table->Width(), sb_table->Height()),
+                                    glm::vec2(m_sbTable->Width(), m_sbTable->Height()),
                                     0.0f,
                                     glm::vec3(1.0f, 1.0f, 1.0f));
 
@@ -564,50 +561,50 @@ void CPlayState::Draw()
     else if (Scene::Instance()->GetPlayer() != NULL)
     {
         int x = 20;
-        int y = Window::height - hud_egg->Height() - 20;
+        int y = Window::s_height - m_hudEgg->Height() - 20;
 
         //////////////// EGGS COLLECTED ///////////////////////////
         int score = Scene::Instance()->GetPlayer()->GetScore();
         for (int i = 0; i < score; i++)
         {
-            sprite_renderer->DrawSprite(*hud_egg,
+            m_spriteRenderer->DrawSprite(*m_hudEgg,
                                         glm::vec2(x, y),
-                                        glm::vec2(hud_egg->Width(), hud_egg->Height()),
+                                        glm::vec2(m_hudEgg->Width(), m_hudEgg->Height()),
                                         0.0f,
                                         glm::vec3(1.0f, 1.0f, 1.0f));
-            x = x + hud_egg->Width() + 5;
+            x = x + m_hudEgg->Width() + 5;
         }
 
         ////////////// WEAPON & TIMER ///////////////////////////////////
-        x = Window::width - hud_weapon_and_timer->Width() - 20;
-        y = Window::height - hud_weapon_and_timer->Height() - 20;
-        sprite_renderer->DrawSprite(
-            *hud_weapon_and_timer,
+        x = Window::s_width - m_hudWeaponAndTimer->Width() - 20;
+        y = Window::s_height - m_hudWeaponAndTimer->Height() - 20;
+        m_spriteRenderer->DrawSprite(
+            *m_hudWeaponAndTimer,
             glm::vec2(x, y),
-            glm::vec2(hud_weapon_and_timer->Width(), hud_weapon_and_timer->Height()),
+            glm::vec2(m_hudWeaponAndTimer->Width(), m_hudWeaponAndTimer->Height()),
             0.0f,
             glm::vec3(1.0f, 1.0f, 1.0f));
 
         ////////////// Power Up Bar ///////////////////////////////////////
-        x = Window::width - hud_power->Width() - 20;
+        x = Window::s_width - m_hudPower->Width() - 20;
         y = 20;
-        sprite_renderer->DrawSprite(*hud_power,
+        m_spriteRenderer->DrawSprite(*m_hudPower,
                                     glm::vec2(x, y),
-                                    glm::vec2(hud_power->Width(), hud_power->Height()),
+                                    glm::vec2(m_hudPower->Width(), m_hudPower->Height()),
                                     0.0f,
                                     glm::vec3(1.0f, 1.0f, 1.0f));
 
         ////////////////////// HEALTH BAR /////////////////////////////////
-        x = Texture::GetWindowCenter(hud_health->Width());
+        x = Texture::GetWindowCenter(m_hudHealth->Width());
         y = 20;
 
         float health = Scene::Instance()->GetPlayer()->GetHealth();
-        std::shared_ptr<Shader>& shader = sprite_renderer->GetShader();
+        std::shared_ptr<Shader>& shader = m_spriteRenderer->GetShader();
         GLint health_pos = shader->GetUniform("health_x_pos");
-        glUniform1i(health_pos, x + (hud_health->Width() * (health / 100.0f)));
-        sprite_renderer->DrawSprite(*hud_health,
+        glUniform1i(health_pos, x + (m_hudHealth->Width() * (health / 100.0f)));
+        m_spriteRenderer->DrawSprite(*m_hudHealth,
                                     glm::vec2(x, y),
-                                    glm::vec2(hud_health->Width(), hud_health->Height()),
+                                    glm::vec2(m_hudHealth->Width(), m_hudHealth->Height()),
                                     0.0f,
                                     glm::vec3(1.0f, 1.0f, 1.0f));
         glUniform1i(health_pos, 0);
@@ -615,37 +612,37 @@ void CPlayState::Draw()
         switch (static_cast<WeaponType>(Scene::Instance()->GetPlayer()->GetWeapon()))
         {
         case WeaponType::SeedGun:
-            hud_weapon = hud_pumpkin_seed;
+            m_hudWeapon = m_hudPumpkinSeed;
             break;
         case WeaponType::BounceGun:
-            hud_weapon = hud_tomato;
+            m_hudWeapon = m_hudTomato;
             break;
         case WeaponType::GrenadeLauncher:
-            hud_weapon = hud_potato;
+            m_hudWeapon = m_hudPotato;
             break;
         case WeaponType::TeleportGun:
-            hud_weapon = hud_bb;
+            m_hudWeapon = m_hudBB;
             break;
         case WeaponType::BlastMine:
-            hud_weapon = hud_mine;
+            m_hudWeapon = m_hudMine;
             break;
         case WeaponType::Shotgun:
-            hud_weapon = hud_seeds;
+            m_hudWeapon = m_hudSeeds;
             break;
         default:
-            hud_weapon = weapon_missing;
+            m_hudWeapon = m_weaponMissing;
             break;
         }
 
-        x = Window::width - hud_weapon_and_timer->Width() - 20;
-        y = Window::height - hud_weapon_and_timer->Height() - 20;
+        x = Window::s_width - m_hudWeaponAndTimer->Width() - 20;
+        y = Window::s_height - m_hudWeaponAndTimer->Height() - 20;
 
         glClear(GL_DEPTH_BUFFER_BIT);
         if (Scene::Instance()->GetPlayer()->GetWeapon() != -1)
         {
-            sprite_renderer->DrawSprite(*hud_weapon,
+            m_spriteRenderer->DrawSprite(*m_hudWeapon,
                                         glm::vec2(x, y),
-                                        glm::vec2(hud_weapon->Width(), hud_weapon->Height()),
+                                        glm::vec2(m_hudWeapon->Width(), m_hudWeapon->Height()),
                                         0.0f,
                                         glm::vec3(1.0f, 1.0f, 1.0f));
         }
@@ -678,16 +675,16 @@ void CPlayState::Draw()
         TextRenderer::RenderText(time.c_str(), x + 54, y + 190, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 
         /////////// DEATH OVERLAY ////////////////////////////////////
-        if (dead)
+        if (m_dead)
         { // play loud sound
             glClear(GL_DEPTH_BUFFER_BIT);
 
-            x = Texture::GetWindowCenter(death_overlay->Width());
-            y = Window::height / 2 - death_overlay->Height() / 2;
+            x = Texture::GetWindowCenter(m_deathOverlay->Width());
+            y = Window::s_height / 2 - m_deathOverlay->Height() / 2;
 
-            sprite_renderer->DrawSprite(*death_overlay,
+            m_spriteRenderer->DrawSprite(*m_deathOverlay,
                                         glm::vec2(x, y),
-                                        glm::vec2(death_overlay->Width(), death_overlay->Height()),
+                                        glm::vec2(m_deathOverlay->Width(), m_deathOverlay->Height()),
                                         0.0f,
                                         glm::vec3(1.0f, 1.0f, 1.0f));
         }
@@ -696,32 +693,32 @@ void CPlayState::Draw()
 
 void CPlayState::InitTextures()
 {
-    if (!initialized)
+    if (!m_initialized)
     {
         // Create the different images
-        sb_chick = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/scoreboard_chicken.png");
-        sb_side = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/sb_side_panel.png");
-        sb_table = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/scoreboard.png");
+        m_sbChick = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/scoreboard_chicken.png");
+        m_sbSide = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/m_sbSide_panel.png");
+        m_sbTable = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/scoreboard.png");
 
-        hud_egg = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/hud_egg.png");
-        hud_health = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/hud_health.png");
-        hud_power = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/hud_power_up.png");
+        m_hudEgg = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/m_hudEgg.png");
+        m_hudHealth = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/m_hudHealth.png");
+        m_hudPower = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/m_hudPower_up.png");
 
-        hud_weapon_and_timer =
-            new Texture(GL_TEXTURE_2D, "assets/ui/playstate/hud_weapon&timer.png");
+        m_hudWeaponAndTimer =
+            new Texture(GL_TEXTURE_2D, "assets/ui/playstate/m_hudWeapon&timer.png");
 
-        hud_tomato = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/weapons/tomato_icon.png");
-        hud_potato = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/weapons/potato_icon.png");
-        hud_pumpkin_seed =
+        m_hudTomato = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/weapons/tomato_icon.png");
+        m_hudPotato = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/weapons/potato_icon.png");
+        m_hudPumpkinSeed =
             new Texture(GL_TEXTURE_2D, "assets/ui/playstate/weapons/pumpkin_seed_icon.png");
-        hud_bb = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/weapons/blueberry_icon.png");
-        hud_mine = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/weapons/mine_icon.png");
-        hud_seeds = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/weapons/seeds_icon.png");
+        m_hudBB = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/weapons/blueberry_icon.png");
+        m_hudMine = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/weapons/mine_icon.png");
+        m_hudSeeds = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/weapons/seeds_icon.png");
 
-        weapon_missing = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/weapons/missing_icon.png");
+        m_weaponMissing = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/weapons/missing_icon.png");
 
-        death_overlay = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/death.png");
+        m_deathOverlay = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/death.png");
 
-        initialized = true;
+        m_initialized = true;
     }
 }

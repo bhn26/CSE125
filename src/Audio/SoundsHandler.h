@@ -8,14 +8,14 @@ public:
     const static int MAX_SOUNDS = 5;
     struct SoundOptions
     {
-        float _position[3];
-        bool _loops;
-        bool _isRelativeToListener;
-        SoundOptions(float x = 0.0f, float y = 0.0f, float z = 0.0f) : _loops(false), _isRelativeToListener(false)
+        float m_position[3];
+        bool m_loops = false;
+        bool m_isRelativeToListener = false;
+        SoundOptions(float x = 0.0f, float y = 0.0f, float z = 0.0f)
         {
-            _position[0] = x;
-            _position[1] = y;
-            _position[2] = z;
+            m_position[0] = x;
+            m_position[1] = y;
+            m_position[2] = z;
         }
     };
 

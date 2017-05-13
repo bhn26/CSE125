@@ -10,29 +10,29 @@
 class LoadState : public CGameState
 {
 public:
-	~LoadState();
+    ~LoadState();
 
-	void Draw();
-	void EnterState();
+    void Draw();
+    void EnterState();
 
-	void Update(DWORD dwCurrentTime);
+    void Update(DWORD dwCurrentTime);
 
-	static LoadState* GetInstance(CStateManager* pManager);
+    static LoadState* GetInstance(CStateManager* manager);
 
 protected:
-	LoadState(CStateManager* pManager);
+    LoadState(CStateManager* manager);
 
 private:
-	void InitTextures();
+    void InitTextures();
 
-	SpriteRenderer * sprite_renderer;
+    SpriteRenderer* m_spriteRenderer = nullptr;
 
-	Texture * bg;
-	Texture * chicken_left;
-	Texture * chicken_right;
-	Texture * dot;
+    Texture* m_bg = nullptr;
+    Texture* m_chickenLeft = nullptr;
+    Texture* m_chickenRight = nullptr;
+    Texture* m_dot = nullptr;
 
-	bool initialized;
+    bool m_initialized = false;
 };
 
-#endif  // _LOADSTATE_H_
+#endif // _LOADSTATE_H_

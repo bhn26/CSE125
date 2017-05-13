@@ -11,33 +11,33 @@ class CStateManager;
 class CGameState
 {
 public:
-	// Constructor
-	CGameState(CStateManager* pManager);
-	// Destructor
-	virtual ~CGameState();
+    // Constructor
+    CGameState(CStateManager* manager);
+    // Destructor
+    virtual ~CGameState();
 
-	// The different 'events' functions. Child classes can 
-	// implement the ones in which they are interested in.
-	virtual void OnClick(int button, int action, double x, double y) {}
-	virtual void OnMouseMove(float xoffset, float yoffset) {}
+    // The different 'events' functions. Child classes can
+    // implement the ones in which they are interested in.
+    virtual void OnClick(int button, int action, double x, double y) {}
+    virtual void OnMouseMove(float xoffset, float yoffset) {}
 
-	virtual void OnKeyDown(int action, int key ) { }
-	virtual void OnKeyUp(int action, int key )   { }
-	virtual void OnChar(unsigned int codepoint)   { }
-	virtual void Update(DWORD )  { }
-	virtual void Draw()  { }
+    virtual void OnKeyDown(int action, int key) {}
+    virtual void OnKeyUp(int action, int key) {}
+    virtual void OnChar(unsigned int codepoint) {}
+    virtual void Update(DWORD) {}
+    virtual void Draw() {}
 
-	// Functions called when the state is entered or left
-	// (transition from/to another state).
-	virtual void EnterState()  { }
-	virtual void LeaveState()   { }
+    // Functions called when the state is entered or left
+    // (transition from/to another state).
+    virtual void EnterState() {}
+    virtual void LeaveState() {}
 
 protected:
-	// Helper function to switch to a new active state.
-	void ChangeState(CGameState* pNewState);
+    // Helper function to switch to a new active state.
+    void ChangeState(CGameState* newState);
 
-	// The state manager.
-	CStateManager* m_pStateManager;
+    // The state manager.
+    CStateManager* m_stateManager;
 };
 
-#endif  // _GAMESTATE_H_
+#endif // _GAMESTATE_H_

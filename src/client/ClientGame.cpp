@@ -85,7 +85,7 @@ ClientGame::ClientGame(void) : m_soundsHandler()
 #ifdef _WIN32
     network = new ClientNetwork();
 
-    start_sent = false;
+    m_startSent = false;
 
     sendInitPacket();
     // sendStartPacket(); // temp - will add start button
@@ -110,9 +110,9 @@ void ClientGame::receiveInitPacket(int offset)
     PacketHeader* hdr = reinterpret_cast<PacketHeader*>(&(m_networkData[offset]));
 
     // Find out what our client id is from the init packet of the server
-    client_id = hdr->receiver_id;
+    m_clientId = hdr->receiver_id;
 
-    printf("set client id to %d\n", client_id);
+    printf("set client id to %d\n", m_clientId);
 
     // Initialize();
 }
@@ -140,10 +140,10 @@ void ClientGame::receiveJoinPacket(int offset)
     PosInfo* pi = reinterpret_cast<PosInfo*>(&(dat->buf));
 
     // set our team if it's for us
-    if (pi->id == client_id)
+    if (pi->id == m_clientId)
     {
-        client_team = pi->team_id;
-        printf("setting client team to %d for player %d\n", client_team, client_id);
+        m_clientTeam = pi->team_id;
+        printf("setting client team to %d for player %d\n", m_clientTeam, m_clientId);
     }
 
     printf("receiveJoinPacket for player %d on team %d\n", pi->id, pi->team_id);
@@ -152,18 +152,18 @@ void ClientGame::receiveJoinPacket(int offset)
 
     if (team == 0)
     {
-        team0.erase(std::remove(team0.begin(), team0.end(), player),
-                    team0.end()); // erase from both lists
-        team1.erase(std::remove(team1.begin(), team1.end(), player), team1.end());
+        m_team0.erase(std::remove(m_team0.begin(), m_team0.end(), player),
+                    m_team0.end()); // erase from both lists
+        m_team1.erase(std::remove(m_team1.begin(), m_team1.end(), player), m_team1.end());
 
-        team0.push_back(player);
+        m_team0.push_back(player);
     }
     else
     {
-        team0.erase(std::remove(team0.begin(), team0.end(), player), team0.end());
-        team1.erase(std::remove(team1.begin(), team1.end(), player), team1.end());
+        m_team0.erase(std::remove(m_team0.begin(), m_team0.end(), player), m_team0.end());
+        m_team1.erase(std::remove(m_team1.begin(), m_team1.end(), player), m_team1.end());
 
-        team1.push_back(player);
+        m_team1.push_back(player);
     }
 };
 
@@ -175,12 +175,12 @@ void ClientGame::sendJoinPacket(int team)
 
     Packet packet;
 
-    packet.hdr.sender_id = client_id;
+    packet.hdr.sender_id = m_clientId;
     packet.hdr.receiver_id = SERVER_ID;
     packet.hdr.packet_type = static_cast<int>(PacketTypes::JoinTeam);
 
     PosInfo pi;
-    pi.id = client_id;
+    pi.id = m_clientId;
     pi.team_id = team;
     pi.Serialize(packet.dat.buf);
 
@@ -197,7 +197,7 @@ void ClientGame::sendReadyPacket()
     Packet packet;
 
     packet.hdr.packet_type = static_cast<int>(PacketTypes::ReadyGame);
-    packet.hdr.sender_id = client_id;
+    packet.hdr.sender_id = m_clientId;
 
     printf("sending a ready packet\n");
 
@@ -219,28 +219,28 @@ void ClientGame::receiveStartPacket(int offset)
     Window::m_pStateManager->ChangeState(
         CPlayState::GetInstance(Window::m_pStateManager)); // start game
 
-    game_started = true;
-    total_eggs = (team0.size() + team1.size()) * 2 + 1;
+    m_gameStarted = true;
+    m_totalEggs = (m_team0.size() + m_team1.size()) * 2 + 1;
     sendReadyPacket();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ClientGame::sendStartPacket()
 {
-    if (start_sent)
+    if (m_startSent)
         return;
 
     const unsigned int packetSize = sizeof(Packet);
     std::uint8_t packetData[packetSize];
 
     Packet packet;
-    packet.hdr.sender_id = client_id;
+    packet.hdr.sender_id = m_clientId;
     packet.hdr.receiver_id = SERVER_ID;
     packet.hdr.packet_type = static_cast<int>(PacketTypes::StartGame);
 
     packet.Serialize(packetData);
 
-    start_sent = true;
+    m_startSent = true;
     NetworkServices::sendMessage(network->ConnectSocket, packetData, packetSize);
 }
 
@@ -253,13 +253,13 @@ void ClientGame::receiveReadyToSpawnPacket(int offset)
 
     Packet packet;
     packet.hdr.packet_type = static_cast<int>(PacketTypes::IndSpawnEvent);
-    packet.hdr.sender_id = client_id;
+    packet.hdr.sender_id = m_clientId;
     packet.hdr.receiver_id = SERVER_ID;
 
     PosInfo pi;
-    pi.id = client_id;
-    pi.team_id = client_team;
-    printf("send IndSpawn Packet for player %d on team %d\n", client_id, pi.team_id);
+    pi.id = m_clientId;
+    pi.team_id = m_clientTeam;
+    printf("send IndSpawn Packet for player %d on team %d\n", m_clientId, pi.team_id);
     pi.skin = rand() % 3;
 
     pi.Serialize(packet.dat.buf);
@@ -277,9 +277,9 @@ void ClientGame::receiveSpawnPacket(int offset)
     // spawn the thing
     Scene::Instance()->AddEntity((*p));
 
-    if (!iSpawned && p->oid == client_id)
+    if (!m_iSpawned && p->oid == m_clientId)
     {
-        iSpawned = true;
+        m_iSpawned = true;
     }
 }
 
@@ -290,11 +290,11 @@ void ClientGame::SetName(std::string name)
     {
         std::string def;
         def += "Player ";
-        def += std::to_string(client_id);
-        name_map[client_id] = def;
+        def += std::to_string(m_clientId);
+        m_nameMap[m_clientId] = def;
     }
     else
-        name_map[client_id] = name;
+        m_nameMap[m_clientId] = name;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -326,7 +326,7 @@ void ClientGame::receiveRemovePacket(int offset)
         && static_cast<CollectType>(r->sub_id) == CollectType::Weapon) // If Weapon/collectable
     {
         // Tell the client you got a weapon!
-        if (client_id == r->rec_oid)
+        if (m_clientId == r->rec_oid)
         {
             if (Scene::Instance()->GetPlayer()->GetWeapon() == -1)
                 Scene::Instance()->GetPlayer()->SetWeapon(r->sub_id2);
@@ -374,7 +374,7 @@ void ClientGame::sendMovePacket(MoveType direction)
 
     Packet packet;
     packet.hdr.packet_type = static_cast<int>(PacketTypes::MoveEvent);
-    packet.hdr.sender_id = client_id;
+    packet.hdr.sender_id = m_clientId;
     packet.hdr.receiver_id = SERVER_ID;
 
     PosInfo pi;
@@ -401,7 +401,7 @@ void ClientGame::receiveRotationPacket(int offset)
 
     // std::shared_ptr<Player> target = FindTarget(pi->id);
     // server don't tell us how we rotate
-    if (pi->oid != client_id)
+    if (pi->oid != m_clientId)
     {
         Scene::Instance()
             ->GetEntity(pi->cid, pi->oid)
@@ -436,7 +436,7 @@ void ClientGame::sendRotationPacket()
 
     Packet packet;
     packet.hdr.packet_type = static_cast<int>(PacketTypes::VRotationEvent);
-    packet.hdr.sender_id = client_id;
+    packet.hdr.sender_id = m_clientId;
     packet.hdr.receiver_id = SERVER_ID;
 
     // send the rotation of the main player
@@ -463,7 +463,7 @@ void ClientGame::sendJumpPacket()
 
     Packet packet;
     packet.hdr.packet_type = static_cast<int>(PacketTypes::JumpEvent);
-    packet.hdr.sender_id = client_id;
+    packet.hdr.sender_id = m_clientId;
     packet.hdr.receiver_id = SERVER_ID;
 
     packet.Serialize(packetData);
@@ -479,8 +479,8 @@ void ClientGame::receiveScorePacket(int offset)
 
     printf("received a score packet t0: %d   t1: %d\n", s->t0_score, s->t1_score);
 
-    scores[0] = s->t0_score;
-    scores[1] = s->t1_score;
+    m_scores[0] = s->t0_score;
+    m_scores[1] = s->t1_score;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -491,21 +491,21 @@ void ClientGame::receiveGameOverPacket(int offset)
 
     if (s->t0_score == s->t1_score)
     {
-        winner = -1;
+        m_winner = -1;
     }
     else if (s->t0_score > s->t1_score)
     { // t0 win
-        winner = 0;
+        m_winner = 0;
     }
     else
     { // t1 win
-        winner = 1;
+        m_winner = 1;
     }
 
-    if (winner == -1)
+    if (m_winner == -1)
         printf("Game was a tie!\n");
     else
-        printf("Team %d won!\n", winner);
+        printf("Team %d won!\n", m_winner);
     // change state to game over screen
     Window::m_pStateManager->ChangeState(GOState::GetInstance(Window::m_pStateManager));
 }
@@ -515,15 +515,15 @@ void ClientGame::receiveTimeStampPacket(int offset)
 {
     PacketData* data = reinterpret_cast<PacketData*>(&m_networkData[offset]);
     MiscInfo* m = reinterpret_cast<MiscInfo*>(&data->buf);
-    if (!countdown)
+    if (!m_countdown)
     {
-        start_time = std::chrono::steady_clock::now();
-        countdown = 300 - m->misc1;
+        m_startTime = std::chrono::steady_clock::now();
+        m_countdown = 300 - m->misc1;
     }
 
-    if (countdown != m->misc1)
+    if (m_countdown != m->misc1)
     {
-        countdown = 300 - m->misc1;
+        m_countdown = 300 - m->misc1;
     }
 }
 
@@ -535,7 +535,7 @@ void ClientGame::sendAttackPacket(AttackType t)
 
     Packet packet;
     packet.hdr.packet_type = static_cast<int>(PacketTypes::AttackEvent);
-    packet.hdr.sender_id = client_id;
+    packet.hdr.sender_id = m_clientId;
     packet.hdr.receiver_id = SERVER_ID;
 
     MiscInfo m;
@@ -566,7 +566,7 @@ void ClientGame::sendDiscardPacket()
 
     Packet packet;
     packet.hdr.packet_type = static_cast<int>(PacketTypes::DiscardEvent);
-    packet.hdr.sender_id = client_id;
+    packet.hdr.sender_id = m_clientId;
     packet.hdr.receiver_id = SERVER_ID;
 
     packet.Serialize(packetData);
@@ -579,7 +579,7 @@ void ClientGame::receiveDiscardPacket(int offset)
 {
     PacketData* dat = reinterpret_cast<PacketData*>(&(m_networkData[offset]));
     MiscInfo* m = reinterpret_cast<MiscInfo*>(&dat->buf);
-    if (m->misc1 == client_id)
+    if (m->misc1 == m_clientId)
     {
         Scene::Instance()->GetPlayer()->SetWeapon(-1);
     }
@@ -604,7 +604,7 @@ void ClientGame::sendDancePacket()
 
     Packet packet;
     packet.hdr.packet_type = static_cast<int>(PacketTypes::DanceEvent);
-    packet.hdr.sender_id = client_id;
+    packet.hdr.sender_id = m_clientId;
     packet.hdr.receiver_id = SERVER_ID;
 
     packet.Serialize(packetData);
@@ -627,7 +627,7 @@ void ClientGame::receiveDeathPacket(int offset)
     decScore(player->GetTeam(), player->GetScore());
 
     // death overlay
-    if (e->id == client_id)
+    if (e->id == m_clientId)
     {
         CPlayState::GetInstance(Window::m_pStateManager)->Die();
     }
@@ -643,7 +643,7 @@ void ClientGame::receiveRespawnPacket(int offset)
     player->SetAlive(true);
 
     // update state
-    if (e->id == client_id)
+    if (e->id == m_clientId)
     {
         CPlayState::GetInstance(Window::m_pStateManager)->Respawn();
     }
@@ -657,12 +657,12 @@ void ClientGame::sendNamePacket()
 
     Packet packet;
     packet.hdr.packet_type = static_cast<int>(PacketTypes::SetUsername);
-    packet.hdr.sender_id = client_id;
+    packet.hdr.sender_id = m_clientId;
     packet.hdr.receiver_id = SERVER_ID;
 
     NameInfo n;
-    n.player_id = client_id;
-    n.name = name_map.at(client_id);
+    n.player_id = m_clientId;
+    n.name = m_nameMap.at(m_clientId);
     n.Serialize(packet.dat.buf);
 
     packet.Serialize(packetData);
@@ -681,7 +681,7 @@ void ClientGame::receiveNamePacket(int offset)
     PacketData* dat = reinterpret_cast<PacketData*>(&m_networkData[offset + sizeof(PacketHeader)]);
     NameInfo* n = reinterpret_cast<NameInfo*>(&dat->buf);
 
-    name_map[n->player_id] = n->name;
+    m_nameMap[n->player_id] = n->name;
     // Player* player =
     // reinterpret_cast<Player*>(Scene::Instance()->GetEntity(ClassId::Player,n->player_id).get());
     // player->SetName(n->name);
@@ -744,7 +744,7 @@ void ClientGame::update()
             break;
 
         case PacketTypes::MoveEvent:
-            if (game_started) // the game needs to start for the client before this can happen
+            if (m_gameStarted) // the game needs to start for the client before this can happen
                 receiveMovePacket(i + sizeof(PacketHeader));
             break;
 
@@ -873,14 +873,14 @@ void ClientGame::GameLoop()
 #endif
         auto curr_time = std::chrono::steady_clock::now();
 
-        auto fp_stamp = curr_time - start_time;
+        auto fp_stamp = curr_time - m_startTime;
 
         int diff = fp_stamp.count();
 
         diff = diff / 1000;
 
-        if ((300 - diff) == (countdown - 1))
-            countdown = 300 - diff;
+        if ((300 - diff) == (m_countdown - 1))
+            m_countdown = 300 - diff;
 
         // Measure speed
         PrintFrameRate();
@@ -892,10 +892,10 @@ void ClientGame::GameLoop()
         // Idle callback. Updating objects, etc. can be done here.
         Window::Idle_callback();
 
-        if (++tick % 15 == 0 && iSpawned)
+        if (++m_tick % 15 == 0 && m_iSpawned)
         {
             ClientGame::instance()->sendRotationPacket();
-            tick = 0;
+            m_tick = 0;
         }
     }
 }
@@ -984,12 +984,12 @@ void ClientGame::Print_versions()
 void ClientGame::PrintFrameRate()
 {
     double currentTime = glfwGetTime();
-    nbFrames++;
-    if (currentTime - lastTime >= 5.0) // If last prinf() was more than 1 sec ago
+    m_nbFrames++;
+    if (currentTime - m_lastTime >= 5.0) // If last prinf() was more than 1 sec ago
     {
-        printf("%f ms/frame\n", 5000.0 / double(nbFrames)); // printf and reset timer
-        nbFrames = 0;
-        lastTime += 5.0;
+        printf("%f ms/frame\n", 5000.0 / double(m_nbFrames)); // printf and reset timer
+        m_nbFrames = 0;
+        m_lastTime += 5.0;
     }
 }
 

@@ -1,7 +1,7 @@
 #pragma once
 #include <stdlib.h>
 #include "ServerNetwork.h"
-#include "../network/NetworkData.h"
+#include "network/NetworkData.h"
 #include "engine/engine.h"
 #include <btBulletDynamicsCommon.h>
 
