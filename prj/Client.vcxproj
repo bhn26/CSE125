@@ -200,6 +200,7 @@
     <None Include="..\src\Graphics\Shaders\text.vert" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\Matt%27s Folder\Classwork\CSE125\Project\src\Network\GameData.cpp" />
     <ClCompile Include="..\src\Audio\SoundBufferManager.cpp" />
     <ClCompile Include="..\src\Audio\SoundsHandler.cpp" />
     <ClCompile Include="..\src\client\GameOverState.cpp" />
