@@ -10,8 +10,8 @@
 
 #include "Entity.h"
 
-#include "../Animation/skinning_technique.h"
-#include "../Animation/AnimatedModel.h"
+#include "Graphics/Animation/skinning_technique.h"
+#include "Graphics/Animation/AnimatedModel.h"
 
 class ChickenAnim : public Entity
 {

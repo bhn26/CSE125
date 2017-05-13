@@ -12,50 +12,65 @@ const GLfloat Camera::ZNEAR = 0.1f;
 const GLfloat Camera::ZFAR = 1000.0f;
 
 Camera::Camera(glm::vec3 position, glm::vec3 up, glm::vec3 front)
-    : position(position), worldUp(up), front(front),
-    movementSpeed(SPEED), mouseSensitivity(SENSITIVTY), zoom(ZOOM), zNear(ZNEAR), zFar(ZFAR)
+    : m_position(position)
+    , m_worldUp(up)
+    , m_front(front)
+    , m_movementSpeed(SPEED)
+    , m_mouseSensitivity(SENSITIVTY)
+    , m_zoom(ZOOM)
+    , m_zNear(ZNEAR)
+    , m_zFar(ZFAR)
 {
-    this->UpdateCameraVectors();
+    UpdateCameraVectors();
 }
 
 void Camera::ProcessKeyboard(CameraMovement direction, GLfloat deltaTime)
 {
-    GLfloat velocity = this->movementSpeed * deltaTime;
+    GLfloat velocity = m_movementSpeed * deltaTime;
     if (direction == CameraMovement::Forward)
-        this->position += this->front * velocity;
+        m_position += m_front * velocity;
     if (direction == CameraMovement::Backward)
-        this->position -= this->front * velocity;
+        m_position -= m_front * velocity;
     if (direction == CameraMovement::Left)
-        this->position -= this->right * velocity;
+        m_position -= m_right * velocity;
     if (direction == CameraMovement::Right)
-        this->position += this->right * velocity;
+        m_position += m_right * velocity;
     if (direction == CameraMovement::Up)
-        this->position += this->up * velocity;
+        m_position += m_up * velocity;
     if (direction == CameraMovement::Down)
-        this->position -= this->up * velocity;
+        m_position -= m_up * velocity;
 }
 
 void Camera::ProcessMouseMovement(GLfloat xoffset, GLfloat yoffset, GLboolean constrainPitch)
 {
-    this->front = glm::mat3(glm::rotate(glm::mat4(1.0f), glm::radians(xoffset), this->worldUp)) * this->front;
+    m_front =
+        glm::mat3(glm::rotate(glm::mat4(1.0f), glm::radians(xoffset), m_worldUp)) * m_front;
 
     // Update Front, Right and Up Vectors using the updated Eular angles
-    this->UpdateCameraVectors();
+    UpdateCameraVectors();
 }
 
 void Camera::ProcessMouseScroll(GLfloat yoffset)
 {
-    if (this->zoom >= 1.0f && this->zoom <= 45.0f)
-        this->zoom -= yoffset;
-    if (this->zoom <= 1.0f)
-        this->zoom = 1.0f;
-    if (this->zoom >= 45.0f)
-        this->zoom = 45.0f;
+    if (m_zoom <= 1.0f)
+    {
+        m_zoom = 1.0f;
+    }
+    else if (m_zoom >= 45.0f)
+    {
+        m_zoom = 45.0f;
+    }
+    else
+    {
+        m_zoom -= yoffset;
+    }
 }
 
 void Camera::UpdateCameraVectors()
 {
-    this->front = glm::normalize(front);
-    this->right = glm::normalize(glm::cross(this->front, this->worldUp));  // Normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
-    this->up = glm::normalize(glm::cross(this->right, this->front));
+    m_front = glm::normalize(m_front);
+    // Normalize the vectors, because their length gets closer to 0 the more you look up or down
+    // which results in slower movement.
+    m_right = glm::normalize(glm::cross(m_front, m_worldUp));
+    m_up = glm::normalize(glm::cross(m_right, m_front));
 }

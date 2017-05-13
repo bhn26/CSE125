@@ -18,13 +18,13 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-Chicken::Chicken() : Chicken (0.0f, 0.0f, 0.0f)
+Chicken::Chicken() : Chicken(0.0f, 0.0f, 0.0f)
 {
 }
 
 Chicken::Chicken(float x, float y, float z) : Entity(glm::vec3(x, y, z))
 {
-    model = ModelManager::GetModel("Chicken");
+    m_model = ModelManager::GetModel("Chicken");
 }
 
 Chicken::~Chicken()
@@ -33,16 +33,20 @@ Chicken::~Chicken()
 
 void Chicken::Draw() const
 {
-    // Use the appropriate shader (depth or model)
+    // Use the appropriate m_shader (depth or m_model)
     UseShader();
 
-    // Draw the loaded model
-    model->Draw(Scene::Instance()->IsRenderingDepth() ? nullptr : shader.get());
+    // Draw the loaded m_model
+    m_model->Draw(Scene::Instance()->IsRenderingDepth() ? nullptr : m_shader.get());
 }
 
 void Chicken::SetShaderUniforms() const
 {
-    glUniformMatrix4fv(shader->GetUniform("view"), 1, false, glm::value_ptr(Scene::Instance()->GetViewMatrix()));
-    glUniformMatrix4fv(shader->GetUniform("model"), 1, false, glm::value_ptr(this->toWorld));
-    glUniformMatrix4fv(shader->GetUniform("projection"), 1, false, glm::value_ptr(Scene::Instance()->GetPerspectiveMatrix()));
+    glUniformMatrix4fv(
+        m_shader->GetUniform("view"), 1, false, glm::value_ptr(Scene::Instance()->GetViewMatrix()));
+    glUniformMatrix4fv(m_shader->GetUniform("model"), 1, false, glm::value_ptr(m_toWorld));
+    glUniformMatrix4fv(m_shader->GetUniform("projection"),
+                       1,
+                       false,
+                       glm::value_ptr(Scene::Instance()->GetPerspectiveMatrix()));
 }

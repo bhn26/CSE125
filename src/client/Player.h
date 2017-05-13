@@ -68,7 +68,7 @@ public:
     void Dance() { ChangeState(State::Dance); }
     void Attack() { ChangeState(State::Attack); }
     void TauntDie() { ChangeState(State::Death); }
-    void Die() { ChangeState(State::Death); alive = false; health = 0; }
+    void Die() { ChangeState(State::Death); m_alive = false; m_health = 0; }
     void Peck() { ChangeState(State::Peck); }
 
 
@@ -91,26 +91,26 @@ public:
     glm::mat3 GetNormalMatrix() const;
 	float GetCamAngle() const;
 
-    int GetID() const { return id; };
-    int GetClassId() const { return class_id; }
+    int GetID() const { return m_id; };
+    int GetClassId() const { return m_classId; }
 
     void ChangeState(State state);                  // Will change model state and player state
     void SetState(State state) { m_state = state; }     // Simply Sets the state without changing the model
 
-    int GetScore() const override { return num_eggs; };
-    void SetScore(int n) override { num_eggs = n; };
+    int GetScore() const override { return m_numEggs; };
+    void SetScore(int n) override { m_numEggs = n; };
 
 	void SetTeam(int team);
-    int GetTeam() const { return team_id; }
+    int GetTeam() const { return m_teamId; }
 
 	int GetWeapon();
-	void SetWeapon(int weapon);
+	void SetWeapon(int m_weapon);
 
-	bool IsAlive() { return alive; }
-	void SetAlive(bool a) { alive = a; health = 100; }
+	bool IsAlive() { return m_alive; }
+	void SetAlive(bool a) { m_alive = a; m_health = 100; }
 
-	void SetHealth(int h) override { health = h; }
-	int GetHealth() const override { return health; };
+	void SetHealth(int h) override { m_health = h; }
+	int GetHealth() const override { return m_health; };
 
 private:
     // AnimationPlayer::Listener
@@ -129,34 +129,34 @@ private:
     std::unique_ptr<Animation::AnimatedModel> m_model;
 
     // Game data
-    int id;
-    int team_id;
-    int num_eggs;
-	int weapon;
+    int m_id;
+    int m_teamId;
+    int m_numEggs = 0;
+	int m_weapon = -1;
 
     Texture* info_panel;
 
     // How up/down camera is
-    float camAngle;
-    glm::vec3 relativeCamPosition;
-    glm::vec3 defaultCamFront;
-    glm::vec3 relativeCamPerpendicular;
+    float m_camAngle = 0.0f;
+    glm::vec3 m_relativeCamPosition;
+    glm::vec3 m_defaultCamFront;
+    glm::vec3 m_relativeCamPerpendicular;
 
     float m_HViewSensitivity = 7.5f;
     float m_VViewSensitivity = 5.0f;
 
-    int tick = 0;
+    int m_tick = 0;
 
-	bool alive;
-	int health;
+	bool m_alive = true;
+	int m_health = 100;
 
     // Path name for chicken model texture
-    std::string modelFile;
+    std::string m_modelFile;
 
     // Animation
     State m_state;
     float m_lastTime_t;     // Test
-    float m_distanceThreshhold_t;
+    float m_distanceThreshhold_t = 1.0f;
     glm::vec3 m_lastPos_t;
 
     std::stack<int> m_danceSoundIndices;      // Sound index

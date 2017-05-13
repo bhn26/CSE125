@@ -11,9 +11,9 @@
 class Ground : public Entity
 {
 public:
-    static const float SIZE;
+    static const float s_size;
 
-    glm::vec3 color;
+    glm::vec3 m_color;
 
     Ground();
     ~Ground();

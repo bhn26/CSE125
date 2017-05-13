@@ -59,9 +59,9 @@ void Scene::Setup()
         new PointLight(glm::vec3(0.0f, 20.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)));
     m_dirLight = std::unique_ptr<DirectionalLight>(
         new DirectionalLight(glm::vec3(0.5, -sqrt(3) / 2.0f, 0.0f)));
-    m_dirLight->_ambientIntensity = 0.3f;
+    m_dirLight->m_ambientIntensity = 0.3f;
     m_camera = std::unique_ptr<Camera>(
-        new Camera(camPos, glm::vec3(0.0f, 1.0f, 0.0f), m_dirLight->_direction));
+        new Camera(camPos, glm::vec3(0.0f, 1.0f, 0.0f), m_dirLight->m_direction));
 
     // glm::vec3 pos = glm::vec3(0.0f, 250.0f, 0.0f);
     // m_lightSpaceMatrix = glm::ortho(-425.0f, 350.0f, -500.0f, 300.0f, 10.0f, 500.0f) *
@@ -73,7 +73,7 @@ void Scene::Setup()
                    std::stof(ConfigManager::Instance()->GetConfigValue("Light_Ortho_Top")),
                    std::stof(ConfigManager::Instance()->GetConfigValue("Light_Ortho_Near")),
                    std::stof(ConfigManager::Instance()->GetConfigValue("Light_Ortho_Far")))
-        * glm::lookAt(pos, pos + m_dirLight->_direction, glm::vec3(0.0f, 1.0f, 0.0));
+        * glm::lookAt(pos, pos + m_dirLight->m_direction, glm::vec3(0.0f, 1.0f, 0.0));
 
     m_depthShader = ShaderManager::GetShader("Depth_Map");
 
@@ -303,7 +303,7 @@ void Scene::SetProjectionUbo()
 void Scene::ConfigureShaderAndMatrices()
 {
     m_depthShader->Use();
-    glUniformMatrix4fv(m_depthShader->GetUniform("m_lightSpaceMatrix"),
+    glUniformMatrix4fv(m_depthShader->GetUniform("lightSpaceMatrix"),
                        1,
                        GL_FALSE,
                        glm::value_ptr(LightSpaceMatrix()));

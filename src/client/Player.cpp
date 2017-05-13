@@ -20,15 +20,13 @@
 ////////////////////////////////////////////////////////////////////////////////
 Player::Player(float x, float y, float z, float rotW, float rotX, float rotY, float rotZ)
     : Entity(glm::vec3(x, y, z), glm::vec3(0.01f))
-    , camAngle(0.0f)
-    , modelFile("assets/chickens/objects/chicken.obj")
-    , defaultCamFront(glm::normalize(glm::vec3(0.05f, -0.20f, 0.97f)))
-    , m_distanceThreshhold_t(1.0f)
+    , m_modelFile("assets/chickens/objects/chicken.obj")
+    , m_defaultCamFront(glm::normalize(glm::vec3(0.05f, -0.20f, 0.97f)))
 {
     // info_panel = new Texture(GL_TEXTURE_2D, "assets/ui/player_info_panel.png");
 
     SetRelativeCamPosition(glm::vec3(-2.5f, 4.5f, -7.0f));
-    camera = std::unique_ptr<Camera>(new Camera(Position() + relativeCamPosition));
+    camera = std::unique_ptr<Camera>(new Camera(Position() + m_relativeCamPosition));
     Entity::RotateTo(rotW, rotX, rotY, rotZ);
 
     // Setup the animated model
@@ -59,15 +57,12 @@ Player::Player(float x, float y, float z, float rotW, float rotX, float rotY, fl
     skinTechnique->SetMatSpecularPower(0);
 
     m_model->InitBones0(); // Initialize bones to 0 time spot
-    alive = true;
-    health = 100;
-    weapon = -1;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 Player::Player(int client_id) : Player()
 {
-    obj_id = client_id;
+    m_objId = client_id;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -79,8 +74,8 @@ Player::~Player()
 ////////////////////////////////////////////////////////////////////////////////
 void Player::SetModelFile(std::string fileName)
 {
-    modelFile = fileName;
-    // model = std::unique_ptr<Model>(new Model(modelFile.c_str()));
+    m_modelFile = fileName;
+    // model = std::unique_ptr<Model>(new Model(m_modelFile.c_str()));
     // m_model = std::unique_ptr<Animation::AnimatedModel>(new Animation::AnimatedModel(fileName));
 }
 
@@ -138,7 +133,7 @@ void Player::UseShader() const
     // For rendering Depth, only need model
     if (Scene::Instance()->IsRenderingDepth())
     {
-        skinTechnique->SetWorldMatrix(toWorld);
+        skinTechnique->SetWorldMatrix(m_toWorld);
         skinTechnique->SetRenderingDepth(true);
         skinTechnique->SetLightSpaceMatrix(Scene::Instance()->LightSpaceMatrix());
     }
@@ -160,8 +155,8 @@ void Player::SetShaderUniforms() const
 
     skinTechnique->SetEyeWorldPos(Scene::Instance()->GetCameraPosition());
     skinTechnique->SetWVP(
-        Scene::Instance()->GetPerspectiveMatrix() * Scene::Instance()->GetViewMatrix() * toWorld);
-    skinTechnique->SetWorldMatrix(toWorld);
+        Scene::Instance()->GetPerspectiveMatrix() * Scene::Instance()->GetViewMatrix() * m_toWorld);
+    skinTechnique->SetWorldMatrix(m_toWorld);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -205,22 +200,22 @@ void Player::ProcessKeyboard(Direction direction, GLfloat deltaTime)
     switch (direction)
     {
     case Direction::Forward:
-        this->toWorld[3] += deltaTime * toWorld[2];
+        this->m_toWorld[3] += deltaTime * m_toWorld[2];
         break;
     case Direction::Backward:
-        this->toWorld[3] -= deltaTime * toWorld[2];
+        this->m_toWorld[3] -= deltaTime * m_toWorld[2];
         break;
     case Direction::Left:
-        this->toWorld[3] += deltaTime * toWorld[0];
+        this->m_toWorld[3] += deltaTime * m_toWorld[0];
         break;
     case Direction::Right:
-        this->toWorld[3] -= deltaTime * toWorld[0];
+        this->m_toWorld[3] -= deltaTime * m_toWorld[0];
         break;
     case Direction::Up:
-        this->toWorld[3] += deltaTime * toWorld[1];
+        this->m_toWorld[3] += deltaTime * m_toWorld[1];
         break;
     case Direction::Down:
-        this->toWorld[3] -= deltaTime * toWorld[1];
+        this->m_toWorld[3] -= deltaTime * m_toWorld[1];
         break;
     }
 }
@@ -234,23 +229,23 @@ void Player::ProcessMouseMovement(GLfloat xoffset, GLfloat yoffset, GLboolean co
     yoffset *= 0.03f;
 
     // Update Front, Right and Up Vectors using the updated Eular angles
-    this->toWorld =
-        this->toWorld
+    this->m_toWorld =
+        this->m_toWorld
         * glm::rotate(glm::mat4(1.0f), glm::radians(-xoffset), glm::vec3(0.0f, 1.0f, 0.0f));
 
-    camAngle += glm::radians(yoffset);
+    m_camAngle += glm::radians(yoffset);
     const static float pi2 = glm::pi<float>() / 2;
-    camAngle = (camAngle > pi2) ? pi2 : ((camAngle < -pi2) ? -pi2 : camAngle);
+    m_camAngle = (m_camAngle > pi2) ? pi2 : ((m_camAngle < -pi2) ? -pi2 : m_camAngle);
 
     CalculateCameraPosition();
     CalculateCameraFront();
     SetAudioListener();
 
-    // Don't send me stuff unless you're alive
-    if (++tick % 10 == 0 && alive)
+    // Don't send me stuff unless you're m_alive
+    if (++m_tick % 10 == 0 && m_alive)
     {
         ClientGame::Instance()->sendRotationPacket();
-        tick = 0;
+        m_tick = 0;
     }
 }
 
@@ -264,33 +259,33 @@ void Player::ProcessViewMovement(GLfloat xoffset, GLfloat yoffset, GLboolean con
 
     // Update Front, Right and Up Vectors using the updated Eular angles
     glm::mat4 temp =
-        this->toWorld
+        this->m_toWorld
         * glm::rotate(glm::mat4(1.0f), glm::radians(-xoffset), glm::vec3(1.0f, 1.0f, 1.0f));
     for (int col = 0; col < 3; col++)
     {
         for (int row = 0; row < 3; row++)
         {
-            temp[col][row] /= scale[col];
+            temp[col][row] /= m_scale[col];
         }
     }
     glm::quat trot = static_cast<glm::quat>(temp);
 
-    this->toWorld =
-        this->toWorld
+    this->m_toWorld =
+        this->m_toWorld
         * glm::rotate(glm::mat4(1.0f), glm::radians(-xoffset), glm::vec3(0.0f, 1.0f, 0.0f));
 
-    camAngle += glm::radians(yoffset);
+    m_camAngle += glm::radians(yoffset);
     const static float pi2 = glm::pi<float>() / 2;
-    camAngle = (camAngle > pi2) ? pi2 : ((camAngle < -pi2) ? -pi2 : camAngle);
+    m_camAngle = (m_camAngle > pi2) ? pi2 : ((m_camAngle < -pi2) ? -pi2 : m_camAngle);
 
     CalculateCameraPosition();
     CalculateCameraFront();
     SetAudioListener();
 
-    if (++tick % 10 == 0)
+    if (++m_tick % 10 == 0)
     {
         ClientGame::Instance()->sendRotationPacket();
-        tick = 0;
+        m_tick = 0;
     }
 }
 
@@ -333,13 +328,13 @@ glm::mat4 Player::GetPerspectiveMatrix() const
 ////////////////////////////////////////////////////////////////////////////////
 glm::mat3 Player::GetNormalMatrix() const
 {
-    return this->normalMatrix;
+    return m_normalMatrix;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 float Player::GetCamAngle() const
 {
-    return this->camAngle;
+    return this->m_camAngle;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -411,22 +406,22 @@ void Player::ChangeState(State state)
 ////////////////////////////////////////////////////////////////////////////////
 int Player::GetWeapon()
 {
-    return this->weapon;
+    return this->m_weapon;
 }
 
-void Player::SetWeapon(int weapon)
+void Player::SetWeapon(int m_weapon)
 {
-    this->weapon = weapon;
+    this->m_weapon = m_weapon;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void Player::SetTeam(int team)
 {
-    team_id = team;
+    m_teamId = team;
     if (team == 1)
     {
         Material material = Material();
-        material._diffuse = glm::vec3(1.0f, 210.0f / 255.0f, 77.0f / 255.0f);
+        material.m_diffuse = glm::vec3(1.0f, 210.0f / 255.0f, 77.0f / 255.0f);
         m_model->ChangeMaterial(1, material);
     }
 }
@@ -457,30 +452,30 @@ void Player::CheckStopDanceSound()
 ////////////////////////////////////////////////////////////////////////////////
 void Player::SetRelativeCamPosition(glm::vec3 relativePos)
 {
-    relativeCamPosition = relativePos;
-    relativeCamPerpendicular =
+    m_relativeCamPosition = relativePos;
+    m_relativeCamPerpendicular =
         glm::cross(glm::vec3(0.0f, 1.0f, 0.0f), relativePos); // Hardcoded world up
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void Player::CalculateCameraPosition()
 {
-    camera->position =
+    camera->m_position =
         Position()
-        + (glm::mat3(this->toWorld)
-           * glm::mat3(glm::rotate(glm::mat4(1.0f), this->camAngle, relativeCamPerpendicular))
-           * relativeCamPosition)
-              / this->scale; // Divide by scale
+        + (glm::mat3(m_toWorld)
+           * glm::mat3(glm::rotate(glm::mat4(1.0f), m_camAngle, m_relativeCamPerpendicular))
+           * m_relativeCamPosition)
+              / m_scale; // Divide by scale
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void Player::CalculateCameraFront()
 {
-    camera->front = glm::normalize(
-        glm::mat3(this->toWorld)
-        * glm::mat3(glm::rotate(glm::mat4(1.0f), this->camAngle, relativeCamPerpendicular))
-        * defaultCamFront);
-    camera->front = glm::normalize(camera->front);
+    camera->m_front = glm::normalize(
+        glm::mat3(m_toWorld)
+        * glm::mat3(glm::rotate(glm::mat4(1.0f), m_camAngle, m_relativeCamPerpendicular))
+        * m_defaultCamFront);
+    camera->m_front = glm::normalize(camera->m_front);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -8,7 +8,7 @@
 #include <memory>
 
 #include "Entity.h"
-#include "../ShaderManager.h"
+#include "Graphics/ShaderManager.h"
 
 struct DirectionalLight;
 class Model;
@@ -19,12 +19,12 @@ public:
     StaticObject(std::shared_ptr<Model> model);
     ~StaticObject();
 
-    void Translate(glm::vec3 translate);
-    void Rotate(float deg, glm::vec3 axis);
+    void Translate(const glm::vec3& translate);
+    void Rotate(float deg, const glm::vec3& axis);
 
-    std::shared_ptr<Model> model;
+    std::shared_ptr<Model> m_model;
 
-    float angle; // For spinning if we want
+    float m_angle; // For spinning if we want
 
     // Inherited via Entity
     void Draw() const override;
@@ -34,5 +34,4 @@ public:
     void Spin(float deg);
 
 private:
-
 };

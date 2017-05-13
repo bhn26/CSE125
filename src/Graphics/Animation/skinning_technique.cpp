@@ -223,11 +223,11 @@ namespace Animation
 
     void SkinningTechnique::SetDirectionalLight(const ::DirectionalLight& light)
     {
-        glUniform3f(m_dirLightLocation.color, light._color.x, light._color.y, light._color.z);
-        glUniform1f(m_dirLightLocation.ambientIntensity, light._ambientIntensity);
-        glm::vec3 direction = glm::normalize(light._direction);
+        glUniform3f(m_dirLightLocation.color, light.m_color.x, light.m_color.y, light.m_color.z);
+        glUniform1f(m_dirLightLocation.ambientIntensity, light.m_ambientIntensity);
+        glm::vec3 direction = glm::normalize(light.m_direction);
         glUniform3f(m_dirLightLocation.direction, direction.x, direction.y, direction.z);
-        glUniform1f(m_dirLightLocation.diffuseIntensity, light._diffuseIntensity);
+        glUniform1f(m_dirLightLocation.diffuseIntensity, light.m_diffuseIntensity);
     }
 
 
@@ -292,10 +292,10 @@ namespace Animation
 
     void SkinningTechnique::SetMaterial(const Material& material)
     {
-        glUniform3fv(GetUniformLocation("material._diffuse"), 1, glm::value_ptr(material._diffuse));
-        glUniform3fv(GetUniformLocation("material._specular"), 1, glm::value_ptr(material._specular));
-        glUniform3fv(GetUniformLocation("material._ambient"),1, glm::value_ptr(material._ambient));
-        glUniform1f(GetUniformLocation("material._shininess"), material._shininess);
+        glUniform3fv(GetUniformLocation("material._diffuse"), 1, glm::value_ptr(material.m_diffuse));
+        glUniform3fv(GetUniformLocation("material._specular"), 1, glm::value_ptr(material.m_specular));
+        glUniform3fv(GetUniformLocation("material._ambient"),1, glm::value_ptr(material.m_ambient));
+        glUniform1f(GetUniformLocation("material._shininess"), material.m_shininess);
     }
 
     void SkinningTechnique::SetUseTexture(bool useTexture)

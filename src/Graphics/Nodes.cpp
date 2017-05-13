@@ -6,38 +6,38 @@ namespace Scenegraph
     */
     Group::~Group()
     {
-        for (Node* node : children)
+        for (Node* node : m_children)
             delete node;
     }
 
     void Group::Draw(glm::mat4 C)
     {
-        for (Node* node : children)
+        for (Node* node : m_children)
             node->Draw(C);
     }
 
     void Group::Update(glm::mat4 C)
     {
-        for (Node* node : children)
+        for (Node* node : m_children)
             node->Update(C);
     }
 
     bool Group::AddChild(Node* node)
     {
-        children.push_back(node);
+        m_children.push_back(node);
         return true;
     }
 
     bool Group::RemoveChild(Node* node)
     {
-        auto currNode = children.begin();
-        auto end = children.end();
+        auto currNode = m_children.begin();
+        auto end = m_children.end();
 
         for (; currNode != end; currNode++)
         {
             if (*currNode == node)      // Ptr comparison
             {
-                children.erase(currNode);
+                m_children.erase(currNode);
                 return true;
             }
         }

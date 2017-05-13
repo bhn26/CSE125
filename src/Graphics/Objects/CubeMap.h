@@ -19,8 +19,8 @@ public:
     CubeMap();
     ~CubeMap();
     
-    GLuint textureID;
-    std::vector<const GLchar*> faces;
+    GLuint m_textureID;
+    std::vector<const GLchar*> m_faces;
     
     GLuint LoadCubeMap();
 

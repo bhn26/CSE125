@@ -14,8 +14,8 @@ class ModelManager : public Singleton<ModelManager>
 {
     friend class Singleton<ModelManager>;
 
-    std::map<std::string, std::shared_ptr<Model>> _modelMap;
-    std::vector<std::string> _modelNames;
+    std::map<std::string, std::shared_ptr<Model>> m_modelMap;
+    std::vector<std::string> m_modelNames;
 
     ModelManager() {}
     bool LoadModel(const std::string& modelName);

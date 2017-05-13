@@ -18,8 +18,8 @@ class ShaderManager : public Singleton<ShaderManager>
     friend class Singleton<ShaderManager>;
     friend class ConfigManager;
 
-    std::map<std::string, std::shared_ptr<Shader>> _shaderMap;
-    std::vector<std::string> _shaderNames;
+    std::map<std::string, std::shared_ptr<Shader>> m_shaderMap;
+    std::vector<std::string> m_shaderNames;
 
     ShaderManager() {}
     bool LoadShader(const std::string& shaderName);

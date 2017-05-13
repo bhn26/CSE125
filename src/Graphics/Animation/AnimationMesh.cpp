@@ -343,10 +343,10 @@ bool Animation::Mesh::InitMaterials(const aiScene* scene, const std::string& fil
             aimaterial->Get(AI_MATKEY_COLOR_SPECULAR, specular);
             aimaterial->Get(AI_MATKEY_COLOR_AMBIENT, ambient);
 
-            material._diffuse = glm::vec3(diffuse.r, diffuse.g, diffuse.b);
-            material._specular = glm::vec3(specular.r, specular.g, specular.b);
-            material._ambient = glm::vec3(ambient.r, ambient.g, ambient.b);
-            aimaterial->Get(AI_MATKEY_SHININESS, material._shininess);
+            material.m_diffuse = glm::vec3(diffuse.r, diffuse.g, diffuse.b);
+            material.m_specular = glm::vec3(specular.r, specular.g, specular.b);
+            material.m_ambient = glm::vec3(ambient.r, ambient.g, ambient.b);
+            aimaterial->Get(AI_MATKEY_SHININESS, material.m_shininess);
         }
     }
 

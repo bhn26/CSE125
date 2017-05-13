@@ -23,25 +23,22 @@ class Model;
 class InstanceObject : public Entity
 {
 public:
-	//InstanceObject(const GLchar* path, GLuint num, GLfloat delta);
-	InstanceObject(std::shared_ptr<Model> instanceModel, GLuint num, GLfloat delta);
-	~InstanceObject();
+    // InstanceObject(const GLchar* path, GLuint num, GLfloat delta);
+    InstanceObject(std::shared_ptr<Model> instanceModel, GLuint num, GLfloat delta);
+    ~InstanceObject();
 
-    //Model* instance;
-    std::shared_ptr<Model> instance;
-	glm::mat4* modelMatrices;
-	GLuint amount;
+    // Model* instance;
+    std::shared_ptr<Model> m_instance;
+    glm::mat4* m_modelMatrices;
+    GLuint m_amount;
 
-	glm::vec3 color;
-	static GLfloat deltaTime;
-	static GLfloat lastFrame;
+    glm::vec3 m_color;
+    static GLfloat s_deltaTime;
+    static GLfloat s_lastFrame;
 
     // Inherited via Entity
     void Draw() const override;
     void Update(float deltaTime) override {}
     virtual void UseShader() const override;
     virtual void SetShaderUniforms() const override;
-
-    void SetColor(glm::vec3 color);
 };
-

@@ -26,7 +26,7 @@ public:
     Chicken(float x, float y, float z);
     ~Chicken();
     
-    std::shared_ptr<Model> model;
+    std::shared_ptr<Model> m_model;
 
     // Inherited via Entity
     void Draw() const override;
