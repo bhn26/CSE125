@@ -5,8 +5,11 @@
 class HealthGain : public PowerUp
 {
 public:
-    HealthGain() { this->type = PowerUpType::HealthGain; }
+    HealthGain() { m_type = PowerUpType::HealthGain; }
     ~HealthGain() {}
-    void ApplyPower(Player* p) override { p->GainHP(20); }; // applies the powerup to the player
-    void RemovePower(Player* p) override {};
+    // applies the powerup to the player
+    void ApplyPower(Player* player) override
+    {
+        player->GainHP(20);
+    }
 };

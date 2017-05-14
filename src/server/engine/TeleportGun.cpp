@@ -2,62 +2,70 @@
 #include "EntitySpawner.h"
 #include "PlayerModifierCollision.h"
 
-
-TeleportGun::TeleportGun(btDiscreteDynamicsWorld* curworld) : Weapon(fireRate, damage, curworld)
+TeleportGun::TeleportGun(btDiscreteDynamicsWorld* curworld) : Weapon(curworld)
 {
-	wt = WeaponType::TeleportGun;
-	nextFireTick = 0;
-	fireRate = 600;
-	damage = 1;
-	currentAmmo = 2;
-	maxAmmo = 2;
-	gunSpeed = new btVector3(0, 8, 2000);
+    m_type = WeaponType::TeleportGun;
+    m_nextFireTick = 0;
+    m_fireRate = 600;
+    m_damage = 1;
+    m_currentAmmo = 2;
+    m_maxAmmo = 2;
+    m_gunSpeed = btVector3(0, 8, 2000);
 }
 
-TeleportGun::~TeleportGun() {}
-
-int TeleportGun::UseWeapon(btVector3 * position, btMatrix3x3* rotation, int playerid, int teamid, Entity* owner)
+TeleportGun::~TeleportGun()
 {
-	if (this->fireFlag)
-	{
-		btCollisionShape* bulletShape = new btSphereShape(btScalar(1.5));
+}
 
-		// Create bullet physics object
-		btVector3 globalPos = ((*rotation) * (btVector3(0, 1, 5))) + (*position);
+int TeleportGun::UseWeapon(const btVector3& position,
+                           const btMatrix3x3& rotation,
+                           int playerid,
+                           int teamid,
+                           Entity* owner)
+{
+    if (m_fireFlag)
+    {
+        btCollisionShape* bulletShape = new btSphereShape(btScalar(1.5));
 
-		btDefaultMotionState*bulletMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), (globalPos)));
-		btScalar mass = 1;
-		btVector3 bulletInertia(0, 0, 0);
-		bulletShape->calculateLocalInertia(mass, bulletInertia);
-		btRigidBody::btRigidBodyConstructionInfo bulletRigidBodyCI(mass, bulletMotionState, bulletShape, bulletInertia);
-		btRigidBody* bRigidBody = new btRigidBody(bulletRigidBodyCI);
+        // Create bullet physics object
+        btVector3 globalPos = rotation * btVector3(0, 1, 5) + position;
 
-		// set bullet rotation
-		btTransform currentTrans;
-		bRigidBody->getMotionState()->getWorldTransform(currentTrans);
-		currentTrans.setBasis((*rotation));
-		bRigidBody->getMotionState()->setWorldTransform(currentTrans);
-		bRigidBody->setCenterOfMassTransform(currentTrans);
+        btDefaultMotionState* bulletMotionState =
+            new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), (globalPos)));
+        btScalar mass = 1;
+        btVector3 bulletInertia(0, 0, 0);
+        bulletShape->calculateLocalInertia(mass, bulletInertia);
+        btRigidBody::btRigidBodyConstructionInfo bulletRigidBodyCI(
+            mass, bulletMotionState, bulletShape, bulletInertia);
+        btRigidBody* bRigidBody = new btRigidBody(bulletRigidBodyCI);
 
-		// set bullet velocity
-		btVector3 newVelocity = (*rotation) * (*this->gunSpeed);
+        // set bullet rotation
+        btTransform currentTrans;
+        bRigidBody->getMotionState()->getWorldTransform(currentTrans);
+        currentTrans.setBasis(rotation);
+        bRigidBody->getMotionState()->setWorldTransform(currentTrans);
+        bRigidBody->setCenterOfMassTransform(currentTrans);
 
-		bRigidBody->setLinearVelocity(newVelocity);
-		bRigidBody->forceActivationState(DISABLE_DEACTIVATION);
+        // set bullet velocity
+        btVector3 newVelocity = rotation * m_gunSpeed;
 
-		// use the simple handler for the seedgun
-		PlayerModifierCollision* handler = new PlayerModifierCollision((Player *) owner);
+        bRigidBody->setLinearVelocity(newVelocity);
+        bRigidBody->forceActivationState(DISABLE_DEACTIVATION);
 
-		// Spawns bullet with this gun's damage, speed, and necessary ids into world
-		Bullet* fireProjectile = EntitySpawner::Instance()->SpawnBullet(playerid, teamid, this->damage, wt, handler, bRigidBody, curWorld);
-		handler->SetBullet(fireProjectile);
+        // use the simple handler for the seedgun
+        PlayerModifierCollision* handler = new PlayerModifierCollision(static_cast<Player*>(owner));
 
-		this->fireFlag = 0;
-		this->nextFireTick = FireRateReset::Instance()->currentWorldTick + fireRate;
+        // Spawns bullet with this gun's damage, speed, and necessary ids into world
+        Bullet* fireProjectile = EntitySpawner::Instance()->SpawnBullet(
+            playerid, teamid, m_damage, m_type, handler, bRigidBody, m_curWorld);
+        handler->SetBullet(fireProjectile);
 
-		// add used weapon to "used" list in FireRateReset static object
-		FireRateReset::Instance()->AddWeapon(this);
-		currentAmmo--;
-	}
-	return currentAmmo;
+        m_fireFlag = 0;
+        m_nextFireTick = FireRateReset::Instance()->m_currentWorldTick + m_fireRate;
+
+        // add used weapon to "used" list in FireRateReset static object
+        FireRateReset::Instance()->AddWeapon(this);
+        m_currentAmmo--;
+    }
+    return m_currentAmmo;
 }

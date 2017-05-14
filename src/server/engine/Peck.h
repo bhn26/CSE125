@@ -6,15 +6,19 @@
 class Peck : public Weapon
 {
 protected:
-	int meleefireRate = 50;
-	int meleeDamage = 32;
+    int m_meleeFireRate = 50;
+    int m_meleeDamage = 32;
+
 public:
-	Peck(btDiscreteDynamicsWorld* curWorld);
-	~Peck();
+    Peck(btDiscreteDynamicsWorld* curWorld);
+    ~Peck();
 
-	void ReloadWeapon();
+    void ReloadWeapon();
 
-	// always returns 1 because infinite ammo
-	int UseWeapon(btVector3* position, btMatrix3x3* rotation, int playerid, int teamid, Entity* owner);
-
+    // always returns 1 because infinite ammo
+    int UseWeapon(const btVector3& position,
+                  const btMatrix3x3& rotation,
+                  int playerid,
+                  int teamid,
+                  Entity* owner) override;
 };

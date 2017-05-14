@@ -2,7 +2,7 @@
 #include "ObjectId.h"
 #include "Entity.h"
 
-FieldObject::FieldObject(btVector3* origin,
+FieldObject::FieldObject(const btVector3& origin,
                          btCollisionShape* fieldshape,
                          int team_id,
                          btDiscreteDynamicsWorld* curWorld)
@@ -15,7 +15,7 @@ FieldObject::FieldObject(btVector3* origin,
     curWorld->addCollisionObject(m_fieldGhostObject,
                                  btBroadphaseProxy::SensorTrigger,
                                  btBroadphaseProxy::AllFilter & ~btBroadphaseProxy::SensorTrigger);
-    m_fieldGhostObject->setWorldTransform(btTransform(btQuaternion::getIdentity(), *origin));
+    m_fieldGhostObject->setWorldTransform(btTransform(btQuaternion::getIdentity(), origin));
 }
 
 FieldObject::~FieldObject()

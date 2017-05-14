@@ -4,10 +4,8 @@
 #include "ObjectId.h"
 
 Flag::Flag(int objid, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld)
-    : Entity(ClassId::Flag, objid, physicsWorld)
+    : Entity(ClassId::Flag, objid, physicsWorld), m_posInfo(pos)
 {
-    p = pos;
-
     btCollisionShape* playerShape = new btBoxShape(btVector3(1, 1, 1));
 
     // Create Flag physics object

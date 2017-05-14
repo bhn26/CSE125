@@ -13,7 +13,7 @@ protected:
 public:
     DamageField(int ttl,
                 int damage,
-                btVector3* origin,
+                const btVector3& origin,
                 btCollisionShape* fieldshape,
                 int team_id,
                 btDiscreteDynamicsWorld* curworld);

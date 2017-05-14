@@ -16,7 +16,7 @@ private:
     FireRateReset() = default;
 
 public:
-    unsigned int currentWorldTick = 0;
+    unsigned int m_currentWorldTick = 0;
 
     ~FireRateReset();
 

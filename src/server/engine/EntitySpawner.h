@@ -24,10 +24,10 @@ private:
     EntitySpawner() = default;
     ~EntitySpawner() = default;
 
-    unsigned int oid_player = 0;      // player
-    unsigned int oid_flag = 0;        // flag
-    unsigned int oid_bullet = 0;      // bullet
-    unsigned int oid_collectable = 0; // collectable
+    unsigned int m_oidPlayer = 0;      // player
+    unsigned int m_oidFlag = 0;        // flag
+    unsigned int m_oidBullet = 0;      // bullet
+    unsigned int m_oidCollectable = 0; // collectable
 
 public:
     Player* SpawnPlayer(int teamid, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld);

@@ -3,18 +3,26 @@
 #include "FieldHandler.h"
 
 // Does not consider what collided with it
-bool ExplosiveBulletCollision::HandleBulletCollision(unsigned int world_tick, Entity* collidee) {
-	if (bullet == nullptr)
-		return false;
-	
-	btVector3 temp = bullet->GetEntityPosition();
-	btVector3* position = new btVector3(temp.getX(), temp.getY(), temp.getZ());
+bool ExplosiveBulletCollision::HandleBulletCollision(unsigned int world_tick, Entity* collidee)
+{
+    if (!m_bullet)
+    {
+        return false;
+    }
 
-	btCollisionShape* expSphere = new btSphereShape(btScalar(explosion_size));
-	DamageField* explosionField = new DamageField(ttl, bullet->GetDamage(), position, expSphere, bullet->GetTeamId(), bullet->GetPhysicsWorld());
+    btVector3 temp = m_bullet->GetEntityPosition();
+    btVector3 position = btVector3(temp.getX(), temp.getY(), temp.getZ());
 
-	//TODO: Add to damage field checker. Add this new field to the checker
-	FieldHandler::Instance()->AddField(explosionField);
+    btCollisionShape* expSphere = new btSphereShape(btScalar(m_explosionSize));
+    DamageField* explosionField = new DamageField(m_ttl,
+                                                  m_bullet->GetDamage(),
+                                                  position,
+                                                  expSphere,
+                                                  m_bullet->GetTeamId(),
+                                                  m_bullet->GetPhysicsWorld());
 
-	return true;
+    // TODO: Add to damage field checker. Add this new field to the checker
+    FieldHandler::Instance()->AddField(explosionField);
+
+    return true;
 }

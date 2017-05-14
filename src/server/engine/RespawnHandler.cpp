@@ -3,9 +3,9 @@
 #include "EntitySpawner.h"
 #include "server/ServerGame.h"
 
-void RespawnHandler::KillPlayer(Player* p)
+void RespawnHandler::KillPlayer(Player* player)
 {
-    m_respawnList.push_back(p);
+    m_respawnList.push_back(player);
 }
 
 // Goes through list of players that need respawning and respawns if needed
@@ -27,21 +27,21 @@ void RespawnHandler::RespawnPlayers(unsigned int current_tick)
 }
 
 // Respawns a specific player
-void RespawnHandler::RespawnAPlayer(Player* p)
+void RespawnHandler::RespawnAPlayer(Player* player)
 {
     // reset hitpoints
-    p->SetHitPoints(100);
-    p->SetAlive(true);
-    p->SetJumpSem();
+    player->SetHitPoints(100);
+    player->SetAlive(true);
+    player->SetJumpSem();
 
     btTransform currentTrans;
 
     // Teleport Player to a random spot in the world
     std::pair<int, int> loc = EntitySpawner::GetRandomLoc();
     btVector3 ranPos = btVector3(loc.first, 90, loc.second);
-    p->GetRigidBody()->getMotionState()->getWorldTransform(currentTrans);
+    player->GetRigidBody()->getMotionState()->getWorldTransform(currentTrans);
     currentTrans.setOrigin(ranPos);
-    p->GetRigidBody()->getMotionState()->setWorldTransform(currentTrans);
-    p->GetRigidBody()->setCenterOfMassTransform(currentTrans);
-    ServerGame::Instance()->SendRespawnPacket(p->GetObjectId());
+    player->GetRigidBody()->getMotionState()->setWorldTransform(currentTrans);
+    player->GetRigidBody()->setCenterOfMassTransform(currentTrans);
+    ServerGame::Instance()->SendRespawnPacket(player->GetObjectId());
 }

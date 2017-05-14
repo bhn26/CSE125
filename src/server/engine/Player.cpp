@@ -165,18 +165,11 @@ void Player::UseWeapon()
         return;
     }
 
-    // passes player position when using weapon
-    btVector3 temp = GetEntityPosition();
-
-    btQuaternion* playerRotation = &(m_cameraAngle);
-
-    btVector3* position = new btVector3(temp.getX(), temp.getY(), temp.getZ());
-
-    btMatrix3x3* currentOrientation = new btMatrix3x3(*playerRotation);
+    // passes player position and orientation when using weapon
+    btMatrix3x3 currentOrientation = btMatrix3x3(m_cameraAngle);
 
     // ServerGame::Instance()->SendShootPacket(m_objectId);
-    if (m_playerWeapon->UseWeapon(position, currentOrientation, m_objectId, m_teamId, this)
-        == 0)
+    if (m_playerWeapon->UseWeapon(GetEntityPosition(), currentOrientation, m_objectId, m_teamId, this) == 0)
     {
         ServerGame::Instance()->SendDiscardPacket(GetObjectId());
         delete m_playerWeapon;
@@ -270,19 +263,14 @@ void Player::UsePeck()
     if (m_stunCount > 0)
         return;
 
-    btVector3 temp = GetEntityPosition();
-
-    btQuaternion* playerRotation = &(GetEntityRotation());
     // playerRotation->setX(position.camx);
     // playerRotation->setZ(position.camz);
 
-    btVector3* position = new btVector3(temp.getX(), temp.getY(), temp.getZ());
-
     btTransform currentTrans;
     m_entityRigidBody->getMotionState()->getWorldTransform(currentTrans);
-    btMatrix3x3* currentOrientation = new btMatrix3x3(*playerRotation);
+    btMatrix3x3 currentOrientation = btMatrix3x3(GetEntityRotation());
 
-    m_peckWeapon->UseWeapon(position, currentOrientation, m_objectId, m_teamId, this);
+    m_peckWeapon->UseWeapon(GetEntityPosition(), currentOrientation, m_objectId, m_teamId, this);
     ServerGame::Instance()->SendAttackPacket(m_objectId);
     //	peckWeapon->UseWeapon(&(m_entityRigidBody->getCenterOfMassPosition()), &currentOrientation,
     //m_objectId, m_teamId, this);

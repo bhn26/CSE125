@@ -9,7 +9,7 @@ Bullet::Bullet(unsigned int objectid,
                btRigidBody* bullet_body,
                btDiscreteDynamicsWorld* physicsWorld)
     : Entity(ClassId::Bullet, objectid, physicsWorld)
-    , m_c_handler(handler)
+    , m_collisionHandler(handler)
     , m_playerId(playerid)
     , m_teamId(teamid)
     , m_damage(damage)
@@ -28,7 +28,7 @@ Bullet::~Bullet()
     delete m_entityRigidBody->getMotionState();
     delete m_entityRigidBody->getCollisionShape();
     delete m_entityRigidBody;
-    delete m_c_handler;
+    delete m_collisionHandler;
     EntitySpawner::Instance()->RemoveEntity(ClassId::Bullet, m_objectId);
 }
 

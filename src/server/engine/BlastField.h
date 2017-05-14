@@ -14,7 +14,7 @@ protected:
     int m_stun = 0;
     bool m_nonFriendly = false; // Whether or not this field friendly fires, true if it does
 
-    static int const ydirection = 20; // the y direction magnitude to launch the player
+    static int const s_yDirection = 20; // the y direction magnitude to launch the player
 
     // list of entities that already got blasted by the velocity
     std::map<std::pair<ClassId, int>, int> blasted;
@@ -25,7 +25,7 @@ public:
                int magnitude,
                int ttl,
                int damage,
-               btVector3* origin,
+               const btVector3& origin,
                btCollisionShape* fieldshape,
                int team_id,
                btDiscreteDynamicsWorld* curworld);

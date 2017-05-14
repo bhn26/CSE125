@@ -6,7 +6,7 @@
 
 DamageField::DamageField(int ttl,
                          int damage,
-                         btVector3* origin,
+                         const btVector3& origin,
                          btCollisionShape* fieldshape,
                          int team_id,
                          btDiscreteDynamicsWorld* curworld)
@@ -33,11 +33,11 @@ int DamageField::HandleField()
             dynamic_cast<btRigidBody*>(m_fieldGhostObject->getOverlappingObject(i));
         if (pRigidBody && static_cast<ClassId>(pRigidBody->getUserIndex()) == ClassId::Player)
         {
-            Player* collidedPlayer = (Player*)pRigidBody->getUserPointer();
+            Player* collidedPlayer = static_cast<Player*>(pRigidBody->getUserPointer());
             if (collidedPlayer->GetTeamId() != m_teamId)
             {
                 if (collidedPlayer->takeDamage(m_fieldDamage,
-                                               FireRateReset::Instance()->currentWorldTick))
+                                               FireRateReset::Instance()->m_currentWorldTick))
                 {
                 }
             }

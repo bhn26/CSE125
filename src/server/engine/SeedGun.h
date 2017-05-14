@@ -5,13 +5,12 @@
 
 class SeedGun : public Weapon
 {
-
 public:
-	SeedGun(btDiscreteDynamicsWorld* curworld);
-	~SeedGun();
+    SeedGun(btDiscreteDynamicsWorld* curworld);
+    ~SeedGun();
 
-    virtual int UseWeapon(btVector3* position,
-                          btMatrix3x3* rotation,
+    virtual int UseWeapon(const btVector3& position,
+                          const btMatrix3x3& rotation,
                           int playerid,
                           int teamid,
                           Entity* owner) override;

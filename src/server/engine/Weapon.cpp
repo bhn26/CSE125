@@ -1,18 +1,22 @@
 
 #include "Weapon.h"
 
-Weapon::Weapon(int firerate, int wdamage, btDiscreteDynamicsWorld* curWorld)
+Weapon::Weapon(btDiscreteDynamicsWorld* curWorld)
+    : m_curWorld(curWorld)
 {
-	this->curWorld = curWorld;
-	this->fireRate = firerate;
-	this->damage = wdamage;
-	this->fireFlag = 1;
 }
 
-Weapon::~Weapon(){}
+Weapon::Weapon(int firerate, int wdamage, btDiscreteDynamicsWorld* curWorld)
+    : m_curWorld(curWorld), m_fireRate(firerate), m_damage(wdamage)
+{
+}
+
+Weapon::~Weapon()
+{
+}
 
 // to be overwritten
-int Weapon::UseWeapon(btVector3 * position, btMatrix3x3* rotation, int playerid, int teamid, Entity* owner) { return 0; }
-
-// to be overwritten
-void Weapon::ReloadWeapon() {currentAmmo = maxAmmo;}
+void Weapon::ReloadWeapon()
+{
+    m_currentAmmo = m_maxAmmo;
+}

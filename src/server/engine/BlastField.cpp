@@ -8,7 +8,7 @@ BlastField::BlastField(bool nonFriendly,
                        int magnitude,
                        int ttl,
                        int damage,
-                       btVector3* origin,
+                       const btVector3& origin,
                        btCollisionShape* fieldshape,
                        int m_teamId,
                        btDiscreteDynamicsWorld* curworld)
@@ -47,7 +47,7 @@ int BlastField::HandleField()
                 if (collidedPlayer->GetTeamId() != m_teamId || m_nonFriendly)
                 { // If the player is an enemy or if this field is nonfriendly
                     collidedPlayer->takeDamage(m_fieldDamage,
-                                               FireRateReset::Instance()->currentWorldTick);
+                                               FireRateReset::Instance()->m_currentWorldTick);
                     collidedPlayer->SetStun(m_stun);
                 }
                 else
@@ -67,7 +67,7 @@ int BlastField::HandleField()
                 btVector3 blastDirection = playerCenter - fieldCenter;
                 blastDirection = blastDirection.normalize();
                 btVector3 velocity = m_magnitude * blastDirection;
-                blastDirection.setY(ydirection);
+                blastDirection.setY(s_yDirection);
 
                 ent->Move(&velocity);
                 std::pair<ClassId, int> entpair(ent->GetClassId(), ent->GetObjectId());

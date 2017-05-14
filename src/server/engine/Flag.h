@@ -7,7 +7,7 @@
 class Flag : public Entity
 {
 public:
-    PosInfo p;
+    PosInfo m_posInfo;
 
     Flag(int objid, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld);
 

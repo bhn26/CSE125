@@ -5,15 +5,15 @@
 class BounceGun : public Weapon
 {
 private:
-	// this is more like bounceframes, it seems to be colliding again and again
-	static const int NUM_BOUNCES = 5;
+    // this is more like bounceframes, it seems to be colliding again and again
+    static const int NUM_BOUNCES = 5;
 
 public:
-	BounceGun(btDiscreteDynamicsWorld* curworld);
-	~BounceGun();
+    BounceGun(btDiscreteDynamicsWorld* curworld);
+    ~BounceGun();
 
-    virtual int UseWeapon(btVector3* position,
-                          btMatrix3x3* rotation,
+    virtual int UseWeapon(const btVector3& position,
+                          const btMatrix3x3& rotation,
                           int playerid,
                           int teamid,
                           Entity* owner) override;

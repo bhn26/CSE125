@@ -27,7 +27,7 @@ Player* EntitySpawner::SpawnPlayer(int teamid, PosInfo pos, btDiscreteDynamicsWo
     // connected to the lobby
     Player* newPlayer = new Player(pos.id, pos.team_id, pos, physicsWorld);
     AddEntity(ClassId::Player, pos.id, newPlayer);
-    oid_player++;
+    m_oidPlayer++;
 
     btQuaternion quat = newPlayer->GetEntityRotation();
 
@@ -60,9 +60,9 @@ Player* EntitySpawner::SpawnPlayer(int teamid, PosInfo pos, btDiscreteDynamicsWo
 Flag* EntitySpawner::SpawnFlag(PosInfo pos, btDiscreteDynamicsWorld* physicsWorld)
 {
     // Create flag and add to Entity Map
-    Flag* newFlag = new Flag(oid_flag, pos, physicsWorld);
-    AddEntity(ClassId::Flag, oid_flag, newFlag);
-    oid_flag++;
+    Flag* newFlag = new Flag(m_oidFlag, pos, physicsWorld);
+    AddEntity(ClassId::Flag, m_oidFlag, newFlag);
+    m_oidFlag++;
 
     // Send Flag Spawn packet
     btVector3 vec = newFlag->GetEntityPosition();
@@ -91,12 +91,12 @@ Bullet* EntitySpawner::SpawnBullet(int playerid,
                                    btDiscreteDynamicsWorld* physicsWorld)
 {
     // Create Bullet and add to Entity Map
-    // Bullet* fireProjectile = new Bullet(oid_bullet, playerid, teamid, damage, pos, velocity,
+    // Bullet* fireProjectile = new Bullet(m_oidBullet, playerid, teamid, damage, pos, velocity,
     // rotation, physicsWorld);
     Bullet* fireProjectile =
-        new Bullet(oid_bullet, playerid, teamid, damage, handler, bullet_body, physicsWorld);
-    AddEntity(ClassId::Bullet, oid_bullet, fireProjectile);
-    oid_bullet++;
+        new Bullet(m_oidBullet, playerid, teamid, damage, handler, bullet_body, physicsWorld);
+    AddEntity(ClassId::Bullet, m_oidBullet, fireProjectile);
+    m_oidBullet++;
 
     // Send Bullet Spawn packet
     btVector3 vec = fireProjectile->GetEntityPosition();
@@ -164,9 +164,9 @@ void EntitySpawner::SpawnCollectable(btDiscreteDynamicsWorld* curWorld, WeaponTy
     pos.y = 90.0f;
     pos.z = (float)p.second;
 
-    Collectable* ranCollectable = new Collectable(oid_collectable, pos, curWorld, wp);
-    AddEntity(ClassId::Collectable, oid_collectable, ranCollectable);
-    oid_collectable++;
+    Collectable* ranCollectable = new Collectable(m_oidCollectable, pos, curWorld, wp);
+    AddEntity(ClassId::Collectable, m_oidCollectable, ranCollectable);
+    m_oidCollectable++;
 
     // Send Collectable Spawn packet
     btVector3 vec = ranCollectable->GetEntityPosition();
@@ -218,9 +218,9 @@ void EntitySpawner::SpawnCollectable(btDiscreteDynamicsWorld* curWorld, PowerUpT
     pos.y = 90;
     pos.z = p.second;
 
-    Collectable* ranCollectable = new Collectable(oid_collectable, pos, curWorld, pow);
-    AddEntity(ClassId::Collectable, oid_collectable, ranCollectable);
-    oid_collectable++;
+    Collectable* ranCollectable = new Collectable(m_oidCollectable, pos, curWorld, pow);
+    AddEntity(ClassId::Collectable, m_oidCollectable, ranCollectable);
+    m_oidCollectable++;
 
     // Send Collectable Spawn packet
     btVector3 vec = ranCollectable->GetEntityPosition();

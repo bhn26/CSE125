@@ -4,13 +4,12 @@
 
 class TeleportGun : public Weapon
 {
-
 public:
-	TeleportGun(btDiscreteDynamicsWorld* curworld);
-	~TeleportGun();
+    TeleportGun(btDiscreteDynamicsWorld* curworld);
+    ~TeleportGun();
 
-    virtual int UseWeapon(btVector3* position,
-                          btMatrix3x3* rotation,
+    virtual int UseWeapon(const btVector3& position,
+                          const btMatrix3x3& rotation,
                           int playerid,
                           int teamid,
                           Entity* owner) override;

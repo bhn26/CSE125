@@ -20,7 +20,7 @@ World::World()
 World::~World()
 {
     // TODO handle vector deletes...
-    delete curWorld;
+    delete m_curWorld;
 }
 
 void World::Init()
@@ -52,7 +52,7 @@ void World::Init()
     groundRigidBody->setGravity(btVector3(0, 0, 0));
     groundRigidBody->setUserIndex(static_cast<int>(ClassId::Obstacle));
     // Create Ground Obstacle
-    WorldObstacle* groundwall = new WorldObstacle(z++, groundRigidBody, curWorld);
+    WorldObstacle* groundwall = new WorldObstacle(z++, groundRigidBody, m_curWorld);
 
     // Add Sky Object
     btCollisionShape* skyShape =
@@ -67,7 +67,7 @@ void World::Init()
     dynamicsWorld->addRigidBody(skyRigidBody);
     skyRigidBody->setUserIndex(static_cast<int>(ClassId::Obstacle));
     // Create Ground Obstacle
-    WorldObstacle* skywall = new WorldObstacle(z++, skyRigidBody, curWorld);
+    WorldObstacle* skywall = new WorldObstacle(z++, skyRigidBody, m_curWorld);
 
     // Add Pos X Wall
     // btCollisionShape* xWallShape = new btStaticPlaneShape(btVector3(btScalar(-1.), btScalar(0.),
@@ -84,7 +84,7 @@ void World::Init()
     dynamicsWorld->addRigidBody(xWallRigidBody);
     xWallRigidBody->setUserIndex(static_cast<int>(ClassId::Obstacle));
     // Create X Wall
-    WorldObstacle* xwall = new WorldObstacle(z++, xWallRigidBody, curWorld);
+    WorldObstacle* xwall = new WorldObstacle(z++, xWallRigidBody, m_curWorld);
 
     // Add Neg X Wall
     // btCollisionShape* nxWallShape = new btStaticPlaneShape(btVector3(btScalar(1.), btScalar(0.),
@@ -101,7 +101,7 @@ void World::Init()
     dynamicsWorld->addRigidBody(nxWallRigidBody);
     nxWallRigidBody->setUserIndex(static_cast<int>(ClassId::Obstacle));
     // Create Neg X Wall
-    WorldObstacle* nxwall = new WorldObstacle(z++, groundRigidBody, curWorld);
+    WorldObstacle* nxwall = new WorldObstacle(z++, groundRigidBody, m_curWorld);
 
     // Add Pos Z Wall
     // btCollisionShape* zWallShape = new btStaticPlaneShape(btVector3(btScalar(0.), btScalar(0.),
@@ -118,7 +118,7 @@ void World::Init()
     dynamicsWorld->addRigidBody(zWallRigidBody);
     zWallRigidBody->setUserIndex(static_cast<int>(ClassId::Obstacle));
     // Create Pos Z Wall
-    WorldObstacle* zwall = new WorldObstacle(z++, zWallRigidBody, curWorld);
+    WorldObstacle* zwall = new WorldObstacle(z++, zWallRigidBody, m_curWorld);
 
     // Add Neg Z Wall
     // btCollisionShape* nzWallShape = new btStaticPlaneShape(btVector3(btScalar(0.), btScalar(0.),
@@ -135,24 +135,24 @@ void World::Init()
     dynamicsWorld->addRigidBody(nzWallRigidBody);
     nzWallRigidBody->setUserIndex(static_cast<int>(ClassId::Obstacle));
     // Create Neg Z Wall
-    WorldObstacle* nzwall = new WorldObstacle(z++, nzWallRigidBody, curWorld);
+    WorldObstacle* nzwall = new WorldObstacle(z++, nzWallRigidBody, m_curWorld);
 
     // Load in world objects
-    this->worldMapLoader = new MapLoader(dynamicsWorld);
-    worldMapLoader->loadMap();
+    m_worldMapLoader = new MapLoader(dynamicsWorld);
+    m_worldMapLoader->LoadMap();
 
     // Set Local attributes
-    this->ground = groundwall;
-    this->frontWall = nzwall;
-    this->backWall = zwall;
-    this->leftWall = nxwall;
-    this->rightWall = xwall;
+    m_ground = groundwall;
+    m_frontWall = nzwall;
+    m_backWall = zwall;
+    m_leftWall = nxwall;
+    m_rightWall = xwall;
 
-    curWorld = dynamicsWorld;
-    solv = solver;
-    pairCache = overlappingPairCache;
-    disp = dispatcher;
-    colConfig = collisionConfig;
+    m_curWorld = dynamicsWorld;
+    m_solv = solver;
+    m_pairCache = overlappingPairCache;
+    m_disp = dispatcher;
+    m_colConfig = collisionConfig;
 
     // set up physics world for field detection
     dynamicsWorld->getBroadphase()->getOverlappingPairCache()->setInternalGhostPairCallback(
@@ -161,7 +161,7 @@ void World::Init()
 
 btDiscreteDynamicsWorld* World::GetPhysicsWorld()
 {
-    return curWorld;
+    return m_curWorld;
 }
 
 void World::PreSpawn()
@@ -172,22 +172,22 @@ void World::PreSpawn()
 void World::UpdateWorld()
 {
     // Step simulation
-    curWorld->stepSimulation(1 / 60.f, 4); // 60
-    //    curWorld->stepSimulation(1 / 30.f, 4);   // 30 frames
+    m_curWorld->stepSimulation(1 / 60.f, 4); // 60
+    //    m_curWorld->stepSimulation(1 / 30.f, 4);   // 30 frames
 
-    FireRateReset::Instance()->currentWorldTick++;
+    FireRateReset::Instance()->m_currentWorldTick++;
 
     // Process Weapon Fire Rate Reset and field collisions
     FireRateReset::Instance()->ResetWeapons();
     FieldHandler::Instance()->HandleFields();
 
     // Process all collisions
-    int numManifolds = curWorld->getDispatcher()->getNumManifolds();
+    int numManifolds = m_curWorld->getDispatcher()->getNumManifolds();
     for (int i = 0; i < numManifolds; i++)
     {
         // printf("numMan  %d\n", numManifolds);
         btPersistentManifold* contactManifold =
-            curWorld->getDispatcher()->getManifoldByIndexInternal(i);
+            m_curWorld->getDispatcher()->getManifoldByIndexInternal(i);
         const btCollisionObject* obA = contactManifold->getBody0();
         const btCollisionObject* obB = contactManifold->getBody1();
 
@@ -211,19 +211,19 @@ void World::UpdateWorld()
                     continue;
                 }
                 // printf("Pushed to delete!, hit playerB");
-                collideBullet->SetToMarked(world_tick);
-                if (collideBullet->handleBulletCollision(world_tick, collidePlayer))
+                collideBullet->SetToMarked(m_worldTick);
+                if (collideBullet->handleBulletCollision(m_worldTick, collidePlayer))
                 {
-                    deleteList.push_back(collideBullet);
+                    m_deleteList.push_back(collideBullet);
                     ServerGame::Instance()->SendRemovePacket(ClassId::Bullet,
                                                              collideBullet->GetObjectId());
                 }
                 else
                 {
-                    unmarkList.push_back(collideBullet);
+                    m_unmarkList.push_back(collideBullet);
                 }
                 // TODO send "you got hit"
-                if (collidePlayer->takeDamage(collideBullet->GetDamage(), world_tick))
+                if (collidePlayer->takeDamage(collideBullet->GetDamage(), m_worldTick))
                 {
                     // printf("Player is dead!");
                     // TODO Handle Player death:  send player death to client
@@ -250,16 +250,16 @@ void World::UpdateWorld()
                 {
                     continue;
                 }
-                collideBullet->SetToMarked(world_tick);
-                if (collideBullet->handleBulletCollision(world_tick, nullptr))
+                collideBullet->SetToMarked(m_worldTick);
+                if (collideBullet->handleBulletCollision(m_worldTick, nullptr))
                 {
-                    deleteList.push_back(collideBullet);
+                    m_deleteList.push_back(collideBullet);
                     ServerGame::Instance()->SendRemovePacket(ClassId::Bullet,
                                                              collideBullet->GetObjectId());
                 }
                 else
                 {
-                    unmarkList.push_back(collideBullet);
+                    m_unmarkList.push_back(collideBullet);
                 }
             }
         }
@@ -283,18 +283,18 @@ void World::UpdateWorld()
                     continue;
                 }
 
-                collideBullet->SetToMarked(world_tick);
-                if (collideBullet->handleBulletCollision(world_tick, collidePlayer))
+                collideBullet->SetToMarked(m_worldTick);
+                if (collideBullet->handleBulletCollision(m_worldTick, collidePlayer))
                 {
-                    deleteList.push_back(collideBullet);
+                    m_deleteList.push_back(collideBullet);
                     ServerGame::Instance()->SendRemovePacket(ClassId::Bullet,
                                                              collideBullet->GetObjectId());
                 }
                 else
                 {
-                    unmarkList.push_back(collideBullet);
+                    m_unmarkList.push_back(collideBullet);
                 }
-                if (collidePlayer->takeDamage(collideBullet->GetDamage(), world_tick))
+                if (collidePlayer->takeDamage(collideBullet->GetDamage(), m_worldTick))
                 {
                     // printf("Player is dead!");
                     // TODO Handle Player death:  send player death to client
@@ -321,16 +321,16 @@ void World::UpdateWorld()
                 bulPos = collideBullet->GetRigidBody()->getLinearVelocity();
                 // printf("Current velocity:  x: %f, y: %f, z: %f  \n", bulPos.getX(),
                 // bulPos.getY(), bulPos.getZ());
-                collideBullet->SetToMarked(world_tick);
-                if (collideBullet->handleBulletCollision(world_tick, nullptr))
+                collideBullet->SetToMarked(m_worldTick);
+                if (collideBullet->handleBulletCollision(m_worldTick, nullptr))
                 {
-                    deleteList.push_back(collideBullet);
+                    m_deleteList.push_back(collideBullet);
                     ServerGame::Instance()->SendRemovePacket(ClassId::Bullet,
                                                              collideBullet->GetObjectId());
                 }
                 else
                 {
-                    unmarkList.push_back(collideBullet);
+                    m_unmarkList.push_back(collideBullet);
                 }
             }
         }
@@ -377,8 +377,8 @@ void World::UpdateWorld()
                         CollectType::PowerUp,
                         static_cast<int>(collectObj->GetPowerUp()->GetType()));
                 }
-                deleteList.push_back(collectObj);
-                collectObj->SetToMarked(world_tick);
+                m_deleteList.push_back(collectObj);
+                collectObj->SetToMarked(m_worldTick);
             }
 
             // if Obj B is Flag
@@ -400,8 +400,8 @@ void World::UpdateWorld()
                                                          collideFlag->GetObjectId(),
                                                          ClassId::Player,
                                                          collidePlayer->GetObjectId());
-                markedList.push_back(collideFlag);
-                collideFlag->SetToMarked(world_tick);
+                m_markedList.push_back(collideFlag);
+                collideFlag->SetToMarked(m_worldTick);
                 // TODO send a packet for the player to acquire the item for GUI
             }
 
@@ -481,8 +481,8 @@ void World::UpdateWorld()
                         CollectType::PowerUp,
                         static_cast<int>(collectObj->GetPowerUp()->GetType()));
                 }
-                deleteList.push_back(collectObj);
-                collectObj->SetToMarked(world_tick);
+                m_deleteList.push_back(collectObj);
+                collectObj->SetToMarked(m_worldTick);
             }
 
             // if Obj A is Flag
@@ -503,8 +503,8 @@ void World::UpdateWorld()
                                                          collideFlag->GetObjectId(),
                                                          ClassId::Player,
                                                          collidePlayer->GetObjectId());
-                markedList.push_back(collideFlag);
-                collideFlag->SetToMarked(world_tick);
+                m_markedList.push_back(collideFlag);
+                collideFlag->SetToMarked(m_worldTick);
                 // TODO send a packet for the player to acquire the item for GUI
             }
 
@@ -545,29 +545,29 @@ void World::UpdateWorld()
     }
 
     // Reset Marked Entities
-    for (auto it = markedList.begin(); it != markedList.end(); it++)
+    for (auto it = m_markedList.begin(); it != m_markedList.end(); it++)
     {
         (*it)->ResetMark();
-        this->curWorld->removeCollisionObject((*it)->GetRigidBody());
+        m_curWorld->removeCollisionObject((*it)->GetRigidBody());
     }
-    markedList.clear();
+    m_markedList.clear();
 
     // Delete Marked Entities
-    for (auto it = deleteList.begin(); it != deleteList.end(); it++)
+    for (auto it = m_deleteList.begin(); it != m_deleteList.end(); it++)
     {
         delete (*it);
     }
-    deleteList.clear();
+    m_deleteList.clear();
 
     // Unmarks entities not on the previous lists, used for bullet collision
-    for (auto it = unmarkList.begin(); it != unmarkList.end(); it++)
+    for (auto it = m_unmarkList.begin(); it != m_unmarkList.end(); it++)
     {
-        if ((*it)->GetMarkTick() == world_tick - 5)
+        if ((*it)->GetMarkTick() == m_worldTick - 5)
             (*it)->ResetMark();
     }
 
     // if (x++ % 10000 == 0) {
-    if (world_tick % 500 == 0)
+    if (m_worldTick % 500 == 0)
     {
         /*
         btVector3 vecg = rightWall->getCenterOfMassPosition();
@@ -600,11 +600,11 @@ void World::UpdateWorld()
     }
 
     // Handle spawning for this tick
-    RespawnHandler::Instance()->RespawnPlayers(world_tick);
-    CollectableSpawner::Instance()->SpawnRandomCollectables(curWorld, world_tick);
+    RespawnHandler::Instance()->RespawnPlayers(m_worldTick);
+    CollectableSpawner::Instance()->SpawnRandomCollectables(m_curWorld, m_worldTick);
 
     // Send position updates of all dynamic objects
-    if (world_tick % 4 == 0)
+    if (m_worldTick % 4 == 0)
     {
         // Iterates through all dynamic objects in the Map and sends position updates to client
         auto& dynamicMap = EntitySpawner::Instance()->GetMap();
@@ -634,14 +634,13 @@ void World::UpdateWorld()
                 // resets stuns
                 if (player->GetStun() > 0)
                 {
-                   player->SetStun(player->GetStun() - 4); // unstun the guy
+                    player->SetStun(player->GetStun() - 4); // unstun the guy
                 }
 
                 // resets powerups
                 if (player->GetPowerUpDuration() > 0)
                 {
-                    player
-                        ->SetPowerUpDuration(player->GetPowerUpDuration() - 4);
+                    player->SetPowerUpDuration(player->GetPowerUpDuration() - 4);
                     if (player->GetPowerUpDuration() <= 0)
                     {
                         if (!player->GetPower())
@@ -657,16 +656,16 @@ void World::UpdateWorld()
         }
     }
 
-    world_tick++;
+    m_worldTick++;
 }
 
 void World::removeFlag(Flag* collectedFlag)
 {
-    for (auto it = flags.begin(); it != flags.end(); ++it)
+    for (auto it = m_flags.begin(); it != m_flags.end(); ++it)
     {
         if (collectedFlag == it->get())
         {
-            flags.erase(it);
+            m_flags.erase(it);
             printf("Flag has been removed from world list \n");
             return;
         }

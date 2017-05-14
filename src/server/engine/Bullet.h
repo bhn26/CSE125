@@ -10,7 +10,7 @@ private:
     int m_playerId = 0;
     int m_teamId = 0;
     int m_damage = 0;
-    BulletCollisionHandler* m_c_handler = nullptr;
+    BulletCollisionHandler* m_collisionHandler = nullptr;
 
 public:
     Bullet(unsigned int objectid,
@@ -30,7 +30,7 @@ public:
     // collidee will be nullptr if the collidee is a static object
     bool handleBulletCollision(unsigned int world_tick, Entity* collidee)
     {
-        return m_c_handler->HandleBulletCollision(world_tick, collidee);
+        return m_collisionHandler->HandleBulletCollision(world_tick, collidee);
     }
 
     // get player id

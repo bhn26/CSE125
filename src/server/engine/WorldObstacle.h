@@ -9,9 +9,9 @@
 class WorldObstacle
 {
 private:
-    int id;
-    btRigidBody* obstacleRigidBody;
-    btDiscreteDynamicsWorld* curWorld;
+    int m_id = -1;
+    btRigidBody* m_obstacleRigidBody = nullptr;
+    btDiscreteDynamicsWorld* m_curWorld = nullptr;
 
 public:
     WorldObstacle(int objectid, btRigidBody* rigidbody, btDiscreteDynamicsWorld* curworld);

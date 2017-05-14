@@ -17,9 +17,9 @@ void FireRateReset::ResetWeapons()
         // (*it)->nextFireTick);
 
         // reset fire flag if it can be fired again
-        if ((*it)->nextFireTick == currentWorldTick)
+        if ((*it)->m_nextFireTick == m_currentWorldTick)
         {
-            (*it)->fireFlag = 1;
+            (*it)->m_fireFlag = 1;
             it = m_usedWeapons.erase(it);
         }
         else

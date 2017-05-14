@@ -5,23 +5,23 @@
 class SpeedUp : public PowerUp
 {
 public:
-    static const int speed_bonus = 8;
-    static const int speed_bonusDuration = 400;
+    static const int m_speedBonus = 8;
+    static const int m_speedBonusDuration = 400;
 
-    SpeedUp() { this->type = PowerUpType::SpeedUp; }
+    SpeedUp() { m_type = PowerUpType::SpeedUp; }
     ~SpeedUp() {}
     // applies the powerup to the player
-    void ApplyPower(Player* p) override
+    void ApplyPower(Player* player) override
     {
-        p->SetBonusSpeed(speed_bonusDuration);
-        p->SetPowerUpDuration(speed_bonusDuration);
-        p->EquipPower(this);
-    };
-    void RemovePower(Player* p) override
+        player->SetBonusSpeed(m_speedBonusDuration);
+        player->SetPowerUpDuration(m_speedBonusDuration);
+        player->EquipPower(this);
+    }
+    void RemovePower(Player* player) override
     {
-        p->SetBonusSpeed(0);
-        p->SetPowerUpDuration(0);
-        p->ResetPower();
+        player->SetBonusSpeed(0);
+        player->SetPowerUpDuration(0);
+        player->ResetPower();
         delete this;
-    };
+    }
 };

@@ -14,7 +14,7 @@ public:
     Engine();
     ~Engine();
 
-    World* GetWorld() { return world; };
+    World* GetWorld() { return m_world; };
     // generate map
     void InitWorld(int num_players);
 
@@ -33,7 +33,7 @@ public:
 
 private:
     bool initialSpawned = false;
-    World* world; // used to communicate with clients
+    World* m_world; // used to communicate with clients
 
     /* maybe put the world representation in this class so we can
     manipulate it and use ServerGame to send packets to clients*/

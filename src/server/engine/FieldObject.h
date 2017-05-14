@@ -18,7 +18,7 @@ protected:
     int m_teamId = 0;
 
 public:
-    FieldObject(btVector3* origin,
+    FieldObject(const btVector3& origin,
                 btCollisionShape* fieldshape,
                 int team_id,
                 btDiscreteDynamicsWorld* curworld);

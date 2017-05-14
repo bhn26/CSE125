@@ -16,33 +16,33 @@ class World
 {
 private:
     // list of game world objects
-    std::vector<std::shared_ptr<Flag>> flags;
+    std::vector<std::shared_ptr<Flag>> m_flags;
     // Delete list, mainly for bullets
-    std::vector<Entity*> deleteList;
+    std::vector<Entity*> m_deleteList;
     // Marked list to protect multi-handling, for flags
-    std::vector<Entity*> markedList;
+    std::vector<Entity*> m_markedList;
     // List of entities to unmark at the end
-    std::vector<Entity*> unmarkList;
+    std::vector<Entity*> m_unmarkList;
 
     // Physics World attributes
-    btDiscreteDynamicsWorld* curWorld;
-    btDefaultCollisionConfiguration* colConfig;
-    btCollisionDispatcher* disp;
-    btBroadphaseInterface* pairCache;
-    btSequentialImpulseConstraintSolver* solv;
+    btDiscreteDynamicsWorld* m_curWorld = nullptr;
+    btDefaultCollisionConfiguration* m_colConfig = nullptr;
+    btCollisionDispatcher* m_disp = nullptr;
+    btBroadphaseInterface* m_pairCache = nullptr;
+    btSequentialImpulseConstraintSolver* m_solv = nullptr;
 
     // Map objects
-    WorldObstacle* ground;
-    WorldObstacle* frontWall;
-    WorldObstacle* backWall;
-    WorldObstacle* leftWall;
-    WorldObstacle* rightWall;
+    WorldObstacle* m_ground = nullptr;
+    WorldObstacle* m_frontWall = nullptr;
+    WorldObstacle* m_backWall = nullptr;
+    WorldObstacle* m_leftWall = nullptr;
+    WorldObstacle* m_rightWall = nullptr;
 
     // object ids
-    int oid;
+    int m_oid = -1;
 
     // Map Loader object
-    MapLoader* worldMapLoader;
+    MapLoader* m_worldMapLoader = nullptr;
 
     // list of fields to check.  Explosions and mounts.  Maybe decouple into a class of it's own.
     // Have a TTL
@@ -52,7 +52,7 @@ public:
     ~World();
 
     // ticker used for now
-    unsigned int world_tick = 0;
+    unsigned int m_worldTick = 0;
 
     void Init();
 

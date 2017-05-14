@@ -5,11 +5,9 @@
 class SimpleBulletCollision : public BulletCollisionHandler
 {
 public:
-	SimpleBulletCollision() {};
-	~SimpleBulletCollision() {};
+    SimpleBulletCollision(){};
+    ~SimpleBulletCollision(){};
 
-	// Does not consider what collided with it
-	bool HandleBulletCollision(unsigned int world_tick, Entity* collidee) {
-		return true;
-	}
+    // Does not consider what collided with it
+    bool HandleBulletCollision(unsigned int world_tick, Entity* collidee) override { return true; }
 };
