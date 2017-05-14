@@ -8,17 +8,9 @@
 #include "ClientGame.h"
 #include "Graphics\Scene.h"
 
-GOState::GOState(CStateManager* pManager) : CGameState(pManager), m_spriteRenderer(new SpriteRenderer())
+GOState::GOState(CStateManager* pManager)
+    : CGameState(pManager), m_spriteRenderer(std::make_unique<SpriteRenderer>())
 {
-}
-
-GOState::~GOState()
-{
-    delete m_spriteRenderer;
-    delete m_bg;
-    delete m_win;
-    delete m_lose;
-    delete m_tied;
 }
 
 GOState* GOState::GetInstance(CStateManager* pManager)
@@ -32,7 +24,7 @@ void GOState::OnKeyDown(int action, int key)
     switch (key)
     {
     case GLFW_KEY_ESCAPE:
-        glfwSetWindowShouldClose(ClientGame::Instance()->window, GL_TRUE);
+        glfwSetWindowShouldClose(ClientGame::Instance()->m_window, GL_TRUE);
         break;
     default:
         break;
@@ -87,7 +79,7 @@ void GOState::Draw()
     int x = Texture::GetWindowCenter(m_bg->Width());
     int y = Window::s_height / 2 - m_bg->Height() / 2;
 
-    m_spriteRenderer->DrawSprite(*m_bg,
+    m_spriteRenderer->DrawSprite(m_bg.get(),
                                 glm::vec2(x, y),
                                 glm::vec2(m_bg->Width(), m_bg->Height()),
                                 0.0f,
@@ -98,7 +90,7 @@ void GOState::Draw()
     //////////////// DISPLAY WINNER ////////////////////////////////
     if (ClientGame::Instance()->GetWinner() == -1)
     { // tie
-        m_spriteRenderer->DrawSprite(*m_tied,
+        m_spriteRenderer->DrawSprite(m_tied.get(),
                                     glm::vec2(x, y),
                                     glm::vec2(m_tied->Width(), m_tied->Height()),
                                     0.0f,
@@ -106,7 +98,7 @@ void GOState::Draw()
     }
     else if (ClientGame::Instance()->GetWinner() == ClientGame::Instance()->GetClientTeam())
     {
-        m_spriteRenderer->DrawSprite(*m_win,
+        m_spriteRenderer->DrawSprite(m_win.get(),
                                     glm::vec2(x, y),
                                     glm::vec2(m_win->Width(), m_win->Height()),
                                     0.0f,
@@ -114,7 +106,7 @@ void GOState::Draw()
     }
     else
     {
-        m_spriteRenderer->DrawSprite(*m_lose,
+        m_spriteRenderer->DrawSprite(m_lose.get(),
                                     glm::vec2(x, y),
                                     glm::vec2(m_lose->Width(), m_lose->Height()),
                                     0.0f,
@@ -126,7 +118,7 @@ void GOState::EnterState()
 {
     ClientGame::Instance()->StopMenuSound();
     Window::s_mouseCaptured = false;
-    glfwSetInputMode(ClientGame::Instance()->window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    glfwSetInputMode(ClientGame::Instance()->m_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 }
 
 void GOState::Update(DWORD dwCurrentTime)
@@ -138,11 +130,11 @@ void ::GOState::InitTextures()
     if (!m_initialized)
     {
         // Create the different images
-        m_bg = new Texture(GL_TEXTURE_2D, "assets/ui/gameover/gameover.png");
+        m_bg = std::make_unique<Texture>(GL_TEXTURE_2D, "assets/ui/gameover/gameover.png");
 
-        m_win = new Texture(GL_TEXTURE_2D, "assets/ui/gameover/m_win.png");
-        m_lose = new Texture(GL_TEXTURE_2D, "assets/ui/gameover/m_lose.png");
-        m_tied = new Texture(GL_TEXTURE_2D, "assets/ui/gameover/m_tied.png");
+        m_win = std::make_unique<Texture>(GL_TEXTURE_2D, "assets/ui/gameover/m_win.png");
+        m_lose = std::make_unique<Texture>(GL_TEXTURE_2D, "assets/ui/gameover/m_lose.png");
+        m_tied = std::make_unique<Texture>(GL_TEXTURE_2D, "assets/ui/gameover/m_tied.png");
 
         m_initialized = true;
     }

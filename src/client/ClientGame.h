@@ -63,9 +63,9 @@ class ClientGame : public Singleton<ClientGame>
 
 public:
 #ifdef _WIN32
-    ClientNetwork* network;
+    ClientNetwork* m_network;
 #endif
-    GLFWwindow* window;
+    GLFWwindow* m_window;
 
 #ifdef _WIN32
 

@@ -17,13 +17,13 @@ public:
     // Destructor
     ~SpriteRenderer();
     // Renders a defined quad textured with given sprite
-    void DrawSprite(Texture& texture,
+    void DrawSprite(Texture* texture,
                     glm::vec2 position,
                     glm::vec2 size = glm::vec2(10, 10),
                     GLfloat rotate = 0.0f,
                     glm::vec3 color = glm::vec3(1.0f));
     void RenderSelection(int selection_code,
-                         Texture& texture,
+                         Texture* texture,
                          glm::vec2 position,
                          glm::vec2 size = glm::vec2(10, 10),
                          GLfloat rotate = 0.0f);

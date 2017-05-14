@@ -13,7 +13,6 @@
 
 Grass::Grass(const GLchar* path, GLuint num) : Entity(), m_amount(num)
 {
-    // m_grass = new Model(path);
     m_grass = ModelManager::GetModel("Grass");
     m_shader = ShaderManager::Instance()->GetShader("Instancing");
 

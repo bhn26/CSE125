@@ -83,7 +83,7 @@ void ClientGame::StopMenuSound()
 ClientGame::ClientGame(void) : m_soundsHandler()
 {
 #ifdef _WIN32
-    network = new ClientNetwork();
+    m_network = new ClientNetwork();
 
     m_startSent = false;
 
@@ -130,7 +130,7 @@ void ClientGame::sendInitPacket()
 
     packet.Serialize(packetData);
 
-    NetworkServices::sendMessage(network->m_connectSocket, packetData, packetSize);
+    NetworkServices::sendMessage(m_network->m_connectSocket, packetData, packetSize);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -185,7 +185,7 @@ void ClientGame::sendJoinPacket(int team)
     pi.Serialize(packet.dat.buf);
 
     packet.Serialize(packetData);
-    NetworkServices::sendMessage(network->m_connectSocket, packetData, packetSize);
+    NetworkServices::sendMessage(m_network->m_connectSocket, packetData, packetSize);
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -203,7 +203,7 @@ void ClientGame::sendReadyPacket()
 
     packet.Serialize(packetData);
 
-    NetworkServices::sendMessage(network->m_connectSocket, packetData, packetSize);
+    NetworkServices::sendMessage(m_network->m_connectSocket, packetData, packetSize);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -241,7 +241,7 @@ void ClientGame::sendStartPacket()
     packet.Serialize(packetData);
 
     m_startSent = true;
-    NetworkServices::sendMessage(network->m_connectSocket, packetData, packetSize);
+    NetworkServices::sendMessage(m_network->m_connectSocket, packetData, packetSize);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -265,7 +265,7 @@ void ClientGame::receiveReadyToSpawnPacket(int offset)
     pi.Serialize(packet.dat.buf);
 
     packet.Serialize(packetData);
-    NetworkServices::sendMessage(network->m_connectSocket, packetData, packetSize);
+    NetworkServices::sendMessage(m_network->m_connectSocket, packetData, packetSize);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -387,7 +387,7 @@ void ClientGame::sendMovePacket(MoveType direction)
     pi.Serialize(packet.dat.buf);
 
     packet.Serialize(packetData);
-    NetworkServices::sendMessage(network->m_connectSocket, packetData, packetSize);
+    NetworkServices::sendMessage(m_network->m_connectSocket, packetData, packetSize);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -452,7 +452,7 @@ void ClientGame::sendRotationPacket()
 
     packet.Serialize(packetData);
 
-    NetworkServices::sendMessage(network->m_connectSocket, packetData, packetSize);
+    NetworkServices::sendMessage(m_network->m_connectSocket, packetData, packetSize);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -468,7 +468,7 @@ void ClientGame::sendJumpPacket()
 
     packet.Serialize(packetData);
 
-    NetworkServices::sendMessage(network->m_connectSocket, packetData, packetSize);
+    NetworkServices::sendMessage(m_network->m_connectSocket, packetData, packetSize);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -545,7 +545,7 @@ void ClientGame::sendAttackPacket(AttackType t)
 
     packet.Serialize(packetData);
 
-    NetworkServices::sendMessage(network->m_connectSocket, packetData, packetSize);
+    NetworkServices::sendMessage(m_network->m_connectSocket, packetData, packetSize);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -571,7 +571,7 @@ void ClientGame::sendDiscardPacket()
 
     packet.Serialize(packetData);
 
-    NetworkServices::sendMessage(network->m_connectSocket, packetData, packetSize);
+    NetworkServices::sendMessage(m_network->m_connectSocket, packetData, packetSize);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -609,7 +609,7 @@ void ClientGame::sendDancePacket()
 
     packet.Serialize(packetData);
 
-    NetworkServices::sendMessage(network->m_connectSocket, packetData, packetSize);
+    NetworkServices::sendMessage(m_network->m_connectSocket, packetData, packetSize);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -667,11 +667,11 @@ void ClientGame::sendNamePacket()
 
     packet.Serialize(packetData);
 
-    NetworkServices::sendMessage(network->m_connectSocket, packetData, packetSize);
+    NetworkServices::sendMessage(m_network->m_connectSocket, packetData, packetSize);
 
     packet.Serialize(packetData);
 
-    NetworkServices::sendMessage(network->m_connectSocket, packetData, packetSize);
+    NetworkServices::sendMessage(m_network->m_connectSocket, packetData, packetSize);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -691,7 +691,7 @@ void ClientGame::receiveNamePacket(int offset)
 void ClientGame::update()
 {
     Packet packet;
-    int data_length = network->receivePackets(m_networkData);
+    int data_length = m_network->receivePackets(m_networkData);
 
     if (data_length <= 0)
     {
@@ -792,8 +792,8 @@ void ClientGame::update()
 ////////////////////////////////////////////////////////////////////////////////
 void ClientGame::Initialize()
 {
-    // Create the GLFW window
-    window = Window::Create_window(1366, 768);
+    // Create the GLFW m_window
+    m_window = Window::Create_window(1366, 768);
 
     // Print OpenGL and GLSL versions
     Print_versions();
@@ -836,29 +836,26 @@ void ClientGame::ShowLoadingScreen()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glClearColor(0.28f, 0.65f, 0.89f, 1.0f); // reset color
-    SpriteRenderer* sprite_renderer = new SpriteRenderer();
-    Texture* bg = new Texture(GL_TEXTURE_2D, "assets/ui/loading/loading.png");
-    int x = Texture::GetWindowCenter(bg->Width());
-    int y = Window::s_height / 2 - bg->Height() / 2;
+    SpriteRenderer sprite_renderer = SpriteRenderer();
+    Texture bg = Texture(GL_TEXTURE_2D, "assets/ui/loading/loading.png");
+    int x = Texture::GetWindowCenter(bg.Width());
+    int y = Window::s_height / 2 - bg.Height() / 2;
 
-    sprite_renderer->DrawSprite(*bg,
+    sprite_renderer.DrawSprite(&bg,
                                 glm::vec2(x, y),
-                                glm::vec2(bg->Width(), bg->Height()),
+                                glm::vec2(bg.Width(), bg.Height()),
                                 0.0f,
                                 glm::vec3(1.0f, 1.0f, 1.0f));
 
-    glfwSwapBuffers(window);
-
-    delete sprite_renderer;
-    delete bg;
+    glfwSwapBuffers(m_window);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ClientGame::Destroy()
 {
     Window::Clean_up();
-    // Destroy the window
-    glfwDestroyWindow(window);
+    // Destroy the m_window
+    glfwDestroyWindow(m_window);
     // Terminate GLFW
     glfwTerminate();
 }
@@ -866,7 +863,7 @@ void ClientGame::Destroy()
 ////////////////////////////////////////////////////////////////////////////////
 void ClientGame::GameLoop()
 {
-    while (!glfwWindowShouldClose(window))
+    while (!glfwWindowShouldClose(m_window))
     {
 #ifdef _WIN32
         update();
@@ -888,7 +885,7 @@ void ClientGame::GameLoop()
         CheckController();
 
         // Main render display callback. Rendering of objects is done here.
-        Window::Display_callback(window);
+        Window::Display_callback(m_window);
         // Idle callback. Updating objects, etc. can be done here.
         Window::Idle_callback();
 
@@ -919,13 +916,13 @@ void ClientGame::Setup_callbacks()
     // Set the error callback
     glfwSetErrorCallback(ClientGame::Error_callback);
     // Set the key callback
-    glfwSetKeyCallback(this->window, Window::Key_callback);
+    glfwSetKeyCallback(this->m_window, Window::Key_callback);
 
-    glfwSetCursorPosCallback(window, Window::Mouse_callback);
-    glfwSetMouseButtonCallback(window, Window::Mouse_button_callback);
-    glfwSetCharCallback(window, Window::Char_callback);
-    // Set the window resize callback
-    glfwSetWindowSizeCallback(window, Window::Resize_callback);
+    glfwSetCursorPosCallback(m_window, Window::Mouse_callback);
+    glfwSetMouseButtonCallback(m_window, Window::Mouse_button_callback);
+    glfwSetCharCallback(m_window, Window::Char_callback);
+    // Set the m_window resize callback
+    glfwSetWindowSizeCallback(m_window, Window::Resize_callback);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1184,7 +1181,7 @@ void ClientGame::HandleButtonEvent(const std::string& event, bool buttonDown)
     {
         if (event == EventQuit)
         {
-            glfwSetWindowShouldClose(this->window, GL_TRUE);
+            glfwSetWindowShouldClose(this->m_window, GL_TRUE);
         }
         else if (event == EventWeaponAttack)
         {

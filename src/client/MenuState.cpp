@@ -9,17 +9,9 @@
 #include "Graphics/Scene.h"
 #include "ClientGame.h"
 
-CMenuState::CMenuState(CStateManager* manager) : CGameState(manager), m_spriteRenderer(new SpriteRenderer())
+CMenuState::CMenuState(CStateManager* manager)
+    : CGameState(manager), m_spriteRenderer(std::make_unique<SpriteRenderer>())
 {
-}
-
-CMenuState::~CMenuState()
-{
-    delete m_spriteRenderer;
-
-    delete m_bg;
-    delete m_textbox;
-    delete m_join;
 }
 
 CMenuState* CMenuState::GetInstance(CStateManager* manager)
@@ -119,14 +111,17 @@ void CMenuState::RenderSelection()
 
     ////////////// USERNAME TEXTBOX /////////////////////////////////
     m_spriteRenderer->RenderSelection(1,
-                                     *m_textbox,
+                                     m_textbox.get(),
                                      glm::vec2(x + 115, y + 555),
                                      glm::vec2(m_textbox->Width(), m_textbox->Height()),
                                      0.0f);
 
     ////////////// JOIN BUTTON /////////////////////////////////////
-    m_spriteRenderer->RenderSelection(
-        2, *m_join, glm::vec2(x + 660, y + 555), glm::vec2(m_join->Width(), m_join->Height()), 0.0f);
+    m_spriteRenderer->RenderSelection(2,
+                                      m_join.get(),
+                                      glm::vec2(x + 660, y + 555),
+                                      glm::vec2(m_join->Width(), m_join->Height()),
+                                      0.0f);
 
     glClearColor(0.28f, 0.65f, 0.89f, 1.0f); // reset color
 }
@@ -143,14 +138,14 @@ void CMenuState::Draw()
     ////////////////// BACKGROUND//////////////////////////
     float x = Texture::GetWindowCenter(m_bg->Width());
     float y = Window::s_height / 2 - m_bg->Height() / 2;
-    m_spriteRenderer->DrawSprite(*m_bg,
+    m_spriteRenderer->DrawSprite(m_bg.get(),
                                 glm::vec2(x, y),
                                 glm::vec2(m_bg->Width(), m_bg->Height()),
                                 0.0f,
                                 glm::vec3(1.0f, 1.0f, 1.0f));
 
     ////////////// USERNAME TEXTBOX /////////////////////////////////
-    m_spriteRenderer->DrawSprite(*m_textbox,
+    m_spriteRenderer->DrawSprite(m_textbox.get(),
                                 glm::vec2(x + 115, y + 555),
                                 glm::vec2(m_textbox->Width(), m_textbox->Height()),
                                 0.0f,
@@ -159,7 +154,7 @@ void CMenuState::Draw()
     TextRenderer::RenderText(m_username.c_str(), x + 145, y + 585, 1.0f, glm::vec3(0.5f, 0.5f, 0.5f));
 
     ////////////// JOIN BUTTON /////////////////////////////////////
-    m_spriteRenderer->DrawSprite(*m_join,
+    m_spriteRenderer->DrawSprite(m_join.get(),
                                 glm::vec2(x + 660, y + 555),
                                 glm::vec2(m_join->Width(), m_join->Height()),
                                 0.0f,
@@ -180,9 +175,9 @@ void ::CMenuState::InitTextures()
     if (!m_initialized)
     {
         // Create the different images
-        m_bg = new Texture(GL_TEXTURE_2D, "assets/ui/login/login_bg.png");
-        m_textbox = new Texture(GL_TEXTURE_2D, "assets/ui/login/login_textbox.png");
-        m_join = new Texture(GL_TEXTURE_2D, "assets/ui/login/login_button.png");
+        m_bg = std::make_unique<Texture>(GL_TEXTURE_2D, "assets/ui/login/login_bg.png");
+        m_textbox = std::make_unique<Texture>(GL_TEXTURE_2D, "assets/ui/login/login_textbox.png");
+        m_join = std::make_unique<Texture>(GL_TEXTURE_2D, "assets/ui/login/login_button.png");
 
         m_initialized = true;
     }

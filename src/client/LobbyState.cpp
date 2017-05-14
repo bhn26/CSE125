@@ -10,25 +10,10 @@
 #include <string.h>
 
 LobbyState::LobbyState(CStateManager* pManager)
-    : CGameState(pManager), m_spriteRenderer(new SpriteRenderer())
+    : CGameState(pManager), m_spriteRenderer(std::make_unique<SpriteRenderer>())
 {
     // Create the text controls of the menu.
     ClientGame::Instance()->sendJoinPacket(ClientGame::GetClientId() % 2);
-}
-
-LobbyState::~LobbyState()
-{
-    delete m_spriteRenderer;
-    delete m_bg;
-    delete m_startButton;
-
-    delete m_tableT1;
-    delete m_tableT2;
-
-    delete m_join;
-    delete m_joinDisabled;
-
-    delete m_loadScreen;
 }
 
 LobbyState* LobbyState::GetInstance(CStateManager* pManager)
@@ -102,7 +87,7 @@ void LobbyState::RenderSelection()
         ////////////// START BUTTON /////////////////////////////////////
         m_spriteRenderer->RenderSelection(
             1,
-            *m_startButton,
+            m_startButton.get(),
             glm::vec2(x + 1000, y + 55),
             glm::vec2(m_startButton->Width(), m_startButton->Height()),
             0.0f);
@@ -122,7 +107,7 @@ void LobbyState::RenderSelection()
         {
             // add m_join button for t1
             m_spriteRenderer->RenderSelection(2,
-                                              *m_join,
+                                              m_join.get(),
                                               glm::vec2(tx1, ty + 390),
                                               glm::vec2(m_join->Width(), m_join->Height()),
                                               0.0f);
@@ -130,7 +115,7 @@ void LobbyState::RenderSelection()
         else
         { // t2
             m_spriteRenderer->RenderSelection(3,
-                                              *m_join,
+                                              m_join.get(),
                                               glm::vec2(tx2, ty + 390),
                                               glm::vec2(m_join->Width(), m_join->Height()),
                                               0.0f);
@@ -149,14 +134,14 @@ void LobbyState::Draw()
         ////////////////// BACKGROUND//////////////////////////
         float x = (float)Texture::GetWindowCenter(m_bg->Width());
         float y = Window::s_height / 2.0f - m_bg->Height() / 2.0f;
-        m_spriteRenderer->DrawSprite(*m_bg,
+        m_spriteRenderer->DrawSprite(m_bg.get(),
                                      glm::vec2(x, y),
                                      glm::vec2(m_bg->Width(), m_bg->Height()),
                                      0.0f,
                                      glm::vec3(1.0f, 1.0f, 1.0f));
 
         ////////////// START BUTTON /////////////////////////////////////
-        m_spriteRenderer->DrawSprite(*m_startButton,
+        m_spriteRenderer->DrawSprite(m_startButton.get(),
                                      glm::vec2(x + 1000, y + 55),
                                      glm::vec2(m_startButton->Width(), m_startButton->Height()),
                                      0.0f,
@@ -166,14 +151,14 @@ void LobbyState::Draw()
         float ty = y + 255;
 
         float tx1 = x + (m_bg->Width() / 2) - (m_tableT1->Width() + 20);
-        m_spriteRenderer->DrawSprite(*m_tableT1,
+        m_spriteRenderer->DrawSprite(m_tableT1.get(),
                                      glm::vec2(tx1, ty),
                                      glm::vec2(m_tableT1->Width(), m_tableT1->Height()),
                                      0.0f,
                                      glm::vec3(1.0f, 1.0f, 1.0f));
 
         float tx2 = tx1 + m_tableT1->Width() + 40;
-        m_spriteRenderer->DrawSprite(*m_tableT2,
+        m_spriteRenderer->DrawSprite(m_tableT2.get(),
                                      glm::vec2(tx2, ty),
                                      glm::vec2(m_tableT2->Width(), m_tableT2->Height()),
                                      0.0f,
@@ -203,7 +188,7 @@ void LobbyState::Draw()
         if (std::find(team0.begin(), team0.end(), ClientGame::GetClientId()) == team0.end())
         {
             // add m_join button
-            m_spriteRenderer->DrawSprite(*m_join,
+            m_spriteRenderer->DrawSprite(m_join.get(),
                                          glm::vec2(tx1, ty + 390),
                                          glm::vec2(m_join->Width(), m_join->Height()),
                                          0.0f,
@@ -211,7 +196,7 @@ void LobbyState::Draw()
         }
         else
         {
-            m_spriteRenderer->DrawSprite(*m_joinDisabled,
+            m_spriteRenderer->DrawSprite(m_joinDisabled.get(),
                                          glm::vec2(tx1, ty + 390),
                                          glm::vec2(m_join->Width(), m_join->Height()),
                                          0.0f,
@@ -237,7 +222,7 @@ void LobbyState::Draw()
         if (std::find(team1.begin(), team1.end(), ClientGame::GetClientId()) == team1.end())
         {
             // add m_join button
-            m_spriteRenderer->DrawSprite(*m_join,
+            m_spriteRenderer->DrawSprite(m_join.get(),
                                          glm::vec2(tx2, ty + 390),
                                          glm::vec2(m_join->Width(), m_join->Height()),
                                          0.0f,
@@ -245,7 +230,7 @@ void LobbyState::Draw()
         }
         else
         {
-            m_spriteRenderer->DrawSprite(*m_joinDisabled,
+            m_spriteRenderer->DrawSprite(m_joinDisabled.get(),
                                          glm::vec2(tx2, ty + 390),
                                          glm::vec2(m_join->Width(), m_join->Height()),
                                          0.0f,
@@ -272,16 +257,16 @@ void LobbyState::InitTextures()
     if (!m_initialized)
     {
         // Create the different images
-        m_bg = new Texture(GL_TEXTURE_2D, "assets/ui/lobby/lobby_bg.png");
-        m_startButton = new Texture(GL_TEXTURE_2D, "assets/ui/lobby/lobby_start.png");
+        m_bg = std::make_unique<Texture>(GL_TEXTURE_2D, "assets/ui/lobby/lobby_bg.png");
+        m_startButton = std::make_unique<Texture>(GL_TEXTURE_2D, "assets/ui/lobby/lobby_start.png");
 
-        m_tableT1 = new Texture(GL_TEXTURE_2D, "assets/ui/lobby/lobby_t1.png");
-        m_tableT2 = new Texture(GL_TEXTURE_2D, "assets/ui/lobby/lobby_t2.png");
+        m_tableT1 = std::make_unique<Texture>(GL_TEXTURE_2D, "assets/ui/lobby/lobby_t1.png");
+        m_tableT2 = std::make_unique<Texture>(GL_TEXTURE_2D, "assets/ui/lobby/lobby_t2.png");
 
-        m_join = new Texture(GL_TEXTURE_2D, "assets/ui/lobby/lobby_join.png");
-        m_joinDisabled = new Texture(GL_TEXTURE_2D, "assets/ui/lobby/lobby_join_disabled.png");
+        m_join = std::make_unique<Texture>(GL_TEXTURE_2D, "assets/ui/lobby/lobby_join.png");
+        m_joinDisabled = std::make_unique<Texture>(GL_TEXTURE_2D, "assets/ui/lobby/lobby_join_disabled.png");
 
-        m_loadScreen = new Texture(GL_TEXTURE_2D, "assets/ui/m_loading/instructions.png");
+        m_loadScreen = std::make_unique<Texture>(GL_TEXTURE_2D, "assets/ui/m_loading/instructions.png");
         m_initialized = true;
     }
 }
@@ -291,7 +276,7 @@ void LobbyState::ShowLoadingScreen()
     int x = Texture::GetWindowCenter(m_loadScreen->Width());
     int y = Window::s_height / 2 - m_loadScreen->Height() / 2;
 
-    m_spriteRenderer->DrawSprite(*m_loadScreen,
+    m_spriteRenderer->DrawSprite(m_loadScreen.get(),
                                  glm::vec2(x, y),
                                  glm::vec2(m_loadScreen->Width(), m_loadScreen->Height()),
                                  0.0f,

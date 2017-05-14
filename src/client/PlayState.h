@@ -11,8 +11,6 @@ class CPlayState : public CGameState
     friend class ClientGame;
 
 public:
-    ~CPlayState();
-
     // Implementation of specific events
     void OnMouseMove(float xoffset, float yoffset) override;
     void OnClick(int button, int action, double x, double y) override;
@@ -35,6 +33,9 @@ protected:
     CPlayState(CStateManager* pManager);
 
 private:
+    CPlayState(const CPlayState& rhs) = delete;
+    CPlayState& operator=(const CPlayState& rhs) = delete;
+
     // The current score
     int m_scores[2] = {0,0};
 
@@ -47,29 +48,29 @@ private:
     bool m_initialized = false;
     void InitTextures();
 
-    SpriteRenderer* m_spriteRenderer = nullptr;
+    std::unique_ptr<SpriteRenderer> m_spriteRenderer;
 
-    Texture* m_sbChick = nullptr;
-    Texture* m_sbSide = nullptr;
-    Texture* m_sbTable = nullptr;
+    std::unique_ptr<Texture> m_sbChick;
+    std::unique_ptr<Texture> m_sbSide;
+    std::unique_ptr<Texture> m_sbTable;
 
-    Texture* m_hudEgg = nullptr;
-    Texture* m_hudHealth = nullptr;
-    Texture* m_hudPower = nullptr;
-    Texture* m_hudWeaponAndTimer = nullptr;
+    std::unique_ptr<Texture> m_hudEgg;
+    std::unique_ptr<Texture> m_hudHealth;
+    std::unique_ptr<Texture> m_hudPower;
+    std::unique_ptr<Texture> m_hudWeaponAndTimer;
 
-    Texture* m_hudTomato = nullptr;
-    Texture* m_hudPotato = nullptr;
-    Texture* m_hudPumpkinSeed = nullptr;
-    Texture* m_hudBB = nullptr;
-    Texture* m_hudMine = nullptr;
-    Texture* m_hudSeeds = nullptr;
+    std::unique_ptr<Texture> m_hudTomato;
+    std::unique_ptr<Texture> m_hudPotato;
+    std::unique_ptr<Texture> m_hudPumpkinSeed;
+    std::unique_ptr<Texture> m_hudBB;
+    std::unique_ptr<Texture> m_hudMine;
+    std::unique_ptr<Texture> m_hudSeeds;
 
-    Texture* m_weaponMissing = nullptr;
+    std::unique_ptr<Texture> m_weaponMissing;
 
     Texture* m_hudWeapon = nullptr;
 
-    Texture* m_deathOverlay = nullptr;
+    std::unique_ptr<Texture> m_deathOverlay;
 };
 
 #endif // _PLAYSTATE_H_

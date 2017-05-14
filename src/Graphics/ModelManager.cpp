@@ -38,8 +38,7 @@ bool ModelManager::LoadModel(const std::string& modelName)
         return false;
     }
 
-    Model* model = new Model(modelPath);
-    m_modelMap[modelName] = std::shared_ptr<Model>(model);
+    m_modelMap[modelName] = std::shared_ptr<Model>(new Model(modelPath));
     printf("Done!\n");
     return true;
 }

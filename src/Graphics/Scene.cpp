@@ -55,13 +55,12 @@ void Scene::Setup()
                               std::stof(ConfigManager::Instance()->GetConfigValue("Light_Pos_Z")));
     glm::vec3 camPos = pos + glm::vec3(-75.0f, 0.0f, 0.0f);
 
-    m_pointLight = std::unique_ptr<PointLight>(
-        new PointLight(glm::vec3(0.0f, 20.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)));
-    m_dirLight = std::unique_ptr<DirectionalLight>(
-        new DirectionalLight(glm::vec3(0.5, -sqrt(3) / 2.0f, 0.0f)));
+    m_pointLight =
+        std::make_unique<PointLight>(glm::vec3(0.0f, 20.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+    m_dirLight = std::make_unique<DirectionalLight>(glm::vec3(0.5, -sqrt(3) / 2.0f, 0.0f));
     m_dirLight->m_ambientIntensity = 0.3f;
-    m_camera = std::unique_ptr<Camera>(
-        new Camera(camPos, glm::vec3(0.0f, 1.0f, 0.0f), m_dirLight->m_direction));
+    m_camera =
+        std::make_unique<Camera>(camPos, glm::vec3(0.0f, 1.0f, 0.0f), m_dirLight->m_direction);
 
     // glm::vec3 pos = glm::vec3(0.0f, 250.0f, 0.0f);
     // m_lightSpaceMatrix = glm::ortho(-425.0f, 350.0f, -500.0f, 300.0f, 10.0f, 500.0f) *
@@ -82,51 +81,51 @@ void Scene::Setup()
 
     // Barn
     std::unique_ptr<StaticObject> barn =
-        std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Barn")));
+        std::make_unique<StaticObject>(ModelManager::GetModel("Barn"));
 
     // Tractors
     std::unique_ptr<StaticObject> red_tractor =
-        std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Tractor_Red")));
+        std::make_unique<StaticObject>(ModelManager::GetModel("Tractor_Red"));
     red_tractor->Rotate(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
     red_tractor->Translate(glm::vec3(17.0f, 0.0f, -13.0f));
 
     std::unique_ptr<StaticObject> green_tractor =
-        std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Tractor_Green")));
+        std::make_unique<StaticObject>(ModelManager::GetModel("Tractor_Green"));
     green_tractor->Rotate(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
     green_tractor->Translate(glm::vec3(34.0f, 0.0f, 13.0f));
 
     std::unique_ptr<StaticObject> orange_tractor =
-        std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Tractor_Orange")));
+        std::make_unique<StaticObject>(ModelManager::GetModel("Tractor_Orange"));
     orange_tractor->Rotate(90.0f, glm::vec3(0.0f, -1.0f, 0.0f));
     orange_tractor->Translate(glm::vec3(-17.0f, 0.0f, -13.0f));
 
     // Silo
     std::unique_ptr<StaticObject> silo =
-        std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Silo")));
+        std::make_unique<StaticObject>(ModelManager::GetModel("Silo"));
 
     // Construction
-    std::unique_ptr<StaticObject> construction_site = std::unique_ptr<StaticObject>(
-        new StaticObject(ModelManager::GetModel("Construction_Site")));
+    std::unique_ptr<StaticObject> construction_site =
+        std::make_unique<StaticObject>(ModelManager::GetModel("Construction_Site"));
 
     // House
     std::unique_ptr<StaticObject> house =
-        std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("House")));
+        std::make_unique<StaticObject>(ModelManager::GetModel("House"));
 
     // Patio
     std::unique_ptr<StaticObject> patio =
-        std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Patio")));
+        std::make_unique<StaticObject>(ModelManager::GetModel("Patio"));
 
     // Maze
     std::unique_ptr<StaticObject> maze =
-        std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Maze")));
+        std::make_unique<StaticObject>(ModelManager::GetModel("Maze"));
 
     // Fence
     std::unique_ptr<StaticObject> fence =
-        std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Fence")));
+        std::make_unique<StaticObject>(ModelManager::GetModel("Fence"));
 
     // Bench
     std::unique_ptr<StaticObject> bench =
-        std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Bench")));
+        std::make_unique<StaticObject>(ModelManager::GetModel("Bench"));
 
     // Pumpkin
     // TODO NO IDEA WHY PUMPKIN HACK WORKS HERE
@@ -137,7 +136,7 @@ void Scene::Setup()
     //    StaticObject(ModelManager::GetModel("Pumpkin")));
     // Pumpkin Patch
     std::unique_ptr<StaticObject> pumpkin_patch =
-        std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Pumpkin_Patch")));
+        std::make_unique<StaticObject>(ModelManager::GetModel("Pumpkin_Patch"));
 
     // Rocks
     // std::unique_ptr<StaticObject> rocks = std::unique_ptr<StaticObject>(new
@@ -146,39 +145,38 @@ void Scene::Setup()
 
     // Stump
     std::unique_ptr<StaticObject> stump =
-        std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Stump")));
+        std::make_unique<StaticObject>(ModelManager::GetModel("Stump"));
     // stump->Translate(glm::vec3(-28.0f, 0.2f, -20.0f));
 
     // Ground
     std::unique_ptr<StaticObject> ground =
-        std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Ground")));
+        std::make_unique<StaticObject>(ModelManager::GetModel("Ground"));
     // ground->Translate(glm::vec3(0.0f, 100.4f, 0.0f));
 
     // Seed
     std::unique_ptr<StaticObject> seed =
-        std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Pumpkin_Seed")));
+        std::make_unique<StaticObject>(ModelManager::GetModel("Pumpkin_Seed"));
     seed->SetScale(0.5f);
     seed->Translate(glm::vec3(0.0f, 1.0f, 0.0f));
 
     // Boat
     std::unique_ptr<StaticObject> hot_tub =
-        std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Boat")));
+        std::make_unique<StaticObject>(ModelManager::GetModel("Boat"));
 
     // Hot Tub
     std::unique_ptr<StaticObject> boat =
-        std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Hot_Tub")));
+        std::make_unique<StaticObject>(ModelManager::GetModel("Hot_Tub"));
 
     std::unique_ptr<StaticObject> windmill =
-        std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Windmill")));
+        std::make_unique<StaticObject>(ModelManager::GetModel("Windmill"));
     // windmill->SetScale(1/3.0f);
     // windmill->Translate(glm::vec3(-125.0f, 0.0f, 0.0f));
 
-    m_grass = std::unique_ptr<InstanceObject>(
-        new InstanceObject(ModelManager::GetModel("Grass"), 10000, 1.0f));
+    m_grass = std::make_unique<InstanceObject>(ModelManager::GetModel("Grass"), 10000, 1.0f);
     //	pumpkin = std::unique_ptr<InstanceObject>(new
     // InstanceObject(ModelManager::GetModel("Pumpkin"), 20, 10.0f, 20.0f));
 
-    m_cubeMap = std::unique_ptr<CubeMap>(new CubeMap);
+    m_cubeMap = std::make_unique<CubeMap>();
     m_cubeMap->LoadCubeMap();
     m_cubeMap->GetShader() = ShaderManager::GetShader("CubeMap");
     m_grass->GetShader() = ShaderManager::GetShader("Instancing");
@@ -458,7 +456,7 @@ void Scene::AddEntity(PosInfo p)
     switch (p.cid)
     {
     case ClassId::Player:
-        player = std::unique_ptr<Player>(new Player(p.x, p.y, p.z, p.rotw, p.rotx, p.roty, p.rotz));
+        player = std::make_unique<Player>(p.x, p.y, p.z, p.rotw, p.rotx, p.roty, p.rotz);
         if (p.skin == 0)
         {
             skin_type = "assets/chickens/objects/chicken.obj";
@@ -484,7 +482,7 @@ void Scene::AddEntity(PosInfo p)
         AddEntity(p.cid, p.oid, std::move(player));
         break;
     case ClassId::Flag:
-        egg = std::unique_ptr<Egg>(new Egg(p.x, p.y, p.z, "Easter_Egg"));
+        egg = std::make_unique<Egg>(p.x, p.y, p.z, "Easter_Egg");
         egg->SetColor(glm::vec3(0.27f, 0.16f, 0.0f));
         egg->GetShader() = ShaderManager::GetShader("Model");
         egg->SetClassId(static_cast<int>(p.cid));
@@ -493,45 +491,41 @@ void Scene::AddEntity(PosInfo p)
         break;
     case ClassId::Bullet:
     {
-        // std::unique_ptr<StaticObject> bullet = std::unique_ptr<StaticObject>(new
-        // StaticObject("assets/weapons/pumpkinseed.obj"));
+        // std::unique_ptr<StaticObject> bullet =
+        // std::make_unique<StaticObject>("assets/weapons/pumpkinseed.obj");
         std::unique_ptr<StaticObject> bullet;
         switch (static_cast<WeaponType>(p.sub_id))
         {
         case WeaponType::SeedGun:
-            bullet = std::unique_ptr<StaticObject>(
-                new StaticObject(ModelManager::GetModel("Pumpkin_Seed")));
+            bullet = std::make_unique<StaticObject>(ModelManager::GetModel("Pumpkin_Seed"));
             bullet->Translate(glm::vec3(p.x, p.y, p.z));
-            // bullet->GetShader() = modelShader;        // Set in ModelEntity
             AddEntity(p.cid, p.oid, std::move(bullet));
             break;
         case WeaponType::BounceGun:
-            bullet =
-                std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Tomato")));
+            bullet = std::make_unique<StaticObject>(ModelManager::GetModel("Tomato"));
             bullet->Translate(glm::vec3(p.x, p.y, p.z));
-            // bullet->GetShader() = modelShader;        // Set in ModelEntity
             AddEntity(p.cid, p.oid, std::move(bullet));
             break;
         case WeaponType::GrenadeLauncher:
-            bullet =
-                std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Potato")));
+            bullet = std::make_unique<StaticObject>(ModelManager::GetModel("Potato"));
             bullet->Translate(glm::vec3(p.x, p.y, p.z));
-            // bullet->GetShader() = modelShader;        // Set in ModelEntity
             AddEntity(p.cid, p.oid, std::move(bullet));
             break;
         case WeaponType::TeleportGun:
-            bullet =
-                std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Teleport")));
+            bullet = std::make_unique<StaticObject>(ModelManager::GetModel("Teleport"));
             bullet->Translate(glm::vec3(p.x, p.y, p.z));
-            // bullet->GetShader() = modelShader;        // Set in ModelEntity
             AddEntity(p.cid, p.oid, std::move(bullet));
             break;
         case WeaponType::BlastMine:
             eggtype = rand() % 2;
             if (eggtype == 1)
-                egg = std::unique_ptr<Egg>(new Egg(p.x, p.y, p.z, "Easter_Egg"));
+            {
+                egg = std::make_unique<Egg>(p.x, p.y, p.z, "Easter_Egg");
+            }
             else
-                egg = std::unique_ptr<Egg>(new Egg(p.x, p.y, p.z, "Wood_Egg"));
+            {
+                egg = std::make_unique<Egg>(p.x, p.y, p.z, "Wood_Egg");
+            }
             egg->SetColor(glm::vec3(0.27f, 0.16f, 0.0f));
             egg->GetShader() = ShaderManager::GetShader("Model");
             egg->SetClassId(static_cast<int>(p.cid));
@@ -539,17 +533,14 @@ void Scene::AddEntity(PosInfo p)
             AddEntity(p.cid, p.oid, std::move(egg));
             break;
         case WeaponType::Shotgun:
-            bullet = std::unique_ptr<StaticObject>(
-                new StaticObject(ModelManager::GetModel("Pumpkin_Seed")));
+            bullet = std::make_unique<StaticObject>(ModelManager::GetModel("Pumpkin_Seed"));
             bullet->Translate(glm::vec3(p.x, p.y, p.z));
-            // bullet->GetShader() = modelShader;        // Set in ModelEntity
             AddEntity(p.cid, p.oid, std::move(bullet));
             break;
         default:
             std::unique_ptr<StaticObject> bullet =
-                std::unique_ptr<StaticObject>(new StaticObject(ModelManager::GetModel("Tomato")));
+                std::make_unique<StaticObject>(ModelManager::GetModel("Tomato"));
             bullet->Translate(glm::vec3(p.x, p.y, p.z));
-            // bullet->GetShader() = modelShader;        // Set in ModelEntity
             AddEntity(p.cid, p.oid, std::move(bullet));
             break;
         }
@@ -558,26 +549,24 @@ void Scene::AddEntity(PosInfo p)
     }
     case ClassId::Collectable:
     {
-        // std::unique_ptr<StaticObject> bullet = std::unique_ptr<StaticObject>(new
-        // StaticObject("assets/weapons/pumpkinseed.obj"));
+        // std::unique_ptr<StaticObject> bullet =
+        // std::make_unique<StaticObject>("assets/weapons/pumpkinseed.obj");
         if (static_cast<CollectType>(p.sub_id) == CollectType::Weapon)
         {
-            egg = std::unique_ptr<Egg>(new Egg(p.x, p.y, p.z, "Robot_Egg"));
+            egg = std::make_unique<Egg>(p.x, p.y, p.z, "Robot_Egg");
             egg->SetColor(glm::vec3(0.27f, 0.16f, 0.0f));
             egg->GetShader() = ShaderManager::GetShader("Model");
             egg->SetClassId(static_cast<int>(p.cid));
             egg->SetObjId(p.oid);
-            // bullet->GetShader() = modelShader;        // Set in ModelEntity
             AddEntity(p.cid, p.oid, std::move(egg));
         }
         else if (static_cast<CollectType>(p.sub_id) == CollectType::PowerUp)
         {
-            egg = std::unique_ptr<Egg>(new Egg(p.x, p.y, p.z, "Wood_Egg"));
+            egg = std::make_unique<Egg>(p.x, p.y, p.z, "Wood_Egg");
             egg->SetColor(glm::vec3(0.27f, 0.16f, 0.0f));
             egg->GetShader() = ShaderManager::GetShader("Model");
             egg->SetClassId(static_cast<int>(p.cid));
             egg->SetObjId(p.oid);
-            // bullet->GetShader() = modelShader;        // Set in ModelEntity
             AddEntity(p.cid, p.oid, std::move(egg));
         }
         break;

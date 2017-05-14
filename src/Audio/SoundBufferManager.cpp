@@ -37,7 +37,7 @@ bool SoundBufferManager::LoadSoundBuffer(const std::string& soundName)
         return false;
     }
 
-    std::shared_ptr<sf::SoundBuffer> buffer = std::shared_ptr<sf::SoundBuffer>(new sf::SoundBuffer());
+    std::shared_ptr<sf::SoundBuffer> buffer = std::make_shared<sf::SoundBuffer>();
     if (!buffer->loadFromFile(s_soundDirectory + soundPath))
     {
         printf("Error: could not load!\n");

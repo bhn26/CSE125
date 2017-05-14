@@ -49,9 +49,9 @@ void Animation::Mesh::VertexBoneData::AddBoneData(unsigned int boneID, float wei
 
 ///////////////////////////////////////////////////////////////////////
 Animation::Mesh::Mesh()
-    : m_VAO(0), m_VBO(0), m_EBO(0), m_numBones(0), m_rootNode(std::unique_ptr<Node>(new Node()))
+    : m_VAO(0), m_VBO(0), m_EBO(0), m_numBones(0), m_rootNode(std::make_unique<Node>())
 {
-    m_skinningTechnique = std::shared_ptr<SkinningTechnique>(new SkinningTechnique());
+    m_skinningTechnique = std::make_shared<SkinningTechnique>();
 
     if (!m_skinningTechnique->Init())
     {
@@ -198,7 +198,7 @@ void Animation::Mesh::InitNodeHierarchy(std::unique_ptr<Node>& node, aiNode* ain
     Assign(node->m_nodeTransform, ainode->mTransformation);
     for (unsigned int i = 0; i < ainode->mNumChildren; i++)
     {
-        node->m_children.push_back(std::unique_ptr<Node>(new Node()));
+        node->m_children.push_back(std::make_unique<Node>());
         InitNodeHierarchy(node->m_children[i], ainode->mChildren[i]);
     }
 }

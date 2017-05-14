@@ -14,8 +14,6 @@
 class GOState : public CGameState
 {
 public:
-    ~GOState();
-
     void OnKeyDown(int action, int key) override;
     void OnClick(int button, int action, double x, double y) override;
     void Draw() override;
@@ -29,15 +27,18 @@ protected:
     GOState(CStateManager* pManager);
 
 private:
+    GOState(const GOState& rhs) = delete;
+    GOState& operator=(const GOState& rhs) = delete;
+
     void RenderSelection();
     void InitTextures();
 
-    SpriteRenderer* m_spriteRenderer = nullptr;
+    std::unique_ptr<SpriteRenderer> m_spriteRenderer;
 
-    Texture* m_bg = nullptr;
-    Texture* m_win = nullptr;
-    Texture* m_lose = nullptr;
-    Texture* m_tied = nullptr;
+    std::unique_ptr<Texture> m_bg;
+    std::unique_ptr<Texture> m_win;
+    std::unique_ptr<Texture> m_lose;
+    std::unique_ptr<Texture> m_tied;
 
     bool m_initialized = false;
 };

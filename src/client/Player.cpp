@@ -26,11 +26,11 @@ Player::Player(float x, float y, float z, float rotW, float rotX, float rotY, fl
     // info_panel = new Texture(GL_TEXTURE_2D, "assets/ui/player_info_panel.png");
 
     SetRelativeCamPosition(glm::vec3(-2.5f, 4.5f, -7.0f));
-    camera = std::unique_ptr<Camera>(new Camera(Position() + m_relativeCamPosition));
+    camera = std::make_unique<Camera>(Position() + m_relativeCamPosition);
     Entity::RotateTo(rotW, rotX, rotY, rotZ);
 
     // Setup the animated model
-    m_model = std::unique_ptr<Animation::AnimatedModel>(new Animation::AnimatedModel);
+    m_model = std::make_unique<Animation::AnimatedModel>();
     m_model->FBXLoadClean("assets/chickens/chicken_dance.fbx", true, "dance");
     m_model->AddAnimation("assets/chickens/chicken_walk.fbx", true, "walk");
     m_model->AddAnimation("assets/chickens/chicken_attack.fbx", false, "melee");

@@ -10,12 +10,9 @@
 // Specialization of the CGameState class for
 // the menu state. This displays a menu in which
 // the player can start a new game, continue an
-// existing game, see the high-scores or exit the game.
 class CMenuState : public CGameState
 {
 public:
-    ~CMenuState();
-
     void OnKeyDown(int action, int key) override;
     void OnClick(int button, int action, double x, double y) override;
     void OnChar(unsigned int codepoint) override;
@@ -30,16 +27,20 @@ protected:
     CMenuState(CStateManager* manager);
 
 private:
+    // Deleted because we have unique_ptrs
+    CMenuState(const CMenuState& rhs) = delete;
+    CMenuState& operator=(const CMenuState& rhs) = delete;
+
     void StartGame();
     void RenderSelection();
     void InitTextures();
 
-    SpriteRenderer* m_spriteRenderer = nullptr;
+    std::unique_ptr<SpriteRenderer> m_spriteRenderer;
 
     // stuff below is for optimization later
-    Texture* m_bg = nullptr;
-    Texture* m_textbox = nullptr;
-    Texture* m_join = nullptr;
+    std::unique_ptr<Texture> m_bg;
+    std::unique_ptr<Texture> m_textbox;
+    std::unique_ptr<Texture> m_join;
 
     std::string m_defaultName;
     std::string m_username;

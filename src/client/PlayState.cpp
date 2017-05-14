@@ -14,29 +14,8 @@
 #include <sstream>
 #include <math.h>
 
-CPlayState::CPlayState(CStateManager* pManager) : CGameState(pManager), m_spriteRenderer(new SpriteRenderer())
+CPlayState::CPlayState(CStateManager* pManager) : CGameState(pManager), m_spriteRenderer(std::make_unique<SpriteRenderer>())
 {
-}
-
-CPlayState::~CPlayState()
-{
-    delete m_spriteRenderer;
-
-    delete m_sbChick;
-    delete m_sbSide;
-    delete m_sbTable;
-
-    delete m_hudEgg;
-    delete m_hudHealth;
-    delete m_hudPower;
-
-    delete m_hudWeaponAndTimer;
-    delete m_hudTomato;
-    delete m_hudPotato;
-    delete m_hudPumpkinSeed;
-    delete m_weaponMissing;
-
-    delete m_deathOverlay;
 }
 
 CPlayState* CPlayState::GetInstance(CStateManager* pManager)
@@ -83,12 +62,12 @@ void CPlayState::OnClick(int button, int action, double x, double y)
     {
         Window::s_mouseCaptured = true;
         Window::s_firstMouse = true;
-        glfwSetInputMode(ClientGame::Instance()->window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        glfwSetInputMode(ClientGame::Instance()->m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
     else if (button == GLFW_MOUSE_BUTTON_MIDDLE && Window::s_mouseCaptured)
     {
         Window::s_mouseCaptured = false;
-        glfwSetInputMode(ClientGame::Instance()->window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        glfwSetInputMode(ClientGame::Instance()->m_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
     else if (button == GLFW_MOUSE_BUTTON_RIGHT && Window::s_mouseCaptured)
     {
@@ -456,7 +435,7 @@ void CPlayState::Draw()
         ////////////////// BACKGROUND//////////////////////////
         int x = Window::s_width - m_sbChick->Width();
         int y = Window::s_height - m_sbChick->Height();
-        m_spriteRenderer->DrawSprite(*m_sbChick,
+        m_spriteRenderer->DrawSprite(m_sbChick.get(),
                                     glm::vec2(x, y),
                                     glm::vec2(m_sbChick->Width(), m_sbChick->Height()),
                                     0.0f,
@@ -464,7 +443,7 @@ void CPlayState::Draw()
 
         int side_x = 0;
         int side_y = Window::s_height / 2 - m_sbSide->Height() / 2;
-        m_spriteRenderer->DrawSprite(*m_sbSide,
+        m_spriteRenderer->DrawSprite(m_sbSide.get(),
                                     glm::vec2(side_x, side_y),
                                     glm::vec2(m_sbSide->Width(), m_sbSide->Height()),
                                     0.0f,
@@ -475,7 +454,7 @@ void CPlayState::Draw()
         ///////////////// TABLES ////////////////////////////////////////
         x = Texture::GetWindowCenter(m_sbTable->Width());
         y = Window::s_height / 2 - m_sbTable->Height() / 2;
-        m_spriteRenderer->DrawSprite(*m_sbTable,
+        m_spriteRenderer->DrawSprite(m_sbTable.get(),
                                     glm::vec2(x, y),
                                     glm::vec2(m_sbTable->Width(), m_sbTable->Height()),
                                     0.0f,
@@ -567,7 +546,7 @@ void CPlayState::Draw()
         int score = Scene::Instance()->GetPlayer()->GetScore();
         for (int i = 0; i < score; i++)
         {
-            m_spriteRenderer->DrawSprite(*m_hudEgg,
+            m_spriteRenderer->DrawSprite(m_hudEgg.get(),
                                         glm::vec2(x, y),
                                         glm::vec2(m_hudEgg->Width(), m_hudEgg->Height()),
                                         0.0f,
@@ -579,7 +558,7 @@ void CPlayState::Draw()
         x = Window::s_width - m_hudWeaponAndTimer->Width() - 20;
         y = Window::s_height - m_hudWeaponAndTimer->Height() - 20;
         m_spriteRenderer->DrawSprite(
-            *m_hudWeaponAndTimer,
+            m_hudWeaponAndTimer.get(),
             glm::vec2(x, y),
             glm::vec2(m_hudWeaponAndTimer->Width(), m_hudWeaponAndTimer->Height()),
             0.0f,
@@ -588,7 +567,7 @@ void CPlayState::Draw()
         ////////////// Power Up Bar ///////////////////////////////////////
         x = Window::s_width - m_hudPower->Width() - 20;
         y = 20;
-        m_spriteRenderer->DrawSprite(*m_hudPower,
+        m_spriteRenderer->DrawSprite(m_hudPower.get(),
                                     glm::vec2(x, y),
                                     glm::vec2(m_hudPower->Width(), m_hudPower->Height()),
                                     0.0f,
@@ -602,7 +581,7 @@ void CPlayState::Draw()
         std::shared_ptr<Shader>& shader = m_spriteRenderer->GetShader();
         GLint health_pos = shader->GetUniform("health_x_pos");
         glUniform1i(health_pos, x + (m_hudHealth->Width() * (health / 100.0f)));
-        m_spriteRenderer->DrawSprite(*m_hudHealth,
+        m_spriteRenderer->DrawSprite(m_hudHealth.get(),
                                     glm::vec2(x, y),
                                     glm::vec2(m_hudHealth->Width(), m_hudHealth->Height()),
                                     0.0f,
@@ -612,25 +591,25 @@ void CPlayState::Draw()
         switch (static_cast<WeaponType>(Scene::Instance()->GetPlayer()->GetWeapon()))
         {
         case WeaponType::SeedGun:
-            m_hudWeapon = m_hudPumpkinSeed;
+            m_hudWeapon = m_hudPumpkinSeed.get();
             break;
         case WeaponType::BounceGun:
-            m_hudWeapon = m_hudTomato;
+            m_hudWeapon = m_hudTomato.get();
             break;
         case WeaponType::GrenadeLauncher:
-            m_hudWeapon = m_hudPotato;
+            m_hudWeapon = m_hudPotato.get();
             break;
         case WeaponType::TeleportGun:
-            m_hudWeapon = m_hudBB;
+            m_hudWeapon = m_hudBB.get();
             break;
         case WeaponType::BlastMine:
-            m_hudWeapon = m_hudMine;
+            m_hudWeapon = m_hudMine.get();
             break;
         case WeaponType::Shotgun:
-            m_hudWeapon = m_hudSeeds;
+            m_hudWeapon = m_hudSeeds.get();
             break;
         default:
-            m_hudWeapon = m_weaponMissing;
+            m_hudWeapon = m_weaponMissing.get();
             break;
         }
 
@@ -640,7 +619,7 @@ void CPlayState::Draw()
         glClear(GL_DEPTH_BUFFER_BIT);
         if (Scene::Instance()->GetPlayer()->GetWeapon() != -1)
         {
-            m_spriteRenderer->DrawSprite(*m_hudWeapon,
+            m_spriteRenderer->DrawSprite(m_hudWeapon,
                                         glm::vec2(x, y),
                                         glm::vec2(m_hudWeapon->Width(), m_hudWeapon->Height()),
                                         0.0f,
@@ -682,7 +661,7 @@ void CPlayState::Draw()
             x = Texture::GetWindowCenter(m_deathOverlay->Width());
             y = Window::s_height / 2 - m_deathOverlay->Height() / 2;
 
-            m_spriteRenderer->DrawSprite(*m_deathOverlay,
+            m_spriteRenderer->DrawSprite(m_deathOverlay.get(),
                                         glm::vec2(x, y),
                                         glm::vec2(m_deathOverlay->Width(), m_deathOverlay->Height()),
                                         0.0f,
@@ -696,28 +675,28 @@ void CPlayState::InitTextures()
     if (!m_initialized)
     {
         // Create the different images
-        m_sbChick = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/scoreboard_chicken.png");
-        m_sbSide = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/m_sbSide_panel.png");
-        m_sbTable = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/scoreboard.png");
+        m_sbChick = std::make_unique<Texture>(GL_TEXTURE_2D, "assets/ui/playstate/scoreboard_chicken.png");
+        m_sbSide = std::make_unique<Texture>(GL_TEXTURE_2D, "assets/ui/playstate/m_sbSide_panel.png");
+        m_sbTable = std::make_unique<Texture>(GL_TEXTURE_2D, "assets/ui/playstate/scoreboard.png");
 
-        m_hudEgg = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/m_hudEgg.png");
-        m_hudHealth = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/m_hudHealth.png");
-        m_hudPower = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/m_hudPower_up.png");
+        m_hudEgg = std::make_unique<Texture>(GL_TEXTURE_2D, "assets/ui/playstate/m_hudEgg.png");
+        m_hudHealth = std::make_unique<Texture>(GL_TEXTURE_2D, "assets/ui/playstate/m_hudHealth.png");
+        m_hudPower = std::make_unique<Texture>(GL_TEXTURE_2D, "assets/ui/playstate/m_hudPower_up.png");
 
         m_hudWeaponAndTimer =
-            new Texture(GL_TEXTURE_2D, "assets/ui/playstate/m_hudWeapon&timer.png");
+            std::make_unique<Texture>(GL_TEXTURE_2D, "assets/ui/playstate/m_hudWeapon&timer.png");
 
-        m_hudTomato = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/weapons/tomato_icon.png");
-        m_hudPotato = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/weapons/potato_icon.png");
+        m_hudTomato = std::make_unique<Texture>(GL_TEXTURE_2D, "assets/ui/playstate/weapons/tomato_icon.png");
+        m_hudPotato = std::make_unique<Texture>(GL_TEXTURE_2D, "assets/ui/playstate/weapons/potato_icon.png");
         m_hudPumpkinSeed =
-            new Texture(GL_TEXTURE_2D, "assets/ui/playstate/weapons/pumpkin_seed_icon.png");
-        m_hudBB = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/weapons/blueberry_icon.png");
-        m_hudMine = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/weapons/mine_icon.png");
-        m_hudSeeds = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/weapons/seeds_icon.png");
+            std::make_unique<Texture>(GL_TEXTURE_2D, "assets/ui/playstate/weapons/pumpkin_seed_icon.png");
+        m_hudBB = std::make_unique<Texture>(GL_TEXTURE_2D, "assets/ui/playstate/weapons/blueberry_icon.png");
+        m_hudMine = std::make_unique<Texture>(GL_TEXTURE_2D, "assets/ui/playstate/weapons/mine_icon.png");
+        m_hudSeeds = std::make_unique<Texture>(GL_TEXTURE_2D, "assets/ui/playstate/weapons/seeds_icon.png");
 
-        m_weaponMissing = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/weapons/missing_icon.png");
+        m_weaponMissing = std::make_unique<Texture>(GL_TEXTURE_2D, "assets/ui/playstate/weapons/missing_icon.png");
 
-        m_deathOverlay = new Texture(GL_TEXTURE_2D, "assets/ui/playstate/death.png");
+        m_deathOverlay = std::make_unique<Texture>(GL_TEXTURE_2D, "assets/ui/playstate/death.png");
 
         m_initialized = true;
     }

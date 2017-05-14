@@ -14,8 +14,6 @@
 class LobbyState : public CGameState
 {
 public:
-    ~LobbyState();
-
     void OnKeyDown(WPARAM wKey);
     void OnClick(int button, int action, double x, double y) override;
     void Draw() override;
@@ -30,23 +28,27 @@ protected:
     LobbyState(CStateManager* pManager);
 
 private:
+    // Deleted because we have unique_ptrs
+    LobbyState(const LobbyState& rhs) = delete;
+    LobbyState& operator=(const LobbyState& rhs) = delete;
+
     void RenderSelection();
     void InitTextures();
     void ShowLoadingScreen();
 
-    SpriteRenderer* m_spriteRenderer;
+    std::unique_ptr<SpriteRenderer> m_spriteRenderer;
 
     // stuff below is for optimization later
-    Texture* m_bg = nullptr;
-    Texture* m_startButton = nullptr;
+    std::unique_ptr<Texture> m_bg;
+    std::unique_ptr<Texture> m_startButton;
 
-    Texture* m_tableT1 = nullptr;
-    Texture* m_tableT2 = nullptr;
+    std::unique_ptr<Texture> m_tableT1;
+    std::unique_ptr<Texture> m_tableT2;
 
-    Texture* m_join = nullptr;
-    Texture* m_joinDisabled = nullptr;
+    std::unique_ptr<Texture> m_join;
+    std::unique_ptr<Texture> m_joinDisabled;
 
-    Texture* m_loadScreen = nullptr;
+    std::unique_ptr<Texture> m_loadScreen;
 
     bool m_initialized = false;
     bool m_loading = false;

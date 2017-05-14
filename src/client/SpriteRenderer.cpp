@@ -19,7 +19,7 @@ SpriteRenderer::~SpriteRenderer()
     glDeleteVertexArrays(1, &m_quadVAO);
 }
 
-void SpriteRenderer::DrawSprite(Texture& texture,
+void SpriteRenderer::DrawSprite(Texture* texture,
                                 glm::vec2 position,
                                 glm::vec2 size,
                                 GLfloat rotate,
@@ -27,9 +27,6 @@ void SpriteRenderer::DrawSprite(Texture& texture,
 {
     if (!m_initialized)
     {
-        // shader = new Shader("src/Graphics/Shaders/sprite.vert",
-        // "src/Graphics/Shaders/sprite.frag");  selectionShader = new
-        // Shader("src/Graphics/Shaders/selection.vert", "src/Graphics/Shaders/selection.frag");
         m_shader = ShaderManager::GetShader("Sprite");
         m_selectionShader = ShaderManager::GetShader("Selection");
 
@@ -72,7 +69,7 @@ void SpriteRenderer::DrawSprite(Texture& texture,
     glUniformMatrix4fv(projection_loc, 1, false, glm::value_ptr(projection));
 
     // glActiveTexture(GL_TEXTURE0);
-    texture.Bind(GL_TEXTURE0);
+    texture->Bind(GL_TEXTURE0);
 
     glBindVertexArray(m_quadVAO);
     glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -80,7 +77,7 @@ void SpriteRenderer::DrawSprite(Texture& texture,
 }
 
 void SpriteRenderer::RenderSelection(int selection_code,
-                                     Texture& texture,
+                                     Texture* texture,
                                      glm::vec2 position,
                                      glm::vec2 size,
                                      GLfloat rotate)
@@ -121,7 +118,7 @@ void SpriteRenderer::RenderSelection(int selection_code,
     GLint code_loc = m_selectionShader->GetUniform("code");
     glUniform1i(code_loc, selection_code);
 
-    texture.Bind(GL_TEXTURE0);
+    texture->Bind(GL_TEXTURE0);
 
     glBindVertexArray(m_quadVAO);
     glDrawArrays(GL_TRIANGLES, 0, 6);

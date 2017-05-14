@@ -10,8 +10,6 @@
 class LoadState : public CGameState
 {
 public:
-    ~LoadState();
-
     void Draw();
     void EnterState();
 
@@ -23,14 +21,16 @@ protected:
     LoadState(CStateManager* manager);
 
 private:
+    LoadState(const LoadState& rhs) = delete;
+    LoadState& operator=(const LoadState& rhs) = delete;
     void InitTextures();
 
-    SpriteRenderer* m_spriteRenderer = nullptr;
+    std::unique_ptr<SpriteRenderer> m_spriteRenderer;
 
-    Texture* m_bg = nullptr;
-    Texture* m_chickenLeft = nullptr;
-    Texture* m_chickenRight = nullptr;
-    Texture* m_dot = nullptr;
+    std::unique_ptr<Texture> m_bg;
+    std::unique_ptr<Texture> m_chickenLeft;
+    std::unique_ptr<Texture> m_chickenRight;
+    std::unique_ptr<Texture> m_dot;
 
     bool m_initialized = false;
 };
