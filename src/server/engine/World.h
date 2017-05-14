@@ -60,8 +60,8 @@ public:
     btDiscreteDynamicsWorld* GetPhysicsWorld();
 
     // Updates Physics world by one tick
-    void UpdateWorld();
+    void Update();
 
     // Finds and Removes flag from world list of flags
-    void removeFlag(Flag* collectedFlag);
+    void RemoveFlag(Flag* collectedFlag);
 };

@@ -5,7 +5,7 @@
 
 Engine::Engine()
 {
-    m_world = new World();
+    m_world = std::make_unique<World>();
 }
 
 Engine::~Engine()

@@ -169,7 +169,7 @@ void World::PreSpawn()
     ServerGame::Instance()->SendReadyToSpawnPacket();
 }
 
-void World::UpdateWorld()
+void World::Update()
 {
     // Step simulation
     m_curWorld->stepSimulation(1 / 60.f, 4); // 60
@@ -659,7 +659,7 @@ void World::UpdateWorld()
     m_worldTick++;
 }
 
-void World::removeFlag(Flag* collectedFlag)
+void World::RemoveFlag(Flag* collectedFlag)
 {
     for (auto it = m_flags.begin(); it != m_flags.end(); ++it)
     {

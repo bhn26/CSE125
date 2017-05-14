@@ -98,7 +98,7 @@ void ServerGame::Update()
 
         if (m_eggsSpawned)
         {
-            m_engine->GetWorld()->UpdateWorld();
+            m_engine->GetWorld()->Update();
         }
 
         auto t2 = std::chrono::steady_clock::now();
