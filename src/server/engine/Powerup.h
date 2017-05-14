@@ -1,16 +1,16 @@
 #pragma once
-#include "../../network/GameData.h"
+#include "network/GameData.h"
 
 class Player;
 
-class Powerup   // powerup base class
+class PowerUp // powerup base class
 {
-	protected:
-		PowerupType type;
+protected:
+    PowerUpType m_type;
 
-	public:
-		PowerupType getType() { return type; }
-		void setType(PowerupType type) { this->type = type; }
-		virtual void applyPower(Player* p) {}; // applies the powerup to the player
-		virtual void removePower(Player* p) {};
+public:
+    PowerUpType GetType() { return m_type; }
+    void SetType(PowerUpType type) { m_type = type; }
+    virtual void ApplyPower(Player*){} // applies the powerup to the player
+    virtual void RemovePower(Player*){}
 };

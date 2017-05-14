@@ -1,47 +1,53 @@
 #include "Bullet.h"
 #include "EntitySpawner.h"
 
-Bullet::Bullet(unsigned int objectid, int playerid, int teamid, int damage, BulletCollisionHandler* handler, btRigidBody* bullet_body, btDiscreteDynamicsWorld* physicsWorld) : Entity(ClassId::BULLET, objectid, physicsWorld)
+Bullet::Bullet(unsigned int objectid,
+               int playerid,
+               int teamid,
+               int damage,
+               BulletCollisionHandler* handler,
+               btRigidBody* bullet_body,
+               btDiscreteDynamicsWorld* physicsWorld)
+    : Entity(ClassId::Bullet, objectid, physicsWorld)
+    , m_collisionHandler(handler)
+    , m_playerId(playerid)
+    , m_teamId(teamid)
+    , m_damage(damage)
 {
-	physicsWorld->addRigidBody(bullet_body);
+    physicsWorld->addRigidBody(bullet_body);
 
-	// Set Bullet's protected fields
-	this->c_handler = handler;
-	this->playerId = playerid;
-	this->teamId = teamid;
-	this->damage = damage;
-	this->entityRigidBody = bullet_body;
+    m_entityRigidBody = bullet_body;
 
-	bullet_body->setUserPointer(this);
-	bullet_body->setUserIndex(BULLET);
+    bullet_body->setUserPointer(this);
+    bullet_body->setUserIndex(static_cast<int>(ClassId::Bullet));
 }
 
 Bullet::~Bullet()
 {
-	this->curWorld->removeCollisionObject(entityRigidBody);
-	delete entityRigidBody->getMotionState();
-	delete entityRigidBody->getCollisionShape();
-	delete entityRigidBody;
-	delete c_handler;
-	EntitySpawner::instance()->RemoveEntity(ClassId::BULLET, objectId);
+    m_curWorld->removeCollisionObject(m_entityRigidBody);
+    delete m_entityRigidBody->getMotionState();
+    delete m_entityRigidBody->getCollisionShape();
+    delete m_entityRigidBody;
+    delete m_collisionHandler;
+    EntitySpawner::Instance()->RemoveEntity(ClassId::Bullet, m_objectId);
 }
 
 btVector3 Bullet::GetBulletPosition()
 {
-	return (this->entityRigidBody)->getCenterOfMassPosition();
+    return (m_entityRigidBody)->getCenterOfMassPosition();
 }
 
 int Bullet::GetPlayerId()
 {
-	return this->playerId;
+    return m_playerId;
 }
 
 int Bullet::GetTeamId()
 {
-	return this->teamId;
+    return m_teamId;
 }
 
 int Bullet::GetDamage()
 {
-	return this->damage;
+    return m_damage;
 }

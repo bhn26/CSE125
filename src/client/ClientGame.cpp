@@ -24,20 +24,20 @@
 #include "Graphics/ModelManager.h"
 #include "Audio/SoundBufferManager.h"
 
-const std::string ClientGame::EVENT_QUIT = "Quit";
-const std::string ClientGame::EVENT_JUMP = "Jump";
-const std::string ClientGame::EVENT_WEAPON_ATTACK = "Weapon_Attack";
-const std::string ClientGame::EVENT_PECK_ATTACK = "Peck_Attack";
-const std::string ClientGame::EVENT_DISCARD_WEAPON = "Discard_Weapon";
-const std::string ClientGame::EVENT_START = "Start";
-const std::string ClientGame::EVENT_MOVE_FORWARD = "Move_Forward";
-const std::string ClientGame::EVENT_MOVE_BACKWARD = "Move_Backward";
-const std::string ClientGame::EVENT_MOVE_LEFT = "Move_Left";
-const std::string ClientGame::EVENT_MOVE_RIGHT = "Move_Right";
-const std::string ClientGame::EVENT_SCOREBOARD = "Scoreboard";
-const std::string ClientGame::EVENT_TAUNT_DANCE = "Taunt_Dance";
-const std::string ClientGame::EVENT_TAUNT_DEATH = "Taunt_Death";
-const std::string ClientGame::EVENT_TAUNT_PECK = "Taunt_Peck";
+const std::string ClientGame::EventQuit = "Quit";
+const std::string ClientGame::EventJump = "Jump";
+const std::string ClientGame::EventWeaponAttack = "Weapon_Attack";
+const std::string ClientGame::EventPeckAttack = "Peck_Attack";
+const std::string ClientGame::EventDiscardWeapon = "Discard_Weapon";
+const std::string ClientGame::EventStart = "Start";
+const std::string ClientGame::EventMoveForward = "Move_Forward";
+const std::string ClientGame::EventMoveBackward = "Move_Backward";
+const std::string ClientGame::EventMoveLeft = "Move_Left";
+const std::string ClientGame::EventMoveRight = "Move_Right";
+const std::string ClientGame::EventScoreboard = "Scoreboard";
+const std::string ClientGame::EventTauntDance = "Taunt_Dance";
+const std::string ClientGame::EventTauntDeath = "Taunt_Death";
+const std::string ClientGame::EventTauntPeck = "Taunt_Peck";
 
 ////////////////////////////////////////////////////////////////////////////////
 int ClientGame::PlaySound(const std::string& soundName, SoundsHandler::SoundOptions options)
@@ -63,8 +63,8 @@ void ClientGame::PlayMenuSound()
     {
         // loop and set to origin
         SoundsHandler::SoundOptions options;
-        options._loops = true;
-        options._isRelativeToListener = true;
+        options.m_loops = true;
+        options.m_isRelativeToListener = true;
         m_menuSound = m_soundsHandler.Play(*soundBuffer, options);
     }
 }
@@ -83,17 +83,16 @@ void ClientGame::StopMenuSound()
 ClientGame::ClientGame(void) : m_soundsHandler()
 {
 #ifdef _WIN32
-    network = new ClientNetwork();
+    m_network = new ClientNetwork();
 
-    start_sent = false;
+    m_startSent = false;
 
-	sendInitPacket();
-	//sendStartPacket(); // temp - will add start button
+    SendInitPacket();
+    // sendStartPacket(); // temp - will add start button
 
-	Initialize();
-    
+    Initialize();
+
 #endif
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -106,649 +105,697 @@ ClientGame::~ClientGame(void)
 
 ////////////////////////////////////////////////////////////////////////////////
 // Do we want to create a new world every time we get a new init packet
-void ClientGame::receiveInitPacket(int offset)
+void ClientGame::ReceiveInitPacket(int offset)
 {
-    
-    struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset]);
+    PacketHeader* hdr = reinterpret_cast<PacketHeader*>(&(m_networkData[offset]));
 
     // Find out what our client id is from the init packet of the server
-    client_id = hdr->receiver_id;
+    m_clientId = hdr->m_receiver;
 
-	printf("set client id to %d\n", client_id);
+    printf("set client id to %d\n", m_clientId);
 
-	//Initialize();
+    // Initialize();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ClientGame::sendInitPacket() {
-	const unsigned int packet_size = sizeof(Packet);
-	char packet_data[packet_size];
-
-	Packet packet;
-	// no client id yet
-	packet.hdr.receiver_id = SERVER_ID;
-	packet.hdr.packet_type = INIT_CONNECTION;
-
-	packet.serialize(packet_data);
-
-	NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ClientGame::receiveJoinPacket(int offset) {
-	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
-	struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
-
-	// set our team if it's for us
-	if (pi->id == client_id) {
-		client_team = pi->team_id;
-		printf("setting client team to %d for player %d\n", client_team, client_id);
-	}
-
-	printf("receiveJoinPacket for player %d on team %d\n", pi->id, pi->team_id);
-	int player = pi->id;
-	int team = pi->team_id;
-	
-	if (team == 0) {
-		team0.erase(std::remove(team0.begin(), team0.end(), player), team0.end()); // erase from both lists
-		team1.erase(std::remove(team1.begin(), team1.end(), player), team1.end());
-
-		team0.push_back(player);
-	} else {
-		team0.erase(std::remove(team0.begin(), team0.end(), player), team0.end());
-		team1.erase(std::remove(team1.begin(), team1.end(), player), team1.end());
-
-		team1.push_back(player);
-	}
-};
-
-////////////////////////////////////////////////////////////////////////////////
-void ClientGame::sendJoinPacket(int team) {
-	const unsigned int packet_size = sizeof(Packet);
-	char packet_data[packet_size];
-
-	Packet packet;
-
-	packet.hdr.sender_id = client_id;
-	packet.hdr.receiver_id = SERVER_ID;
-	packet.hdr.packet_type = JOIN_TEAM;
-
-	PosInfo pi;
-	pi.id = client_id;
-	pi.team_id = team;
-	pi.serialize(packet.dat.buf);
-
-	packet.serialize(packet_data);
-	NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
-};
-
-////////////////////////////////////////////////////////////////////////////////
-void ClientGame::sendReadyPacket()
+void ClientGame::SendInitPacket()
 {
-	const unsigned int packet_size = sizeof(Packet);
-	char packet_data[packet_size];
+    const unsigned int packetSize = sizeof(Packet);
+    std::uint8_t packetData[packetSize];
 
-	Packet packet;
+    Packet packet;
+    // no client id yet
+    packet.m_header.m_receiver = SERVER_ID;
+    packet.m_header.packet_type = static_cast<int>(PacketTypes::InitConnection);
 
-	packet.hdr.packet_type = READY_GAME;
-	packet.hdr.sender_id = client_id;
+    packet.Serialize(packetData);
+
+    NetworkServices::Send(m_network->m_connectSocket, packetData, packetSize);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ClientGame::ReceiveJoinPacket(int offset)
+{
+    PacketData* dat = reinterpret_cast<PacketData*>(&m_networkData[offset]);
+    PosInfo* pi = reinterpret_cast<PosInfo*>(&dat->m_buffer);
+
+    // set our team if it's for us
+    if (pi->id == m_clientId)
+    {
+        m_clientTeam = pi->team_id;
+        printf("setting client team to %d for player %d\n", m_clientTeam, m_clientId);
+    }
+
+    printf("receiveJoinPacket for player %d on team %d\n", pi->id, pi->team_id);
+    int player = pi->id;
+    int team = pi->team_id;
+
+    if (team == 0)
+    {
+        m_team0.erase(std::remove(m_team0.begin(), m_team0.end(), player),
+                      m_team0.end()); // erase from both lists
+        m_team1.erase(std::remove(m_team1.begin(), m_team1.end(), player), m_team1.end());
+
+        m_team0.push_back(player);
+    }
+    else
+    {
+        m_team0.erase(std::remove(m_team0.begin(), m_team0.end(), player), m_team0.end());
+        m_team1.erase(std::remove(m_team1.begin(), m_team1.end(), player), m_team1.end());
+
+        m_team1.push_back(player);
+    }
+};
+
+////////////////////////////////////////////////////////////////////////////////
+void ClientGame::SendJoinPacket(int team)
+{
+    const unsigned int packetSize = sizeof(Packet);
+    std::uint8_t packetData[packetSize];
+
+    Packet packet;
+
+    packet.m_header.m_sender = m_clientId;
+    packet.m_header.m_receiver = SERVER_ID;
+    packet.m_header.packet_type = static_cast<int>(PacketTypes::JoinTeam);
+
+    PosInfo pi;
+    pi.id = m_clientId;
+    pi.team_id = team;
+    pi.Serialize(packet.m_data.m_buffer);
+
+    packet.Serialize(packetData);
+    NetworkServices::Send(m_network->m_connectSocket, packetData, packetSize);
+};
+
+////////////////////////////////////////////////////////////////////////////////
+void ClientGame::SendReadyPacket()
+{
+    const unsigned int packetSize = sizeof(Packet);
+    std::uint8_t packetData[packetSize];
+
+    Packet packet;
+
+    packet.m_header.packet_type = static_cast<int>(PacketTypes::ReadyGame);
+    packet.m_header.m_sender = m_clientId;
 
     printf("sending a ready packet\n");
 
-	packet.serialize(packet_data);
+    packet.Serialize(packetData);
 
-	NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
+    NetworkServices::Send(m_network->m_connectSocket, packetData, packetSize);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ClientGame::receiveStartPacket(int offset) {
-	struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset]);
-    struct PacketData* dat = (struct PacketData *) &(network_data[offset + sizeof(PacketHeader)]);
-    
-	struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
-	printf("received start packet for %d players\n", pi->id);
+void ClientGame::ReceiveStartPacket(int offset)
+{
+    PacketHeader* hdr = reinterpret_cast<PacketHeader*>(&(m_networkData[offset]));
+    PacketData* dat =
+        reinterpret_cast<PacketData*>(&(m_networkData[offset + sizeof(PacketHeader)]));
 
-	Window::m_pStateManager->ChangeState(CPlayState::GetInstance(Window::m_pStateManager)); // start game
+    PosInfo* pi = reinterpret_cast<PosInfo*>(&(dat->m_buffer));
+    printf("received start packet for %d players\n", pi->id);
 
-	game_started = true;
-	total_eggs = (team0.size() + team1.size()) * 2 + 1;
-	sendReadyPacket();
+    Window::m_pStateManager->ChangeState(
+        CPlayState::GetInstance(Window::m_pStateManager)); // start game
+
+    m_gameStarted = true;
+    m_totalEggs = (m_team0.size() + m_team1.size()) * 2 + 1;
+    SendReadyPacket();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ClientGame::sendStartPacket() {
-    if (start_sent)
+void ClientGame::SendStartPacket()
+{
+    if (m_startSent)
         return;
 
-	const unsigned int packet_size = sizeof(Packet);
-	char packet_data[packet_size];
+    const unsigned int packetSize = sizeof(Packet);
+    std::uint8_t packetData[packetSize];
 
-	Packet packet;
-	packet.hdr.sender_id = client_id;
-	packet.hdr.receiver_id = SERVER_ID;
-	packet.hdr.packet_type = START_GAME;
+    Packet packet;
+    packet.m_header.m_sender = m_clientId;
+    packet.m_header.m_receiver = SERVER_ID;
+    packet.m_header.packet_type = static_cast<int>(PacketTypes::StartGame);
 
-	packet.serialize(packet_data);
+    packet.Serialize(packetData);
 
-    start_sent = true;
-	NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
+    m_startSent = true;
+    NetworkServices::Send(m_network->m_connectSocket, packetData, packetSize);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // sendIndSpawnPacket
-void ClientGame::receiveReadyToSpawnPacket(int offset)
+void ClientGame::ReceiveReadyToSpawnPacket(int offset)
 {
-	const unsigned int packet_size = sizeof(Packet);
-	char packet_data[packet_size];
+    const unsigned int packetSize = sizeof(Packet);
+    std::uint8_t packetData[packetSize];
 
-	Packet packet;
-	packet.hdr.packet_type = IND_SPAWN_EVENT;
-	packet.hdr.sender_id = client_id;
-	packet.hdr.receiver_id = SERVER_ID;
+    Packet packet;
+    packet.m_header.packet_type = static_cast<int>(PacketTypes::IndSpawnEvent);
+    packet.m_header.m_sender = m_clientId;
+    packet.m_header.m_receiver = SERVER_ID;
 
-	PosInfo pi;
-	pi.id = client_id;
-	pi.team_id = client_team;
-	printf("send IndSpawn Packet for player %d on team %d\n", client_id, pi.team_id);
-	pi.skin = rand() % 3;
+    PosInfo pi;
+    pi.id = m_clientId;
+    pi.team_id = m_clientTeam;
+    printf("send IndSpawn Packet for player %d on team %d\n", m_clientId, pi.team_id);
+    pi.skin = rand() % 3;
 
-	pi.serialize(packet.dat.buf);
+    pi.Serialize(packet.m_data.m_buffer);
 
-	packet.serialize(packet_data);
-	NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
+    packet.Serialize(packetData);
+    NetworkServices::Send(m_network->m_connectSocket, packetData, packetSize);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ClientGame::receiveSpawnPacket(int offset)
+void ClientGame::ReceiveSpawnPacket(int offset)
 {
-    struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
-    struct PosInfo* p = (struct PosInfo *) (dat->buf);
+    PacketData* dat = reinterpret_cast<PacketData*>(&m_networkData[offset]);
+    PosInfo* p = reinterpret_cast<PosInfo*>(dat->m_buffer);
 
-	// spawn the thing
-	Scene::Instance()->AddEntity((*p));
+    // spawn the thing
+    Scene::Instance()->AddEntity((*p));
 
-	if (!iSpawned && p->oid == client_id)
-	{
-		iSpawned = true;
-	}
+    if (!m_iSpawned && p->oid == m_clientId)
+    {
+        m_iSpawned = true;
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ClientGame::SetName(std::string name)
 {
-	if (name == "Enter your name" || name == "")
-	{
-		std::string def;
-		def += "Player ";
-		def += std::to_string(client_id);
-		name_map[client_id] = def;
-	}
-	else
-		name_map[client_id] = name;
+    if (name == "Enter your name" || name == "")
+    {
+        std::string def;
+        def += "Player ";
+        def += std::to_string(m_clientId);
+        m_nameMap[m_clientId] = def;
+    }
+    else
+        m_nameMap[m_clientId] = name;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ClientGame::receiveRemovePacket(int offset)
+void ClientGame::ReceiveRemovePacket(int offset)
 {
-	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
-	struct RemInfo* r = (struct RemInfo *) &(dat->buf);
+    PacketData* dat = reinterpret_cast<PacketData*>(&m_networkData[offset]);
+    RemInfo* r = reinterpret_cast<RemInfo*>(&dat->m_buffer);
 
-	Scene::Instance()->RemoveEntity(r->rem_cid, r->rem_oid);
+    Scene::Instance()->RemoveEntity(r->rem_cid, r->rem_oid);
 
-	// if it's a flag, then a player should've removed it
-	if (r->rem_cid == ClassId::FLAG)
-	{
-		// change the player's score based on that flag
-		if (r->rec_cid == ClassId::PLAYER)
-		{
-			incScore(((Player *)(Scene::Instance()->GetEntity(ClassId::PLAYER, r->rec_oid).get()))->GetTeam(), 1);
-		}
-        glm::vec3 position = ((Player *)(Scene::Instance()->GetEntity(ClassId::PLAYER, r->rec_oid).get()))->Position();
-        SoundsHandler::SoundOptions options(position.x, position.y, position.z);     // Play at own position
+    // if it's a flag, then a player should've removed it
+    if (r->rem_cid == ClassId::Flag)
+    {
+        // change the player's score based on that flag
+        if (r->rec_cid == ClassId::Player)
+        {
+            IncScore(((Player*)(Scene::Instance()->GetEntity(ClassId::Player, r->rec_oid).get()))
+                         ->GetTeam(),
+                     1);
+        }
+        glm::vec3 position =
+            ((Player*)(Scene::Instance()->GetEntity(ClassId::Player, r->rec_oid).get()))
+                ->Position();
+        SoundsHandler::SoundOptions options(
+            position.x, position.y, position.z); // Play at own position
         PlaySound("Collect_Egg", options);
     }
-	if (r->rem_cid == ClassId::COLLECTABLE && r->sub_id == CollectType::WEAPONCOLLECT)      // If Weapon/collectable
-	{
+    if (r->rem_cid == ClassId::Collectable
+        && static_cast<CollectType>(r->sub_id) == CollectType::Weapon) // If Weapon/collectable
+    {
         // Tell the client you got a weapon!
-		if (client_id == r->rec_oid)
-		{
-			if(Scene::Instance()->GetPlayer()->GetWeapon() == -1)
-				Scene::Instance()->GetPlayer()->SetWeapon(r->sub_id2);
-		}
+        if (m_clientId == r->rec_oid)
+        {
+            if (Scene::Instance()->GetPlayer()->GetWeapon() == -1)
+                Scene::Instance()->GetPlayer()->SetWeapon(r->sub_id2);
+        }
         // make sound regardless of who it is
-        glm::vec3 position = ((Player *)(Scene::Instance()->GetEntity(ClassId::PLAYER, r->rec_oid).get()))->Position();
-        SoundsHandler::SoundOptions options(position.x, position.y, position.z);     // Play at own position
+        glm::vec3 position =
+            ((Player*)(Scene::Instance()->GetEntity(ClassId::Player, r->rec_oid).get()))
+                ->Position();
+        SoundsHandler::SoundOptions options(
+            position.x, position.y, position.z); // Play at own position
         PlaySound("Collect_Weapon", options);
-	}
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ClientGame::receiveMovePacket(int offset)
+void ClientGame::ReceiveMovePacket(int offset)
 {
+    PacketData* dat = reinterpret_cast<PacketData*>(&m_networkData[offset]);
+    PosInfo* pi = reinterpret_cast<PosInfo*>(&dat->m_buffer);
 
-    struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
-    struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
+    // if(pi->oid == 0)
+    // printf("received move packet for obj id %d. Its coordinates are: %f, %f, %f\n", pi->oid,
+    // pi->x, pi->y, pi->z);
 
-	//if(pi->oid == 0)
-		//printf("received move packet for obj id %d. Its coordinates are: %f, %f, %f\n", pi->oid, pi->x, pi->y, pi->z);
+    Scene::Instance()->GetEntity(pi->cid, pi->oid)->MoveTo(pi->x, pi->y, pi->z);
 
-	Scene::Instance()->GetEntity(pi->cid, pi->oid)->MoveTo(pi->x, pi->y, pi->z);
+    // check the jump animation
+    if (pi->cid == ClassId::Player)
+    {
+        Scene::Instance()->GetEntity(pi->cid, pi->oid)->SetScore(pi->num_eggs);
+        if (pi->jump == 0 || pi->jump == 1)
+            ((Player*)(Scene::Instance()->GetEntity(pi->cid, pi->oid).get()))->Jump();
+    }
 
-	// check the jump animation
-	if (pi->cid == ClassId::PLAYER)
-	{
-		Scene::Instance()->GetEntity(pi->cid, pi->oid)->SetScore(pi->num_eggs);
-		if(pi->jump == 0 || pi->jump == 1)
-			((Player *)(Scene::Instance()->GetEntity(pi->cid, pi->oid).get()))->Jump();
-	}
-
-	// update hp
-	((Player *)(Scene::Instance()->GetEntity(pi->cid, pi->oid).get()))->SetHealth(pi->hp);
+    // update hp
+    ((Player*)(Scene::Instance()->GetEntity(pi->cid, pi->oid).get()))->SetHealth(pi->hp);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // Need to know what direction to move in
-void ClientGame::sendMovePacket(int direction)
+void ClientGame::SendMovePacket(MoveType direction)
 {
-    const unsigned int packet_size = sizeof(Packet);
-    char packet_data[packet_size];
+    const unsigned int packetSize = sizeof(Packet);
+    std::uint8_t packetData[packetSize];
 
     Packet packet;
-    packet.hdr.packet_type = MOVE_EVENT;
-    packet.hdr.sender_id = client_id;
-    packet.hdr.receiver_id = SERVER_ID;
+    packet.m_header.packet_type = static_cast<int>(PacketTypes::MoveEvent);
+    packet.m_header.m_sender = m_clientId;
+    packet.m_header.m_receiver = SERVER_ID;
 
     PosInfo pi;
-    pi.direction = direction;
-	glm::quat rot = Scene::Instance()->GetPlayer()->Orientation();
-	pi.rotw = rot.w;
-	pi.rotx = rot.x;
-	pi.roty = rot.y;
-	pi.rotz = rot.z;
-    pi.serialize(packet.dat.buf);
+    pi.direction = static_cast<int>(direction);
+    glm::quat rot = Scene::Instance()->GetPlayer()->Orientation();
+    pi.rotw = rot.w;
+    pi.rotx = rot.x;
+    pi.roty = rot.y;
+    pi.rotz = rot.z;
+    pi.Serialize(packet.m_data.m_buffer);
 
-    packet.serialize(packet_data);
-    NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
+    packet.Serialize(packetData);
+    NetworkServices::Send(m_network->m_connectSocket, packetData, packetSize);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ClientGame::receiveRotationPacket(int offset) {
-    struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
-    struct PosInfo* pi = (struct PosInfo *) &(dat->buf);
+void ClientGame::ReceiveRotationPacket(int offset)
+{
+    PacketData* dat = reinterpret_cast<PacketData*>(&m_networkData[offset]);
+    PosInfo* pi = reinterpret_cast<PosInfo*>(&dat->m_buffer);
 
-	//printf("received a rotation packet with: %f, %f, %f, %f\n", pi->rotw, pi->rotx, pi->roty, pi->rotz);
+    // printf("received a rotation packet with: %f, %f, %f, %f\n", pi->rotw, pi->rotx, pi->roty,
+    // pi->rotz);
 
-	//std::shared_ptr<Player> target = FindTarget(pi->id);
-	//server don't tell us how we rotate
-	if (pi->oid != client_id) {
-		Scene::Instance()->GetEntity(pi->cid, pi->oid)->RotateTo(pi->rotw, pi->rotx, pi->roty, pi->rotz);
-		glm::quat quat = Scene::Instance()->GetEntity(pi->cid, pi->oid)->Orientation();
-	}
-	
-	// Rotate it if it's not a player
-	if (pi->cid != ClassId::PLAYER)
-	{
-		Scene::Instance()->GetEntity(pi->cid, pi->oid)->RotateTo(pi->rotw, pi->rotx, pi->roty, pi->rotz);
-	}
+    // std::shared_ptr<Player> target = FindTarget(pi->id);
+    // server don't tell us how we rotate
+    if (pi->oid != m_clientId)
+    {
+        Scene::Instance()
+            ->GetEntity(pi->cid, pi->oid)
+            ->RotateTo(pi->rotw, pi->rotx, pi->roty, pi->rotz);
+        glm::quat quat = Scene::Instance()->GetEntity(pi->cid, pi->oid)->Orientation();
+    }
 
+    // Rotate it if it's not a player
+    if (pi->cid != ClassId::Player)
+    {
+        Scene::Instance()
+            ->GetEntity(pi->cid, pi->oid)
+            ->RotateTo(pi->rotw, pi->rotx, pi->roty, pi->rotz);
+    }
 
+    // left/right rotation
+    /*glm::mat4 newToWorld = target->GetToWorld() * glm::rotate(glm::mat4(1.0f), pi->v_rotation,
+    glm::vec3(0.0f, 1.0f, 0.0f));
+    target->SetToWorld(newToWorld);
 
-	// left/right rotation
-	/*glm::mat4 newToWorld = target->GetToWorld() * glm::rotate(glm::mat4(1.0f), pi->v_rotation, glm::vec3(0.0f, 1.0f, 0.0f));
-	target->SetToWorld(newToWorld);
-
-	// up/down rotation
-	float newAngle = target->GetCamAngle() + pi->h_rotation;
-	const static float pi2 = glm::pi<float>() / 2;
-	target->SetCamAngle((newAngle > pi2) ? pi2 : ((newAngle < -pi2) ? -pi2 : newAngle));*/
-
+    // up/down rotation
+    float newAngle = target->GetCamAngle() + pi->h_rotation;
+    const static float pi2 = glm::pi<float>() / 2;
+    target->SetCamAngle((newAngle > pi2) ? pi2 : ((newAngle < -pi2) ? -pi2 : newAngle));*/
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ClientGame::sendRotationPacket() {
-    const unsigned int packet_size = sizeof(Packet);
-    char packet_data[packet_size];
+void ClientGame::SendRotationPacket()
+{
+    const unsigned int packetSize = sizeof(Packet);
+    std::uint8_t packetData[packetSize];
 
     Packet packet;
-    packet.hdr.packet_type = V_ROTATION_EVENT;
-    packet.hdr.sender_id = client_id;
-    packet.hdr.receiver_id = SERVER_ID;
+    packet.m_header.packet_type = static_cast<int>(PacketTypes::VRotationEvent);
+    packet.m_header.m_sender = m_clientId;
+    packet.m_header.m_receiver = SERVER_ID;
 
-	// send the rotation of the main player
+    // send the rotation of the main player
     PosInfo pi;
-	glm::quat rot = Scene::Instance()->GetPlayer()->Orientation();
-	pi.rotw = rot.w;
-	pi.rotx = rot.x;
-	pi.roty = rot.y;
-	pi.rotz = rot.z;
+    glm::quat rot = Scene::Instance()->GetPlayer()->Orientation();
+    pi.rotw = rot.w;
+    pi.rotx = rot.x;
+    pi.roty = rot.y;
+    pi.rotz = rot.z;
 
-	//pi.h_rotation = h_rot;
-    pi.serialize(packet.dat.buf);
+    // pi.h_rotation = h_rot;
+    pi.Serialize(packet.m_data.m_buffer);
 
-    packet.serialize(packet_data);
+    packet.Serialize(packetData);
 
-    NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
+    NetworkServices::Send(m_network->m_connectSocket, packetData, packetSize);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ClientGame::sendJumpPacket()
+void ClientGame::SendJumpPacket()
 {
-    const unsigned int packet_size = sizeof(Packet);
-    char packet_data[packet_size];
+    const unsigned int packetSize = sizeof(Packet);
+    std::uint8_t packetData[packetSize];
 
     Packet packet;
-    packet.hdr.packet_type = JUMP_EVENT;
-    packet.hdr.sender_id = client_id;
-    packet.hdr.receiver_id = SERVER_ID;
+    packet.m_header.packet_type = static_cast<int>(PacketTypes::JumpEvent);
+    packet.m_header.m_sender = m_clientId;
+    packet.m_header.m_receiver = SERVER_ID;
 
-    packet.serialize(packet_data);
+    packet.Serialize(packetData);
 
-    NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
+    NetworkServices::Send(m_network->m_connectSocket, packetData, packetSize);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ClientGame::receiveScorePacket(int offset) {
-	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
-	struct ScoreInfo* s = (struct ScoreInfo *) &(dat->buf);
-
-	printf("received a score packet t0: %d   t1: %d\n", s->t0_score, s->t1_score);
-
-	scores[0] = s->t0_score;
-	scores[1] = s->t1_score;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ClientGame::receiveGameOverPacket(int offset) {
-	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
-	struct ScoreInfo* s = (struct ScoreInfo *) &(dat->buf);
-
-	if (s->t0_score == s->t1_score) {
-		winner = -1;
-	}
-	else if (s->t0_score > s->t1_score) { // t0 win
-		winner = 0;
-	}
-	else { // t1 win
-		winner = 1;
-	}
-
-	if (winner == -1)
-		printf("Game was a tie!\n");
-	else
-		printf("Team %d won!\n", winner);
-	// change state to game over screen
-	Window::m_pStateManager->ChangeState(GOState::GetInstance(Window::m_pStateManager));
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ClientGame::receiveTimeStampPacket(int offset)
+void ClientGame::ReceiveScorePacket(int offset)
 {
-	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
-	struct MiscInfo* m = (struct MiscInfo *) &(dat->buf);
-	if (countdown == NULL)
-	{
-		start_time = std::chrono::high_resolution_clock::now();
-		countdown = 300 - m->misc1;
-	}
+    PacketData* dat = reinterpret_cast<PacketData*>(&m_networkData[offset]);
+    ScoreInfo* s = reinterpret_cast<ScoreInfo*>(&dat->m_buffer);
 
-	if(countdown != m->misc1)
-		countdown = 300 - m->misc1;
+    printf("received a score packet t0: %d   t1: %d\n", s->t0_score, s->t1_score);
+
+    m_scores[0] = s->t0_score;
+    m_scores[1] = s->t1_score;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ClientGame::sendAttackPacket(AttackType t) {
-	const unsigned int packet_size = sizeof(Packet);
-	char packet_data[packet_size];
-
-	Packet packet;
-	packet.hdr.packet_type = ATTACK_EVENT;
-	packet.hdr.sender_id = client_id;
-	packet.hdr.receiver_id = SERVER_ID;
-
-	MiscInfo m;
-	m.misc1 = t;
-	m.misc3 = Scene::Instance()->GetPlayer()->GetCamAngle();
-	m.serialize(packet.dat.buf);
-
-	packet.serialize(packet_data);
-
-	NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ClientGame::receiveAttackPacket(int offset)
+void ClientGame::ReceiveGameOverPacket(int offset)
 {
-	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
-	struct EmoteInfo* e = (struct EmoteInfo *) &(dat->buf); // later parse this to miscinfo
-	((Player *)(Scene::Instance()->GetEntity(ClassId::PLAYER, e->id).get()))->Attack();
+    PacketData* dat = reinterpret_cast<PacketData*>(&m_networkData[offset]);
+    ScoreInfo* s = reinterpret_cast<ScoreInfo*>(&dat->m_buffer);
+
+    if (s->t0_score == s->t1_score)
+    {
+        m_winner = -1;
+    }
+    else if (s->t0_score > s->t1_score)
+    { // t0 win
+        m_winner = 0;
+    }
+    else
+    { // t1 win
+        m_winner = 1;
+    }
+
+    if (m_winner == -1)
+        printf("Game was a tie!\n");
+    else
+        printf("Team %d won!\n", m_winner);
+    // change state to game over screen
+    Window::m_pStateManager->ChangeState(GOState::GetInstance(Window::m_pStateManager));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ClientGame::sendDiscardPacket()
+void ClientGame::ReceiveTimeStampPacket(int offset)
 {
-	const unsigned int packet_size = sizeof(Packet);
-	char packet_data[packet_size];
+    PacketData* data = reinterpret_cast<PacketData*>(&m_networkData[offset]);
+    MiscInfo* m = reinterpret_cast<MiscInfo*>(&data->m_buffer);
+    if (!m_countdown)
+    {
+        m_startTime = std::chrono::steady_clock::now();
+        m_countdown = 300 - m->misc1;
+    }
 
-	Packet packet;
-	packet.hdr.packet_type = DISCARD_EVENT;
-	packet.hdr.sender_id = client_id;
-	packet.hdr.receiver_id = SERVER_ID;
-
-	packet.serialize(packet_data);
-
-	NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
+    if (m_countdown != m->misc1)
+    {
+        m_countdown = 300 - m->misc1;
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ClientGame::receiveDiscardPacket(int offset)
+void ClientGame::SendAttackPacket(AttackType t)
 {
-	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
-	struct MiscInfo* m = (struct MiscInfo *) &(dat->buf);
-	if(m->misc1 == client_id)
-		Scene::Instance()->GetPlayer()->SetWeapon(-1);
+    const unsigned int packetSize = sizeof(Packet);
+    std::uint8_t packetData[packetSize];
+
+    Packet packet;
+    packet.m_header.packet_type = static_cast<int>(PacketTypes::AttackEvent);
+    packet.m_header.m_sender = m_clientId;
+    packet.m_header.m_receiver = SERVER_ID;
+
+    MiscInfo m;
+    m.misc1 = static_cast<int>(t);
+    m.misc3 = Scene::Instance()->GetPlayer()->GetCamAngle();
+    m.Serialize(packet.m_data.m_buffer);
+
+    packet.Serialize(packetData);
+
+    NetworkServices::Send(m_network->m_connectSocket, packetData, packetSize);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ClientGame::ReceiveAttackPacket(int offset)
+{
+    PacketData* dat = reinterpret_cast<PacketData*>(&m_networkData[offset]);
+    EmoteInfo* e = reinterpret_cast<EmoteInfo*>(&dat->m_buffer); // later parse this to miscinfo
+    auto player =
+        reinterpret_cast<Player*>(Scene::Instance()->GetEntity(ClassId::Player, e->id).get());
+    player->Attack();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ClientGame::SendDiscardPacket()
+{
+    const unsigned int packetSize = sizeof(Packet);
+    std::uint8_t packetData[packetSize];
+
+    Packet packet;
+    packet.m_header.packet_type = static_cast<int>(PacketTypes::DiscardEvent);
+    packet.m_header.m_sender = m_clientId;
+    packet.m_header.m_receiver = SERVER_ID;
+
+    packet.Serialize(packetData);
+
+    NetworkServices::Send(m_network->m_connectSocket, packetData, packetSize);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ClientGame::ReceiveDiscardPacket(int offset)
+{
+    PacketData* dat = reinterpret_cast<PacketData*>(&(m_networkData[offset]));
+    MiscInfo* m = reinterpret_cast<MiscInfo*>(&dat->m_buffer);
+    if (m->misc1 == m_clientId)
+    {
+        Scene::Instance()->GetPlayer()->SetWeapon(-1);
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //	NOTE: We're going to use the sender id as the guy that's dancing instead of changing
-void ClientGame::receiveDancePacket(int offset)
+void ClientGame::ReceiveDancePacket(int offset)
 {
-	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
-	struct EmoteInfo* e = (struct EmoteInfo *) &(dat->buf);
-	((Player *)(Scene::Instance()->GetEntity(ClassId::PLAYER, e->id).get()))->Dance();
+    PacketData* dat = reinterpret_cast<PacketData*>(&m_networkData[offset]);
+    EmoteInfo* e = reinterpret_cast<EmoteInfo*>(&dat->m_buffer);
+    auto player =
+        reinterpret_cast<Player*>(Scene::Instance()->GetEntity(ClassId::Player, e->id).get());
+    player->Dance();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ClientGame::sendDancePacket()
+void ClientGame::SendDancePacket()
 {
+    const unsigned int packetSize = sizeof(Packet);
+    std::uint8_t packetData[packetSize];
 
-	const unsigned int packet_size = sizeof(Packet);
-	char packet_data[packet_size];
+    Packet packet;
+    packet.m_header.packet_type = static_cast<int>(PacketTypes::DanceEvent);
+    packet.m_header.m_sender = m_clientId;
+    packet.m_header.m_receiver = SERVER_ID;
 
-	Packet packet;
-	packet.hdr.packet_type = DANCE_EVENT;
-	packet.hdr.sender_id = client_id;
-	packet.hdr.receiver_id = SERVER_ID;
+    packet.Serialize(packetData);
 
-	packet.serialize(packet_data);
-
-	NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
+    NetworkServices::Send(m_network->m_connectSocket, packetData, packetSize);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ClientGame::receiveDeathPacket(int offset)
+void ClientGame::ReceiveDeathPacket(int offset)
 {
-	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
-	struct EmoteInfo* e = (struct EmoteInfo *) &(dat->buf);
+    PacketData* dat = reinterpret_cast<PacketData*>(&m_networkData[offset]);
+    EmoteInfo* e = reinterpret_cast<EmoteInfo*>(&dat->m_buffer);
 
-	// model
-	((Player *)(Scene::Instance()->GetEntity(ClassId::PLAYER, e->id).get()))->Die();
+    // model
+    auto player =
+        reinterpret_cast<Player*>(Scene::Instance()->GetEntity(ClassId::Player, e->id).get());
+    player->Die();
 
-	// score
-	decScore(((Player *)(Scene::Instance()->GetEntity(ClassId::PLAYER, e->id).get()))->GetTeam(), 
-		((Player *)(Scene::Instance()->GetEntity(ClassId::PLAYER, e->id).get()))->GetScore());
+    // score
+    DecScore(player->GetTeam(), player->GetScore());
 
-	// death overlay
-	if (e->id == client_id) {
-		CPlayState::GetInstance(Window::m_pStateManager)->Die();
-	}
+    // death overlay
+    if (e->id == m_clientId)
+    {
+        CPlayState::GetInstance(Window::m_pStateManager)->Die();
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ClientGame::receiveRespawnPacket(int offset)
+void ClientGame::ReceiveRespawnPacket(int offset)
 {
-	struct PacketData *dat = (struct PacketData *) &(network_data[offset]);
-	struct EmoteInfo* e = (struct EmoteInfo *) &(dat->buf);
-	((Player *)(Scene::Instance()->GetEntity(ClassId::PLAYER, e->id).get()))->SetAlive(true);
+    PacketData* dat = reinterpret_cast<PacketData*>(m_networkData[offset]);
+    EmoteInfo* e = reinterpret_cast<EmoteInfo*>(&dat->m_buffer);
+    auto player =
+        reinterpret_cast<Player*>(Scene::Instance()->GetEntity(ClassId::Player, e->id).get());
+    player->SetAlive(true);
 
-	// update state
-	if (e->id == client_id) {
-		CPlayState::GetInstance(Window::m_pStateManager)->Respawn();
-	}
+    // update state
+    if (e->id == m_clientId)
+    {
+        CPlayState::GetInstance(Window::m_pStateManager)->Respawn();
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ClientGame::sendNamePacket() {
-	const unsigned int packet_size = sizeof(Packet);
-	char packet_data[packet_size];
+void ClientGame::SendNamePacket()
+{
+    const unsigned int packetSize = sizeof(Packet);
+    std::uint8_t packetData[packetSize];
 
-	Packet packet;
-	packet.hdr.packet_type = SET_USERNAME;
-	packet.hdr.sender_id = client_id;
-	packet.hdr.receiver_id = SERVER_ID;
+    Packet packet;
+    packet.m_header.packet_type = static_cast<int>(PacketTypes::SetUsername);
+    packet.m_header.m_sender = m_clientId;
+    packet.m_header.m_receiver = SERVER_ID;
 
-	NameInfo n;
-	n.player_id = client_id;
-	n.name = name_map.at(client_id);
-	n.serialize(packet.dat.buf);
+    NameInfo n;
+    n.player_id = m_clientId;
+    n.name = m_nameMap.at(m_clientId);
+    n.Serialize(packet.m_data.m_buffer);
 
-	packet.serialize(packet_data);
+    packet.Serialize(packetData);
 
-	NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
+    NetworkServices::Send(m_network->m_connectSocket, packetData, packetSize);
 
-	packet.serialize(packet_data);
+    packet.Serialize(packetData);
 
-	NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
+    NetworkServices::Send(m_network->m_connectSocket, packetData, packetSize);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ClientGame::receiveNamePacket(int offset) {
-	struct PacketHeader* hdr = (struct PacketHeader *) &(network_data[offset]);
-	struct PacketData* dat = (struct PacketData *) &(network_data[offset + sizeof(PacketHeader)]);
-	struct NameInfo* n = (struct NameInfo *) &(dat->buf);
+void ClientGame::ReceiveNamePacket(int offset)
+{
+    PacketHeader* hdr = reinterpret_cast<PacketHeader*>(&m_networkData[offset]);
+    PacketData* dat = reinterpret_cast<PacketData*>(&m_networkData[offset + sizeof(PacketHeader)]);
+    NameInfo* n = reinterpret_cast<NameInfo*>(&dat->m_buffer);
 
-	name_map[n->player_id] = n->name;
-	//Player* player = (Player*)Scene::Instance()->GetEntity(ClassId::PLAYER,n->player_id).get();
-	//player->SetName(n->name);
+    m_nameMap[n->player_id] = n->name;
+    // Player* player =
+    // reinterpret_cast<Player*>(Scene::Instance()->GetEntity(ClassId::Player,n->player_id).get());
+    // player->SetName(n->name);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ClientGame::update()
+void ClientGame::Update()
 {
     Packet packet;
-    int data_length = network->receivePackets(network_data);
+    int data_length = m_network->ReceivePackets(m_networkData);
 
-    if (data_length <= 0) 
+    if (data_length <= 0)
     {
-        return;     //no data recieved
+        return; // no data recieved
     }
 
-    int i = 0;
-    while (i < (unsigned int)data_length) 
+    unsigned int i = 0;
+    while (i < (unsigned int)data_length)
     {
-        packet.deserialize(&(network_data[i]));
+        packet.Deserialize(&m_networkData[i]);
 
-        switch (packet.hdr.packet_type) {
+        switch (static_cast<PacketTypes>(packet.m_header.packet_type))
+        {
+        case PacketTypes::InitConnection:
+            // offset for this will be the packet header
+            ReceiveInitPacket(i);
+            break;
 
-            case INIT_CONNECTION:
+        case PacketTypes::SetUsername:
+            ReceiveNamePacket(i);
+            break;
 
-                // offset for this will be the packet header
-                receiveInitPacket(i);
-                break;
+        case PacketTypes::JoinTeam:
+            ReceiveJoinPacket(i + sizeof(PacketHeader));
+            break;
 
-			case SET_USERNAME:
-				receiveNamePacket(i);
-				break;
+        case PacketTypes::StartGame:
+            ReceiveStartPacket(i);
+            break;
 
-			case JOIN_TEAM:
-				receiveJoinPacket(i + sizeof(PacketHeader));
-				break;
+        case PacketTypes::ServerLoading:
+            LobbyState::GetInstance(Window::m_pStateManager)->ServerLoading();
+            break;
 
-			case START_GAME:
-				receiveStartPacket(i);
-				break;
+        case PacketTypes::ReadyToSpawnEvent:
+            ReceiveReadyToSpawnPacket(i);
+            break;
 
-			case SERVER_LOADING:
-				LobbyState::GetInstance(Window::m_pStateManager)->ServerLoading();
-				break;
+        case PacketTypes::SpawnEvent:
+            // You want to offset the packet header
+            ReceiveSpawnPacket(i + sizeof(PacketHeader));
+            break;
 
-			case READY_TO_SPAWN_EVENT:
-				receiveReadyToSpawnPacket(i);
-				break;
+        case PacketTypes::RemoveEvent:
+            ReceiveRemovePacket(i + sizeof(PacketHeader));
+            break;
 
-            case SPAWN_EVENT:
-                // You want to offset the packet header
-                receiveSpawnPacket(i + sizeof(PacketHeader));
-                break;
+        case PacketTypes::DiscardEvent:
+            ReceiveDiscardPacket(i + sizeof(PacketHeader));
+            break;
 
-			case REMOVE_EVENT:
-				receiveRemovePacket(i + sizeof(PacketHeader));
-				break;
+        case PacketTypes::MoveEvent:
+            if (m_gameStarted) // the game needs to start for the client before this can happen
+            {
+                ReceiveMovePacket(i + sizeof(PacketHeader));
+            }
+            break;
 
-			case DISCARD_EVENT:
-				receiveDiscardPacket(i + sizeof(PacketHeader));
-				break;
+        case PacketTypes::TimeEvent:
+            ReceiveTimeStampPacket(i + sizeof(PacketHeader));
+            break;
 
-            case MOVE_EVENT:
-				if(game_started) // the game needs to start for the client before this can happen
-					receiveMovePacket(i + sizeof(PacketHeader));
-                break;
+        case PacketTypes::DanceEvent:
+            ReceiveDancePacket(i + sizeof(PacketHeader));
+            break;
 
-			case TIME_EVENT:
-				receiveTimeStampPacket(i + sizeof(PacketHeader));
-				break;
+        case PacketTypes::DeathEvent:
+            ReceiveDeathPacket(i + sizeof(PacketHeader));
+            break;
 
-			case DANCE_EVENT:
-				receiveDancePacket(i + sizeof(PacketHeader));
-				break;
+        case PacketTypes::RespawnEvent:
+            ReceiveRespawnPacket(i + sizeof(PacketHeader));
+            break;
 
-			case DEATH_EVENT:
-				receiveDeathPacket(i + sizeof(PacketHeader));
-				break;
+        case PacketTypes::VRotationEvent:
+            ReceiveRotationPacket(i + sizeof(PacketHeader));
+            break;
 
-			case RESPAWN_EVENT:
-				receiveRespawnPacket(i + sizeof(PacketHeader));
-				break;
+        case PacketTypes::AttackEvent:
+            ReceiveAttackPacket(i + sizeof(PacketHeader));
+            break;
 
-			case V_ROTATION_EVENT:
-				receiveRotationPacket(i + sizeof(PacketHeader));
-				break;
+        case PacketTypes::UpdateScore:
+            ReceiveScorePacket(i + sizeof(PacketHeader));
+            break;
 
-			case ATTACK_EVENT:
-				receiveAttackPacket(i + sizeof(PacketHeader));
-				break;
+        case PacketTypes::GameOver:
+            ReceiveGameOverPacket(i + sizeof(PacketHeader));
+            break;
 
-			case UPDATE_SCORE:
-				receiveScorePacket(i + sizeof(PacketHeader));
-				break;
-
-			case GAME_OVER:
-				receiveGameOverPacket(i + sizeof(PacketHeader));
-				break;
-
-            default:
-                printf("error in packet types %d\n", packet.hdr.packet_type);
-                break;
+        default:
+            printf("error in packet types %d\n", packet.m_header.packet_type);
+            break;
         }
         i += sizeof(Packet);
     }
 }
-#endif  // ifdef _WIN32
+#endif // ifdef _WIN32
 
 ////////////////////////////////////////////////////////////////////////////////
 void ClientGame::Initialize()
 {
-    // Create the GLFW window
-    window = Window::Create_window(1366, 768);
+    // Create the GLFW m_window
+    m_window = Window::Create_window(1366, 768);
 
     // Print OpenGL and GLSL versions
     Print_versions();
@@ -760,20 +807,20 @@ void ClientGame::Initialize()
     // Initialize the shaders. Must be loaded before Loading screen to show the screen.
     ShaderManager::Instance()->LoadShaders();
 
-	// show loading screen
-	ShowLoadingScreen();
+    // show loading screen
+    ShowLoadingScreen();
 
     ModelManager::Instance()->LoadModels();
     SoundBufferManager::Instance()->LoadSoundBuffers();
     // Initialize objects/pointers for rendering
     Window::Initialize_objects();
 
-	TextRenderer::Initialize();
+    TextRenderer::Initialize();
     Scene::Initialize();
 
-	// go to login menu
-	Window::m_pStateManager->ChangeState(CMenuState::GetInstance(Window::m_pStateManager));
-    sf::Listener::setUpVector(0.0f, 1.0f, 0.0f);        // Initialize the up vector
+    // go to login menu
+    Window::m_pStateManager->ChangeState(CMenuState::GetInstance(Window::m_pStateManager));
+    sf::Listener::setUpVector(0.0f, 1.0f, 0.0f); // Initialize the up vector
     for (int i = 0; i < SoundsHandler::MAX_SOUNDS; i++)
     {
         m_soundsHandler.SetMinDistance(i, ConfigManager::GetAsFloat("Sounds_Min_Distance"));
@@ -783,55 +830,56 @@ void ClientGame::Initialize()
 
     double lastTime = glfwGetTime();
     int nbFrames = 0;
-	srand(time(NULL));
+    srand(static_cast<unsigned int>(time(NULL)));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ClientGame::ShowLoadingScreen() {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glClearColor(0.28f, 0.65f, 0.89f, 1.0f); // reset color
-	SpriteRenderer * sprite_renderer = new SpriteRenderer();
-	Texture * bg = new Texture(GL_TEXTURE_2D, "assets/ui/loading/loading.png");
-	int x = Texture::GetWindowCenter(bg->Width());
-	int y = Window::height / 2 - bg->Height() / 2;
+void ClientGame::ShowLoadingScreen()
+{
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClearColor(0.28f, 0.65f, 0.89f, 1.0f); // reset color
+    SpriteRenderer sprite_renderer = SpriteRenderer();
+    Texture bg = Texture(GL_TEXTURE_2D, "assets/ui/loading/loading.png");
+    int x = Texture::GetWindowCenter(bg.Width());
+    int y = Window::s_height / 2 - bg.Height() / 2;
 
-	sprite_renderer->DrawSprite(*bg, glm::vec2(x, y), glm::vec2(bg->Width(), bg->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+    sprite_renderer.DrawSprite(&bg,
+                                glm::vec2(x, y),
+                                glm::vec2(bg.Width(), bg.Height()),
+                                0.0f,
+                                glm::vec3(1.0f, 1.0f, 1.0f));
 
-	glfwSwapBuffers(window);
-
-	delete sprite_renderer;
-	delete bg;
+    glfwSwapBuffers(m_window);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ClientGame::Destroy()
 {
     Window::Clean_up();
-    // Destroy the window
-    glfwDestroyWindow(window);
+    // Destroy the m_window
+    glfwDestroyWindow(m_window);
     // Terminate GLFW
     glfwTerminate();
 }
 
-
 ////////////////////////////////////////////////////////////////////////////////
 void ClientGame::GameLoop()
 {
-    while (!glfwWindowShouldClose(window))
+    while (!glfwWindowShouldClose(m_window))
     {
 #ifdef _WIN32
-        update();
+        Update();
 #endif
-		auto curr_time = std::chrono::high_resolution_clock::now();
+        auto curr_time = std::chrono::steady_clock::now();
 
-		std::chrono::duration<double, std::milli> fp_stamp = curr_time - start_time;
+        auto fp_stamp = curr_time - m_startTime;
 
-		int diff = fp_stamp.count();
+        int diff = fp_stamp.count();
 
-		diff = diff / 1000;
+        diff = diff / 1000;
 
-		if ((300 - diff) == (countdown-1))
-			countdown = 300 - diff;
+        if ((300 - diff) == (m_countdown - 1))
+            m_countdown = 300 - diff;
 
         // Measure speed
         PrintFrameRate();
@@ -839,18 +887,17 @@ void ClientGame::GameLoop()
         CheckController();
 
         // Main render display callback. Rendering of objects is done here.
-        Window::Display_callback(window);
+        Window::Display_callback(m_window);
         // Idle callback. Updating objects, etc. can be done here.
         Window::Idle_callback();
 
-		if (++tick % 15 == 0 && iSpawned)
-		{
-			ClientGame::instance()->sendRotationPacket();
-			tick = 0;
-		}
+        if (++m_tick % 15 == 0 && m_iSpawned)
+        {
+            ClientGame::Instance()->SendRotationPacket();
+            m_tick = 0;
+        }
     }
 }
-
 
 ////////////////////////////////////////////////////////////////////////////////
 void ClientGame::Error_callback(int error, const char* description)
@@ -862,7 +909,7 @@ void ClientGame::Error_callback(int error, const char* description)
 ////////////////////////////////////////////////////////////////////////////////
 void ClientGame::LoadConfigs()
 {
-    ConfigManager::instance()->LoadConfigs("eggs.cfg");
+    ConfigManager::Instance()->LoadConfigs("eggs.cfg");
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -871,13 +918,13 @@ void ClientGame::Setup_callbacks()
     // Set the error callback
     glfwSetErrorCallback(ClientGame::Error_callback);
     // Set the key callback
-    glfwSetKeyCallback(this->window, Window::Key_callback);
+    glfwSetKeyCallback(this->m_window, Window::Key_callback);
 
-    glfwSetCursorPosCallback(window, Window::Mouse_callback);
-    glfwSetMouseButtonCallback(window, Window::Mouse_button_callback);
-	glfwSetCharCallback(window, Window::Char_callback);
-    // Set the window resize callback
-    glfwSetWindowSizeCallback(window, Window::Resize_callback);
+    glfwSetCursorPosCallback(m_window, Window::Mouse_callback);
+    glfwSetMouseButtonCallback(m_window, Window::Mouse_button_callback);
+    glfwSetCharCallback(m_window, Window::Char_callback);
+    // Set the m_window resize callback
+    glfwSetWindowSizeCallback(m_window, Window::Resize_callback);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -912,10 +959,10 @@ void ClientGame::Setup_opengl_settings()
     // Set clear color
     glClearColor(0.28f, 0.65f, 0.89f, 1.0f);
 
-	// Font Rendering
-	glEnable(GL_CULL_FACE);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    // Font Rendering
+    glEnable(GL_CULL_FACE);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -925,9 +972,9 @@ void ClientGame::Print_versions()
     printf("Renderer: %s\n", glGetString(GL_RENDERER));
     printf("OpenGL version supported %s\n", glGetString(GL_VERSION));
 
-    //If the shading language symbol is defined
+// If the shading language symbol is defined
 #ifdef GL_SHADING_LANGUAGE_VERSION
-    std::printf("Supported GLSL version is %s.\n", (char *)glGetString(GL_SHADING_LANGUAGE_VERSION));
+    std::printf("Supported GLSL version is %s.\n", (char*)glGetString(GL_SHADING_LANGUAGE_VERSION));
 #endif
 }
 
@@ -936,17 +983,16 @@ void ClientGame::Print_versions()
 void ClientGame::PrintFrameRate()
 {
     double currentTime = glfwGetTime();
-    nbFrames++;
-    if (currentTime - lastTime >= 5.0) // If last prinf() was more than 1 sec ago
+    m_nbFrames++;
+    if (currentTime - m_lastTime >= 5.0) // If last prinf() was more than 1 sec ago
     {
-        printf("%f ms/frame\n", 5000.0/double(nbFrames));   // printf and reset timer
-        nbFrames = 0;
-        lastTime += 5.0;
+        printf("%f ms/frame\n", 5000.0 / double(m_nbFrames)); // printf and reset timer
+        m_nbFrames = 0;
+        m_lastTime += 5.0;
     }
 }
 
 #include <iostream>
-
 
 ////////////////////////////////////////////////////////////////////////////////
 // Checks the controller input on Microsoft PC-joystick driver
@@ -964,7 +1010,9 @@ void ClientGame::CheckController()
 {
     using namespace Controller;
     if (!glfwJoystickPresent(GLFW_JOYSTICK_1))
+    {
         return;
+    }
 
     // Get axes and buttons
     int axesCount, buttonCount;
@@ -972,13 +1020,13 @@ void ClientGame::CheckController()
     const unsigned char* buttons = glfwGetJoystickButtons(GLFW_JOYSTICK_1, &buttonCount);
 
     // Check if we're starting the game
-    if (!ClientGame::instance()->hasStarted())
+    if (!ClientGame::Instance()->HasStarted())
     {
-        if (buttons[Buttons::START])     // Start
+        if (buttons[static_cast<int>(Buttons::Start)]) // Start
         {
             printf("client will send start game\n");
             printf("sending start packet\n");
-            ClientGame::instance()->sendStartPacket();
+            ClientGame::Instance()->SendStartPacket();
         }
         return;
     }
@@ -993,55 +1041,73 @@ void ClientGame::CheckController()
 
 ////////////////////////////////////////////////////////////////////////////////
 // axis[2] = (< 0) Left trigger, (> 0) Right trigger
-void ClientGame::HandleTriggers(const float * axes)
+void ClientGame::HandleTriggers(const float* axes)
 {
-	static const float threshold = 0.5f;
-	if (axes[2] < -threshold)
-	{
-		HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_L_Trigger"));
-	}
-	if (axes[2] > threshold)
-	{
-		HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_R_Trigger"));
-	}
+    static const float threshold = 0.5f;
+    if (axes[2] < -threshold)
+    {
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_L_Trigger"));
+    }
+    if (axes[2] > threshold)
+    {
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_R_Trigger"));
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // Handles View changing
-void ClientGame::HandleRightAnalog(const float * axes)
+void ClientGame::HandleRightAnalog(const float* axes)
 {
     using namespace Controller;
     const float rotThreshold = 0.2f;
-    if (abs(axes[Axes::R_HORIZONTAL]) > rotThreshold || abs(axes[Axes::R_VERTICAL]) > rotThreshold)
+    if (abs(axes[static_cast<int>(Axes::RHorizontal)]) > rotThreshold
+        || abs(axes[static_cast<int>(Axes::RVertical)]) > rotThreshold)
     {
-        Scene::Instance()->GetPlayer()->ProcessViewMovement(abs(axes[Axes::R_HORIZONTAL]) > rotThreshold ? axes[Axes::R_HORIZONTAL] : 0.0f,
-            abs(axes[Axes::R_VERTICAL]) > rotThreshold ? -axes[Axes::R_VERTICAL] : 0.0f);
+        Scene::Instance()->GetPlayer()->ProcessViewMovement(
+            abs(axes[static_cast<int>(Axes::RHorizontal)]) > rotThreshold
+                ? axes[static_cast<int>(Axes::RHorizontal)]
+                : 0.0f,
+            abs(axes[static_cast<int>(Axes::RVertical)]) > rotThreshold
+                ? -axes[static_cast<int>(Axes::RVertical)]
+                : 0.0f);
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // Handles movement
-void ClientGame::HandleLeftAnalog(const float * axes)
+void ClientGame::HandleLeftAnalog(const float* axes)
 {
     using namespace Controller;
     const float threshold = 0.7f;
-    int greatestAxis = abs(axes[Axes::L_HORIZONTAL]) > abs(axes[Axes::L_VERTICAL]) ? Axes::L_HORIZONTAL : Axes::L_VERTICAL;
+    int greatestAxis = abs(axes[static_cast<int>(Axes::LHorizontal)])
+                               > abs(axes[static_cast<int>(Axes::LVertical)])
+                           ? static_cast<int>(Axes::LHorizontal)
+                           : static_cast<int>(Axes::LVertical);
     if (abs(axes[greatestAxis]) > threshold)
     {
         switch (greatestAxis)
         {
-            case Axes::L_HORIZONTAL:     // Right
-                if (axes[greatestAxis] > 0)
-                    ClientGame::instance()->sendMovePacket(MOVE_RIGHT);
-                else
-                    ClientGame::instance()->sendMovePacket(MOVE_LEFT);
-                break;
-            case Axes::L_VERTICAL:     // DOWN
-                if (axes[greatestAxis] > 0)
-                    ClientGame::instance()->sendMovePacket(MOVE_BACKWARD);
-                else
-                    ClientGame::instance()->sendMovePacket(MOVE_FORWARD);
-                break;
+        case static_cast<int>(Axes::LHorizontal): // Right
+            if (axes[greatestAxis] > 0)
+            {
+                ClientGame::Instance()->SendMovePacket(MoveType::Right);
+            }
+            else
+            {
+                ClientGame::Instance()->SendMovePacket(MoveType::Left);
+            }
+            break;
+        case static_cast<int>(Axes::LVertical): // DOWN
+            if (axes[greatestAxis] > 0)
+            {
+                ClientGame::Instance()->SendMovePacket(MoveType::Backward);
+            }
+            else
+            {
+                ClientGame::Instance()->SendMovePacket(MoveType::Forward);
+            }
+
+            break;
         }
     }
 }
@@ -1051,62 +1117,62 @@ void ClientGame::HandleLeftAnalog(const float * axes)
 void ClientGame::HandleButtonPress(const unsigned char* buttons)
 {
     using namespace Controller;
-    if (buttons[Buttons::A])
-        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_A"));
+    if (buttons[static_cast<int>(Buttons::A)])
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_A"));
     else
-        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_A"), false);
-    if (buttons[Buttons::B])
-        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_B"));
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_A"), false);
+    if (buttons[static_cast<int>(Buttons::B)])
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_B"));
     else
-        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_B"), false);
-    if (buttons[Buttons::X])
-        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_X"));
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_B"), false);
+    if (buttons[static_cast<int>(Buttons::X)])
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_X"));
     else
-        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_X"), false);
-    if (buttons[Buttons::Y])
-        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_Y"));
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_X"), false);
+    if (buttons[static_cast<int>(Buttons::Y)])
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_Y"));
     else
-        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_Y"), false);
-    if (buttons[Buttons::BACK])
-        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_Back"));
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_Y"), false);
+    if (buttons[static_cast<int>(Buttons::Back)])
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_Back"));
     else
-        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_Back"), false);
-    if (buttons[Buttons::START])
-        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_Start"));
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_Back"), false);
+    if (buttons[static_cast<int>(Buttons::Start)])
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_Start"));
     else
-        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_Start"), false);
-    if (buttons[Buttons::L_ANALOG])
-        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_L_Analog"));
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_Start"), false);
+    if (buttons[static_cast<int>(Buttons::LAnalog)])
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_L_Analog"));
     else
-        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_L_Analog"), false);
-    if (buttons[Buttons::R_ANALOG])
-        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_R_Analog"));
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_L_Analog"), false);
+    if (buttons[static_cast<int>(Buttons::RAnalog)])
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_R_Analog"));
     else
-        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_R_Analog"), false);
-    if (buttons[Buttons::L_BUMPER])
-        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_L_Bumper"));
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_R_Analog"), false);
+    if (buttons[static_cast<int>(Buttons::LBumper)])
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_L_Bumper"));
     else
-        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_L_Bumper"), false);
-    if (buttons[Buttons::R_BUMPER])
-        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_R_Bumper"));
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_L_Bumper"), false);
+    if (buttons[static_cast<int>(Buttons::RBumper)])
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_R_Bumper"));
     else
-        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_R_Bumper"), false);
-    if (buttons[Buttons::D_PAD_UP])
-        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_D_Pad_Up"));
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_R_Bumper"), false);
+    if (buttons[static_cast<int>(Buttons::DPadUp)])
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_D_Pad_Up"));
     else
-        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_D_Pad_Up"), false);
-    if (buttons[Buttons::D_PAD_RIGHT])
-        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_D_Pad_Right"));
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_D_Pad_Up"), false);
+    if (buttons[static_cast<int>(Buttons::DPadRight)])
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_D_Pad_Right"));
     else
-        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_D_Pad_Right"), false);
-    if (buttons[Buttons::D_PAD_DOWN])
-        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_D_Pad_Down"));
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_D_Pad_Right"), false);
+    if (buttons[static_cast<int>(Buttons::DPadDown)])
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_D_Pad_Down"));
     else
-        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_D_Pad_Down"), false);
-    if (buttons[Buttons::D_PAD_LEFT])
-        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_D_Pad_Left"));
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_D_Pad_Down"), false);
+    if (buttons[static_cast<int>(Buttons::DPadLeft)])
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_D_Pad_Left"));
     else
-        HandleButtonEvent(ConfigManager::instance()->GetConfigValue("XBOX_D_Pad_Left"), false);
+        HandleButtonEvent(ConfigManager::Instance()->GetConfigValue("XBOX_D_Pad_Left"), false);
 }
 
 void ClientGame::HandleButtonEvent(const std::string& event, bool buttonDown)
@@ -1115,70 +1181,72 @@ void ClientGame::HandleButtonEvent(const std::string& event, bool buttonDown)
         return;
     if (buttonDown)
     {
-        if (event == EVENT_QUIT)
+        if (event == EventQuit)
         {
-            glfwSetWindowShouldClose(this->window, GL_TRUE);
+            glfwSetWindowShouldClose(this->m_window, GL_TRUE);
         }
-        else if (event == EVENT_WEAPON_ATTACK)
+        else if (event == EventWeaponAttack)
         {
-            sendAttackPacket(AttackType::WEAPON_ATTACK);
+            SendAttackPacket(AttackType::Weapon);
         }
-		else if (event == EVENT_PECK_ATTACK)
-		{
-			sendAttackPacket(AttackType::PECK);
-		}
-		else if (event == EVENT_DISCARD_WEAPON)
-		{
-			sendDiscardPacket(); // TODOCHANGETHIS
-		}
-        else if (event == EVENT_JUMP)
+        else if (event == EventPeckAttack)
         {
-            sendJumpPacket();
+            SendAttackPacket(AttackType::Peck);
         }
-        else if (event == EVENT_MOVE_FORWARD)
+        else if (event == EventDiscardWeapon)
         {
-            sendMovePacket(MOVE_FORWARD);
+            SendDiscardPacket(); // TODOCHANGETHIS
         }
-        else if (event == EVENT_MOVE_BACKWARD)
+        else if (event == EventJump)
         {
-            sendMovePacket(MOVE_BACKWARD);
+            SendJumpPacket();
         }
-        else if (event == EVENT_MOVE_LEFT)
+        else if (event == EventMoveForward)
         {
-            sendMovePacket(MOVE_LEFT);
+            SendMovePacket(MoveType::Forward);
         }
-        else if (event == EVENT_MOVE_RIGHT)
+        else if (event == EventMoveBackward)
         {
-            sendMovePacket(MOVE_RIGHT);
+            SendMovePacket(MoveType::Backward);
         }
-        else if (event == EVENT_SCOREBOARD)
+        else if (event == EventMoveLeft)
         {
-            if (Window::m_pStateManager->GetActiveState() == CPlayState::GetInstance(Window::m_pStateManager))
+            SendMovePacket(MoveType::Left);
+        }
+        else if (event == EventMoveRight)
+        {
+            SendMovePacket(MoveType::Right);
+        }
+        else if (event == EventScoreboard)
+        {
+            if (Window::m_pStateManager->GetActiveState()
+                == CPlayState::GetInstance(Window::m_pStateManager))
             {
-                CPlayState::GetInstance(Window::m_pStateManager)->show_scoreboard = true;
+                CPlayState::GetInstance(Window::m_pStateManager)->m_showScoreboard = true;
             }
         }
-        else if (event == EVENT_TAUNT_DANCE)
+        else if (event == EventTauntDance)
         {
-			printf("dance event triggered\n");
-			sendDancePacket();
+            printf("dance event triggered\n");
+            SendDancePacket();
         }
-        else if (event == EVENT_TAUNT_DEATH)
+        else if (event == EventTauntDeath)
         {
             Scene::Instance()->GetPlayer()->TauntDie();
         }
-        else if (event == EVENT_TAUNT_PECK)
+        else if (event == EventTauntPeck)
         {
             Scene::Instance()->GetPlayer()->Peck();
         }
     }
-    else        // !buttonDown
+    else // !buttonDown
     {
-        if (event == EVENT_SCOREBOARD)
+        if (event == EventScoreboard)
         {
-            if (Window::m_pStateManager->GetActiveState() == CPlayState::GetInstance(Window::m_pStateManager))
+            if (Window::m_pStateManager->GetActiveState()
+                == CPlayState::GetInstance(Window::m_pStateManager))
             {
-                CPlayState::GetInstance(Window::m_pStateManager)->show_scoreboard = false;
+                CPlayState::GetInstance(Window::m_pStateManager)->m_showScoreboard = false;
             }
         }
     }

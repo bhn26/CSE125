@@ -2,8 +2,8 @@
 
 // Scenegraph nodes defined here.
 // Node: the toplevel interface
-// Group: can have children
-// MatrixTransform: specific type of group that transforms the children by a matrix
+// Group: can have m_children
+// MatrixTransform: specific type of group that transforms the m_children by a matrix
 // Geode: a type of node that should be derived from to draw objects
 //
 // May not use
@@ -24,9 +24,9 @@ namespace Scenegraph
     */
     struct Group : public Node
     {
-        std::list<Node*> children;
+        std::list<Node*> m_children;
 
-        Group() : children(std::list<Node*>()) {}
+        Group() : m_children(std::list<Node*>()) {}
         ~Group();
 
         void Draw(glm::mat4 C) override;
@@ -54,12 +54,12 @@ namespace Scenegraph
     */
     struct Geode : public Node
     {
-        double dim;
-        glm::mat4 model2world;
-        glm::vec3 color;
+        double m_dim;
+        glm::mat4 m_model2world;
+        glm::vec3 m_color;
 
         Geode(double d) : Geode(d, glm::vec3(1.0f)) {}
-        Geode(double d, glm::vec3 col) : dim(d), color(col), model2world(glm::mat4(1.0f)) {}
+        Geode(double d, glm::vec3 col) : m_dim(d), m_color(col), m_model2world(glm::mat4(1.0f)) {}
 
         void Draw(glm::mat4 C) override;
         virtual void Render() = 0;

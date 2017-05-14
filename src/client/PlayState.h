@@ -4,14 +4,13 @@
 #include "GameState.h"
 
 #include "SpriteRenderer.h"
-#include "../Graphics/Texture.h"
+#include "Graphics/Texture.h"
 
 class CPlayState : public CGameState
 {
     friend class ClientGame;
-public:
-	~CPlayState();
 
+public:
     // Implementation of specific events
     void OnMouseMove(float xoffset, float yoffset) override;
     void OnClick(int button, int action, double x, double y) override;
@@ -20,55 +19,58 @@ public:
     void Update(DWORD dwCurrentTime) override;
     void Draw() override;
 
-	void Die() { dead = true; };
-	void Respawn() { dead = false; };
+    void Die() { m_dead = true; };
+    void Respawn() { m_dead = false; };
 
-	void EnterState() override;
-	void LeaveState() override;
-	void Reset();
+    void EnterState() override;
+    void LeaveState() override;
+    void Reset();
 
-	// Returns the single instance
-	static CPlayState* GetInstance(CStateManager* pManager);
+    // Returns the single instance
+    static CPlayState* GetInstance(CStateManager* pManager);
 
 protected:
-	CPlayState(CStateManager* pManager);
+    CPlayState(CStateManager* pManager);
 
 private:
-	// The current score
-	int scores[2];
+    CPlayState(const CPlayState& rhs) = delete;
+    CPlayState& operator=(const CPlayState& rhs) = delete;
 
-	bool dead;
-	bool show_scoreboard;
+    // The current score
+    int m_scores[2] = {0,0};
 
-	int backgroundMusicID = -1;
+    bool m_dead = false;
+    bool m_showScoreboard = false;
 
-	////// HUD ////////////
-	bool initialized;
-	void InitTextures();
+    int m_backgroundMusicID = -1;
 
-	SpriteRenderer * sprite_renderer;
+    ////// HUD ////////////
+    bool m_initialized = false;
+    void InitTextures();
 
-	Texture * sb_chick;
-	Texture * sb_side;
-	Texture * sb_table;
+    std::unique_ptr<SpriteRenderer> m_spriteRenderer;
 
-	Texture * hud_egg;
-	Texture * hud_health;
-	Texture * hud_power;
-	Texture * hud_weapon_and_timer;
-	
-	Texture * hud_tomato;
-	Texture * hud_potato;
-	Texture * hud_pumpkin_seed;
-	Texture * hud_bb;
-	Texture * hud_mine;
-	Texture * hud_seeds;
+    std::unique_ptr<Texture> m_sbChick;
+    std::unique_ptr<Texture> m_sbSide;
+    std::unique_ptr<Texture> m_sbTable;
 
-	Texture * weapon_missing;
+    std::unique_ptr<Texture> m_hudEgg;
+    std::unique_ptr<Texture> m_hudHealth;
+    std::unique_ptr<Texture> m_hudPower;
+    std::unique_ptr<Texture> m_hudWeaponAndTimer;
 
-	Texture * hud_weapon;
+    std::unique_ptr<Texture> m_hudTomato;
+    std::unique_ptr<Texture> m_hudPotato;
+    std::unique_ptr<Texture> m_hudPumpkinSeed;
+    std::unique_ptr<Texture> m_hudBB;
+    std::unique_ptr<Texture> m_hudMine;
+    std::unique_ptr<Texture> m_hudSeeds;
 
-	Texture * death_overlay;
+    std::unique_ptr<Texture> m_weaponMissing;
+
+    Texture* m_hudWeapon = nullptr;
+
+    std::unique_ptr<Texture> m_deathOverlay;
 };
 
-#endif  // _PLAYSTATE_H_
+#endif // _PLAYSTATE_H_

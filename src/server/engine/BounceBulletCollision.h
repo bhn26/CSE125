@@ -2,38 +2,36 @@
 #include "BulletCollisionHandler.h"
 #include "Bullet.h"
 
-// simple collision handler, always signals the bullet for deletion on collision
+// simple collision handler, always signals the m_bullet for deletion on collision
 class BounceBulletCollision : public BulletCollisionHandler
 {
 public:
-	// the number of bounces the bullet should have
-	BounceBulletCollision(int b, btVector3* initial_speed) {
-		bounces = b;  
-		bullet = nullptr;
-		speed = initial_speed;
-	};
-	~BounceBulletCollision() { delete speed; };
+    // the number of m_bounces the m_bullet should have
+    BounceBulletCollision(int b, const btVector3& initialSpeed)
+        : m_bounces(b), m_speed(initialSpeed){};
 
-	// Does not consider what it collided with
-	bool HandleBulletCollision(unsigned int world_tick, Entity* collidee) {
-		if (bullet == nullptr)
-			return false;
+    // Does not consider what it collided with
+    bool HandleBulletCollision(unsigned int world_tick, Entity* collidee) override
+    {
+        if (!m_bullet)
+        {
+            return false;
+        }
 
-		if (--bounces == 0)
-			return true;
-		bullet->GetRigidBody()->setLinearVelocity(*speed);
+        if (--m_bounces == 0)
+        {
+            return true;
+        }
+        m_bullet->GetRigidBody()->setLinearVelocity(m_speed);
 
-		return false;
-	}
+        return false;
+    }
 
-	// This needs to be called after the constructor because hack.
-	void SetBullet(Bullet* bul)
-	{
-		bullet = bul;
-	}
+    // This needs to be called after the constructor because hack.
+    void SetBullet(Bullet* bul) { m_bullet = bul; }
 
 private:
-	int bounces; //the number of bounces left before the bullet should expire
-	Bullet* bullet; // the bullet that owns this collision handler
-	btVector3* speed; // initial speed of the bullet
+    int m_bounces = 0;          // the number of m_bounces left before the m_bullet should expire
+    Bullet* m_bullet = nullptr; // the m_bullet that owns this collision handler
+    btVector3 m_speed = btVector3(0, 0, 0); // initial m_speed of the m_bullet
 };

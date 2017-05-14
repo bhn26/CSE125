@@ -1,127 +1,118 @@
 #include "ClientNetwork.h"
 #include "ConfigManager.h"
 
-ClientNetwork::ClientNetwork(void)
+ClientNetwork::ClientNetwork(void) : m_connectSocket(INVALID_SOCKET)
 {
     // create WSADATA object
     WSADATA wsaData;
 
-    // socket
-    ConnectSocket = INVALID_SOCKET;
-
     // holds address info for socket to connect to
-    struct addrinfo *result = NULL,
-                    *ptr = NULL,
-                    hints;
+    addrinfo *result = nullptr, *ptr = nullptr, hints;
 
     // Initialize Winsock
-    iResult = WSAStartup(MAKEWORD(2,2), &wsaData);
+    m_result = WSAStartup(MAKEWORD(2, 2), &wsaData);
 
-    if (iResult != 0) {
-        printf("WSAStartup failed with error: %d\n", iResult);
+    if (m_result != 0)
+    {
+        printf("WSAStartup failed with error: %d\n", m_result);
         exit(1);
     }
 
     // set address info
-    ZeroMemory( &hints, sizeof(hints) );
+    ZeroMemory(&hints, sizeof(hints));
     hints.ai_family = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
-    hints.ai_protocol = IPPROTO_TCP;  //TCP connection!!!
-	
-	ConfigManager::instance()->LoadConfigs("eggs.cfg");
-	ip = ConfigManager::instance()->GetConfigValue("ip");
-	port = ConfigManager::instance()->GetConfigValue("port");
+    hints.ai_protocol = IPPROTO_TCP; // TCP connection!!!
 
-	//resolve server address and port 
-	if (std::string(ip).size() == 0 || std::string(port).size() == 0)
-	{
-		printf("failed to read from config file, using defaults\n");
-		iResult = getaddrinfo(DEFAULT_IP, DEFAULT_PORT, &hints, &result);
-	}
-	else
-	{
-		iResult = getaddrinfo(ip.c_str(), port.c_str(), &hints, &result);
-	}
+    ConfigManager::Instance()->LoadConfigs("eggs.cfg");
+    m_ip = ConfigManager::Instance()->GetConfigValue("m_ip");
+    m_port = ConfigManager::Instance()->GetConfigValue("m_port");
 
-    if( iResult != 0 ) 
+    // resolve server address and m_port
+    if (std::string(m_ip).size() == 0 || std::string(m_port).size() == 0)
     {
-        printf("getaddrinfo failed with error: %d\n", iResult);
+        printf("failed to read from config file, using defaults\n");
+        m_result = getaddrinfo(DEFAULT_IP, DEFAULT_PORT, &hints, &result);
+    }
+    else
+    {
+        m_result = getaddrinfo(m_ip.c_str(), m_port.c_str(), &hints, &result);
+    }
+
+    if (m_result != 0)
+    {
+        printf("getaddrinfo failed with error: %d\n", m_result);
         WSACleanup();
         exit(1);
     }
 
     // Attempt to connect to an address until one succeeds
-    for(ptr=result; ptr != NULL ;ptr=ptr->ai_next) {
-
+    for (ptr = result; ptr != NULL; ptr = ptr->ai_next)
+    {
         // Create a SOCKET for connecting to server
-        ConnectSocket = socket(ptr->ai_family, ptr->ai_socktype, 
-            ptr->ai_protocol);
+        m_connectSocket = socket(ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol);
 
-        if (ConnectSocket == INVALID_SOCKET) {
+        if (m_connectSocket == INVALID_SOCKET)
+        {
             printf("socket failed with error: %ld\n", WSAGetLastError());
             WSACleanup();
             exit(1);
         }
 
         // Connect to server.
-        iResult = connect( ConnectSocket, ptr->ai_addr, (int)ptr->ai_addrlen);
+        m_result = connect(m_connectSocket, ptr->ai_addr, (int)ptr->ai_addrlen);
 
-        if (iResult == SOCKET_ERROR)
+        if (m_result == SOCKET_ERROR)
         {
-            closesocket(ConnectSocket);
-            ConnectSocket = INVALID_SOCKET;
-            printf ("The server is down... did not connect");
+            closesocket(m_connectSocket);
+            m_connectSocket = INVALID_SOCKET;
+            printf("The server is down... did not connect");
         }
     }
-
-
 
     // no longer need address info for server
     freeaddrinfo(result);
 
-
-
     // if connection failed
-    if (ConnectSocket == INVALID_SOCKET) 
+    if (m_connectSocket == INVALID_SOCKET)
     {
         printf("Unable to connect to server!\n");
         WSACleanup();
         exit(1);
     }
 
-	// Set the mode of the socket to be nonblocking
+    // Set the mode of the socket to be nonblocking
     u_long iMode = 1;
 
-    iResult = ioctlsocket(ConnectSocket, FIONBIO, &iMode);
-    if (iResult == SOCKET_ERROR)
+    m_result = ioctlsocket(m_connectSocket, FIONBIO, &iMode);
+    if (m_result == SOCKET_ERROR)
     {
         printf("ioctlsocket failed with error: %d\n", WSAGetLastError());
-        closesocket(ConnectSocket);
+        closesocket(m_connectSocket);
         WSACleanup();
-        exit(1);        
+        exit(1);
     }
 
-	//disable nagle
+    // disable nagle
     char value = 1;
-    setsockopt( ConnectSocket, IPPROTO_TCP, TCP_NODELAY, &value, sizeof( value ) );
+    setsockopt(m_connectSocket, IPPROTO_TCP, TCP_NODELAY, &value, sizeof(value));
 }
-
 
 ClientNetwork::~ClientNetwork(void)
 {
 }
 
-int ClientNetwork::receivePackets(char * recvbuf) 
+int ClientNetwork::ReceivePackets(std::uint8_t* recvbuf)
 {
-    iResult = NetworkServices::receiveMessage(ConnectSocket, recvbuf, MAX_PACKET_SIZE);
+    m_result = NetworkServices::Receive(m_connectSocket, recvbuf, g_maxPacketSize);
 
-    if ( iResult == 0 )
+    if (m_result == 0)
     {
         printf("Connection closed.... %d\n", errno);
-        closesocket(ConnectSocket);
+        closesocket(m_connectSocket);
         WSACleanup();
         exit(1);
     }
 
-    return iResult;
+    return m_result;
 }

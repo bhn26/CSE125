@@ -14,7 +14,7 @@ public:
     Cube();
     ~Cube();
 
-    glm::vec3 color;
+    glm::vec3 m_color;
 
     // Inherited via Entity
     void Draw() const override;
@@ -22,8 +22,6 @@ public:
     virtual void SetShaderUniforms() const override;
 
     void Spin(float);
-
 };
 
 #endif
-

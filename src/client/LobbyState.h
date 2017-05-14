@@ -5,52 +5,52 @@
 #include "PlayState.h"
 
 #include "SpriteRenderer.h"
-#include "../Graphics/Texture.h"
+#include "Graphics/Texture.h"
 
-
-// Specialization of the CGameState class for 
+// Specialization of the CGameState class for
 // the menu state. This displays a menu in which
-// the player can start a new game, continue an 
+// the player can start a new game, continue an
 // existing game, see the high-scores or exit the game.
 class LobbyState : public CGameState
 {
 public:
-	~LobbyState();
-
-	void OnKeyDown(WPARAM wKey);
-	void OnClick(int button, int action, double x, double y) override;
-	void Draw() override;
-	void EnterState() override;
+    void OnClick(int button, int action, double x, double y) override;
+    void Draw() override;
+    void EnterState() override;
     void LeaveState() override;
 
-	static LobbyState* GetInstance(CStateManager* pManager);
+    static LobbyState* GetInstance(CStateManager* pManager);
 
-	void ServerLoading() { loading = true; }
+    void ServerLoading() { m_loading = true; }
 
 protected:
-	LobbyState(CStateManager* pManager);
+    LobbyState(CStateManager* pManager);
 
 private:
-	void RenderSelection();
-	void InitTextures();
-	void ShowLoadingScreen();
+    // Deleted because we have unique_ptrs
+    LobbyState(const LobbyState& rhs) = delete;
+    LobbyState& operator=(const LobbyState& rhs) = delete;
 
-	SpriteRenderer * sprite_renderer;
+    void RenderSelection();
+    void InitTextures();
+    void ShowLoadingScreen();
 
-	// stuff below is for optimization later
-	Texture *bg;
-	Texture *start_button;
+    std::unique_ptr<SpriteRenderer> m_spriteRenderer;
 
-	Texture *table_t1;
-	Texture *table_t2;
+    // stuff below is for optimization later
+    std::unique_ptr<Texture> m_bg;
+    std::unique_ptr<Texture> m_startButton;
 
-	Texture *join;
-	Texture *join_disabled;
+    std::unique_ptr<Texture> m_tableT1;
+    std::unique_ptr<Texture> m_tableT2;
 
-	Texture * load_screen;
+    std::unique_ptr<Texture> m_join;
+    std::unique_ptr<Texture> m_joinDisabled;
 
-	bool initialized;
-	bool loading;
+    std::unique_ptr<Texture> m_loadScreen;
+
+    bool m_initialized = false;
+    bool m_loading = false;
 };
 
-#endif  // _LOBBYSTATE_H_
+#endif // _LOBBYSTATE_H_

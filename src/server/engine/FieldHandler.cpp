@@ -1,49 +1,40 @@
-
 #include "FieldHandler.h"
+
 #include "FieldObject.h"
-#include "../../network/GameData.h"
+#include "network/GameData.h"
 
-
-FieldHandler* FieldHandler::fh = nullptr;
-
-FieldHandler* FieldHandler::instance()
+FieldHandler::~FieldHandler()
 {
-	if (!fh)
-	{
-		fh = new FieldHandler();
-	}
-	return fh;
+    // delete fields???
+    for (auto* field : m_activeFields)
+    {
+        delete field;
+    }
+    m_activeFields.clear();
 }
-
-FieldHandler::FieldHandler()
-{
-	activeFields = new std::vector<FieldObject*>;
-}
-
-FieldHandler::~FieldHandler() {}
 
 void FieldHandler::HandleFields()
 {
-	auto it = activeFields->begin();
+    auto it = m_activeFields.begin();
 
-	// Check through list of active fields
-	while (it != activeFields->end())
-	{
-		// if field is done, remove from queue
-		if ((*it)->handleField())
-		{
-			auto tempIt = (*it);
-			it = activeFields->erase(it);
-			delete tempIt;
-		}
-		else
-		{
-			it++; 
-		}
-	}
+    // Check through list of active fields
+    while (it != m_activeFields.end())
+    {
+        // if field is done, remove from queue
+        if ((*it)->HandleField())
+        {
+            auto tempIt = (*it);
+            it = m_activeFields.erase(it);
+            delete tempIt;
+        }
+        else
+        {
+            it++;
+        }
+    }
 }
 
 void FieldHandler::AddField(FieldObject* newField)
 {
-	activeFields->push_back(newField);
+    m_activeFields.push_back(newField);
 }

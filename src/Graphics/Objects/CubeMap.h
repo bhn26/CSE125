@@ -19,14 +19,13 @@ public:
     CubeMap();
     ~CubeMap();
     
-    GLuint textureID;
-    std::vector<const GLchar*> faces;
+    GLuint m_textureID;
+    std::vector<const GLchar*> m_faces;
     
     GLuint LoadCubeMap();
 
     // Inherited via Entity
     virtual void Draw() const override;
-    virtual void Update(float deltaTime) override {}
     virtual void SetShaderUniforms() const override;
 
 };

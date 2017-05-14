@@ -8,6 +8,8 @@
 #include <Windows.h>
 #endif
 
+#include "Basic/Singleton.h"
+
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <memory>
@@ -26,153 +28,151 @@ class Window;
 
 namespace Controller
 {
-    enum Buttons
+    enum class Buttons
     {
         A = 0,
         B = 1,
         X = 2,
         Y = 3,
-        L_BUMPER = 4,
-        R_BUMPER = 5,
-        BACK = 6,
-        START = 7,
-        L_ANALOG = 8,
-        R_ANALOG = 9,
-        D_PAD_UP = 10,
-        D_PAD_RIGHT = 11,
-        D_PAD_DOWN = 12,
-        D_PAD_LEFT = 13,
+        LBumper = 4,
+        RBumper = 5,
+        Back = 6,
+        Start = 7,
+        LAnalog = 8,
+        RAnalog = 9,
+        DPadUp = 10,
+        DPadRight = 11,
+        DPadDown = 12,
+        DPadLeft = 13,
     };
 
-    enum Axes
+    enum class Axes
     {
-        L_HORIZONTAL = 0,
-        L_VERTICAL = 1,
-        R_HORIZONTAL = 4,
-        R_VERTICAL = 3,
+        LHorizontal = 0,
+        LVertical = 1,
+        RHorizontal = 4,
+        RVertical = 3,
     };
 }
 
-class ClientGame
+class ClientGame : public Singleton<ClientGame>
 {
+    friend class Singleton<ClientGame>;
     friend class Window;
-	friend class CPlayState;
+    friend class CPlayState;
+
 public:
 #ifdef _WIN32
-    ClientNetwork* network;
+    ClientNetwork* m_network;
 #endif
-    GLFWwindow* window;
+    GLFWwindow* m_window;
 
 #ifdef _WIN32
 
-    void receiveInitPacket(int offset);
-	void sendInitPacket();
+    void ReceiveInitPacket(int offset);
+    void SendInitPacket();
 
-	void receiveJoinPacket(int offset);
-	void sendJoinPacket(int team);
+    void ReceiveJoinPacket(int offset);
+    void SendJoinPacket(int team);
 
-	// Tell the server this client is ready, this is like an ACK to prevent a race condition
-	void sendReadyPacket();
+    // TeLl the server this client is ready, this is like an ACK to prevent a race condition
+    void SendReadyPacket();
 
-	void receiveStartPacket(int offset);
-	void sendStartPacket();
+    void ReceiveStartPacket(int offset);
+    void SendStartPacket();
 
-	void receiveReadyToSpawnPacket(int offset);
+    void ReceiveReadyToSpawnPacket(int offset);
 
     // The data we want in network_data should have an offset if any
-    void receiveSpawnPacket(int offset);
+    void ReceiveSpawnPacket(int offset);
 
-	void receiveRemovePacket(int offset);
+    void ReceiveRemovePacket(int offset);
 
-    void receiveMovePacket(int offset);
-    void sendMovePacket(int direction);
+    void ReceiveMovePacket(int offset);
+    void SendMovePacket(MoveType direction);
 
-	void receiveTimeStampPacket(int offset);
+    void ReceiveTimeStampPacket(int offset);
 
-    void receiveRotationPacket(int offset);
-    void sendRotationPacket(); 
+    void ReceiveRotationPacket(int offset);
+    void SendRotationPacket();
 
-	void sendJumpPacket();
+    void SendJumpPacket();
 
-	void sendDancePacket();
-	void receiveDancePacket(int offset);
+    void SendDancePacket();
+    void ReceiveDancePacket(int offset);
 
-	void receiveDeathPacket(int offset);
+    void ReceiveDeathPacket(int offset);
 
-	void receiveRespawnPacket(int offset);
+    void ReceiveRespawnPacket(int offset);
 
-	void receiveScorePacket(int offset);
+    void ReceiveScorePacket(int offset);
 
-	void receiveGameOverPacket(int offset);
+    void ReceiveGameOverPacket(int offset);
 
-	void sendAttackPacket(AttackType t);
-	void receiveAttackPacket(int offset);   // do distinct animation for peck and weapon attack later?
+    void SendAttackPacket(AttackType t);
+    void ReceiveAttackPacket(int offset); // do distinct animation for peck and weapon attack later?
 
-	void sendDiscardPacket();
-	void receiveDiscardPacket(int offset);  // do animation for weapon discard later?
+    void SendDiscardPacket();
+    void ReceiveDiscardPacket(int offset); // do animation for weapon discard later?
 
-	void sendNamePacket();
-	void receiveNamePacket(int offset);
+    void SendNamePacket();
+    void ReceiveNamePacket(int offset);
 
-	bool hasStarted() { return game_started; };
+    bool HasStarted() { return m_gameStarted; };
 
-	void decScore(int team, int amount) { scores[team] -= amount; }
-	void incScore(int team, int amount) { scores[team] += amount; }
+    void DecScore(int team, int amount) { m_scores[team] -= amount; }
+    void IncScore(int team, int amount) { m_scores[team] += amount; }
 
-    char network_data[MAX_PACKET_SIZE];
+    std::uint8_t m_networkData[g_maxPacketSize];
 
-    void update();
+    void Update();
 #endif
 
     void Initialize();
     void Destroy();
     void GameLoop();
 
-    static ClientGame* instance()
-    {
-        static ClientGame* instance = new ClientGame();
-        return instance;
-    }
-	static int GetClientId() { return instance()->client_id; }
+    static int GetClientId() { return Instance()->m_clientId; }
 
-	static std::vector<int> Team0() { return instance()->team0; }
-	static std::vector<int> Team1() { return instance()->team1; }
+    static const std::vector<int>& Team0() { return Instance()->m_team0; }
+    static const std::vector<int>& Team1() { return Instance()->m_team1; }
 
-	int TotalEggs() { return total_eggs; };
-	int * GetScores() { return scores; };
-	int GetCountdown() { return countdown; };
-	int GetClientTeam() { return client_team; };
+    int TotalEggs() { return m_totalEggs; };
+    int* GetScores() { return m_scores; };
+    int GetCountdown() { return m_countdown; };
+    int GetClientTeam() { return m_clientTeam; };
 
-	int GetWinner() { return winner; };
+    int GetWinner() { return m_winner; };
 
-	std::string GetName(int id) { return name_map[id]; }
-	void SetName(std::string name);
+    std::string GetName(int id) { return m_nameMap[id]; }
+    void SetName(std::string name);
 
-    ////////////////////////////////////////////////////////////////////////////////
-    // Sounds
+////////////////////////////////////////////////////////////////////////////////
+// Sounds
 #ifdef PlaySound
 #undef PlaySound
 #endif
-    int PlaySound(const std::string& soundName, SoundsHandler::SoundOptions options = SoundsHandler::SoundOptions());
+    int PlaySound(const std::string& soundName,
+                  SoundsHandler::SoundOptions options = SoundsHandler::SoundOptions());
     bool StopSound(int index);
     void PlayMenuSound();
     void StopMenuSound();
 
 private:
-    const static std::string EVENT_QUIT;
-    const static std::string EVENT_JUMP;
-    const static std::string EVENT_WEAPON_ATTACK;
-	const static std::string EVENT_PECK_ATTACK;
-	const static std::string EVENT_DISCARD_WEAPON;
-    const static std::string EVENT_START;
-    const static std::string EVENT_MOVE_FORWARD;
-    const static std::string EVENT_MOVE_BACKWARD;
-    const static std::string EVENT_MOVE_LEFT;
-    const static std::string EVENT_MOVE_RIGHT;
-    const static std::string EVENT_SCOREBOARD;
-    const static std::string EVENT_TAUNT_DANCE;
-    const static std::string EVENT_TAUNT_DEATH;
-    const static std::string EVENT_TAUNT_PECK;
+    const static std::string EventQuit;
+    const static std::string EventJump;
+    const static std::string EventWeaponAttack;
+    const static std::string EventPeckAttack;
+    const static std::string EventDiscardWeapon;
+    const static std::string EventStart;
+    const static std::string EventMoveForward;
+    const static std::string EventMoveBackward;
+    const static std::string EventMoveLeft;
+    const static std::string EventMoveRight;
+    const static std::string EventScoreboard;
+    const static std::string EventTauntDance;
+    const static std::string EventTauntDeath;
+    const static std::string EventTauntPeck;
 
     ClientGame(void);
     ~ClientGame(void);
@@ -198,31 +198,30 @@ private:
 
     ////////////////////////////////////////////////////////////////////////////////
     // Instance Variables
-    double lastTime;
-    int nbFrames;
+    double m_lastTime;
+    int m_nbFrames;
 
-    int client_id; // should know what client number we are so we can fill out packet headers
-	int client_team;
-	int client_skin;
+    int m_clientId; // should know what client number we are so we can fill out packet headers
+    int m_clientTeam;
+    int m_clientSkin;
 
-    bool start_sent;
+    bool m_startSent;
 
-	std::vector <int> team0;
-	std::vector <int> team1;
-	std::map<int, std::string> name_map;
+    std::vector<int> m_team0;
+    std::vector<int> m_team1;
+    std::map<int, std::string> m_nameMap;
 
-	int total_eggs;
-	std::chrono::time_point<std::chrono::steady_clock> start_time;
-	int countdown; // Seconds
-	int scores[2];
-	int winner; // set on receipt of game over packet
+    int m_totalEggs;
+    std::chrono::time_point<std::chrono::steady_clock> m_startTime;
+    int m_countdown; // Seconds
+    int m_scores[2];
+    int m_winner; // set on receipt of game over packet
 
-	int tick = 0;
+    int m_tick = 0;
 
-	bool game_started = false;
-	bool iSpawned = false;
+    bool m_gameStarted = false;
+    bool m_iSpawned = false;
 
     SoundsHandler m_soundsHandler;
     int m_menuSound = -1;
 };
-

@@ -1,13 +1,15 @@
 #pragma once
-#include "Powerup.h"
 #include "Player.h"
+#include "PowerUp.h"
 
-class HealthGain : public Powerup
+class HealthGain : public PowerUp
 {
-	public:
-		HealthGain() { this->type = PowerupType::HEALTHGAIN; }
-		~HealthGain() {}
-
-		void applyPower(Player* p) {p->GainHP(20);}; // applies the powerup to the player
-		void removePower(Player* p) {};
+public:
+    HealthGain() { m_type = PowerUpType::HealthGain; }
+    ~HealthGain() {}
+    // applies the powerup to the player
+    void ApplyPower(Player* player) override
+    {
+        player->GainHP(20);
+    }
 };

@@ -9,41 +9,48 @@
 #include <BulletPhysics\btBulletCollisionCommon.h>
 #endif
 
-Peck::Peck(btDiscreteDynamicsWorld* curworld): Weapon(meleefireRate, meleeDamage, curworld)
+Peck::Peck(btDiscreteDynamicsWorld* curworld) : Weapon(m_meleeFireRate, m_meleeDamage, curworld)
 {
-	nextFireTick = 0;
+    m_nextFireTick = 0;
 }
 
-Peck::~Peck(){}
-
-int Peck::UseWeapon(btVector3* position, btMatrix3x3* rotation, int playerid, int teamid, Entity* owner)
+Peck::~Peck()
 {
-	if (this->fireFlag)
-	{
-		// Spawns damage field for peck attack into the world
-		/*
-		btVector3 vec = btVector3(0, 0, 3);
-		vec = ((vec) * (*rotation));
-		vec = ((vec) + (*position));
-		*/
-		btVector3 vec = ((*rotation) * (btVector3(0, 0, 3))) + (*position);
-
-		btVector3 * fieldPos = new btVector3(vec.getX(), vec.getY(), vec.getZ());
-		btCollisionShape* peckSphere = new btSphereShape(btScalar(3));
-		DamageField* peckField = new DamageField(1, meleeDamage, fieldPos, peckSphere, teamid, curWorld);
-
-		//TODO: Add to damage field checker. Add this new field to the checker
-		FieldHandler::instance()->AddField(peckField);
-
-		this->fireFlag = 0;
-		this->nextFireTick = FireRateReset::instance()->currentWorldTick + meleefireRate;
-
-		// add used weapon to "used" list in FireRateReset static object
-		FireRateReset::instance()->AddWeapon(this);
-	}
-	return 1; //infinite ammo
 }
 
+int Peck::UseWeapon(const btVector3& position,
+                    const btMatrix3x3& rotation,
+                    int playerid,
+                    int teamid,
+                    Entity* owner)
+{
+    if (m_fireFlag)
+    {
+        // Spawns damage field for peck attack into the world
+        /*
+        btVector3 vec = btVector3(0, 0, 3);
+        vec = ((vec) * (*rotation));
+        vec = ((vec) + (*position));
+        */
+        btVector3 vec = rotation * btVector3(0, 0, 3) + position;
 
-void Peck::ReloadWeapon() {}
+        btVector3 fieldPos = btVector3(vec.getX(), vec.getY(), vec.getZ());
+        btCollisionShape* peckSphere = new btSphereShape(btScalar(3));
+        DamageField* peckField =
+            new DamageField(1, m_meleeDamage, fieldPos, peckSphere, teamid, m_curWorld);
 
+        // TODO: Add to damage field checker. Add this new field to the checker
+        FieldHandler::Instance()->AddField(peckField);
+
+        m_fireFlag = 0;
+        m_nextFireTick = FireRateReset::Instance()->m_currentWorldTick + m_meleeFireRate;
+
+        // add used weapon to "used" list in FireRateReset static object
+        FireRateReset::Instance()->AddWeapon(this);
+    }
+    return 1; // infinite ammo
+}
+
+void Peck::ReloadWeapon()
+{
+}

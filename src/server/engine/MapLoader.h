@@ -11,16 +11,13 @@
 
 class MapLoader
 {
-
 protected:
-
-	std::vector<btRigidBody*> mapObjects;
-	btDiscreteDynamicsWorld* curWorld;
-	std::vector<const char *> fileNames;
+    std::vector<btRigidBody*> m_mapObjects;
+    btDiscreteDynamicsWorld* m_curWorld;
+    std::vector<const char*> m_fileNames;
 
 public:
-
-	MapLoader(btDiscreteDynamicsWorld* dynamicsWorld);
-	~MapLoader();
-	void loadMap();
+    MapLoader(btDiscreteDynamicsWorld* dynamicsWorld);
+    ~MapLoader();
+    void LoadMap();
 };

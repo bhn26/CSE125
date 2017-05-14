@@ -23,14 +23,14 @@ class Model;
 class Egg : public Entity
 {
 public:
-	Egg();
-	Egg(float x, float y, float z, std::string type);
-	~Egg();
+    Egg();
+    Egg(float x, float y, float z, std::string type);
+    ~Egg();
 
-	std::shared_ptr<Model> model;
-	float angle; // For spinning if we want
+    std::shared_ptr<Model> m_model;
+    float m_angle; // For spinning if we want
 
-	glm::vec3 color;
+    glm::vec3 m_color;
 
     // Inherited via Entity
     void Draw() const override;
@@ -38,8 +38,7 @@ public:
     virtual void SetShaderUniforms() const override;
 
     void Spin(float deg);
-	void SetColor(glm::vec3 color);
-
+    void SetColor(const glm::vec3& color);
 };
 
 #endif /* Egg_h */

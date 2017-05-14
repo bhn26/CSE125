@@ -90,7 +90,7 @@ namespace Animation
 
         SkinningTechnique();
 
-        virtual bool Init();
+        virtual bool Init() override;
 
         void SetWVP(const glm::mat4& WVP);
         void SetWorldMatrix(const glm::mat4& WVP);

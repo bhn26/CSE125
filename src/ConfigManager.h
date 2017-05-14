@@ -7,14 +7,16 @@
 //
 #pragma once
 
+#include "Basic/Singleton.h"
+
 #include <string>
 #include <map>
 
-class ConfigManager
+class ConfigManager : public Singleton<ConfigManager>
 {
+    friend class Singleton<ConfigManager>;
+
 public:
-    std::map<std::string, std::string> cfg_map;
-    
     // use this to load the file into the manager
     void LoadConfigs(const std::string& file_name);
 
@@ -24,14 +26,10 @@ public:
     static long GetAsLong(const std::string& key);
     static float GetAsFloat(const std::string& key);
 
-    static ConfigManager* instance()
-    {
-        static ConfigManager* instance = new ConfigManager();
-        return instance;
-    }
-
 private:
     ConfigManager(void) {}
     ~ConfigManager(void) {}
     bool HasPrefix(const std::string& word, const std::string& prefix) const;
+
+    std::map<std::string, std::string> m_configs;
 };

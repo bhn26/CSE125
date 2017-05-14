@@ -22,32 +22,32 @@ namespace Animation
         for (unsigned int i = 0; i < nodeAnim->mNumPositionKeys; i++)
         {
             VectorKey posKey;
-            posKey._time = (float)nodeAnim->mPositionKeys[i].mTime;
-            posKey._value = glm::vec3(nodeAnim->mPositionKeys[i].mValue.x,
-                                      nodeAnim->mPositionKeys[i].mValue.y,
-                                      nodeAnim->mPositionKeys[i].mValue.z);
-            _positionKeys.push_back(std::move(posKey));
+            posKey.m_time = (float)nodeAnim->mPositionKeys[i].mTime;
+            posKey.m_value = glm::vec3(nodeAnim->mPositionKeys[i].mValue.x,
+                                       nodeAnim->mPositionKeys[i].mValue.y,
+                                       nodeAnim->mPositionKeys[i].mValue.z);
+            m_positionKeys.push_back(std::move(posKey));
         }
         // Parse scaling keys
         for (unsigned int i = 0; i < nodeAnim->mNumScalingKeys; i++)
         {
             VectorKey scaleKey;
-            scaleKey._time = (float)nodeAnim->mScalingKeys[i].mTime;
-            scaleKey._value = glm::vec3(nodeAnim->mScalingKeys[i].mValue.x,
-                                        nodeAnim->mScalingKeys[i].mValue.y,
-                                        nodeAnim->mScalingKeys[i].mValue.z);
-            _scaleKeys.push_back(std::move(scaleKey));
+            scaleKey.m_time = (float)nodeAnim->mScalingKeys[i].mTime;
+            scaleKey.m_value = glm::vec3(nodeAnim->mScalingKeys[i].mValue.x,
+                                         nodeAnim->mScalingKeys[i].mValue.y,
+                                         nodeAnim->mScalingKeys[i].mValue.z);
+            m_scaleKeys.push_back(std::move(scaleKey));
         }
         // Parse rotation keys
         for (unsigned int i = 0; i < nodeAnim->mNumRotationKeys; i++)
         {
             QuatKey rotKey;
-            rotKey._time = (float)nodeAnim->mScalingKeys[i].mTime;
-            rotKey._value = glm::quat(nodeAnim->mRotationKeys[i].mValue.w,
-                                      nodeAnim->mRotationKeys[i].mValue.x,
-                                      nodeAnim->mRotationKeys[i].mValue.y,
-                                      nodeAnim->mRotationKeys[i].mValue.z);
-            _rotationKeys.push_back(std::move(rotKey));
+            rotKey.m_time = (float)nodeAnim->mScalingKeys[i].mTime;
+            rotKey.m_value = glm::quat(nodeAnim->mRotationKeys[i].mValue.w,
+                                       nodeAnim->mRotationKeys[i].mValue.x,
+                                       nodeAnim->mRotationKeys[i].mValue.y,
+                                       nodeAnim->mRotationKeys[i].mValue.z);
+            m_rotationKeys.push_back(std::move(rotKey));
         }
     }
 
@@ -56,9 +56,9 @@ namespace Animation
     // specialized scaling and transformation matrices with mostly 0s
     glm::mat4 Channel::Evaluate(float time, float duration) const
     {
-        glm::vec3 scaling = CalcInterpolation(_scaleKeys, time, duration, _lastScaleKey);
-        glm::quat rotationQ = CalcInterpolation(_rotationKeys, time, duration, _lastRotKey);
-        glm::vec3 translation = CalcInterpolation(_positionKeys, time, duration, _lastPosKey);
+        glm::vec3 scaling = CalcInterpolation(m_scaleKeys, time, duration, m_lastScaleKey);
+        glm::quat rotationQ = CalcInterpolation(m_rotationKeys, time, duration, m_lastRotKey);
+        glm::vec3 translation = CalcInterpolation(m_positionKeys, time, duration, m_lastPosKey);
 
         // Generate return matrix
         glm::mat4 ret = static_cast<glm::mat4>(glm::quat(rotationQ));
@@ -81,35 +81,36 @@ namespace Animation
     // Returns an invalid channel if doesn't exist by name
     const Channel& Animation::GetChannel(std::string name) const
     {
-        auto it = _channelMap.find(name);
-        return (it != _channelMap.end()) ? _channels[it->second] : Channel::INVALID_CHANNEL;
+        auto it = m_channelMap.find(name);
+        return (it != m_channelMap.end()) ? m_channels[it->second] : Channel::INVALID_CHANNEL;
     }
 
     ///////////////////////////////////////////////////////////////////////
     // Constructor from an assimp animation object
-    Animation::Animation(const aiAnimation* animation, bool loops) : _duration((float)animation->mDuration),
-        _ticksPerSecond((float)animation->mTicksPerSecond), _loops(loops)
+    Animation::Animation(const aiAnimation* animation, bool loops)
+        : m_duration((float)animation->mDuration)
+        , m_ticksPerSecond((float)animation->mTicksPerSecond)
+        , m_loops(loops)
     {
         // Create each channel and add to vector
         for (unsigned int i = 0; i < animation->mNumChannels; i++)
         {
             Channel channel = Channel(animation->mChannels[i]);
-            _channels.push_back(std::move(channel));
-            _channelMap[std::string(animation->mChannels[i]->mNodeName.C_Str())] = i;   // Map name -> index in channelMap
+            m_channels.push_back(std::move(channel));
+            m_channelMap[std::string(animation->mChannels[i]->mNodeName.C_Str())] =
+                i; // Map name -> index in channelMap
         }
     }
 
     ///////////////////////////////////////////////////////////////////////
     // Set the 0 time transforms
-    void AnimationPlayer::InitBones0()
-    {
-        EvaluateChildren(m_mesh->m_rootNode, 0.0f);
-    }
+    void AnimationPlayer::InitBones0() { EvaluateChildren(m_mesh->m_rootNode, 0.0f); }
 
     ///////////////////////////////////////////////////////////////////////
-    // Add an animation from the assimp scene. Will not override any 
+    // Add an animation from the assimp scene. Will not override any
     // previous animation. Uses The name in the aiAnimation object
-    std::string AnimationPlayer::AddAnimFromScene(const aiScene* scene, bool loops, std::string animName)
+    std::string
+        AnimationPlayer::AddAnimFromScene(const aiScene* scene, bool loops, std::string animName)
     {
         if (scene->mNumAnimations < 1)
         {
@@ -119,17 +120,17 @@ namespace Animation
 
         aiAnimation& aiAnim = *scene->mAnimations[0];
         std::string name = (animName.length() == 0) ? std::string(aiAnim.mName.C_Str()) : animName;
-        if (m_animMap.find(name) != m_animMap.end())      // Don't override an animation
+        if (m_animMap.find(name) != m_animMap.end()) // Don't override an animation
         {
             fprintf(stderr, "Will not override animation: %s\n", name.c_str());
             do
             {
-                name[name.length()-1]++;
+                name[name.length() - 1]++;
             } while (m_animMap.find(name) != m_animMap.end());
-            //return "";
+            // return "";
         }
 
-        Animation animation = Animation(scene->mAnimations[0], loops);      // Pass in the only animation
+        Animation animation = Animation(scene->mAnimations[0], loops); // Pass in the only animation
         m_animMap[name] = m_animations.size();
         m_animations.push_back(std::move(animation));
         return name;
@@ -137,16 +138,16 @@ namespace Animation
 
     ///////////////////////////////////////////////////////////////////////
     // Start playing the given animation from the beginning.
-    bool AnimationPlayer::PlayAnimation(std::string name)
+    bool AnimationPlayer::PlayAnimation(const std::string& name)
     {
         SetAnimation(name);
-        m_animating = true;     // Set to update and evaluate
+        m_animating = true; // Set to update and evaluate
         return true;
     }
 
     ///////////////////////////////////////////////////////////////////////
     // Sets the current animation
-    bool AnimationPlayer::SetAnimation(std::string name)
+    bool AnimationPlayer::SetAnimation(const std::string& name)
     {
         auto it = m_animMap.find(name);
         if (it == m_animMap.end())
@@ -176,16 +177,16 @@ namespace Animation
     void AnimationPlayer::Evaluate()
     {
         const Animation& currAnim = m_animations[m_currAnimationIndex];
-        float ticksPerSecond = (currAnim._ticksPerSecond != 0) ? currAnim._ticksPerSecond : 25.0f;
-        float timeInTicks = m_playTimer * ticksPerSecond;       // Timer in seconds
-        if (timeInTicks > currAnim._duration)
+        float ticksPerSecond = (currAnim.m_ticksPerSecond != 0) ? currAnim.m_ticksPerSecond : 25.0f;
+        float timeInTicks = m_playTimer * ticksPerSecond; // Timer in seconds
+        if (timeInTicks > currAnim.m_duration)
         {
-            if (currAnim._loops)
-                timeInTicks = fmod(timeInTicks, currAnim._duration);
+            if (currAnim.m_loops)
+                timeInTicks = fmod(timeInTicks, currAnim.m_duration);
             else
             {
                 Finish();
-                //m_animating = false;
+                // m_animating = false;
                 return;
             }
         }
@@ -196,18 +197,25 @@ namespace Animation
     ///////////////////////////////////////////////////////////////////////
     // Recursive Evaluate. Give the node to evaluate at given time in ticks
     // with parent transform
-    void AnimationPlayer::EvaluateChildren(const std::unique_ptr<Mesh::Node>& node, float time, glm::mat4 parentTransform) const
+    void AnimationPlayer::EvaluateChildren(const std::unique_ptr<Mesh::Node>& node,
+                                           float time,
+                                           glm::mat4 parentTransform) const
     {
-        const Channel& channel = m_animations[m_currAnimationIndex].GetChannel(node->_name);
+        const Channel& channel = m_animations[m_currAnimationIndex].GetChannel(node->m_name);
 
-        glm::mat4 globalTransform = parentTransform * (channel.Valid() ? channel.Evaluate(time, m_animations[m_currAnimationIndex]._duration) : node->_nodeTransform);
-        if (m_mesh->m_boneMapping.find(node->_name) != m_mesh->m_boneMapping.end())
+        glm::mat4 globalTransform =
+            parentTransform
+            * (channel.Valid()
+                   ? channel.Evaluate(time, m_animations[m_currAnimationIndex].m_duration)
+                   : node->m_nodeTransform);
+        if (m_mesh->m_boneMapping.find(node->m_name) != m_mesh->m_boneMapping.end())
         {
-            Mesh::BoneInfo& boneInfo = m_mesh->m_boneInfo[m_mesh->m_boneMapping[node->_name]];
-            boneInfo.finalTransformation = m_mesh->m_GlobalInverseTransform * globalTransform * boneInfo.boneOffset;
+            Mesh::BoneInfo& boneInfo = m_mesh->m_boneInfo[m_mesh->m_boneMapping[node->m_name]];
+            boneInfo.m_finalTransformation =
+                m_mesh->m_globalInverseTransform * globalTransform * boneInfo.m_boneOffset;
         }
 
-        for (std::unique_ptr<Mesh::Node>& child : node->_children)
+        for (std::unique_ptr<Mesh::Node>& child : node->m_children)
         {
             EvaluateChildren(child, time, globalTransform);
         }

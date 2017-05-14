@@ -5,49 +5,49 @@
 #include "PlayState.h"
 
 #include "SpriteRenderer.h"
-#include "../Graphics/Texture.h"
+#include "Graphics/Texture.h"
 
-
-// Specialization of the CGameState class for 
+// Specialization of the CGameState class for
 // the menu state. This displays a menu in which
-// the player can start a new game, continue an 
-// existing game, see the high-scores or exit the game.
+// the player can start a new game, continue an
 class CMenuState : public CGameState
 {
 public:
-	~CMenuState();
+    void OnKeyDown(int action, int key) override;
+    void OnClick(int button, int action, double x, double y) override;
+    void OnChar(unsigned int codepoint) override;
 
-	void OnKeyDown(int action, int key) override;
-	void OnClick(int button, int action, double x, double y) override;
-	void OnChar(unsigned int codepoint) override;
+    void Update(DWORD) override;
+    void Draw() override;
+    void EnterState() override;
 
-	void Update(DWORD) override;
-	void Draw() override;
-	void EnterState() override;
-
-	static CMenuState* GetInstance(CStateManager* pManager);
+    static CMenuState* GetInstance(CStateManager* manager);
 
 protected:
-	CMenuState(CStateManager* pManager);
+    CMenuState(CStateManager* manager);
 
 private:
-	void StartGame();
-	void RenderSelection();
-	void InitTextures();
+    // Deleted because we have unique_ptrs
+    CMenuState(const CMenuState& rhs) = delete;
+    CMenuState& operator=(const CMenuState& rhs) = delete;
 
-	SpriteRenderer * sprite_renderer;
+    void StartGame();
+    void RenderSelection();
+    void InitTextures();
 
-	// stuff below is for optimization later
-	Texture *bg;
-	Texture *textbox;
-	Texture *join;
+    std::unique_ptr<SpriteRenderer> m_spriteRenderer;
 
-	std::string default_name;
-	std::string username;
+    // stuff below is for optimization later
+    std::unique_ptr<Texture> m_bg;
+    std::unique_ptr<Texture> m_textbox;
+    std::unique_ptr<Texture> m_join;
 
-	bool typing; // true when player selects textbox
-	
-	bool initialized;
+    std::string m_defaultName;
+    std::string m_username;
+
+    bool m_typing = false; // true when player selects textbox
+
+    bool m_initialized = false;
 };
 
-#endif  // _MENUSTATE_H_
+#endif // _MENUSTATE_H_

@@ -1,18 +1,19 @@
 #pragma once
-#include <winsock2.h>
-#include <Windows.h>
-#include "../network/NetworkServices.h"
-#include <ws2tcpip.h>
+
+#include "network/NetworkData.h"
+#include "network/NetworkServices.h"
+
 #include <map>
 #include <string>
-#include "../network/NetworkData.h"
-using namespace std; 
-#pragma comment (lib, "Ws2_32.lib")
+
+#include <winsock2.h>
+#include <Windows.h>
+#include <ws2tcpip.h>
+
+#pragma comment(lib, "Ws2_32.lib")
 
 #define DEFAULT_BUFLEN 512
-#define DEFAULT_PORT "6881" 
-
-
+#define DEFAULT_PORT "6881"
 
 class ServerNetwork
 {
@@ -20,31 +21,30 @@ public:
     ServerNetwork(void);
     ~ServerNetwork(void);
 
-	// send data to all clients
-    void sendToAll(char * packets, int totalSize);
+    // send data to all clients
+    void SendToAll(std::uint8_t* packets, int totalSize);
 
     // send data to one client
-    void sendToClient(char * packets, int totalSize, unsigned int clientId);
+    void SendToClient(std::uint8_t* packets, int totalSize, unsigned int clientId);
 
-	// receive incoming data
-    int receiveData(unsigned int client_id, char * recvbuf);
-	
-	// accept new connections
-    bool acceptNewClient(unsigned int & id);
+    // receive incoming data
+    int ReceiveData(unsigned int client_id, std::uint8_t* recvbuf);
+
+    // accept new connections
+    bool AcceptNewClient(unsigned int& id);
 
     // Socket to listen for new connections
-    SOCKET ListenSocket;
+    SOCKET m_listenSocket = INVALID_SOCKET;
 
     // Socket to give to the clients
-    SOCKET ClientSocket;
+    SOCKET m_clientSocket = INVALID_SOCKET;
 
     // for error checking return values
-    int iResult;
+    int m_result = 0;
 
     // table to keep track of each client's socket
-    std::map<unsigned int, SOCKET> sessions; 
+    std::map<unsigned int, SOCKET> m_sessions;
 
 private:
-	std::string port;
+    std::string m_port;
 };
-

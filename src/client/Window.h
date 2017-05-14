@@ -9,15 +9,15 @@ struct GLFWwindow;
 class Window
 {
 public:
-    static int width;
-    static int height;
+    static int s_width;
+    static int s_height;
 
-    static bool firstMouse;
-    static bool mouseCaptured;
-    static GLint lastX;
-    static GLint lastY;
+    static bool s_firstMouse;
+    static bool s_mouseCaptured;
+    static GLint s_lastX;
+    static GLint s_lastY;
 
-	static CStateManager* m_pStateManager;
+    static CStateManager* m_pStateManager;
 
     static void Initialize_objects();
     static void Clean_up();
@@ -28,6 +28,5 @@ public:
     static void Key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
     static void Mouse_callback(GLFWwindow* window, double xpos, double ypos);
     static void Mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
-	static void Char_callback(GLFWwindow *window, unsigned int codepoint);
+    static void Char_callback(GLFWwindow* window, unsigned int codepoint);
 };
-

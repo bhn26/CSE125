@@ -1,9 +1,10 @@
 #pragma once
 
-#include "../../network/GameData.h"
+#include "network/GameData.h"
+#include "FireRateReset.h"
+
 #include <vector>
 #include <memory>
-#include "FireRateReset.h"
 
 #ifndef BULLET_PHYSICS
 #define BULLET_PHYSICS
@@ -14,32 +15,38 @@ class Entity;
 
 class Weapon
 {
-
 protected:
-	int fireRate;
-	int damage;
-	int currentAmmo; // Current ammo of this weapon
-	int maxAmmo;   // Capacity of this weapon
-	btVector3* gunSpeed;
+    int m_fireRate;
+    int m_damage;
+    int m_currentAmmo; // Current ammo of this weapon
+    int m_maxAmmo;     // Capacity of this weapon
+    btVector3 m_gunSpeed;
 
-	WeaponType wt;
+    WeaponType m_type;
 
-	btDiscreteDynamicsWorld* curWorld;
+    btDiscreteDynamicsWorld* m_curWorld;
 
 public:
+    unsigned int m_nextFireTick;
+    int m_fireFlag = 1;
 
-	unsigned int nextFireTick;
-	int fireFlag;
+    Weapon(btDiscreteDynamicsWorld* curworld);
+    Weapon(int firerate, int wdamage, btDiscreteDynamicsWorld* curworld);
+    ~Weapon();
 
-	Weapon(int firerate, int wdamage, btDiscreteDynamicsWorld* curworld);
-	~Weapon();
+    // returns the ammo left in the weapon
+    virtual int UseWeapon(const btVector3& position,
+                          const btMatrix3x3& rotation,
+                          int playerid,
+                          int teamid,
+                          Entity* owner)
+    {
+        return 0;
+    };
 
-	// returns the ammo left in the weapon
-	int virtual UseWeapon(btVector3 * position, btMatrix3x3* rotation, int playerid, int teamid, Entity* owner);
+    WeaponType virtual GetWeaponType() { return m_type; }
 
-	WeaponType virtual GetWeaponType() { return wt; }
+    const btVector3& GetGunSpeed() { return m_gunSpeed; }
 
-	btVector3* GetGunSpeed() { return gunSpeed; }
-
-	void virtual ReloadWeapon();
+    void virtual ReloadWeapon();
 };

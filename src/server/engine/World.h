@@ -1,71 +1,67 @@
 #pragma once
 
 #include "EntitySpawner.h"
+#include "network/GameData.h"
+
 #include <vector>
 #include <memory>
 #include <map>
 
-#include "../../network/GameData.h"
-
 class WorldObstacle;
 class MapLoader;
 
-using namespace std;
+typedef std::vector<PosInfo> pos_list;
 
-typedef vector<PosInfo> pos_list;
-
-class World {
-
+class World
+{
 private:
+    // list of game world objects
+    std::vector<std::shared_ptr<Flag>> m_flags;
+    // Delete list, mainly for bullets
+    std::vector<Entity*> m_deleteList;
+    // Marked list to protect multi-handling, for flags
+    std::vector<Entity*> m_markedList;
+    // List of entities to unmark at the end
+    std::vector<Entity*> m_unmarkList;
 
-	// list of game world objects
-	std::vector<std::shared_ptr<Flag>> flags;
-	// Delete list, mainly for bullets
-	std::vector<Entity*> deleteList;  
-	// Marked list to protect multi-handling, for flags
-	std::vector<Entity*> markedList;
-	// List of entities to unmark at the end
-	std::vector<Entity*> unmarkList;
+    // Physics World attributes
+    btDiscreteDynamicsWorld* m_curWorld = nullptr;
+    btDefaultCollisionConfiguration* m_colConfig = nullptr;
+    btCollisionDispatcher* m_disp = nullptr;
+    btBroadphaseInterface* m_pairCache = nullptr;
+    btSequentialImpulseConstraintSolver* m_solv = nullptr;
 
-	// Physics World attributes
-	btDiscreteDynamicsWorld* curWorld;
-	btDefaultCollisionConfiguration* colConfig;
-	btCollisionDispatcher* disp;
-	btBroadphaseInterface* pairCache;
-	btSequentialImpulseConstraintSolver* solv;
+    // Map objects
+    WorldObstacle* m_ground = nullptr;
+    WorldObstacle* m_frontWall = nullptr;
+    WorldObstacle* m_backWall = nullptr;
+    WorldObstacle* m_leftWall = nullptr;
+    WorldObstacle* m_rightWall = nullptr;
 
-	// Map objects
-	WorldObstacle * ground;
-	WorldObstacle * frontWall;
-	WorldObstacle * backWall;
-	WorldObstacle * leftWall;
-	WorldObstacle * rightWall;
+    // object ids
+    int m_oid = -1;
 
-	// object ids
-	int oid;
+    // Map Loader object
+    MapLoader* m_worldMapLoader = nullptr;
 
-	// Map Loader object
-	MapLoader* worldMapLoader;
-
-	// list of fields to check.  Explosions and mounts.  Maybe decouple into a class of it's own.  Have a TTL
-
+    // list of fields to check.  Explosions and mounts.  Maybe decouple into a class of it's own.
+    // Have a TTL
 
 public:
-	World();
-	~World();
+    World();
+    ~World();
 
-	// ticker used for now
-	unsigned int world_tick = 0;
+    // ticker used for now
+    unsigned int m_worldTick = 0;
 
-	void Init();
+    void Init();
 
-	void PreSpawn();
-	btDiscreteDynamicsWorld* GetPhysicsWorld();
+    void PreSpawn();
+    btDiscreteDynamicsWorld* GetPhysicsWorld();
 
-	// Updates Physics world by one tick
-	void UpdateWorld();
+    // Updates Physics world by one tick
+    void Update();
 
-	// Finds and Removes flag from world list of flags
-	void removeFlag(Flag* collectedFlag);
-
+    // Finds and Removes flag from world list of flags
+    void RemoveFlag(Flag* collectedFlag);
 };

@@ -7,11 +7,16 @@ class FieldObject;
 class DamageField : public FieldObject
 {
 protected:
-	int fieldTtl;
-	int fieldDamage;
+    int m_fieldTtl = 0;
+    int m_fieldDamage = 0;
 
 public:
-	DamageField(int ttl, int damage, btVector3* origin, btCollisionShape* fieldshape, int team_id, btDiscreteDynamicsWorld* curworld);
-	virtual ~DamageField();
-	int handleField();
+    DamageField(int ttl,
+                int damage,
+                const btVector3& origin,
+                btCollisionShape* fieldshape,
+                int team_id,
+                btDiscreteDynamicsWorld* curworld);
+    virtual ~DamageField();
+    int HandleField() override;
 };

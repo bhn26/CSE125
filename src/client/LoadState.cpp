@@ -1,45 +1,36 @@
 #include "LoadState.h"
+
 #include "StateManager.h"
 #include "TextRenderer.h"
 #include "Window.h"
 
-#include "../Graphics/Shader.h"
+#include "Graphics/Shader.h"
 #include "ClientGame.h"
 #include "Graphics\Scene.h"
 
-
-LoadState::LoadState(CStateManager* pManager)
-	: CGameState(pManager)
+LoadState::LoadState(CStateManager* manager)
+    : CGameState(manager), m_spriteRenderer(std::make_unique<SpriteRenderer>())
 {
-	// Create the text controls of the menu.
-	sprite_renderer = new SpriteRenderer();
-	initialized = false;
 }
 
-LoadState::~LoadState()
+LoadState* LoadState::GetInstance(CStateManager* manager)
 {
-	delete sprite_renderer;
-	delete bg;
-	delete chicken_left;
-	delete chicken_right;
-	delete dot;
+    static LoadState Instance(manager);
+    return &Instance;
 }
-
-LoadState* LoadState::GetInstance(CStateManager* pManager)
-{
-	static LoadState Instance(pManager);
-	return &Instance;
-}
-
 
 void LoadState::Draw()
 {
-	InitTextures();
+    InitTextures();
 
-	int x = Texture::GetWindowCenter(bg->Width());
-	int y = Window::height / 2 - bg->Height() / 2;
+    int x = Texture::GetWindowCenter(m_bg->Width());
+    int y = Window::s_height / 2 - m_bg->Height() / 2;
 
-	sprite_renderer->DrawSprite(*bg, glm::vec2(x, y), glm::vec2(bg->Width(), bg->Height()), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+    m_spriteRenderer->DrawSprite(m_bg.get(),
+                                 glm::vec2(x, y),
+                                 glm::vec2(m_bg->Width(), m_bg->Height()),
+                                 0.0f,
+                                 glm::vec3(1.0f, 1.0f, 1.0f));
 }
 
 void LoadState::EnterState()
@@ -50,15 +41,19 @@ void LoadState::Update(DWORD dwCurrentTime)
 {
 }
 
-void::LoadState::InitTextures() {
-	if (!initialized) {
-		// Create the different images
-		bg = new Texture(GL_TEXTURE_2D, "assets/ui/loading/loading_bg.png");
+void ::LoadState::InitTextures()
+{
+    if (!m_initialized)
+    {
+        // Create the different images
+        m_bg = std::make_unique<Texture>(GL_TEXTURE_2D, "assets/ui/loading/loading_bg.png");
 
-		chicken_left = new Texture(GL_TEXTURE_2D, "assets/ui/loading/loading_chicken_l.png");
-		chicken_right = new Texture(GL_TEXTURE_2D, "assets/ui/loading/loading_chicken_r.png");
-		dot = new Texture(GL_TEXTURE_2D, "assets/ui/loading/loading_dot.png");
+        m_chickenLeft =
+            std::make_unique<Texture>(GL_TEXTURE_2D, "assets/ui/loading/loading_chicken_l.png");
+        m_chickenRight =
+            std::make_unique<Texture>(GL_TEXTURE_2D, "assets/ui/loading/loading_chicken_r.png");
+        m_dot = std::make_unique<Texture>(GL_TEXTURE_2D, "assets/ui/loading/loading_m_dot.png");
 
-		initialized = true;
-	}
+        m_initialized = true;
+    }
 }

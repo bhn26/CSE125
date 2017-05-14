@@ -220,6 +220,9 @@
     <ClCompile Include="..\src\Audio\SoundsHandler.cpp">
       <Filter>Source Files\Audio</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Network\GameData.cpp">
+      <Filter>Source Files\Network</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Graphics\Camera.h">
@@ -368,6 +371,9 @@
     </ClInclude>
     <ClInclude Include="..\src\Audio\SoundsHandler.h">
       <Filter>Source Files\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Basic\Singleton.h">
+      <Filter>Source Files\Basic</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

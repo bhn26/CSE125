@@ -156,6 +156,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\src\Basic\Singleton.h" />
     <ClInclude Include="..\src\ConfigManager.h" />
     <ClInclude Include="..\src\network\GameData.h" />
     <ClInclude Include="..\src\network\NetworkData.h" />
@@ -200,6 +201,7 @@
     <ClInclude Include="..\src\server\ServerNetwork.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\Network\GameData.cpp" />
     <ClCompile Include="..\src\ConfigManager.cpp" />
     <ClCompile Include="..\src\network\NetworkServices.cpp" />
     <ClCompile Include="..\src\server\engine\BlastField.cpp" />

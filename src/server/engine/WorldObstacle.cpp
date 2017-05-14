@@ -1,28 +1,28 @@
 
 #include "WorldObstacle.h"
 
-WorldObstacle::WorldObstacle(int objectid, btRigidBody* rigidbody, btDiscreteDynamicsWorld* curworld)
+WorldObstacle::WorldObstacle(int objectid,
+                             btRigidBody* rigidbody,
+                             btDiscreteDynamicsWorld* curworld)
+    : m_id(objectid), m_obstacleRigidBody(rigidbody), m_curWorld(curworld)
 {
-	this->id = objectid;
-	this->obstacleRigidBody = rigidbody;
-	this->curWorld = curworld;
 }
 
 WorldObstacle::~WorldObstacle()
 {
-	// should we delete Rigid body here?  or elswhere...
-	this->curWorld->removeCollisionObject(obstacleRigidBody);
-	delete obstacleRigidBody->getMotionState();
-	delete obstacleRigidBody->getCollisionShape();
-	delete obstacleRigidBody;
+    // should we delete Rigid body here?  or elswhere...
+    m_curWorld->removeCollisionObject(m_obstacleRigidBody);
+    delete m_obstacleRigidBody->getMotionState();
+    delete m_obstacleRigidBody->getCollisionShape();
+    delete m_obstacleRigidBody;
 }
 
 int WorldObstacle::GetObjectId()
 {
-	return this->id;
+    return m_id;
 }
 
 btRigidBody* WorldObstacle::GetObjectRigidBody()
 {
-	return this->obstacleRigidBody;
+    return m_obstacleRigidBody;
 }

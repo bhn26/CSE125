@@ -3,15 +3,19 @@
 class BlastMine : public Weapon
 {
 private:
-	static const int ttl = 8;
-	static const int magnitude = 100;
-	static const int explosion_size = 17;
-	static const int stun = 12;
-	static const bool nonFriendly = false;
+    static const int m_ttl = 8;
+    static const int m_magnitude = 100;
+    static const int m_explosionSize = 17;
+    static const int m_stun = 12;
+    static const bool m_nonFriendly = false;
 
 public:
-	BlastMine(btDiscreteDynamicsWorld* curworld);
-	~BlastMine();
+    BlastMine(btDiscreteDynamicsWorld* curworld);
+    ~BlastMine();
 
-	int UseWeapon(btVector3 * position, btMatrix3x3* rotation, int playerid, int teamid, Entity* owner);
+    virtual int UseWeapon(const btVector3& position,
+                          const btMatrix3x3& rotation,
+                          int playerid,
+                          int teamid,
+                          Entity* owner) override;
 };

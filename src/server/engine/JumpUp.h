@@ -1,27 +1,26 @@
 #pragma once
-#include "Powerup.h"
+#include "PowerUp.h"
 #include "Player.h"
 
-class JumpUp : public Powerup
+class JumpUp : public PowerUp
 {
 public:
-	static const int jump_bonus = 30;
-	static const int jump_bonus_duration = 1200;
+    static const int s_jumpBonus = 30;
+    static const int s_jumpBonusDuration = 1200;
 
-	JumpUp() {this->type = PowerupType::JUMPUP;}
-	~JumpUp() {}
-
-	void applyPower(Player* p)  // applies the powerup to the player
-	{ 
-		p->SetBonusJump(jump_bonus);
-		p->SetPowerupDuration(jump_bonus_duration);
-		p->EquipPower(this);
-	};
-	void removePower(Player* p) 
-	{
-		p->SetBonusJump(0);
-		p->SetPowerupDuration(0);
-		p->ResetPower();
-		delete this;
-	};
+    JumpUp() { m_type = PowerUpType::JumpUp; }
+    ~JumpUp() {}
+    void ApplyPower(Player* player) override // applies the powerup to the player
+    {
+        player->SetBonusJump(s_jumpBonus);
+        player->SetPowerUpDuration(s_jumpBonusDuration);
+        player->EquipPower(this);
+    }
+    void RemovePower(Player* player) override
+    {
+        player->SetBonusJump(0);
+        player->SetPowerUpDuration(0);
+        player->ResetPower();
+        delete this;
+    }
 };

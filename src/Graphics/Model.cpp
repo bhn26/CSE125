@@ -29,10 +29,10 @@ void Model::LoadModel(std::string path)
         return;
     }
     // Retrieve the directory path of the filepath
-    this->directory = path.substr(0, path.find_last_of('/'));
+    m_directory = path.substr(0, path.find_last_of('/'));
 
     // Process ASSIMP's root node recursively
-    this->ProcessNode(scene->mRootNode, scene);
+    ProcessNode(scene->mRootNode, scene);
 }
 
 void Model::ProcessNode(aiNode* node, const aiScene* scene)
@@ -40,16 +40,18 @@ void Model::ProcessNode(aiNode* node, const aiScene* scene)
     // Process each mesh located at the current node
     for (GLuint i = 0; i < node->mNumMeshes; i++)
     {
-        // The node object only contains indices to index the actual objects in the scene. 
-        // The scene contains all the data, node is just to keep stuff organized (like relations between nodes).
+        // The node object only contains indices to index the actual objects in the scene.
+        // The scene contains all the data, node is just to keep stuff organized (like relations
+        // between nodes).
         aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-        this->meshes.push_back(this->ProcessMesh(mesh, scene));
+        m_meshes.push_back(this->ProcessMesh(mesh, scene));
     }
 
-    // After we've processed all of the meshes (if any) we then recursively process each of the children nodes
+    // After we've processed all of the meshes (if any) we then recursively process each of the
+    // children nodes
     for (GLuint i = 0; i < node->mNumChildren; i++)
     {
-        this->ProcessNode(node->mChildren[i], scene);
+        ProcessNode(node->mChildren[i], scene);
     }
 }
 
@@ -65,37 +67,40 @@ Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
     for (GLuint i = 0; i < mesh->mNumVertices; i++)
     {
         Mesh::Vertex vertex;
-        glm::vec3 vector; // We declare a placeholder vector since assimp uses its own vector class that doesn't directly convert to glm's vec3 class so we transfer the data to this placeholder glm::vec3 first.
-                          // Positions
+        glm::vec3 vector; // We declare a placeholder vector since assimp uses its own vector class
+                          // that doesn't directly convert to glm's vec3 class so we transfer the
+                          // data to this placeholder glm::vec3 first. Positions
         vector.x = mesh->mVertices[i].x;
         vector.y = mesh->mVertices[i].y;
         vector.z = mesh->mVertices[i].z;
-        vertex.position = std::move(vector);
+        vertex.m_position = std::move(vector);
 
         // Normals
         vector.x = mesh->mNormals[i].x;
         vector.y = mesh->mNormals[i].y;
         vector.z = mesh->mNormals[i].z;
-        vertex.normal = std::move(vector);
+        vertex.m_normal = std::move(vector);
 
         // Texture Coordinates
         if (mesh->mTextureCoords[0]) // Does the mesh contain texture coordinates?
         {
             glm::vec2 vec;
-            // A vertex can contain up to 8 different texture coordinates. We thus make the assumption that we won't 
-            // use models where a vertex can have multiple texture coordinates so we always take the first set (0).
+            // A vertex can contain up to 8 different texture coordinates. We thus make the
+            // assumption that we won't use models where a vertex can have multiple texture
+            // coordinates so we always take the first set (0).
             vec.x = mesh->mTextureCoords[0][i].x;
             vec.y = mesh->mTextureCoords[0][i].y;
-            vertex.texCoords = std::move(vec);
+            vertex.m_texCoords = std::move(vec);
         }
         else
         {
-            vertex.texCoords = std::move(glm::vec2(0.0f, 0.0f));
+            vertex.m_texCoords = std::move(glm::vec2(0.0f, 0.0f));
         }
         vertices.push_back(vertex);
     }
 
-    // Now wak through each of the mesh's faces (a face is a mesh its triangle) and retrieve the corresponding vertex indices.
+    // Now wak through each of the mesh's faces (a face is a mesh its triangle) and retrieve the
+    // corresponding vertex indices.
     for (GLuint i = 0; i < mesh->mNumFaces; i++)
     {
         aiFace face = mesh->mFaces[i];
@@ -105,23 +110,25 @@ Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
     }
 
     // Process materials
-    
+
     if (mesh->mMaterialIndex >= 0)
     {
         aiMaterial* aimaterial = scene->mMaterials[mesh->mMaterialIndex];
-        // We assume a convention for sampler names in the shaders. Each diffuse texture should be named
-        // as 'texture_diffuseN' where N is a sequential number ranging from 1 to MAX_SAMPLER_NUMBER. 
-        // Same applies to other texture as the following list summarizes:
+        // We assume a convention for sampler names in the shaders. Each diffuse texture should be
+        // named as 'texture_diffuseN' where N is a sequential number ranging from 1 to
+        // MAX_SAMPLER_NUMBER. Same applies to other texture as the following list summarizes:
         // Diffuse: texture_diffuseN
         // Specular: texture_specularN
         // Normal: texture_normalN
 
         // 1. Diffuse maps
-        std::vector<Mesh::Texture> diffuseMaps = this->LoadMaterialTextures(aimaterial, aiTextureType_DIFFUSE, "texture_diffuse");
+        std::vector<Mesh::Texture> diffuseMaps =
+            LoadMaterialTextures(aimaterial, aiTextureType_DIFFUSE, "texture_diffuse");
         textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
 
         // 2. Specular maps
-        std::vector<Mesh::Texture> specularMaps = this->LoadMaterialTextures(aimaterial, aiTextureType_SPECULAR, "texture_specular");
+        std::vector<Mesh::Texture> specularMaps =
+            LoadMaterialTextures(aimaterial, aiTextureType_SPECULAR, "texture_specular");
         textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
 
         bool matExist = true;
@@ -131,17 +138,17 @@ Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
         matExist &= (aimaterial->Get(AI_MATKEY_COLOR_DIFFUSE, diffuse) == AI_SUCCESS);
         matExist &= (aimaterial->Get(AI_MATKEY_COLOR_SPECULAR, specular) == AI_SUCCESS);
         matExist &= (aimaterial->Get(AI_MATKEY_COLOR_AMBIENT, ambient) == AI_SUCCESS);
-        matExist &= (aimaterial->Get(AI_MATKEY_SHININESS, material._shininess) == AI_SUCCESS);
+        matExist &= (aimaterial->Get(AI_MATKEY_SHININESS, material.m_shininess) == AI_SUCCESS);
 
         if (matExist)
         {
-            material._diffuse = glm::vec3(diffuse.r, diffuse.g, diffuse.b);
-            material._specular = glm::vec3(specular.r, specular.g, specular.b);
-            material._ambient = glm::vec3(ambient.r, ambient.g, ambient.b);
+            material.m_diffuse = glm::vec3(diffuse.r, diffuse.g, diffuse.b);
+            material.m_specular = glm::vec3(specular.r, specular.g, specular.b);
+            material.m_ambient = glm::vec3(ambient.r, ambient.g, ambient.b);
         }
         else
         {
-            material._diffuse = material._specular = material._ambient = glm::vec3(0.0f);
+            material.m_diffuse = material.m_specular = material.m_ambient = glm::vec3(0.0f);
         }
     }
 
@@ -149,60 +156,65 @@ Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
     return Mesh(vertices, indices, textures, material);
 }
 
-std::vector<Mesh::Texture> Model::LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName)
+std::vector<Mesh::Texture>
+    Model::LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName)
 {
     std::vector<Mesh::Texture> textures;
     for (GLuint i = 0; i < mat->GetTextureCount(type); i++)
     {
         aiString str;
         mat->GetTexture(type, i, &str);
-        // Check if texture was loaded before and if so, continue to next iteration: skip loading a new texture
+        // Check if texture was loaded before and if so, continue to next iteration: skip loading a
+        // new texture
         GLboolean skip = false;
-        for (GLuint j = 0; j < textures_loaded.size(); j++)
+        for (GLuint j = 0; j < m_texturesLoaded.size(); j++)
         {
-            if (textures_loaded[j].path == str)
+            if (m_texturesLoaded[j].m_path == str)
             {
-                textures.push_back(textures_loaded[j]);
-                skip = true; // A texture with the same filepath has already been loaded, continue to next one. (optimization)
+                textures.push_back(m_texturesLoaded[j]);
+                skip = true; // A texture with the same filepath has already been loaded, continue
+                             // to next one. (optimization)
                 break;
             }
         }
         if (!skip)
-        {   // If texture hasn't been loaded already, load it
+        { // If texture hasn't been loaded already, load it
             Mesh::Texture texture;
-            texture.id = TextureFromFile(str.C_Str(), this->directory);
-            texture.type = typeName;
-            texture.path = str;
+            texture.m_id = TextureFromFile(str.C_Str(), m_directory);
+            texture.m_type = typeName;
+            texture.m_path = str;
             textures.push_back(texture);
-            this->textures_loaded.push_back(texture);  // Store it as texture loaded for entire model, to ensure we won't unnecesery load duplicate textures.
+            m_texturesLoaded.push_back(texture); // Store it as texture loaded for entire
+                                                      // model, to ensure we won't unnecesery load
+                                                      // duplicate textures.
         }
     }
     return textures;
 }
 
-
 GLint TextureFromFile(const char* path, std::string directory)
 {
-    //Generate texture ID and load texture data 
+    // Generate texture ID and load texture data
     std::string filename = std::string(path);
     filename = directory + '/' + filename;
-    
+
     GLuint textureID;
     glGenTextures(1, &textureID);
-    
-    //load an image file directly as a new OpenGL texture
+
+    // load an image file directly as a new OpenGL texture
     /*textureID = SOIL_load_OGL_texture(
      filename.c_str(),
      SOIL_LOAD_AUTO,
      SOIL_CREATE_NEW_ID,
      SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT);
     
+
     // check for an error during the load process
     if( textureID == 0 )
     {
         printf( "SOIL loading error: '%s'\n", SOIL_last_result() );
     };*/
-    
+
     int width, height;
     unsigned char* image = SOIL_load_image(filename.c_str(), &width, &height, 0, SOIL_LOAD_RGB);
     // Assign texture to ID
@@ -215,7 +227,7 @@ GLint TextureFromFile(const char* path, std::string directory)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    
+
     // Reset
     glBindTexture(GL_TEXTURE_2D, 0);
     SOIL_free_image_data(image);

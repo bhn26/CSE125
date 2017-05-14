@@ -3,68 +3,82 @@
 #include "Entity.h"
 #include "FireRateReset.h"
 
-BlastField::BlastField(bool nonFriendly, int stun, int magnitude, int ttl, int damage, btVector3* origin, btCollisionShape* fieldshape, int team_id, btDiscreteDynamicsWorld* curworld) : FieldObject(origin, fieldshape, team_id, curworld)
+BlastField::BlastField(bool nonFriendly,
+                       int m_stun,
+                       int magnitude,
+                       int ttl,
+                       int damage,
+                       const btVector3& origin,
+                       btCollisionShape* fieldshape,
+                       int m_teamId,
+                       btDiscreteDynamicsWorld* curworld)
+    : FieldObject(origin, fieldshape, m_teamId, curworld)
+    , m_stun(m_stun)
+    , m_fieldTtl(ttl)
+    , m_fieldDamage(damage)
+    , m_nonFriendly(nonFriendly)
+    , m_magnitude(magnitude)
 {
-	this->stun = stun;
-	this->fieldTtl = ttl;
-	this->fieldDamage = damage;
-	this->nonFriendly = nonFriendly;
-	this->magnitude = magnitude;
 }
+
 BlastField::~BlastField()
 {
-	this->curWorld->removeCollisionObject(FieldGhostObject);
-	delete FieldGhostObject->getCollisionShape();
-	delete FieldGhostObject;
+    m_curWorld->removeCollisionObject(m_fieldGhostObject);
+    delete m_fieldGhostObject->getCollisionShape();
+    delete m_fieldGhostObject;
 }
 
-int BlastField::handleField()
+int BlastField::HandleField()
 {
-	fieldTtl--;
-	int numOverlap = FieldGhostObject->getNumOverlappingObjects();
-	for (int i = 0; i < numOverlap; i++)
-	{
-		btRigidBody *pRigidBody = dynamic_cast<btRigidBody *>(FieldGhostObject->getOverlappingObject(i));
-		if (pRigidBody && pRigidBody->getUserIndex() != ClassId::OBSTACLE && pRigidBody->getUserIndex() != ClassId::FIELD)
-		{
-			Entity* ent = (Entity *)pRigidBody->getUserPointer();
+    m_fieldTtl--;
+    int numOverlap = m_fieldGhostObject->getNumOverlappingObjects();
+    for (int i = 0; i < numOverlap; i++)
+    {
+        btRigidBody* pRigidBody =
+            dynamic_cast<btRigidBody*>(m_fieldGhostObject->getOverlappingObject(i));
+        if (pRigidBody && static_cast<ClassId>(pRigidBody->getUserIndex()) != ClassId::Obstacle
+            && static_cast<ClassId>(pRigidBody->getUserIndex()) != ClassId::Field)
+        {
+            Entity* ent = (Entity*)pRigidBody->getUserPointer();
 
-			if (ent->GetClassId() == ClassId::PLAYER)
-			{
-				Player* collidedPlayer = (Player*)ent;
-				if (collidedPlayer->GetTeamId() != team_id || nonFriendly){ // If the player is an enemy or if this field is nonfriendly
-					collidedPlayer->takeDamage(this->fieldDamage, FireRateReset::instance()->currentWorldTick);
-					collidedPlayer->SetStun(stun);
-					
-				}
-				else {
-					break;
-				}
-			}
+            if (ent->GetClassId() == ClassId::Player)
+            {
+                Player* collidedPlayer = (Player*)ent;
+                if (collidedPlayer->GetTeamId() != m_teamId || m_nonFriendly)
+                { // If the player is an enemy or if this field is nonfriendly
+                    collidedPlayer->takeDamage(m_fieldDamage,
+                                               FireRateReset::Instance()->m_currentWorldTick);
+                    collidedPlayer->SetStun(m_stun);
+                }
+                else
+                {
+                    break;
+                }
+            }
 
-			// if we haven't already blasted this kid
-			if(blasted.find(std::pair<int,int>(ent->GetClassId(), ent->GetObjectId())) == blasted.end())
-			{ 
-				btTransform field = FieldGhostObject->getWorldTransform();
-				btVector3 fieldCenter = field.getOrigin();
+            // if we haven't already blasted this kid
+            if (blasted.find(std::pair<ClassId, int>(ent->GetClassId(), ent->GetObjectId()))
+                == blasted.end())
+            {
+                btTransform field = m_fieldGhostObject->getWorldTransform();
+                btVector3 fieldCenter = field.getOrigin();
 
-				btVector3 playerCenter = ent->GetEntityPosition();
-				btVector3 blastDirection = playerCenter - fieldCenter;
-				blastDirection = blastDirection.normalize();
-				btVector3 velocity = magnitude * blastDirection;
-				blastDirection.setY(ydirection);
+                btVector3 playerCenter = ent->GetEntityPosition();
+                btVector3 blastDirection = playerCenter - fieldCenter;
+                blastDirection = blastDirection.normalize();
+                btVector3 velocity = m_magnitude * blastDirection;
+                blastDirection.setY(s_yDirection);
 
-				ent->Move(&velocity);
-				std::pair<int,int> entpair = std::pair<int, int>(ent->GetClassId(), ent->GetObjectId());
-				blasted.insert(std::pair<std::pair<int,int>,int>(entpair, 1));
-			}
+                ent->Move(&velocity);
+                std::pair<ClassId, int> entpair(ent->GetClassId(), ent->GetObjectId());
+                blasted.emplace(entpair, 1);
+            }
+        }
+    }
 
-
-		}
-	}
-
-	if (fieldTtl > 0)
-		return 0;
-	else
-		return 1;
+    if (m_fieldTtl > 0)
+    {
+        return 0;
+    }
+    return 1;
 }
