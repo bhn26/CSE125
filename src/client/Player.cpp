@@ -23,10 +23,10 @@ Player::Player(float x, float y, float z, float rotW, float rotX, float rotY, fl
     , m_modelFile("assets/chickens/objects/chicken.obj")
     , m_defaultCamFront(glm::normalize(glm::vec3(0.05f, -0.20f, 0.97f)))
 {
-    // info_panel = new Texture(GL_TEXTURE_2D, "assets/ui/player_info_panel.png");
+    // info_panel = std::make_unique<Texture>(GL_TEXTURE_2D, "assets/ui/player_info_panel.png");
 
     SetRelativeCamPosition(glm::vec3(-2.5f, 4.5f, -7.0f));
-    camera = std::make_unique<Camera>(Position() + m_relativeCamPosition);
+    m_camera = std::make_unique<Camera>(Position() + m_relativeCamPosition);
     Entity::RotateTo(rotW, rotX, rotY, rotZ);
 
     // Setup the animated model
@@ -294,35 +294,35 @@ void Player::ProcessViewMovement(GLfloat xoffset, GLfloat yoffset, GLboolean con
 // wheel-axis
 void Player::ProcessMouseScroll(GLfloat yoffset)
 {
-    camera->ProcessMouseScroll(yoffset);
+    m_camera->ProcessMouseScroll(yoffset);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 glm::vec3 Player::CameraPosition() const
 {
     // return glm::vec3(toWorld * glm::rotate(glm::mat4(1.0f), camAngle, glm::vec3(-1.0f, 0.0f,
-    // 0.0f)) * glm::vec4(camera->Position(), 1.0f));
-    return camera->Position();
+    // 0.0f)) * glm::vec4(m_camera->Position(), 1.0f));
+    return m_camera->Position();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 glm::mat4 Player::GetViewMatrix() const
 {
-    // return camera->GetViewMatrix() * glm::rotate(glm::mat4(1.0f), camAngle, glm::vec3(1.0f, 0.0f,
+    // return m_camera->GetViewMatrix() * glm::rotate(glm::mat4(1.0f), camAngle, glm::vec3(1.0f, 0.0f,
     // 0.0f)) * glm::inverse(toWorld);
-    return camera->GetViewMatrix();
+    return m_camera->GetViewMatrix();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 glm::vec3 Player::GetFront() const
 {
-    return camera->Front();
+    return m_camera->Front();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 glm::mat4 Player::GetPerspectiveMatrix() const
 {
-    return camera->GetPerspectiveMatrix();
+    return m_camera->GetPerspectiveMatrix();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -460,7 +460,7 @@ void Player::SetRelativeCamPosition(glm::vec3 relativePos)
 ////////////////////////////////////////////////////////////////////////////////
 void Player::CalculateCameraPosition()
 {
-    camera->m_position =
+    m_camera->m_position =
         Position()
         + (glm::mat3(m_toWorld)
            * glm::mat3(glm::rotate(glm::mat4(1.0f), m_camAngle, m_relativeCamPerpendicular))
@@ -471,11 +471,11 @@ void Player::CalculateCameraPosition()
 ////////////////////////////////////////////////////////////////////////////////
 void Player::CalculateCameraFront()
 {
-    camera->m_front = glm::normalize(
+    m_camera->m_front = glm::normalize(
         glm::mat3(m_toWorld)
         * glm::mat3(glm::rotate(glm::mat4(1.0f), m_camAngle, m_relativeCamPerpendicular))
         * m_defaultCamFront);
-    camera->m_front = glm::normalize(camera->m_front);
+    m_camera->m_front = glm::normalize(m_camera->m_front);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -488,7 +488,7 @@ float Player::DistanceFromLastPos(glm::vec3 newPosition) const
 void Player::SetAudioListener() const
 {
     glm::vec3 position = Position();
-    glm::vec3 direction = camera->Front();
+    glm::vec3 direction = m_camera->Front();
     sf::Listener::setPosition(position.x, position.y, position.z);
     sf::Listener::setDirection(direction.x, direction.y, direction.z);
 }

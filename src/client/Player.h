@@ -30,7 +30,6 @@ enum class Direction
     Down,
 };
 
-
 class Player : public Entity, public Animation::AnimationPlayer::Listener
 {
 public:
@@ -68,49 +67,62 @@ public:
     void Dance() { ChangeState(State::Dance); }
     void Attack() { ChangeState(State::Attack); }
     void TauntDie() { ChangeState(State::Death); }
-    void Die() { ChangeState(State::Death); m_alive = false; m_health = 0; }
+    void Die()
+    {
+        ChangeState(State::Death);
+        m_alive = false;
+        m_health = 0;
+    }
     void Peck() { ChangeState(State::Peck); }
-
 
     void SetModelFile(std::string fileName);
 
     // Process movement
     void ProcessKeyboard(Direction direction, GLfloat deltaTime);
 
-    // Processes input received from a mouse input system. Expects the offset value in both the x and y direction.
+    // Processes input received from a mouse input system. Expects the offset value in both the x
+    // and y direction.
     void ProcessMouseMovement(GLfloat xoffset, GLfloat yoffset, GLboolean constrainPitch = true);
     void ProcessViewMovement(GLfloat xoffset, GLfloat yoffset, GLboolean constrainPitch = true);
 
-    // Processes input received from a mouse scroll-wheel event. Only requires input on the vertical wheel-axis
+    // Processes input received from a mouse scroll-wheel event. Only requires input on the vertical
+    // wheel-axis
     void ProcessMouseScroll(GLfloat yoffset);
 
     glm::vec3 CameraPosition() const;
     glm::mat4 GetViewMatrix() const;
     glm::mat4 GetPerspectiveMatrix() const;
-	glm::vec3 GetFront() const;
+    glm::vec3 GetFront() const;
     glm::mat3 GetNormalMatrix() const;
-	float GetCamAngle() const;
+    float GetCamAngle() const;
 
     int GetID() const { return m_id; };
     int GetClassId() const { return m_classId; }
 
-    void ChangeState(State state);                  // Will change model state and player state
-    void SetState(State state) { m_state = state; }     // Simply Sets the state without changing the model
+    void ChangeState(State state); // Will change model state and player state
+    void SetState(State state)
+    {
+        m_state = state;
+    } // Simply Sets the state without changing the model
 
     int GetScore() const override { return m_numEggs; };
     void SetScore(int n) override { m_numEggs = n; };
 
-	void SetTeam(int team);
+    void SetTeam(int team);
     int GetTeam() const { return m_teamId; }
 
-	int GetWeapon();
-	void SetWeapon(int m_weapon);
+    int GetWeapon();
+    void SetWeapon(int m_weapon);
 
-	bool IsAlive() { return m_alive; }
-	void SetAlive(bool a) { m_alive = a; m_health = 100; }
+    bool IsAlive() { return m_alive; }
+    void SetAlive(bool a)
+    {
+        m_alive = a;
+        m_health = 100;
+    }
 
-	void SetHealth(int h) override { m_health = h; }
-	int GetHealth() const override { return m_health; };
+    void SetHealth(int h) override { m_health = h; }
+    int GetHealth() const override { return m_health; };
 
 private:
     // AnimationPlayer::Listener
@@ -124,17 +136,17 @@ private:
 
 private:
     // Player is made up of a model with a camera following it
-    std::unique_ptr<Camera> camera;
-    //std::unique_ptr<Model> model;
+    std::unique_ptr<Camera> m_camera;
+    // std::unique_ptr<Model> model;
     std::unique_ptr<Animation::AnimatedModel> m_model;
 
     // Game data
     int m_id;
     int m_teamId;
     int m_numEggs = 0;
-	int m_weapon = -1;
+    int m_weapon = -1;
 
-    Texture* info_panel;
+    std::unique_ptr<Texture> m_infoPanel;
 
     // How up/down camera is
     float m_camAngle = 0.0f;
@@ -147,19 +159,17 @@ private:
 
     int m_tick = 0;
 
-	bool m_alive = true;
-	int m_health = 100;
+    bool m_alive = true;
+    int m_health = 100;
 
     // Path name for chicken model texture
     std::string m_modelFile;
 
     // Animation
     State m_state;
-    float m_lastTime_t;     // Test
+    float m_lastTime_t; // Test
     float m_distanceThreshhold_t = 1.0f;
     glm::vec3 m_lastPos_t;
 
-    std::stack<int> m_danceSoundIndices;      // Sound index
-
+    std::stack<int> m_danceSoundIndices; // Sound index
 };
-
