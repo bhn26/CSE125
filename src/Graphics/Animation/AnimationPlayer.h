@@ -33,9 +33,9 @@ namespace Animation
         std::vector<VectorKey> m_positionKeys;
         std::vector<VectorKey> m_scaleKeys;
         std::vector<QuatKey> m_rotationKeys;
-        int m_lastPosKey, m_lastScaleKey, m_lastRotKey;
+        int m_lastPosKey = 0, m_lastScaleKey = 0, m_lastRotKey = 0;
 
-        Channel() : m_lastPosKey(0), m_lastScaleKey(0), m_lastRotKey(0) {}
+        Channel() = default;
         Channel(const aiNodeAnim* nodeAnim);
 
         glm::mat4 Evaluate(float time, float duration) const;
@@ -60,13 +60,13 @@ namespace Animation
     // Animation with channels
     struct Animation
     {
-        float m_duration;
-        float m_ticksPerSecond;
-        bool m_loops;
+        float m_duration = 0.0f;
+        float m_ticksPerSecond = 16.6f;
+        bool m_loops = false;
         std::vector<Channel> m_channels;
         std::unordered_map<std::string, int> m_channelMap;
 
-        Animation() : m_duration(0.0f) {}
+        Animation() = default;
         Animation(const aiAnimation* scene, bool loops = false);
         const Channel& GetChannel(std::string name) const;
     };
@@ -92,8 +92,8 @@ namespace Animation
 
         std::string
             AddAnimFromScene(const aiScene* scene, bool loops = false, std::string animName = "");
-        bool PlayAnimation(std::string name);
-        bool SetAnimation(std::string name);
+        bool PlayAnimation(const std::string& name);
+        bool SetAnimation(const std::string& name);
 
         void Pause() { m_animating = false; }
         void Continue() { m_animating = true; }
