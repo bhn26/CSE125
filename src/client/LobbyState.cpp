@@ -22,10 +22,6 @@ LobbyState* LobbyState::GetInstance(CStateManager* pManager)
     return &Instance;
 }
 
-void LobbyState::OnKeyDown(WPARAM wKey)
-{
-}
-
 void LobbyState::OnClick(int button, int action, double x, double y)
 {
     if (!m_loading)

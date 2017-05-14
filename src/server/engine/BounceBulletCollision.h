@@ -11,9 +11,9 @@ public:
         : m_bounces(b), m_speed(initialSpeed){};
 
     // Does not consider what it collided with
-    bool HandleBulletCollision(unsigned int world_tick, Entity* collidee)
+    bool HandleBulletCollision(unsigned int world_tick, Entity* collidee) override
     {
-        if (m_bullet == nullptr)
+        if (!m_bullet)
         {
             return false;
         }

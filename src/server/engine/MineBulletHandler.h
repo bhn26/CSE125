@@ -21,5 +21,5 @@ public:
     // This needs to be called after the constructor because hack.
     void SetBullet(Bullet* bul) { m_bullet = bul; }
 
-    bool HandleBulletCollision(unsigned int world_tick, Entity* collidee);
+    bool HandleBulletCollision(unsigned int world_tick, Entity* collidee) override;
 };

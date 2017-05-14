@@ -2,7 +2,7 @@
 
 #include "Entity.h"
 #include "BulletCollisionHandler.h"
-#include "../../network/GameData.h"
+#include "network/GameData.h"
 
 class Bullet : public Entity
 {
@@ -28,7 +28,7 @@ public:
     // the tick that the collision occured, may consider the object it collided with, returns true
     // if the bullet needs to be deleted, the handler decides this
     // collidee will be nullptr if the collidee is a static object
-    bool handleBulletCollision(unsigned int world_tick, Entity* collidee)
+    bool HandleBulletCollision(unsigned int world_tick, Entity* collidee)
     {
         return m_collisionHandler->HandleBulletCollision(world_tick, collidee);
     }

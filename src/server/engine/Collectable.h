@@ -22,6 +22,6 @@ public:
     Collectable(int objectid, PosInfo pos, btDiscreteDynamicsWorld* curworld, Weapon* wp);
     Collectable(int objectid, PosInfo pos, btDiscreteDynamicsWorld* curworld, PowerUp* powerup);
     virtual ~Collectable();
-    void virtual HandleCollect(Player* collidedPlayer);
+    virtual void HandleCollect(Player* collidedPlayer);
     CollectType GetType() { return m_type; }
 };

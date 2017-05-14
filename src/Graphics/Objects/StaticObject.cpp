@@ -42,11 +42,6 @@ void StaticObject::Draw() const
     m_model->Draw(Scene::Instance()->IsRenderingDepth() ? nullptr : m_shader.get());
 }
 
-void StaticObject::Update(float deltaTime)
-{
-    // Spin(0.3f);
-}
-
 void StaticObject::Spin(float deg)
 {
     // This creates the matrix to rotate the cube

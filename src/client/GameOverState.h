@@ -19,7 +19,7 @@ public:
     void Draw() override;
     void EnterState() override;
 
-    void Update(DWORD dwCurrentTime);
+    void Update(DWORD dwCurrentTime) override;
 
     static GOState* GetInstance(CStateManager* pManager);
 

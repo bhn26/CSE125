@@ -14,7 +14,7 @@ public:
     void SetBullet(Bullet* b) { m_bullet = b; }
 
     // Does not consider what collided with it
-    bool HandleBulletCollision(unsigned int world_tick, Entity* collidee);
+    bool HandleBulletCollision(unsigned int world_tick, Entity* collidee) override;
 
 private:
     int m_explosionSize = 0;  // size of the explosion

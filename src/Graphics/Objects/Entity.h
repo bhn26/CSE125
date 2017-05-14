@@ -58,7 +58,7 @@ public:
 
     // Basic Rendering functions
     virtual void Draw() const = 0;
-    virtual void Update(float deltaTime) = 0;
+    virtual void Update(float deltaTime) {}
 
     // Methods to modify model matrix (position/view)
     virtual void MoveTo(float x, float y, float z) { MoveTo(glm::vec3(x, y, z)); }

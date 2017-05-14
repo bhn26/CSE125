@@ -28,7 +28,6 @@ public:
 
     // Inherited via Entity
     void Draw() const override;
-    void Update(float deltaTime) override;
     virtual void SetShaderUniforms() const override;
 
     void Spin(float deg);

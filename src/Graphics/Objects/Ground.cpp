@@ -61,10 +61,6 @@ Ground::~Ground()
     glDeleteBuffers(1, &m_EBO);
 }
 
-void Ground::Update(float deltaTime)
-{
-}
-
 void Ground::SetShaderUniforms() const
 {
     glUniformMatrix4fv(m_shader->GetUniform("view"), 1, false, glm::value_ptr(Scene::Instance()->GetViewMatrix()));

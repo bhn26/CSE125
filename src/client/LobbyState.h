@@ -14,7 +14,6 @@
 class LobbyState : public CGameState
 {
 public:
-    void OnKeyDown(WPARAM wKey);
     void OnClick(int button, int action, double x, double y) override;
     void Draw() override;
     void EnterState() override;

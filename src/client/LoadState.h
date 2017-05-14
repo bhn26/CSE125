@@ -10,10 +10,10 @@
 class LoadState : public CGameState
 {
 public:
-    void Draw();
-    void EnterState();
+    void Draw() override;
+    void EnterState() override;
 
-    void Update(DWORD dwCurrentTime);
+    void Update(DWORD dwCurrentTime) override;
 
     static LoadState* GetInstance(CStateManager* manager);
 
