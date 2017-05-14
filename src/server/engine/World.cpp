@@ -212,7 +212,7 @@ void World::Update()
                 }
                 // printf("Pushed to delete!, hit playerB");
                 collideBullet->SetToMarked(m_worldTick);
-                if (collideBullet->handleBulletCollision(m_worldTick, collidePlayer))
+                if (collideBullet->HandleBulletCollision(m_worldTick, collidePlayer))
                 {
                     m_deleteList.push_back(collideBullet);
                     ServerGame::Instance()->SendRemovePacket(ClassId::Bullet,
@@ -251,7 +251,7 @@ void World::Update()
                     continue;
                 }
                 collideBullet->SetToMarked(m_worldTick);
-                if (collideBullet->handleBulletCollision(m_worldTick, nullptr))
+                if (collideBullet->HandleBulletCollision(m_worldTick, nullptr))
                 {
                     m_deleteList.push_back(collideBullet);
                     ServerGame::Instance()->SendRemovePacket(ClassId::Bullet,
@@ -284,7 +284,7 @@ void World::Update()
                 }
 
                 collideBullet->SetToMarked(m_worldTick);
-                if (collideBullet->handleBulletCollision(m_worldTick, collidePlayer))
+                if (collideBullet->HandleBulletCollision(m_worldTick, collidePlayer))
                 {
                     m_deleteList.push_back(collideBullet);
                     ServerGame::Instance()->SendRemovePacket(ClassId::Bullet,
@@ -322,7 +322,7 @@ void World::Update()
                 // printf("Current velocity:  x: %f, y: %f, z: %f  \n", bulPos.getX(),
                 // bulPos.getY(), bulPos.getZ());
                 collideBullet->SetToMarked(m_worldTick);
-                if (collideBullet->handleBulletCollision(m_worldTick, nullptr))
+                if (collideBullet->HandleBulletCollision(m_worldTick, nullptr))
                 {
                     m_deleteList.push_back(collideBullet);
                     ServerGame::Instance()->SendRemovePacket(ClassId::Bullet,
