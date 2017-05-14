@@ -37,11 +37,11 @@ void RespawnHandler::RespawnAPlayer(Player* p)
     btTransform currentTrans;
 
     // Teleport Player to a random spot in the world
-    std::pair<int, int> loc = EntitySpawner::getRandomLoc();
+    std::pair<int, int> loc = EntitySpawner::GetRandomLoc();
     btVector3 ranPos = btVector3(loc.first, 90, loc.second);
     p->GetRigidBody()->getMotionState()->getWorldTransform(currentTrans);
     currentTrans.setOrigin(ranPos);
     p->GetRigidBody()->getMotionState()->setWorldTransform(currentTrans);
     p->GetRigidBody()->setCenterOfMassTransform(currentTrans);
-    ServerGame::Instance()->sendRespawnPacket(p->GetObjectId());
+    ServerGame::Instance()->SendRespawnPacket(p->GetObjectId());
 }

@@ -166,7 +166,7 @@ btDiscreteDynamicsWorld* World::GetPhysicsWorld()
 
 void World::PreSpawn()
 {
-    ServerGame::Instance()->sendReadyToSpawnPacket();
+    ServerGame::Instance()->SendReadyToSpawnPacket();
 }
 
 void World::UpdateWorld()
@@ -215,7 +215,7 @@ void World::UpdateWorld()
                 if (collideBullet->handleBulletCollision(world_tick, collidePlayer))
                 {
                     deleteList.push_back(collideBullet);
-                    ServerGame::Instance()->sendRemovePacket(ClassId::Bullet,
+                    ServerGame::Instance()->SendRemovePacket(ClassId::Bullet,
                                                              collideBullet->GetObjectId());
                 }
                 else
@@ -254,7 +254,7 @@ void World::UpdateWorld()
                 if (collideBullet->handleBulletCollision(world_tick, nullptr))
                 {
                     deleteList.push_back(collideBullet);
-                    ServerGame::Instance()->sendRemovePacket(ClassId::Bullet,
+                    ServerGame::Instance()->SendRemovePacket(ClassId::Bullet,
                                                              collideBullet->GetObjectId());
                 }
                 else
@@ -287,7 +287,7 @@ void World::UpdateWorld()
                 if (collideBullet->handleBulletCollision(world_tick, collidePlayer))
                 {
                     deleteList.push_back(collideBullet);
-                    ServerGame::Instance()->sendRemovePacket(ClassId::Bullet,
+                    ServerGame::Instance()->SendRemovePacket(ClassId::Bullet,
                                                              collideBullet->GetObjectId());
                 }
                 else
@@ -325,7 +325,7 @@ void World::UpdateWorld()
                 if (collideBullet->handleBulletCollision(world_tick, nullptr))
                 {
                     deleteList.push_back(collideBullet);
-                    ServerGame::Instance()->sendRemovePacket(ClassId::Bullet,
+                    ServerGame::Instance()->SendRemovePacket(ClassId::Bullet,
                                                              collideBullet->GetObjectId());
                 }
                 else
@@ -359,7 +359,7 @@ void World::UpdateWorld()
                 collectObj->HandleCollect(collidePlayer);
                 if (collectObj->GetType() == CollectType::Weapon)
                 {
-                    ServerGame::Instance()->sendRemovePacket(
+                    ServerGame::Instance()->SendRemovePacket(
                         ClassId::Collectable,
                         collectObj->GetObjectId(),
                         ClassId::Player,
@@ -369,13 +369,13 @@ void World::UpdateWorld()
                 }
                 else if (collectObj->GetType() == CollectType::PowerUp)
                 {
-                    ServerGame::Instance()->sendRemovePacket(
+                    ServerGame::Instance()->SendRemovePacket(
                         ClassId::Collectable,
                         collectObj->GetObjectId(),
                         ClassId::Player,
                         collidePlayer->GetObjectId(),
                         CollectType::PowerUp,
-                        static_cast<int>(collectObj->GetPowerUp()->getType()));
+                        static_cast<int>(collectObj->GetPowerUp()->GetType()));
                 }
                 deleteList.push_back(collectObj);
                 collectObj->SetToMarked(world_tick);
@@ -396,7 +396,7 @@ void World::UpdateWorld()
                 }
 
                 collideFlag->HandleCollectable(collidePlayer);
-                ServerGame::Instance()->sendRemovePacket(ClassId::Flag,
+                ServerGame::Instance()->SendRemovePacket(ClassId::Flag,
                                                          collideFlag->GetObjectId(),
                                                          ClassId::Player,
                                                          collidePlayer->GetObjectId());
@@ -463,7 +463,7 @@ void World::UpdateWorld()
                 collectObj->HandleCollect(collidePlayer);
                 if (collectObj->GetType() == CollectType::Weapon)
                 {
-                    ServerGame::Instance()->sendRemovePacket(
+                    ServerGame::Instance()->SendRemovePacket(
                         ClassId::Collectable,
                         collectObj->GetObjectId(),
                         ClassId::Player,
@@ -473,13 +473,13 @@ void World::UpdateWorld()
                 }
                 else if (collectObj->GetType() == CollectType::PowerUp)
                 {
-                    ServerGame::Instance()->sendRemovePacket(
+                    ServerGame::Instance()->SendRemovePacket(
                         ClassId::Collectable,
                         collectObj->GetObjectId(),
                         ClassId::Player,
                         collidePlayer->GetObjectId(),
                         CollectType::PowerUp,
-                        static_cast<int>(collectObj->GetPowerUp()->getType()));
+                        static_cast<int>(collectObj->GetPowerUp()->GetType()));
                 }
                 deleteList.push_back(collectObj);
                 collectObj->SetToMarked(world_tick);
@@ -499,7 +499,7 @@ void World::UpdateWorld()
                     continue;
                 }
                 collideFlag->HandleCollectable(collidePlayer);
-                ServerGame::Instance()->sendRemovePacket(ClassId::Flag,
+                ServerGame::Instance()->SendRemovePacket(ClassId::Flag,
                                                          collideFlag->GetObjectId(),
                                                          ClassId::Player,
                                                          collidePlayer->GetObjectId());
@@ -618,7 +618,7 @@ void World::UpdateWorld()
             {
                 if (static_cast<ClassId>(it->second->GetClassId()) == ClassId::Player)
                 {
-                    ServerGame::Instance()->sendMovePacket((ClassId)it->second->GetClassId(),
+                    ServerGame::Instance()->SendMovePacket((ClassId)it->second->GetClassId(),
                                                            it->second->GetObjectId());
                 }
                 // printf(" Dynamic object classid: %d, objid: %d, velocity (%f,%f,%f)\n",
@@ -630,25 +630,29 @@ void World::UpdateWorld()
             // modify on player ticks
             if (static_cast<ClassId>(it->second->GetClassId()) == ClassId::Player)
             {
+                Player* player = static_cast<Player*>(it->second);
                 // resets stuns
-                if (((Player*)it->second)->GetStun() > 0)
-                    ((Player*)it->second)
-                        ->SetStun(((Player*)it->second)->GetStun() - 4); // unstun the guy
+                if (player->GetStun() > 0)
+                {
+                   player->SetStun(player->GetStun() - 4); // unstun the guy
+                }
 
                 // resets powerups
-                if (((Player*)it->second)->GetPowerUpDuration() > 0)
+                if (player->GetPowerUpDuration() > 0)
                 {
-                    ((Player*)it->second)
-                        ->SetPowerUpDuration(((Player*)it->second)->GetPowerUpDuration() - 4);
-                    if (((Player*)it->second)->GetPowerUpDuration() <= 0)
+                    player
+                        ->SetPowerUpDuration(player->GetPowerUpDuration() - 4);
+                    if (player->GetPowerUpDuration() <= 0)
                     {
-                        if (((Player*)it->second)->GetPower() != nullptr)
-                            ((Player*)it->second)->GetPower()->removePower(((Player*)it->second));
+                        if (!player->GetPower())
+                        {
+                            player->GetPower()->RemovePower(player);
+                        }
                     }
                 }
             }
 
-            ServerGame::Instance()->sendMovePacket((ClassId)it->second->GetClassId(),
+            ServerGame::Instance()->SendMovePacket((ClassId)it->second->GetClassId(),
                                                    it->second->GetObjectId());
         }
     }

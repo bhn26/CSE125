@@ -18,5 +18,5 @@ public:
                 int team_id,
                 btDiscreteDynamicsWorld* curworld);
     virtual ~DamageField();
-    int handleField() override;
+    int HandleField() override;
 };

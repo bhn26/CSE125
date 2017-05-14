@@ -20,7 +20,7 @@
 #include "JumpUp.h"
 #include "SpeedUp.h"
 
-Player* EntitySpawner::spawnPlayer(int teamid, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld)
+Player* EntitySpawner::SpawnPlayer(int teamid, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld)
 {
     // Create player and add to Entity Map
     // note - need to create players with explicit id or else teams will depend on order they
@@ -53,11 +53,11 @@ Player* EntitySpawner::spawnPlayer(int teamid, PosInfo pos, btDiscreteDynamicsWo
     out.roty = quat.getY();
     out.rotz = quat.getZ();
 
-    ServerGame::Instance()->sendSpawnPacket(out);
+    ServerGame::Instance()->SendSpawnPacket(out);
     return newPlayer;
 }
 
-Flag* EntitySpawner::spawnFlag(PosInfo pos, btDiscreteDynamicsWorld* physicsWorld)
+Flag* EntitySpawner::SpawnFlag(PosInfo pos, btDiscreteDynamicsWorld* physicsWorld)
 {
     // Create flag and add to Entity Map
     Flag* newFlag = new Flag(oid_flag, pos, physicsWorld);
@@ -78,11 +78,11 @@ Flag* EntitySpawner::spawnFlag(PosInfo pos, btDiscreteDynamicsWorld* physicsWorl
     out.rotx = quat.getX();
     out.roty = quat.getY();
     out.rotz = quat.getZ();
-    ServerGame::Instance()->sendSpawnPacket(out);
+    ServerGame::Instance()->SendSpawnPacket(out);
     return newFlag;
 }
 
-Bullet* EntitySpawner::spawnBullet(int playerid,
+Bullet* EntitySpawner::SpawnBullet(int playerid,
                                    int teamid,
                                    int damage,
                                    WeaponType shooter,
@@ -114,11 +114,11 @@ Bullet* EntitySpawner::spawnBullet(int playerid,
     out.rotx = quat.getX();
     out.roty = quat.getY();
     out.rotz = quat.getZ();
-    ServerGame::Instance()->sendSpawnPacket(out);
+    ServerGame::Instance()->SendSpawnPacket(out);
     return fireProjectile;
 }
 
-void EntitySpawner::spawnCollectable(btDiscreteDynamicsWorld* curWorld, WeaponType w_type)
+void EntitySpawner::SpawnCollectable(btDiscreteDynamicsWorld* curWorld, WeaponType w_type)
 {
     Weapon* wp;
     // switch (w_type)
@@ -158,7 +158,7 @@ void EntitySpawner::spawnCollectable(btDiscreteDynamicsWorld* curWorld, WeaponTy
         return;
     }
 
-    std::pair<int, int> p = getRandomLoc();
+    std::pair<int, int> p = GetRandomLoc();
     PosInfo pos;
     pos.x = (float)p.first;
     pos.y = 90.0f;
@@ -183,10 +183,10 @@ void EntitySpawner::spawnCollectable(btDiscreteDynamicsWorld* curWorld, WeaponTy
     out.rotx = quat.getX();
     out.roty = quat.getY();
     out.rotz = quat.getZ();
-    ServerGame::Instance()->sendSpawnPacket(out);
+    ServerGame::Instance()->SendSpawnPacket(out);
 }
 
-void EntitySpawner::spawnCollectable(btDiscreteDynamicsWorld* curWorld, PowerUpType p_type)
+void EntitySpawner::SpawnCollectable(btDiscreteDynamicsWorld* curWorld, PowerUpType p_type)
 {
     PowerUp* pow = nullptr;
 
@@ -212,7 +212,7 @@ void EntitySpawner::spawnCollectable(btDiscreteDynamicsWorld* curWorld, PowerUpT
     if (pow == nullptr)
         return;
 
-    std::pair<int, int> p = getRandomLoc();
+    std::pair<int, int> p = GetRandomLoc();
     PosInfo pos;
     pos.x = p.first;
     pos.y = 90;
@@ -237,7 +237,7 @@ void EntitySpawner::spawnCollectable(btDiscreteDynamicsWorld* curWorld, PowerUpT
     out.rotx = quat.getX();
     out.roty = quat.getY();
     out.rotz = quat.getZ();
-    ServerGame::Instance()->sendSpawnPacket(out);
+    ServerGame::Instance()->SendSpawnPacket(out);
 }
 
 void EntitySpawner::AddEntity(ClassId cid, unsigned int oid, Entity* ent)
@@ -269,7 +269,7 @@ std::map<std::pair<ClassId, unsigned int>, Entity*>& EntitySpawner::GetMap()
     return m_entities;
 }
 
-std::pair<int, int> EntitySpawner::getRandomLoc()
+std::pair<int, int> EntitySpawner::GetRandomLoc()
 {
     std::pair<int, int> loc;
     loc.first = 0;

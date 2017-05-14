@@ -47,7 +47,7 @@ int SeedGun::UseWeapon(btVector3* position, btMatrix3x3* rotation, int playerid,
 		SimpleBulletCollision* handler = new SimpleBulletCollision();
 
 		// Spawns bullet with this gun's damage, speed, and necessary ids into world
-		Bullet* fireProjectile = EntitySpawner::Instance()->spawnBullet(playerid, teamid, this->damage, wt, handler, bRigidBody, curWorld);
+		Bullet* fireProjectile = EntitySpawner::Instance()->SpawnBullet(playerid, teamid, this->damage, wt, handler, bRigidBody, curWorld);
 
 		this->fireFlag = 0;
 		this->nextFireTick = FireRateReset::Instance()->currentWorldTick + fireRate;

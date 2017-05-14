@@ -11,13 +11,13 @@ public:
     SpeedUp() { this->type = PowerUpType::SpeedUp; }
     ~SpeedUp() {}
     // applies the powerup to the player
-    void applyPower(Player* p) override
+    void ApplyPower(Player* p) override
     {
         p->SetBonusSpeed(speed_bonusDuration);
         p->SetPowerUpDuration(speed_bonusDuration);
         p->EquipPower(this);
     };
-    void removePower(Player* p) override
+    void RemovePower(Player* p) override
     {
         p->SetBonusSpeed(0);
         p->SetPowerUpDuration(0);

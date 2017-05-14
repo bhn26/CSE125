@@ -43,7 +43,7 @@ private:
     int m_hitPoints = 100;
     int m_powerupDuration = 0;
 
-    PowerUp* power = nullptr;
+    PowerUp* m_power = nullptr;
 
 public:
     static const int maxHealth = 100;
@@ -79,7 +79,7 @@ public:
 
     bool HasPower();
     void EquipPower(PowerUp* powerup);
-    void ResetPower() { power = nullptr; }
+    void ResetPower() { m_power = nullptr; }
     // How much damage did they take, what is the world tick when they took this damage?
     int takeDamage(int damage, unsigned int world_tick);
 
@@ -132,5 +132,5 @@ public:
     void SetPowerUpDuration(int dur) { m_powerupDuration = dur; }
     int GetHitPoints() const { return m_hitPoints; }
     void SetHitPoints(int hp) { m_hitPoints = hp; }
-    PowerUp* GetPower() { return power; }
+    PowerUp* GetPower() { return m_power; }
 };

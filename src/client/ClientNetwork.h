@@ -25,10 +25,10 @@ public:
     ClientNetwork(void);
     ~ClientNetwork(void);
 
-    int receivePackets(std::uint8_t*);
+    int ReceivePackets(std::uint8_t*);
 
     // for error checking function calls in Winsock library
-    int m_iResult;
+    int m_result;
 
     // socket for client to connect to server
     SOCKET m_connectSocket;

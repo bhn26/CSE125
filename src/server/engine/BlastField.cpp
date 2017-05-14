@@ -28,7 +28,7 @@ BlastField::~BlastField()
     delete m_fieldGhostObject;
 }
 
-int BlastField::handleField()
+int BlastField::HandleField()
 {
     m_fieldTtl--;
     int numOverlap = m_fieldGhostObject->getNumOverlappingObjects();

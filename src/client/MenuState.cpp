@@ -186,7 +186,7 @@ void ::CMenuState::InitTextures()
 void CMenuState::StartGame()
 {
     // send chicken name
-    ClientGame::Instance()->sendNamePacket();
+    ClientGame::Instance()->SendNamePacket();
     // change state
     m_stateManager->ChangeState(LobbyState::GetInstance(m_stateManager));
 }

@@ -1,17 +1,17 @@
 
 #include "NetworkServices.h"
 
-int NetworkServices::sendMessage(SOCKET curSocket, std::uint8_t* message, int messageSize)
+int NetworkServices::Send(SOCKET curSocket, std::uint8_t* message, int messageSize)
 {
     return send(curSocket, reinterpret_cast<char*>(message), messageSize, 0);
 }
 
-int NetworkServices::receiveMessage(SOCKET curSocket, std::uint8_t* buffer, int bufSize)
+int NetworkServices::Receive(SOCKET curSocket, std::uint8_t* buffer, int bufSize)
 {
     return recv(curSocket, reinterpret_cast<char*>(buffer), bufSize, 0);
 }
 
-int NetworkServices::sockInit()
+int NetworkServices::SockInit()
 {
 #ifdef _WIN32
     WSADATA wsa_data;
@@ -21,7 +21,7 @@ int NetworkServices::sockInit()
 #endif
 }
 
-int NetworkServices::sockQuit()
+int NetworkServices::SockQuit()
 {
 #ifdef _WIN32
     return WSACleanup();
@@ -30,7 +30,7 @@ int NetworkServices::sockQuit()
 #endif
 }
 
-int NetworkServices::sockClose(SOCKET sock)
+int NetworkServices::SockClose(SOCKET sock)
 {
     int status = 0;
 

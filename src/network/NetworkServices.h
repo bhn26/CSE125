@@ -22,9 +22,9 @@
 class NetworkServices
 {
 public:
-    static int sendMessage(SOCKET curSocket, std::uint8_t* message, int messageSize);
-    static int receiveMessage(SOCKET curSocket, std::uint8_t* buffer, int bufSize);
-    static int sockInit();
-    static int sockQuit();
-    static int sockClose(SOCKET sock);
+    static int Send(SOCKET curSocket, std::uint8_t* message, int messageSize);
+    static int Receive(SOCKET curSocket, std::uint8_t* buffer, int bufSize);
+    static int SockInit();
+    static int SockQuit();
+    static int SockClose(SOCKET sock);
 };

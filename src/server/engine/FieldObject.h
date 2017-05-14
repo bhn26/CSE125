@@ -26,5 +26,5 @@ public:
 
     btPairCachingGhostObject* GetFieldGhostObject() { return m_fieldGhostObject; }
     // handles field detection. Returns 1 when field is done, 0 if not
-    virtual int handleField();
+    virtual int HandleField();
 };

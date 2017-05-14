@@ -35,20 +35,20 @@ struct PacketHeader
     unsigned int packet_type;
 
     // id for server will be -1
-    int sender_id;
-    int receiver_id;
+    int m_sender;
+    int m_receiver;
 };
 
 struct PacketData
 {
-    GameDataId game_data_id;
-    std::uint8_t buf[g_dataSize];
+    GameDataId m_gameDataId;
+    std::uint8_t m_buffer[g_dataSize];
 };
 
 struct Packet
 {
-    PacketHeader hdr;
-    PacketData dat;
+    PacketHeader m_header;
+    PacketData m_data;
 
     void Serialize(std::uint8_t* data) { memcpy(data, this, sizeof(Packet)); }
     void Deserialize(std::uint8_t* data) { memcpy(this, data, sizeof(Packet)); }

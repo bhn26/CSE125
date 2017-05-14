@@ -116,6 +116,6 @@ float ConfigManager::GetAsFloat(const std::string& key)
 ////////////////////////////////////////////////////////////////////////////////
 bool ConfigManager::HasPrefix(const std::string& word, const std::string& prefix) const
 {
-    return (word.substr(0, prefix.length()) == prefix);
+    return word.substr(0, prefix.length()) == prefix;
 }
 

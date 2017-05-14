@@ -45,7 +45,7 @@ int GrenadeLauncher::UseWeapon(btVector3* position, btMatrix3x3* rotation, int p
 		bRigidBody->forceActivationState(DISABLE_DEACTIVATION);
 
 		ExplosiveBulletCollision* handler = new ExplosiveBulletCollision(EXPLOSION_SIZE, EXPLOSION_DUR);
-		Bullet* fireProjectile = EntitySpawner::Instance()->spawnBullet(playerid, teamid, this->damage, wt, handler, bRigidBody, curWorld);
+		Bullet* fireProjectile = EntitySpawner::Instance()->SpawnBullet(playerid, teamid, this->damage, wt, handler, bRigidBody, curWorld);
 		handler->SetBullet(fireProjectile);
 
 		// Spawns bullet with this gun's damage, speed, and necessary ids into world

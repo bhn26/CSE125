@@ -70,10 +70,10 @@ int Shotgun::UseWeapon(btVector3* position, btMatrix3x3* rotation, int playerid,
 		SimpleBulletCollision* handler4 = new SimpleBulletCollision();
 
 		// Spawns bullet with this gun's damage, speed, and necessary ids into world
-		Bullet* fireProjectile = EntitySpawner::Instance()->spawnBullet(playerid, teamid, this->damage, wt, handler1, bRigidBody1, curWorld);
-		fireProjectile = EntitySpawner::Instance()->spawnBullet(playerid, teamid, this->damage, wt, handler2, bRigidBody2, curWorld);
-		fireProjectile = EntitySpawner::Instance()->spawnBullet(playerid, teamid, this->damage, wt, handler3, bRigidBody3, curWorld);
-		fireProjectile = EntitySpawner::Instance()->spawnBullet(playerid, teamid, this->damage, wt, handler4, bRigidBody4, curWorld);
+		Bullet* fireProjectile = EntitySpawner::Instance()->SpawnBullet(playerid, teamid, this->damage, wt, handler1, bRigidBody1, curWorld);
+		fireProjectile = EntitySpawner::Instance()->SpawnBullet(playerid, teamid, this->damage, wt, handler2, bRigidBody2, curWorld);
+		fireProjectile = EntitySpawner::Instance()->SpawnBullet(playerid, teamid, this->damage, wt, handler3, bRigidBody3, curWorld);
+		fireProjectile = EntitySpawner::Instance()->SpawnBullet(playerid, teamid, this->damage, wt, handler4, bRigidBody4, curWorld);
 
 		this->fireFlag = 0;
 		this->nextFireTick = FireRateReset::Instance()->currentWorldTick + fireRate;

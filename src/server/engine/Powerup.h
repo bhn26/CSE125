@@ -9,8 +9,8 @@ protected:
     PowerUpType type;
 
 public:
-    PowerUpType getType() { return type; }
-    void setType(PowerUpType type) { this->type = type; }
-    virtual void applyPower(Player* p){}; // applies the powerup to the player
-    virtual void removePower(Player* p){};
+    PowerUpType GetType() { return type; }
+    void SetType(PowerUpType type) { this->type = type; }
+    virtual void ApplyPower(Player* p){}; // applies the powerup to the player
+    virtual void RemovePower(Player* p){};
 };

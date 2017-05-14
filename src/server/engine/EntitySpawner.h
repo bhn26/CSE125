@@ -30,14 +30,14 @@ private:
     unsigned int oid_collectable = 0; // collectable
 
 public:
-    Player* spawnPlayer(int teamid, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld);
+    Player* SpawnPlayer(int teamid, PosInfo pos, btDiscreteDynamicsWorld* physicsWorld);
 
-    Flag* spawnFlag(PosInfo pos, btDiscreteDynamicsWorld* physicsWorld);
+    Flag* SpawnFlag(PosInfo pos, btDiscreteDynamicsWorld* physicsWorld);
 
     // id of player spawning, team id of player spawning, dmg the bullet does, the type of weapon
     // that shot the bullet, the collision handler for the bullet, the bullet physics body, the
     // world
-    Bullet* spawnBullet(int playerid,
+    Bullet* SpawnBullet(int playerid,
                         int teamid,
                         int damage,
                         WeaponType shooter,
@@ -45,9 +45,9 @@ public:
                         btRigidBody* bullet_body,
                         btDiscreteDynamicsWorld* physicsWorld);
 
-    void spawnCollectable(btDiscreteDynamicsWorld* curworld, WeaponType w_type);
+    void SpawnCollectable(btDiscreteDynamicsWorld* curworld, WeaponType w_type);
 
-    void spawnCollectable(btDiscreteDynamicsWorld* curworld, PowerUpType p_type);
+    void SpawnCollectable(btDiscreteDynamicsWorld* curworld, PowerUpType p_type);
 
     void AddEntity(ClassId cid, unsigned int oid, Entity* ent);
     Entity* GetEntity(ClassId cid, unsigned int oid);
@@ -55,5 +55,5 @@ public:
 
     std::map<std::pair<ClassId, unsigned int>, Entity*>& GetMap();
 
-    static std::pair<int, int> getRandomLoc();
+    static std::pair<int, int> GetRandomLoc();
 };

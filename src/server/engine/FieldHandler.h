@@ -18,6 +18,5 @@ public:
     ~FieldHandler();
 
     void HandleFields();
-
     void AddField(FieldObject* newField);
 };

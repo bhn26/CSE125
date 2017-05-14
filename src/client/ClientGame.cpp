@@ -87,7 +87,7 @@ ClientGame::ClientGame(void) : m_soundsHandler()
 
     m_startSent = false;
 
-    sendInitPacket();
+    SendInitPacket();
     // sendStartPacket(); // temp - will add start button
 
     Initialize();
@@ -105,12 +105,12 @@ ClientGame::~ClientGame(void)
 
 ////////////////////////////////////////////////////////////////////////////////
 // Do we want to create a new world every time we get a new init packet
-void ClientGame::receiveInitPacket(int offset)
+void ClientGame::ReceiveInitPacket(int offset)
 {
     PacketHeader* hdr = reinterpret_cast<PacketHeader*>(&(m_networkData[offset]));
 
     // Find out what our client id is from the init packet of the server
-    m_clientId = hdr->receiver_id;
+    m_clientId = hdr->m_receiver;
 
     printf("set client id to %d\n", m_clientId);
 
@@ -118,26 +118,26 @@ void ClientGame::receiveInitPacket(int offset)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ClientGame::sendInitPacket()
+void ClientGame::SendInitPacket()
 {
     const unsigned int packetSize = sizeof(Packet);
     std::uint8_t packetData[packetSize];
 
     Packet packet;
     // no client id yet
-    packet.hdr.receiver_id = SERVER_ID;
-    packet.hdr.packet_type = static_cast<int>(PacketTypes::InitConnection);
+    packet.m_header.m_receiver = SERVER_ID;
+    packet.m_header.packet_type = static_cast<int>(PacketTypes::InitConnection);
 
     packet.Serialize(packetData);
 
-    NetworkServices::sendMessage(m_network->m_connectSocket, packetData, packetSize);
+    NetworkServices::Send(m_network->m_connectSocket, packetData, packetSize);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ClientGame::receiveJoinPacket(int offset)
+void ClientGame::ReceiveJoinPacket(int offset)
 {
-    PacketData* dat = reinterpret_cast<PacketData*>(&(m_networkData[offset]));
-    PosInfo* pi = reinterpret_cast<PosInfo*>(&(dat->buf));
+    PacketData* dat = reinterpret_cast<PacketData*>(&m_networkData[offset]);
+    PosInfo* pi = reinterpret_cast<PosInfo*>(&dat->m_buffer);
 
     // set our team if it's for us
     if (pi->id == m_clientId)
@@ -168,52 +168,52 @@ void ClientGame::receiveJoinPacket(int offset)
 };
 
 ////////////////////////////////////////////////////////////////////////////////
-void ClientGame::sendJoinPacket(int team)
+void ClientGame::SendJoinPacket(int team)
 {
     const unsigned int packetSize = sizeof(Packet);
     std::uint8_t packetData[packetSize];
 
     Packet packet;
 
-    packet.hdr.sender_id = m_clientId;
-    packet.hdr.receiver_id = SERVER_ID;
-    packet.hdr.packet_type = static_cast<int>(PacketTypes::JoinTeam);
+    packet.m_header.m_sender = m_clientId;
+    packet.m_header.m_receiver = SERVER_ID;
+    packet.m_header.packet_type = static_cast<int>(PacketTypes::JoinTeam);
 
     PosInfo pi;
     pi.id = m_clientId;
     pi.team_id = team;
-    pi.Serialize(packet.dat.buf);
+    pi.Serialize(packet.m_data.m_buffer);
 
     packet.Serialize(packetData);
-    NetworkServices::sendMessage(m_network->m_connectSocket, packetData, packetSize);
+    NetworkServices::Send(m_network->m_connectSocket, packetData, packetSize);
 };
 
 ////////////////////////////////////////////////////////////////////////////////
-void ClientGame::sendReadyPacket()
+void ClientGame::SendReadyPacket()
 {
     const unsigned int packetSize = sizeof(Packet);
     std::uint8_t packetData[packetSize];
 
     Packet packet;
 
-    packet.hdr.packet_type = static_cast<int>(PacketTypes::ReadyGame);
-    packet.hdr.sender_id = m_clientId;
+    packet.m_header.packet_type = static_cast<int>(PacketTypes::ReadyGame);
+    packet.m_header.m_sender = m_clientId;
 
     printf("sending a ready packet\n");
 
     packet.Serialize(packetData);
 
-    NetworkServices::sendMessage(m_network->m_connectSocket, packetData, packetSize);
+    NetworkServices::Send(m_network->m_connectSocket, packetData, packetSize);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ClientGame::receiveStartPacket(int offset)
+void ClientGame::ReceiveStartPacket(int offset)
 {
     PacketHeader* hdr = reinterpret_cast<PacketHeader*>(&(m_networkData[offset]));
     PacketData* dat =
         reinterpret_cast<PacketData*>(&(m_networkData[offset + sizeof(PacketHeader)]));
 
-    PosInfo* pi = reinterpret_cast<PosInfo*>(&(dat->buf));
+    PosInfo* pi = reinterpret_cast<PosInfo*>(&(dat->m_buffer));
     printf("received start packet for %d players\n", pi->id);
 
     Window::m_pStateManager->ChangeState(
@@ -221,11 +221,11 @@ void ClientGame::receiveStartPacket(int offset)
 
     m_gameStarted = true;
     m_totalEggs = (m_team0.size() + m_team1.size()) * 2 + 1;
-    sendReadyPacket();
+    SendReadyPacket();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ClientGame::sendStartPacket()
+void ClientGame::SendStartPacket()
 {
     if (m_startSent)
         return;
@@ -234,27 +234,27 @@ void ClientGame::sendStartPacket()
     std::uint8_t packetData[packetSize];
 
     Packet packet;
-    packet.hdr.sender_id = m_clientId;
-    packet.hdr.receiver_id = SERVER_ID;
-    packet.hdr.packet_type = static_cast<int>(PacketTypes::StartGame);
+    packet.m_header.m_sender = m_clientId;
+    packet.m_header.m_receiver = SERVER_ID;
+    packet.m_header.packet_type = static_cast<int>(PacketTypes::StartGame);
 
     packet.Serialize(packetData);
 
     m_startSent = true;
-    NetworkServices::sendMessage(m_network->m_connectSocket, packetData, packetSize);
+    NetworkServices::Send(m_network->m_connectSocket, packetData, packetSize);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // sendIndSpawnPacket
-void ClientGame::receiveReadyToSpawnPacket(int offset)
+void ClientGame::ReceiveReadyToSpawnPacket(int offset)
 {
     const unsigned int packetSize = sizeof(Packet);
     std::uint8_t packetData[packetSize];
 
     Packet packet;
-    packet.hdr.packet_type = static_cast<int>(PacketTypes::IndSpawnEvent);
-    packet.hdr.sender_id = m_clientId;
-    packet.hdr.receiver_id = SERVER_ID;
+    packet.m_header.packet_type = static_cast<int>(PacketTypes::IndSpawnEvent);
+    packet.m_header.m_sender = m_clientId;
+    packet.m_header.m_receiver = SERVER_ID;
 
     PosInfo pi;
     pi.id = m_clientId;
@@ -262,17 +262,17 @@ void ClientGame::receiveReadyToSpawnPacket(int offset)
     printf("send IndSpawn Packet for player %d on team %d\n", m_clientId, pi.team_id);
     pi.skin = rand() % 3;
 
-    pi.Serialize(packet.dat.buf);
+    pi.Serialize(packet.m_data.m_buffer);
 
     packet.Serialize(packetData);
-    NetworkServices::sendMessage(m_network->m_connectSocket, packetData, packetSize);
+    NetworkServices::Send(m_network->m_connectSocket, packetData, packetSize);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ClientGame::receiveSpawnPacket(int offset)
+void ClientGame::ReceiveSpawnPacket(int offset)
 {
     PacketData* dat = reinterpret_cast<PacketData*>(&m_networkData[offset]);
-    PosInfo* p = reinterpret_cast<PosInfo*>(dat->buf);
+    PosInfo* p = reinterpret_cast<PosInfo*>(dat->m_buffer);
 
     // spawn the thing
     Scene::Instance()->AddEntity((*p));
@@ -298,10 +298,10 @@ void ClientGame::SetName(std::string name)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ClientGame::receiveRemovePacket(int offset)
+void ClientGame::ReceiveRemovePacket(int offset)
 {
     PacketData* dat = reinterpret_cast<PacketData*>(&m_networkData[offset]);
-    RemInfo* r = reinterpret_cast<RemInfo*>(&dat->buf);
+    RemInfo* r = reinterpret_cast<RemInfo*>(&dat->m_buffer);
 
     Scene::Instance()->RemoveEntity(r->rem_cid, r->rem_oid);
 
@@ -311,7 +311,7 @@ void ClientGame::receiveRemovePacket(int offset)
         // change the player's score based on that flag
         if (r->rec_cid == ClassId::Player)
         {
-            incScore(((Player*)(Scene::Instance()->GetEntity(ClassId::Player, r->rec_oid).get()))
+            IncScore(((Player*)(Scene::Instance()->GetEntity(ClassId::Player, r->rec_oid).get()))
                          ->GetTeam(),
                      1);
         }
@@ -342,10 +342,10 @@ void ClientGame::receiveRemovePacket(int offset)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ClientGame::receiveMovePacket(int offset)
+void ClientGame::ReceiveMovePacket(int offset)
 {
     PacketData* dat = reinterpret_cast<PacketData*>(&m_networkData[offset]);
-    PosInfo* pi = reinterpret_cast<PosInfo*>(&dat->buf);
+    PosInfo* pi = reinterpret_cast<PosInfo*>(&dat->m_buffer);
 
     // if(pi->oid == 0)
     // printf("received move packet for obj id %d. Its coordinates are: %f, %f, %f\n", pi->oid,
@@ -367,15 +367,15 @@ void ClientGame::receiveMovePacket(int offset)
 
 ////////////////////////////////////////////////////////////////////////////////
 // Need to know what direction to move in
-void ClientGame::sendMovePacket(MoveType direction)
+void ClientGame::SendMovePacket(MoveType direction)
 {
     const unsigned int packetSize = sizeof(Packet);
     std::uint8_t packetData[packetSize];
 
     Packet packet;
-    packet.hdr.packet_type = static_cast<int>(PacketTypes::MoveEvent);
-    packet.hdr.sender_id = m_clientId;
-    packet.hdr.receiver_id = SERVER_ID;
+    packet.m_header.packet_type = static_cast<int>(PacketTypes::MoveEvent);
+    packet.m_header.m_sender = m_clientId;
+    packet.m_header.m_receiver = SERVER_ID;
 
     PosInfo pi;
     pi.direction = static_cast<int>(direction);
@@ -384,17 +384,17 @@ void ClientGame::sendMovePacket(MoveType direction)
     pi.rotx = rot.x;
     pi.roty = rot.y;
     pi.rotz = rot.z;
-    pi.Serialize(packet.dat.buf);
+    pi.Serialize(packet.m_data.m_buffer);
 
     packet.Serialize(packetData);
-    NetworkServices::sendMessage(m_network->m_connectSocket, packetData, packetSize);
+    NetworkServices::Send(m_network->m_connectSocket, packetData, packetSize);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ClientGame::receiveRotationPacket(int offset)
+void ClientGame::ReceiveRotationPacket(int offset)
 {
     PacketData* dat = reinterpret_cast<PacketData*>(&m_networkData[offset]);
-    PosInfo* pi = reinterpret_cast<PosInfo*>(&dat->buf);
+    PosInfo* pi = reinterpret_cast<PosInfo*>(&dat->m_buffer);
 
     // printf("received a rotation packet with: %f, %f, %f, %f\n", pi->rotw, pi->rotx, pi->roty,
     // pi->rotz);
@@ -429,15 +429,15 @@ void ClientGame::receiveRotationPacket(int offset)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ClientGame::sendRotationPacket()
+void ClientGame::SendRotationPacket()
 {
     const unsigned int packetSize = sizeof(Packet);
     std::uint8_t packetData[packetSize];
 
     Packet packet;
-    packet.hdr.packet_type = static_cast<int>(PacketTypes::VRotationEvent);
-    packet.hdr.sender_id = m_clientId;
-    packet.hdr.receiver_id = SERVER_ID;
+    packet.m_header.packet_type = static_cast<int>(PacketTypes::VRotationEvent);
+    packet.m_header.m_sender = m_clientId;
+    packet.m_header.m_receiver = SERVER_ID;
 
     // send the rotation of the main player
     PosInfo pi;
@@ -448,34 +448,34 @@ void ClientGame::sendRotationPacket()
     pi.rotz = rot.z;
 
     // pi.h_rotation = h_rot;
-    pi.Serialize(packet.dat.buf);
+    pi.Serialize(packet.m_data.m_buffer);
 
     packet.Serialize(packetData);
 
-    NetworkServices::sendMessage(m_network->m_connectSocket, packetData, packetSize);
+    NetworkServices::Send(m_network->m_connectSocket, packetData, packetSize);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ClientGame::sendJumpPacket()
+void ClientGame::SendJumpPacket()
 {
     const unsigned int packetSize = sizeof(Packet);
     std::uint8_t packetData[packetSize];
 
     Packet packet;
-    packet.hdr.packet_type = static_cast<int>(PacketTypes::JumpEvent);
-    packet.hdr.sender_id = m_clientId;
-    packet.hdr.receiver_id = SERVER_ID;
+    packet.m_header.packet_type = static_cast<int>(PacketTypes::JumpEvent);
+    packet.m_header.m_sender = m_clientId;
+    packet.m_header.m_receiver = SERVER_ID;
 
     packet.Serialize(packetData);
 
-    NetworkServices::sendMessage(m_network->m_connectSocket, packetData, packetSize);
+    NetworkServices::Send(m_network->m_connectSocket, packetData, packetSize);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ClientGame::receiveScorePacket(int offset)
+void ClientGame::ReceiveScorePacket(int offset)
 {
     PacketData* dat = reinterpret_cast<PacketData*>(&m_networkData[offset]);
-    ScoreInfo* s = reinterpret_cast<ScoreInfo*>(&dat->buf);
+    ScoreInfo* s = reinterpret_cast<ScoreInfo*>(&dat->m_buffer);
 
     printf("received a score packet t0: %d   t1: %d\n", s->t0_score, s->t1_score);
 
@@ -484,10 +484,10 @@ void ClientGame::receiveScorePacket(int offset)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ClientGame::receiveGameOverPacket(int offset)
+void ClientGame::ReceiveGameOverPacket(int offset)
 {
     PacketData* dat = reinterpret_cast<PacketData*>(&m_networkData[offset]);
-    ScoreInfo* s = reinterpret_cast<ScoreInfo*>(&dat->buf);
+    ScoreInfo* s = reinterpret_cast<ScoreInfo*>(&dat->m_buffer);
 
     if (s->t0_score == s->t1_score)
     {
@@ -511,10 +511,10 @@ void ClientGame::receiveGameOverPacket(int offset)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ClientGame::receiveTimeStampPacket(int offset)
+void ClientGame::ReceiveTimeStampPacket(int offset)
 {
     PacketData* data = reinterpret_cast<PacketData*>(&m_networkData[offset]);
-    MiscInfo* m = reinterpret_cast<MiscInfo*>(&data->buf);
+    MiscInfo* m = reinterpret_cast<MiscInfo*>(&data->m_buffer);
     if (!m_countdown)
     {
         m_startTime = std::chrono::steady_clock::now();
@@ -528,57 +528,57 @@ void ClientGame::receiveTimeStampPacket(int offset)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ClientGame::sendAttackPacket(AttackType t)
+void ClientGame::SendAttackPacket(AttackType t)
 {
     const unsigned int packetSize = sizeof(Packet);
     std::uint8_t packetData[packetSize];
 
     Packet packet;
-    packet.hdr.packet_type = static_cast<int>(PacketTypes::AttackEvent);
-    packet.hdr.sender_id = m_clientId;
-    packet.hdr.receiver_id = SERVER_ID;
+    packet.m_header.packet_type = static_cast<int>(PacketTypes::AttackEvent);
+    packet.m_header.m_sender = m_clientId;
+    packet.m_header.m_receiver = SERVER_ID;
 
     MiscInfo m;
     m.misc1 = static_cast<int>(t);
     m.misc3 = Scene::Instance()->GetPlayer()->GetCamAngle();
-    m.Serialize(packet.dat.buf);
+    m.Serialize(packet.m_data.m_buffer);
 
     packet.Serialize(packetData);
 
-    NetworkServices::sendMessage(m_network->m_connectSocket, packetData, packetSize);
+    NetworkServices::Send(m_network->m_connectSocket, packetData, packetSize);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ClientGame::receiveAttackPacket(int offset)
+void ClientGame::ReceiveAttackPacket(int offset)
 {
     PacketData* dat = reinterpret_cast<PacketData*>(&m_networkData[offset]);
-    EmoteInfo* e = reinterpret_cast<EmoteInfo*>(&dat->buf); // later parse this to miscinfo
+    EmoteInfo* e = reinterpret_cast<EmoteInfo*>(&dat->m_buffer); // later parse this to miscinfo
     auto player =
         reinterpret_cast<Player*>(Scene::Instance()->GetEntity(ClassId::Player, e->id).get());
     player->Attack();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ClientGame::sendDiscardPacket()
+void ClientGame::SendDiscardPacket()
 {
     const unsigned int packetSize = sizeof(Packet);
     std::uint8_t packetData[packetSize];
 
     Packet packet;
-    packet.hdr.packet_type = static_cast<int>(PacketTypes::DiscardEvent);
-    packet.hdr.sender_id = m_clientId;
-    packet.hdr.receiver_id = SERVER_ID;
+    packet.m_header.packet_type = static_cast<int>(PacketTypes::DiscardEvent);
+    packet.m_header.m_sender = m_clientId;
+    packet.m_header.m_receiver = SERVER_ID;
 
     packet.Serialize(packetData);
 
-    NetworkServices::sendMessage(m_network->m_connectSocket, packetData, packetSize);
+    NetworkServices::Send(m_network->m_connectSocket, packetData, packetSize);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ClientGame::receiveDiscardPacket(int offset)
+void ClientGame::ReceiveDiscardPacket(int offset)
 {
     PacketData* dat = reinterpret_cast<PacketData*>(&(m_networkData[offset]));
-    MiscInfo* m = reinterpret_cast<MiscInfo*>(&dat->buf);
+    MiscInfo* m = reinterpret_cast<MiscInfo*>(&dat->m_buffer);
     if (m->misc1 == m_clientId)
     {
         Scene::Instance()->GetPlayer()->SetWeapon(-1);
@@ -587,36 +587,36 @@ void ClientGame::receiveDiscardPacket(int offset)
 
 ////////////////////////////////////////////////////////////////////////////////
 //	NOTE: We're going to use the sender id as the guy that's dancing instead of changing
-void ClientGame::receiveDancePacket(int offset)
+void ClientGame::ReceiveDancePacket(int offset)
 {
     PacketData* dat = reinterpret_cast<PacketData*>(&m_networkData[offset]);
-    EmoteInfo* e = reinterpret_cast<EmoteInfo*>(&dat->buf);
+    EmoteInfo* e = reinterpret_cast<EmoteInfo*>(&dat->m_buffer);
     auto player =
         reinterpret_cast<Player*>(Scene::Instance()->GetEntity(ClassId::Player, e->id).get());
     player->Dance();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ClientGame::sendDancePacket()
+void ClientGame::SendDancePacket()
 {
     const unsigned int packetSize = sizeof(Packet);
     std::uint8_t packetData[packetSize];
 
     Packet packet;
-    packet.hdr.packet_type = static_cast<int>(PacketTypes::DanceEvent);
-    packet.hdr.sender_id = m_clientId;
-    packet.hdr.receiver_id = SERVER_ID;
+    packet.m_header.packet_type = static_cast<int>(PacketTypes::DanceEvent);
+    packet.m_header.m_sender = m_clientId;
+    packet.m_header.m_receiver = SERVER_ID;
 
     packet.Serialize(packetData);
 
-    NetworkServices::sendMessage(m_network->m_connectSocket, packetData, packetSize);
+    NetworkServices::Send(m_network->m_connectSocket, packetData, packetSize);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ClientGame::receiveDeathPacket(int offset)
+void ClientGame::ReceiveDeathPacket(int offset)
 {
     PacketData* dat = reinterpret_cast<PacketData*>(&m_networkData[offset]);
-    EmoteInfo* e = reinterpret_cast<EmoteInfo*>(&dat->buf);
+    EmoteInfo* e = reinterpret_cast<EmoteInfo*>(&dat->m_buffer);
 
     // model
     auto player =
@@ -624,7 +624,7 @@ void ClientGame::receiveDeathPacket(int offset)
     player->Die();
 
     // score
-    decScore(player->GetTeam(), player->GetScore());
+    DecScore(player->GetTeam(), player->GetScore());
 
     // death overlay
     if (e->id == m_clientId)
@@ -634,10 +634,10 @@ void ClientGame::receiveDeathPacket(int offset)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ClientGame::receiveRespawnPacket(int offset)
+void ClientGame::ReceiveRespawnPacket(int offset)
 {
     PacketData* dat = reinterpret_cast<PacketData*>(m_networkData[offset]);
-    EmoteInfo* e = reinterpret_cast<EmoteInfo*>(&dat->buf);
+    EmoteInfo* e = reinterpret_cast<EmoteInfo*>(&dat->m_buffer);
     auto player =
         reinterpret_cast<Player*>(Scene::Instance()->GetEntity(ClassId::Player, e->id).get());
     player->SetAlive(true);
@@ -650,36 +650,36 @@ void ClientGame::receiveRespawnPacket(int offset)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ClientGame::sendNamePacket()
+void ClientGame::SendNamePacket()
 {
     const unsigned int packetSize = sizeof(Packet);
     std::uint8_t packetData[packetSize];
 
     Packet packet;
-    packet.hdr.packet_type = static_cast<int>(PacketTypes::SetUsername);
-    packet.hdr.sender_id = m_clientId;
-    packet.hdr.receiver_id = SERVER_ID;
+    packet.m_header.packet_type = static_cast<int>(PacketTypes::SetUsername);
+    packet.m_header.m_sender = m_clientId;
+    packet.m_header.m_receiver = SERVER_ID;
 
     NameInfo n;
     n.player_id = m_clientId;
     n.name = m_nameMap.at(m_clientId);
-    n.Serialize(packet.dat.buf);
+    n.Serialize(packet.m_data.m_buffer);
 
     packet.Serialize(packetData);
 
-    NetworkServices::sendMessage(m_network->m_connectSocket, packetData, packetSize);
+    NetworkServices::Send(m_network->m_connectSocket, packetData, packetSize);
 
     packet.Serialize(packetData);
 
-    NetworkServices::sendMessage(m_network->m_connectSocket, packetData, packetSize);
+    NetworkServices::Send(m_network->m_connectSocket, packetData, packetSize);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ClientGame::receiveNamePacket(int offset)
+void ClientGame::ReceiveNamePacket(int offset)
 {
     PacketHeader* hdr = reinterpret_cast<PacketHeader*>(&m_networkData[offset]);
     PacketData* dat = reinterpret_cast<PacketData*>(&m_networkData[offset + sizeof(PacketHeader)]);
-    NameInfo* n = reinterpret_cast<NameInfo*>(&dat->buf);
+    NameInfo* n = reinterpret_cast<NameInfo*>(&dat->m_buffer);
 
     m_nameMap[n->player_id] = n->name;
     // Player* player =
@@ -688,10 +688,10 @@ void ClientGame::receiveNamePacket(int offset)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ClientGame::update()
+void ClientGame::Update()
 {
     Packet packet;
-    int data_length = m_network->receivePackets(m_networkData);
+    int data_length = m_network->ReceivePackets(m_networkData);
 
     if (data_length <= 0)
     {
@@ -703,23 +703,23 @@ void ClientGame::update()
     {
         packet.Deserialize(&m_networkData[i]);
 
-        switch (static_cast<PacketTypes>(packet.hdr.packet_type))
+        switch (static_cast<PacketTypes>(packet.m_header.packet_type))
         {
         case PacketTypes::InitConnection:
             // offset for this will be the packet header
-            receiveInitPacket(i);
+            ReceiveInitPacket(i);
             break;
 
         case PacketTypes::SetUsername:
-            receiveNamePacket(i);
+            ReceiveNamePacket(i);
             break;
 
         case PacketTypes::JoinTeam:
-            receiveJoinPacket(i + sizeof(PacketHeader));
+            ReceiveJoinPacket(i + sizeof(PacketHeader));
             break;
 
         case PacketTypes::StartGame:
-            receiveStartPacket(i);
+            ReceiveStartPacket(i);
             break;
 
         case PacketTypes::ServerLoading:
@@ -727,61 +727,63 @@ void ClientGame::update()
             break;
 
         case PacketTypes::ReadyToSpawnEvent:
-            receiveReadyToSpawnPacket(i);
+            ReceiveReadyToSpawnPacket(i);
             break;
 
         case PacketTypes::SpawnEvent:
             // You want to offset the packet header
-            receiveSpawnPacket(i + sizeof(PacketHeader));
+            ReceiveSpawnPacket(i + sizeof(PacketHeader));
             break;
 
         case PacketTypes::RemoveEvent:
-            receiveRemovePacket(i + sizeof(PacketHeader));
+            ReceiveRemovePacket(i + sizeof(PacketHeader));
             break;
 
         case PacketTypes::DiscardEvent:
-            receiveDiscardPacket(i + sizeof(PacketHeader));
+            ReceiveDiscardPacket(i + sizeof(PacketHeader));
             break;
 
         case PacketTypes::MoveEvent:
             if (m_gameStarted) // the game needs to start for the client before this can happen
-                receiveMovePacket(i + sizeof(PacketHeader));
+            {
+                ReceiveMovePacket(i + sizeof(PacketHeader));
+            }
             break;
 
         case PacketTypes::TimeEvent:
-            receiveTimeStampPacket(i + sizeof(PacketHeader));
+            ReceiveTimeStampPacket(i + sizeof(PacketHeader));
             break;
 
         case PacketTypes::DanceEvent:
-            receiveDancePacket(i + sizeof(PacketHeader));
+            ReceiveDancePacket(i + sizeof(PacketHeader));
             break;
 
         case PacketTypes::DeathEvent:
-            receiveDeathPacket(i + sizeof(PacketHeader));
+            ReceiveDeathPacket(i + sizeof(PacketHeader));
             break;
 
         case PacketTypes::RespawnEvent:
-            receiveRespawnPacket(i + sizeof(PacketHeader));
+            ReceiveRespawnPacket(i + sizeof(PacketHeader));
             break;
 
         case PacketTypes::VRotationEvent:
-            receiveRotationPacket(i + sizeof(PacketHeader));
+            ReceiveRotationPacket(i + sizeof(PacketHeader));
             break;
 
         case PacketTypes::AttackEvent:
-            receiveAttackPacket(i + sizeof(PacketHeader));
+            ReceiveAttackPacket(i + sizeof(PacketHeader));
             break;
 
         case PacketTypes::UpdateScore:
-            receiveScorePacket(i + sizeof(PacketHeader));
+            ReceiveScorePacket(i + sizeof(PacketHeader));
             break;
 
         case PacketTypes::GameOver:
-            receiveGameOverPacket(i + sizeof(PacketHeader));
+            ReceiveGameOverPacket(i + sizeof(PacketHeader));
             break;
 
         default:
-            printf("error in packet types %d\n", packet.hdr.packet_type);
+            printf("error in packet types %d\n", packet.m_header.packet_type);
             break;
         }
         i += sizeof(Packet);
@@ -866,7 +868,7 @@ void ClientGame::GameLoop()
     while (!glfwWindowShouldClose(m_window))
     {
 #ifdef _WIN32
-        update();
+        Update();
 #endif
         auto curr_time = std::chrono::steady_clock::now();
 
@@ -891,7 +893,7 @@ void ClientGame::GameLoop()
 
         if (++m_tick % 15 == 0 && m_iSpawned)
         {
-            ClientGame::Instance()->sendRotationPacket();
+            ClientGame::Instance()->SendRotationPacket();
             m_tick = 0;
         }
     }
@@ -1018,13 +1020,13 @@ void ClientGame::CheckController()
     const unsigned char* buttons = glfwGetJoystickButtons(GLFW_JOYSTICK_1, &buttonCount);
 
     // Check if we're starting the game
-    if (!ClientGame::Instance()->hasStarted())
+    if (!ClientGame::Instance()->HasStarted())
     {
         if (buttons[static_cast<int>(Buttons::Start)]) // Start
         {
             printf("client will send start game\n");
             printf("sending start packet\n");
-            ClientGame::Instance()->sendStartPacket();
+            ClientGame::Instance()->SendStartPacket();
         }
         return;
     }
@@ -1088,21 +1090,21 @@ void ClientGame::HandleLeftAnalog(const float* axes)
         case static_cast<int>(Axes::LHorizontal): // Right
             if (axes[greatestAxis] > 0)
             {
-                ClientGame::Instance()->sendMovePacket(MoveType::Right);
+                ClientGame::Instance()->SendMovePacket(MoveType::Right);
             }
             else
             {
-                ClientGame::Instance()->sendMovePacket(MoveType::Left);
+                ClientGame::Instance()->SendMovePacket(MoveType::Left);
             }
             break;
         case static_cast<int>(Axes::LVertical): // DOWN
             if (axes[greatestAxis] > 0)
             {
-                ClientGame::Instance()->sendMovePacket(MoveType::Backward);
+                ClientGame::Instance()->SendMovePacket(MoveType::Backward);
             }
             else
             {
-                ClientGame::Instance()->sendMovePacket(MoveType::Forward);
+                ClientGame::Instance()->SendMovePacket(MoveType::Forward);
             }
 
             break;
@@ -1185,35 +1187,35 @@ void ClientGame::HandleButtonEvent(const std::string& event, bool buttonDown)
         }
         else if (event == EventWeaponAttack)
         {
-            sendAttackPacket(AttackType::Weapon);
+            SendAttackPacket(AttackType::Weapon);
         }
         else if (event == EventPeckAttack)
         {
-            sendAttackPacket(AttackType::Peck);
+            SendAttackPacket(AttackType::Peck);
         }
         else if (event == EventDiscardWeapon)
         {
-            sendDiscardPacket(); // TODOCHANGETHIS
+            SendDiscardPacket(); // TODOCHANGETHIS
         }
         else if (event == EventJump)
         {
-            sendJumpPacket();
+            SendJumpPacket();
         }
         else if (event == EventMoveForward)
         {
-            sendMovePacket(MoveType::Forward);
+            SendMovePacket(MoveType::Forward);
         }
         else if (event == EventMoveBackward)
         {
-            sendMovePacket(MoveType::Backward);
+            SendMovePacket(MoveType::Backward);
         }
         else if (event == EventMoveLeft)
         {
-            sendMovePacket(MoveType::Left);
+            SendMovePacket(MoveType::Left);
         }
         else if (event == EventMoveRight)
         {
-            sendMovePacket(MoveType::Right);
+            SendMovePacket(MoveType::Right);
         }
         else if (event == EventScoreboard)
         {
@@ -1226,7 +1228,7 @@ void ClientGame::HandleButtonEvent(const std::string& event, bool buttonDown)
         else if (event == EventTauntDance)
         {
             printf("dance event triggered\n");
-            sendDancePacket();
+            SendDancePacket();
         }
         else if (event == EventTauntDeath)
         {

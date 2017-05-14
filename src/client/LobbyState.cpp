@@ -13,7 +13,7 @@ LobbyState::LobbyState(CStateManager* pManager)
     : CGameState(pManager), m_spriteRenderer(std::make_unique<SpriteRenderer>())
 {
     // Create the text controls of the menu.
-    ClientGame::Instance()->sendJoinPacket(ClientGame::GetClientId() % 2);
+    ClientGame::Instance()->SendJoinPacket(ClientGame::GetClientId() % 2);
 }
 
 LobbyState* LobbyState::GetInstance(CStateManager* pManager)
@@ -50,17 +50,17 @@ void LobbyState::OnClick(int button, int action, double x, double y)
             case 1:
                 printf("Start Button clicked\n");
                 ClientGame::Instance()->PlaySound("Button_Click", options);
-                ClientGame::Instance()->sendStartPacket();
+                ClientGame::Instance()->SendStartPacket();
                 break;
             case 2:
                 printf("Join T0 clicked\n"); // team 1
                 ClientGame::Instance()->PlaySound("Button_Click", options);
-                ClientGame::Instance()->sendJoinPacket(0);
+                ClientGame::Instance()->SendJoinPacket(0);
                 break;
             case 3:
                 printf("Join T1 clicked\n"); // team 2
                 ClientGame::Instance()->PlaySound("Button_Click", options);
-                ClientGame::Instance()->sendJoinPacket(1);
+                ClientGame::Instance()->SendJoinPacket(1);
                 break;
             default:
                 //printf("%d clicked%s\n", res[0]);

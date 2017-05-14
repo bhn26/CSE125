@@ -30,5 +30,5 @@ public:
                int team_id,
                btDiscreteDynamicsWorld* curworld);
     virtual ~BlastField();
-    int handleField();
+    int HandleField() override;
 };

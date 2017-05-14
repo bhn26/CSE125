@@ -22,7 +22,7 @@ FieldObject::~FieldObject()
 {
 }
 
-int FieldObject::handleField()
+int FieldObject::HandleField()
 {
     return 1;
 }

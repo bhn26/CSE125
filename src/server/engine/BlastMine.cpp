@@ -57,7 +57,7 @@ int BlastMine::UseWeapon(btVector3 * position, btMatrix3x3* rotation, int player
 		MineBulletHandler* handler = new MineBulletHandler(field);
 
 		// Spawns bullet with this gun's damage, speed, and necessary ids into world
-		Bullet* fireProjectile = EntitySpawner::Instance()->spawnBullet(playerid, teamid, this->damage, wt, handler, bRigidBody, curWorld);
+		Bullet* fireProjectile = EntitySpawner::Instance()->SpawnBullet(playerid, teamid, this->damage, wt, handler, bRigidBody, curWorld);
 		handler->SetBullet(fireProjectile);
 
 		this->fireFlag = 0;

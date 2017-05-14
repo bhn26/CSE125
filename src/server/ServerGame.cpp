@@ -24,17 +24,17 @@ ServerGame::~ServerGame(void)
 {
 }
 
-void ServerGame::update()
+void ServerGame::Update()
 {
     // get new clients only if the game hasn't started
     if (!m_gameStarted)
     {
-        if (m_network->acceptNewClient(m_clientId))
+        if (m_network->AcceptNewClient(m_clientId))
         {
             printf("client %d has been connected to the server\n", m_clientId);
 
             // This will be an INIT_CONNECTION packet
-            receiveFromClients();
+            ReceiveFromClients();
         }
     }
 
@@ -49,26 +49,26 @@ void ServerGame::update()
         m_gameOver = true;
         if (m_scores[0] == m_scores[1])
         {
-            sendGameOverPacket(-1);
+            SendGameOverPacket(-1);
         }
         else if (m_scores[0] > m_scores[1])
         {
-            sendGameOverPacket(0);
+            SendGameOverPacket(0);
         }
         else
         {
-            sendGameOverPacket(1);
+            SendGameOverPacket(1);
         }
     }
     else
     {
         if (m_gameOver == false && m_eggsSpawned && ((diff % 10000) <= 16))
         {
-            sendTimeStampPacket(diff);
+            SendTimeStampPacket(diff);
         }
     }
 
-    receiveFromClients();
+    ReceiveFromClients();
 
     // Check that all clients are ready
 
@@ -88,8 +88,10 @@ void ServerGame::update()
             Sleep(2000); // should wait for clients to respond
             m_startTime = std::chrono::steady_clock::now();
         }
-        if (!m_engine->hasInitialSpawned())
+        if (!m_engine->HasInitialSpawned())
+        {
             m_engine->SendPreSpawn(m_readyClients);
+        }
 
         // once eggs has spawned, everything has spawned and we can begin the world cycle
         auto t1 = std::chrono::steady_clock::now();
@@ -125,7 +127,7 @@ void ServerGame::update()
     }
 }
 
-void ServerGame::receiveFromClients()
+void ServerGame::ReceiveFromClients()
 {
     Packet packet;
 
@@ -134,66 +136,66 @@ void ServerGame::receiveFromClients()
 
     for (iter = m_network->m_sessions.begin(); iter != m_network->m_sessions.end(); iter++)
     {
-        int data_length = m_network->receiveData(iter->first, m_networkData);
+        int m_dataa_length = m_network->ReceiveData(iter->first, m_networkData);
 
-        if (data_length <= 0)
+        if (m_dataa_length <= 0)
         {
-            // no data recieved
+            // no m_dataa recieved
             continue;
         }
 
         int i = 0;
-        while (i < (unsigned int)data_length)
+        while (i < (unsigned int)m_dataa_length)
         {
             // Deserialize and check the type of packet
             packet.Deserialize(&m_networkData[i]);
 
-            switch (static_cast<PacketTypes>(packet.hdr.packet_type))
+            switch (static_cast<PacketTypes>(packet.m_header.packet_type))
             {
             case PacketTypes::InitConnection:
-                // offset is i here since we want to parse the packet header
-                // receive it and send it right back
-                receiveInitPacket(i);
-                // sendInitPacket();
-                // sendActionPackets();
+                // offset is i here since we want to parse the packet m_header
+                // Receive it and Send it right back
+                ReceiveInitPacket(i);
+                // SendInitPacket();
+                // SendActionPackets();
                 break;
             case PacketTypes::SetUsername:
-                receiveNamePacket(i);
+                ReceiveNamePacket(i);
                 break;
             case PacketTypes::JoinTeam:
-                receiveJoinPacket(i);
+                ReceiveJoinPacket(i);
                 break;
             case PacketTypes::ReadyGame:
                 m_readyClients++;
                 // printf("ready clients: %d\nm_clientId: %d\n", m_readyClients, m_clientId);
                 break;
             case PacketTypes::SpawnEvent:
-                receiveIndSpawnPacket(i + sizeof(PacketHeader));
+                ReceiveIndSpawnPacket(i + sizeof(PacketHeader));
                 m_spawnedClients++;
                 break;
             case PacketTypes::StartGame:
-                receiveStartPacket(i);
+                ReceiveStartPacket(i);
                 Sleep(7000);
-                sendStartPacket();
+                SendStartPacket();
                 break;
             case PacketTypes::MoveEvent:
-                // sends a move packet based on if reception was valid
-                receiveMovePacket(i);
+                // Sends a move packet based on if reception was valid
+                ReceiveMovePacket(i);
                 break;
             case PacketTypes::JumpEvent:
-                receiveJumpPacket(i);
+                ReceiveJumpPacket(i);
                 break;
             case PacketTypes::DanceEvent:
-                receiveDancePacket(i);
+                ReceiveDancePacket(i);
                 break;
             case PacketTypes::VRotationEvent:
-                receiveRotationPacket(i + sizeof(PacketHeader));
+                ReceiveRotationPacket(i + sizeof(PacketHeader));
                 break;
             case PacketTypes::AttackEvent:
-                receiveAttackPacket(i);
+                ReceiveAttackPacket(i);
                 break;
             case PacketTypes::DiscardEvent:
-                receiveDiscardPacket(i);
+                ReceiveDiscardPacket(i);
                 break;
             default:
                 printf("error in packet types\n");
@@ -205,71 +207,71 @@ void ServerGame::receiveFromClients()
 }
 
 // Handle new init packet from client
-void ServerGame::receiveInitPacket(int offset)
+void ServerGame::ReceiveInitPacket(int offset)
 {
-    PacketHeader* hdr = reinterpret_cast<PacketHeader*>(&m_networkData[offset]);
+    PacketHeader* m_header = reinterpret_cast<PacketHeader*>(&m_networkData[offset]);
 
-    printf("server received init packet from client\n");
+    printf("server Received init packet from client\n");
     const unsigned int packetSize = sizeof(Packet);
     std::uint8_t packetData[packetSize];
 
     Packet packet;
-    packet.hdr.packet_type = static_cast<int>(PacketTypes::InitConnection);
+    packet.m_header.packet_type = static_cast<int>(PacketTypes::InitConnection);
 
     // Send back to the client and assign client id
-    packet.hdr.receiver_id = m_clientId;
-    packet.hdr.sender_id = SERVER_ID;
+    packet.m_header.m_receiver = m_clientId;
+    packet.m_header.m_sender = SERVER_ID;
 
     packet.Serialize(packetData);
 
-    m_network->sendToClient(packetData, packetSize, m_clientId);
+    m_network->SendToClient(packetData, packetSize, m_clientId);
     printf("server sent init packet to client %d\n", m_clientId);
     m_clientId++;
 }
 
-// Unused, we send the init back right away in receive
-// We actually only want to send this back to the client that we received it from, but assume 1
+// Unused, we Send the init back right away in Receive
+// We actually only want to Send this back to the client that we Received it from, but assume 1
 // client for now
-void ServerGame::sendInitPacket()
+void ServerGame::SendInitPacket()
 {
-    printf("sending init to clients\n");
+    printf("Sending init to clients\n");
     const unsigned int packetSize = sizeof(Packet);
     std::uint8_t packetData[packetSize];
 
     Packet packet;
-    packet.hdr.packet_type = static_cast<int>(PacketTypes::InitConnection);
+    packet.m_header.packet_type = static_cast<int>(PacketTypes::InitConnection);
 
     packet.Serialize(packetData);
 
-    m_network->sendToClient(packetData, packetSize, m_clientId);
+    m_network->SendToClient(packetData, packetSize, m_clientId);
 }
 
-void ServerGame::receiveJoinPacket(int offset)
+void ServerGame::ReceiveJoinPacket(int offset)
 {
-    PacketHeader* hdr = reinterpret_cast<PacketHeader*>(&m_networkData[offset]);
+    PacketHeader* m_header = reinterpret_cast<PacketHeader*>(&m_networkData[offset]);
 
-    PacketData* dat = reinterpret_cast<PacketData*>(&m_networkData[offset + sizeof(PacketHeader)]);
-    PosInfo* pi = reinterpret_cast<PosInfo*>(&dat->buf);
+    PacketData* m_data = reinterpret_cast<PacketData*>(&m_networkData[offset + sizeof(PacketHeader)]);
+    PosInfo* pi = reinterpret_cast<PosInfo*>(&m_data->m_buffer);
 
-    printf("recieved join packet from %d for %d\n", hdr->sender_id, pi->team_id);
+    printf("recieved join packet from %d for %d\n", m_header->m_sender, pi->team_id);
 
-    int client = hdr->sender_id;
+    int client = m_header->m_sender;
 
     if (m_teamMap.find(client) == m_teamMap.end())
-    { // if new client send all client team data
+    { // if new client Send all client team m_dataa
         for (std::map<int, int>::iterator it = m_teamMap.begin(); it != m_teamMap.end(); it++)
         {
-            sendJoinPacket(it->first);
+            SendJoinPacket(it->first);
         }
     }
 
     printf("(before) m_teamMap size = %d", m_teamMap.size());
     m_teamMap[client] = pi->team_id;
     printf("m_teamMap size = %d", m_teamMap.size());
-    sendJoinPacket(client);
+    SendJoinPacket(client);
 };
 
-void ServerGame::sendJoinPacket(int client)
+void ServerGame::SendJoinPacket(int client)
 {
     const unsigned int packetSize = sizeof(Packet);
 
@@ -277,33 +279,33 @@ void ServerGame::sendJoinPacket(int client)
     std::uint8_t packetData[packetSize];
 
     Packet packet;
-    packet.hdr.packet_type = static_cast<int>(PacketTypes::JoinTeam);
+    packet.m_header.packet_type = static_cast<int>(PacketTypes::JoinTeam);
 
     PosInfo p;
     p.id = client;
     p.team_id = m_teamMap[client];
 
-    printf("sending join packet for client %d in team %d\n", client, p.team_id);
+    printf("Sending join packet for client %d in team %d\n", client, p.team_id);
 
-    packet.dat.game_data_id = GameDataId::Position;
+    packet.m_data.m_gameDataId = GameDataId::Position;
 
-    p.Serialize(packet.dat.buf);
+    p.Serialize(packet.m_data.m_buffer);
     packet.Serialize(packetData);
 
-    packet.hdr.sender_id = SERVER_ID;
+    packet.m_header.m_sender = SERVER_ID;
 
     packet.Serialize(packetData);
 
-    m_network->sendToAll(packetData, packetSize);
+    m_network->SendToAll(packetData, packetSize);
 };
 
-void ServerGame::receiveStartPacket(int offset)
+void ServerGame::ReceiveStartPacket(int offset)
 {
-    sendLoadPacket();
+    SendLoadPacket();
 
-    PacketHeader* hdr = reinterpret_cast<PacketHeader*>(&m_networkData[offset]);
+    PacketHeader* m_header = reinterpret_cast<PacketHeader*>(&m_networkData[offset]);
 
-    printf("recieved start packet from %d\n", hdr->sender_id);
+    printf("recieved start packet from %d\n", m_header->m_sender);
     if (!m_gameStarted)
     {
         printf("initializing world with %d players\n", m_clientId + 1);
@@ -318,35 +320,35 @@ void ServerGame::receiveStartPacket(int offset)
     // add player
 }
 
-void ServerGame::sendStartPacket()
+void ServerGame::SendStartPacket()
 { // will add more later based on generated world
     const unsigned int packetSize = sizeof(Packet);
     std::uint8_t packetData[packetSize];
 
     Packet packet;
-    packet.hdr.packet_type = static_cast<int>(PacketTypes::StartGame);
+    packet.m_header.packet_type = static_cast<int>(PacketTypes::StartGame);
 
     PosInfo p;
     // p.id = m_clientId + 1;
 
-    packet.dat.game_data_id = GameDataId::Position;
+    packet.m_data.m_gameDataId = GameDataId::Position;
 
-    printf("sending start packet with m_clientId %d\n", m_clientId + 1);
+    printf("Sending start packet with m_clientId %d\n", m_clientId + 1);
 
-    p.Serialize(packet.dat.buf);
+    p.Serialize(packet.m_data.m_buffer);
     packet.Serialize(packetData);
 
-    packet.hdr.sender_id = SERVER_ID;
+    packet.m_header.m_sender = SERVER_ID;
 
     packet.Serialize(packetData);
 
-    m_network->sendToAll(packetData, packetSize);
+    m_network->SendToAll(packetData, packetSize);
 }
 
-void ServerGame::sendLoadPacket()
+void ServerGame::SendLoadPacket()
 {
     Packet packet;
-    packet.hdr.packet_type = static_cast<int>(PacketTypes::ServerLoading);
+    packet.m_header.packet_type = static_cast<int>(PacketTypes::ServerLoading);
 
     const unsigned int packetSize = sizeof(Packet);
 
@@ -354,13 +356,13 @@ void ServerGame::sendLoadPacket()
 
     packet.Serialize(packetData);
 
-    m_network->sendToAll(packetData, packetSize);
+    m_network->SendToAll(packetData, packetSize);
 }
 
-void ServerGame::sendReadyToSpawnPacket()
+void ServerGame::SendReadyToSpawnPacket()
 {
     Packet packet;
-    packet.hdr.packet_type = static_cast<int>(PacketTypes::ReadyToSpawnEvent);
+    packet.m_header.packet_type = static_cast<int>(PacketTypes::ReadyToSpawnEvent);
 
     const unsigned int packetSize = sizeof(Packet);
 
@@ -368,66 +370,66 @@ void ServerGame::sendReadyToSpawnPacket()
 
     packet.Serialize(packetData);
 
-    m_network->sendToAll(packetData, packetSize);
+    m_network->SendToAll(packetData, packetSize);
 }
 
-void ServerGame::receiveIndSpawnPacket(int offset)
+void ServerGame::ReceiveIndSpawnPacket(int offset)
 {
-    PacketData* dat = reinterpret_cast<PacketData*>(&m_networkData[offset]);
-    PosInfo* pi = reinterpret_cast<PosInfo*>(&dat->buf);
+    PacketData* m_data = reinterpret_cast<PacketData*>(&m_networkData[offset]);
+    PosInfo* pi = reinterpret_cast<PosInfo*>(&m_data->m_buffer);
 
     m_engine->SpawnRandomPlayer(pi->id, pi->team_id, pi->skin);
 }
 
-void ServerGame::sendSpawnPacket(PosInfo pi)
+void ServerGame::SendSpawnPacket(PosInfo pi)
 {
     Packet packet;
-    packet.hdr.packet_type = static_cast<int>(PacketTypes::SpawnEvent);
+    packet.m_header.packet_type = static_cast<int>(PacketTypes::SpawnEvent);
 
     const unsigned int packetSize = sizeof(Packet);
 
     std::uint8_t packetData[packetSize];
 
-    packet.dat.game_data_id = GameDataId::Position;
-    pi.Serialize(packet.dat.buf);
+    packet.m_data.m_gameDataId = GameDataId::Position;
+    pi.Serialize(packet.m_data.m_buffer);
 
     packet.Serialize(packetData);
 
-    m_network->sendToAll(packetData, packetSize);
+    m_network->SendToAll(packetData, packetSize);
 }
 
-void ServerGame::sendRemovePacket(ClassId rem_cid, int rem_oid)
+void ServerGame::SendRemovePacket(ClassId rem_cid, int rem_oid)
 {
     Packet packet;
-    packet.hdr.packet_type = static_cast<int>(PacketTypes::RemoveEvent);
+    packet.m_header.packet_type = static_cast<int>(PacketTypes::RemoveEvent);
 
     const unsigned int packetSize = sizeof(Packet);
 
     std::uint8_t packetData[packetSize];
 
-    packet.dat.game_data_id = GameDataId::Remove;
+    packet.m_data.m_gameDataId = GameDataId::Remove;
 
     RemInfo r;
     r.rem_cid = rem_cid;
     r.rem_oid = rem_oid;
 
-    r.Serialize(packet.dat.buf);
+    r.Serialize(packet.m_data.m_buffer);
 
     packet.Serialize(packetData);
 
-    m_network->sendToAll(packetData, packetSize);
+    m_network->SendToAll(packetData, packetSize);
 }
 
-void ServerGame::sendRemovePacket(ClassId rem_cid, int rem_oid, ClassId rec_cid, int rec_oid)
+void ServerGame::SendRemovePacket(ClassId rem_cid, int rem_oid, ClassId rec_cid, int rec_oid)
 {
     Packet packet;
-    packet.hdr.packet_type = static_cast<int>(PacketTypes::RemoveEvent);
+    packet.m_header.packet_type = static_cast<int>(PacketTypes::RemoveEvent);
 
     const unsigned int packetSize = sizeof(Packet);
 
     std::uint8_t packetData[packetSize];
 
-    packet.dat.game_data_id = GameDataId::Remove;
+    packet.m_data.m_gameDataId = GameDataId::Remove;
 
     RemInfo r;
     r.rem_cid = rem_cid;
@@ -435,17 +437,17 @@ void ServerGame::sendRemovePacket(ClassId rem_cid, int rem_oid, ClassId rec_cid,
     r.rec_cid = rec_cid;
     r.rec_oid = rec_oid;
 
-    r.Serialize(packet.dat.buf);
+    r.Serialize(packet.m_data.m_buffer);
 
     packet.Serialize(packetData);
 
-    m_network->sendToAll(packetData, packetSize);
+    m_network->SendToAll(packetData, packetSize);
 }
 
-void ServerGame::sendDiscardPacket(int id)
+void ServerGame::SendDiscardPacket(int id)
 {
     Packet packet;
-    packet.hdr.packet_type = static_cast<int>(PacketTypes::DiscardEvent);
+    packet.m_header.packet_type = static_cast<int>(PacketTypes::DiscardEvent);
 
     const unsigned int packetSize = sizeof(Packet);
 
@@ -454,14 +456,14 @@ void ServerGame::sendDiscardPacket(int id)
     MiscInfo m;
     m.misc1 = id;
 
-    m.Serialize(packet.dat.buf);
+    m.Serialize(packet.m_data.m_buffer);
 
     packet.Serialize(packetData);
 
-    m_network->sendToAll(packetData, packetSize);
+    m_network->SendToAll(packetData, packetSize);
 }
 
-void ServerGame::sendRemovePacket(ClassId rem_cid,
+void ServerGame::SendRemovePacket(ClassId rem_cid,
                                   int rem_oid,
                                   ClassId rec_cid,
                                   int rec_oid,
@@ -469,13 +471,13 @@ void ServerGame::sendRemovePacket(ClassId rem_cid,
                                   int subtype)
 {
     Packet packet;
-    packet.hdr.packet_type = static_cast<int>(PacketTypes::RemoveEvent);
+    packet.m_header.packet_type = static_cast<int>(PacketTypes::RemoveEvent);
 
     const unsigned int packetSize = sizeof(Packet);
 
     std::uint8_t packetData[packetSize];
 
-    packet.dat.game_data_id = GameDataId::Remove;
+    packet.m_data.m_gameDataId = GameDataId::Remove;
 
     RemInfo r;
     r.rem_cid = rem_cid;
@@ -485,22 +487,22 @@ void ServerGame::sendRemovePacket(ClassId rem_cid,
     r.sub_id = static_cast<int>(c_type);
     r.sub_id2 = subtype;
 
-    r.Serialize(packet.dat.buf);
+    r.Serialize(packet.m_data.m_buffer);
 
     packet.Serialize(packetData);
 
-    m_network->sendToAll(packetData, packetSize);
+    m_network->SendToAll(packetData, packetSize);
 }
 
-void ServerGame::receiveMovePacket(int offset)
+void ServerGame::ReceiveMovePacket(int offset)
 {
-    PacketHeader* hdr = reinterpret_cast<PacketHeader*>(&m_networkData[offset]);
-    PacketData* dat = reinterpret_cast<PacketData*>(&m_networkData[offset + sizeof(PacketHeader)]);
-    PosInfo* pi = reinterpret_cast<PosInfo*>(&dat->buf);
-    Entity* ent = reinterpret_cast<Entity*>(EntitySpawner::Instance()->GetEntity(ClassId::Player, hdr->sender_id));
+    PacketHeader* m_header = reinterpret_cast<PacketHeader*>(&m_networkData[offset]);
+    PacketData* m_data = reinterpret_cast<PacketData*>(&m_networkData[offset + sizeof(PacketHeader)]);
+    PosInfo* pi = reinterpret_cast<PosInfo*>(&m_data->m_buffer);
+    Entity* ent = reinterpret_cast<Entity*>(EntitySpawner::Instance()->GetEntity(ClassId::Player, m_header->m_sender));
 
     Player* player =
-        reinterpret_cast<Player*>(EntitySpawner::Instance()->GetEntity(ClassId::Player, hdr->sender_id));
+        reinterpret_cast<Player*>(EntitySpawner::Instance()->GetEntity(ClassId::Player, m_header->m_sender));
 
     // don't take client input if stunned
     if (player->GetStun() > 0)
@@ -543,7 +545,7 @@ void ServerGame::receiveMovePacket(int offset)
     }
 }
 
-void ServerGame::sendMovePacket(ClassId class_id, int obj_id)
+void ServerGame::SendMovePacket(ClassId class_id, int obj_id)
 {
     Entity* ent = reinterpret_cast<Entity*>(EntitySpawner::Instance()->GetEntity(class_id, obj_id));
 
@@ -554,13 +556,13 @@ void ServerGame::sendMovePacket(ClassId class_id, int obj_id)
     }
 
     Packet packet;
-    packet.hdr.sender_id = SERVER_ID;
-    packet.hdr.packet_type = static_cast<int>(PacketTypes::MoveEvent);
+    packet.m_header.m_sender = SERVER_ID;
+    packet.m_header.packet_type = static_cast<int>(PacketTypes::MoveEvent);
 
     PosInfo p;
-    packet.dat.game_data_id = GameDataId::Position;
+    packet.m_data.m_gameDataId = GameDataId::Position;
 
-    // Extract the vector and send it with the posinfo object
+    // Extract the vector and Send it with the posinfo object
     btVector3 vec = ent->GetEntityPosition();
 
     p.cid = class_id;
@@ -576,31 +578,31 @@ void ServerGame::sendMovePacket(ClassId class_id, int obj_id)
         p.hp = ((Player*)ent)->GetHp();
     }
 
-    p.Serialize(packet.dat.buf);
+    p.Serialize(packet.m_data.m_buffer);
 
     const unsigned int packetSize = sizeof(Packet);
     std::uint8_t packetData[packetSize];
 
     packet.Serialize(packetData);
 
-    m_network->sendToAll(packetData, packetSize);
+    m_network->SendToAll(packetData, packetSize);
 }
 
-void ServerGame::receiveRotationPacket(int offset)
+void ServerGame::ReceiveRotationPacket(int offset)
 {
-    PacketData* dat = reinterpret_cast<PacketData*>(&m_networkData[offset]);
-    PosInfo* pi = reinterpret_cast<PosInfo*>(&dat->buf);
+    PacketData* m_data = reinterpret_cast<PacketData*>(&m_networkData[offset]);
+    PosInfo* pi = reinterpret_cast<PosInfo*>(&m_data->m_buffer);
 
-    PacketHeader* hdr = reinterpret_cast<PacketHeader*>(&m_networkData[offset - sizeof(PacketHeader)]);
+    PacketHeader* m_header = reinterpret_cast<PacketHeader*>(&m_networkData[offset - sizeof(PacketHeader)]);
 
     // All rotation packets will be player type, since it's from client
-    Entity* ent = reinterpret_cast<Entity*>(EntitySpawner::Instance()->GetEntity(ClassId::Player, hdr->sender_id));
+    Entity* ent = reinterpret_cast<Entity*>(EntitySpawner::Instance()->GetEntity(ClassId::Player, m_header->m_sender));
 
     ent->SetEntityRotation(0, pi->roty, 0, pi->rotw);
-    sendRotationPacket(ClassId::Player, hdr->sender_id);
+    SendRotationPacket(ClassId::Player, m_header->m_sender);
 }
 
-void ServerGame::sendRotationPacket(ClassId class_id, int obj_id)
+void ServerGame::SendRotationPacket(ClassId class_id, int obj_id)
 {
     const unsigned int packetSize = sizeof(Packet);
     std::uint8_t packetData[packetSize];
@@ -614,10 +616,10 @@ void ServerGame::sendRotationPacket(ClassId class_id, int obj_id)
     }
 
     Packet packet;
-    packet.hdr.sender_id = SERVER_ID;
-    packet.hdr.packet_type = static_cast<int>(PacketTypes::VRotationEvent);
+    packet.m_header.m_sender = SERVER_ID;
+    packet.m_header.packet_type = static_cast<int>(PacketTypes::VRotationEvent);
 
-    packet.dat.game_data_id = GameDataId::Position;
+    packet.m_data.m_gameDataId = GameDataId::Position;
 
     PosInfo p;
     p.cid = (ClassId)class_id;
@@ -634,19 +636,19 @@ void ServerGame::sendRotationPacket(ClassId class_id, int obj_id)
     p.roty = q.getY();
     p.rotz = q.getZ();
 
-    p.Serialize(packet.dat.buf);
+    p.Serialize(packet.m_data.m_buffer);
 
     packet.Serialize(packetData);
 
-    m_network->sendToAll(packetData, packetSize);
+    m_network->SendToAll(packetData, packetSize);
 }
 
-void ServerGame::receiveJumpPacket(int offset)
+void ServerGame::ReceiveJumpPacket(int offset)
 {
-    PacketHeader* hdr = reinterpret_cast<PacketHeader*>(&m_networkData[offset]);
+    PacketHeader* m_header = reinterpret_cast<PacketHeader*>(&m_networkData[offset]);
 
     Player* player =
-        reinterpret_cast<Player*>(EntitySpawner::Instance()->GetEntity(ClassId::Player, hdr->sender_id));
+        reinterpret_cast<Player*>(EntitySpawner::Instance()->GetEntity(ClassId::Player, m_header->m_sender));
 
     // ignore client input if stunned
     if (player->GetStun() > 0)
@@ -655,60 +657,60 @@ void ServerGame::receiveJumpPacket(int offset)
     player->JumpPlayer();
 }
 
-void ServerGame::sendScorePacket()
+void ServerGame::SendScorePacket()
 {
     Packet packet;
-    packet.hdr.packet_type = static_cast<int>(PacketTypes::UpdateScore);
+    packet.m_header.packet_type = static_cast<int>(PacketTypes::UpdateScore);
 
     const unsigned int packetSize = sizeof(Packet);
 
     std::uint8_t packetData[packetSize];
 
-    packet.dat.game_data_id = GameDataId::Score;
+    packet.m_data.m_gameDataId = GameDataId::Score;
 
     ScoreInfo s;
     s.t0_score = m_scores[0];
     s.t1_score = m_scores[1];
 
-    printf("sending score packet: %d, %d\n", s.t0_score, s.t1_score);
-    s.Serialize(packet.dat.buf);
+    printf("Sending score packet: %d, %d\n", s.t0_score, s.t1_score);
+    s.Serialize(packet.m_data.m_buffer);
 
     packet.Serialize(packetData);
 
-    m_network->sendToAll(packetData, packetSize);
+    m_network->SendToAll(packetData, packetSize);
 }
 
-void ServerGame::sendGameOverPacket(int winner)
+void ServerGame::SendGameOverPacket(int winner)
 {
     Packet packet;
-    packet.hdr.packet_type = static_cast<int>(PacketTypes::GameOver);
+    packet.m_header.packet_type = static_cast<int>(PacketTypes::GameOver);
     m_gameOver = true;
 
     const unsigned int packetSize = sizeof(Packet);
 
     std::uint8_t packetData[packetSize];
 
-    packet.dat.game_data_id = GameDataId::Score;
+    packet.m_data.m_gameDataId = GameDataId::Score;
 
     ScoreInfo s;
     s.t0_score = m_scores[0];
     s.t1_score = m_scores[1];
 
-    printf("sending game over\n");
-    s.Serialize(packet.dat.buf);
+    printf("Sending game over\n");
+    s.Serialize(packet.m_data.m_buffer);
 
     packet.Serialize(packetData);
 
-    m_network->sendToAll(packetData, packetSize);
+    m_network->SendToAll(packetData, packetSize);
 }
 
-void ServerGame::receiveAttackPacket(int offset)
+void ServerGame::ReceiveAttackPacket(int offset)
 {
-    PacketHeader* hdr = reinterpret_cast<PacketHeader*>(&m_networkData[offset]);
-    PacketData* dat = reinterpret_cast<PacketData*>(&m_networkData[offset + sizeof(PacketHeader)]);
-    MiscInfo* m = reinterpret_cast<MiscInfo*>(&dat->buf);
+    PacketHeader* m_header = reinterpret_cast<PacketHeader*>(&m_networkData[offset]);
+    PacketData* m_data = reinterpret_cast<PacketData*>(&m_networkData[offset + sizeof(PacketHeader)]);
+    MiscInfo* m = reinterpret_cast<MiscInfo*>(&m_data->m_buffer);
     Player* player =
-        reinterpret_cast<Player*>(EntitySpawner::Instance()->GetEntity(ClassId::Player, hdr->sender_id));
+        reinterpret_cast<Player*>(EntitySpawner::Instance()->GetEntity(ClassId::Player, m_header->m_sender));
 
     player->SetCamAngle(m->misc3);
 
@@ -722,148 +724,148 @@ void ServerGame::receiveAttackPacket(int offset)
     }
 }
 
-void ServerGame::sendTimeStampPacket(int diff)
+void ServerGame::SendTimeStampPacket(int diff)
 {
     Packet packet;
-    packet.hdr.sender_id = SERVER_ID;
-    packet.hdr.packet_type = static_cast<int>(PacketTypes::TimeEvent);
+    packet.m_header.m_sender = SERVER_ID;
+    packet.m_header.packet_type = static_cast<int>(PacketTypes::TimeEvent);
 
     MiscInfo m;
     m.misc1 = (diff / 1000);
 
-    m.Serialize(packet.dat.buf);
+    m.Serialize(packet.m_data.m_buffer);
 
     const unsigned int packetSize = sizeof(Packet);
     std::uint8_t packetData[packetSize];
 
     packet.Serialize(packetData);
 
-    m_network->sendToAll(packetData, packetSize);
+    m_network->SendToAll(packetData, packetSize);
 }
 
-void ServerGame::sendAttackPacket(int id)
+void ServerGame::SendAttackPacket(int id)
 {
     const unsigned int packetSize = sizeof(Packet);
     std::uint8_t packetData[packetSize];
 
     Packet packet;
-    packet.hdr.sender_id = SERVER_ID;
-    packet.hdr.packet_type = static_cast<int>(PacketTypes::AttackEvent);
+    packet.m_header.m_sender = SERVER_ID;
+    packet.m_header.packet_type = static_cast<int>(PacketTypes::AttackEvent);
 
-    packet.dat.game_data_id = GameDataId::Emote;
+    packet.m_data.m_gameDataId = GameDataId::Emote;
 
     EmoteInfo e;
     e.id = id;
-    e.Serialize(packet.dat.buf);
+    e.Serialize(packet.m_data.m_buffer);
 
     packet.Serialize(packetData);
-    m_network->sendToAll(packetData, packetSize);
+    m_network->SendToAll(packetData, packetSize);
 }
 
-void ServerGame::receiveDiscardPacket(int offset)
+void ServerGame::ReceiveDiscardPacket(int offset)
 {
-    // PacketHeader* hdr = (PacketHeader *) &(m_networkData[offset]);
+    // PacketHeader* m_header = (PacketHeader *) &(m_networkData[offset]);
 
-    // shared_ptr<Player> player = m_engine->GetWorld()->GetPlayer(hdr->sender_id);
-    PacketHeader* hdr = reinterpret_cast<PacketHeader*>(&m_networkData[offset]);
+    // shared_ptr<Player> player = m_engine->GetWorld()->GetPlayer(m_header->m_sender);
+    PacketHeader* m_header = reinterpret_cast<PacketHeader*>(&m_networkData[offset]);
     Player* player =
-        reinterpret_cast<Player*>(EntitySpawner::Instance()->GetEntity(ClassId::Player, hdr->sender_id));
+        reinterpret_cast<Player*>(EntitySpawner::Instance()->GetEntity(ClassId::Player, m_header->m_sender));
     player->DiscardWeapon();
 }
 
-void ServerGame::receiveDancePacket(int offset)
+void ServerGame::ReceiveDancePacket(int offset)
 {
-    PacketHeader* hdr = reinterpret_cast<PacketHeader*>(&m_networkData[offset]);
-    sendDancePacket(hdr->sender_id);
+    PacketHeader* m_header = reinterpret_cast<PacketHeader*>(&m_networkData[offset]);
+    SendDancePacket(m_header->m_sender);
 }
 
-void ServerGame::sendDancePacket(int id)
+void ServerGame::SendDancePacket(int id)
 {
     const unsigned int packetSize = sizeof(Packet);
     std::uint8_t packetData[packetSize];
 
     Packet packet;
-    packet.hdr.sender_id = SERVER_ID;
-    packet.hdr.packet_type = static_cast<int>(PacketTypes::DanceEvent);
+    packet.m_header.m_sender = SERVER_ID;
+    packet.m_header.packet_type = static_cast<int>(PacketTypes::DanceEvent);
 
-    packet.dat.game_data_id = GameDataId::Emote;
+    packet.m_data.m_gameDataId = GameDataId::Emote;
 
     EmoteInfo e;
     e.id = id;
-    e.Serialize(packet.dat.buf);
+    e.Serialize(packet.m_data.m_buffer);
 
     packet.Serialize(packetData);
-    m_network->sendToAll(packetData, packetSize);
+    m_network->SendToAll(packetData, packetSize);
 }
 
-void ServerGame::sendDeathPacket(int id)
+void ServerGame::SendDeathPacket(int id)
 {
     const unsigned int packetSize = sizeof(Packet);
     std::uint8_t packetData[packetSize];
 
     Packet packet;
-    packet.hdr.sender_id = SERVER_ID;
-    packet.hdr.packet_type = static_cast<int>(PacketTypes::DeathEvent);
+    packet.m_header.m_sender = SERVER_ID;
+    packet.m_header.packet_type = static_cast<int>(PacketTypes::DeathEvent);
 
-    packet.dat.game_data_id = GameDataId::Emote;
+    packet.m_data.m_gameDataId = GameDataId::Emote;
 
     EmoteInfo e;
     e.id = id;
-    e.Serialize(packet.dat.buf);
+    e.Serialize(packet.m_data.m_buffer);
 
     packet.Serialize(packetData);
-    m_network->sendToAll(packetData, packetSize);
+    m_network->SendToAll(packetData, packetSize);
 }
 
-void ServerGame::sendRespawnPacket(int id)
+void ServerGame::SendRespawnPacket(int id)
 {
     const unsigned int packetSize = sizeof(Packet);
     std::uint8_t packetData[packetSize];
 
     Packet packet;
-    packet.hdr.sender_id = SERVER_ID;
-    packet.hdr.packet_type = static_cast<int>(PacketTypes::RespawnEvent);
+    packet.m_header.m_sender = SERVER_ID;
+    packet.m_header.packet_type = static_cast<int>(PacketTypes::RespawnEvent);
 
-    packet.dat.game_data_id = GameDataId::Emote;
+    packet.m_data.m_gameDataId = GameDataId::Emote;
 
     EmoteInfo e;
     e.id = id;
-    e.Serialize(packet.dat.buf);
+    e.Serialize(packet.m_data.m_buffer);
 
     packet.Serialize(packetData);
-    m_network->sendToAll(packetData, packetSize);
+    m_network->SendToAll(packetData, packetSize);
 }
 
-void ServerGame::sendNamePacket(int player_id)
+void ServerGame::SendNamePacket(int player_id)
 {
     const unsigned int packetSize = sizeof(Packet);
     std::uint8_t packetData[packetSize];
 
     Packet packet;
-    packet.hdr.sender_id = SERVER_ID;
-    packet.hdr.packet_type = static_cast<int>(PacketTypes::SetUsername);
+    packet.m_header.m_sender = SERVER_ID;
+    packet.m_header.packet_type = static_cast<int>(PacketTypes::SetUsername);
 
-    packet.dat.game_data_id = GameDataId::Name;
+    packet.m_data.m_gameDataId = GameDataId::Name;
 
     NameInfo n;
     n.player_id = player_id;
     n.name = m_nameMap.at(player_id);
-    n.Serialize(packet.dat.buf);
+    n.Serialize(packet.m_data.m_buffer);
 
     packet.Serialize(packetData);
-    m_network->sendToAll(packetData, packetSize);
+    m_network->SendToAll(packetData, packetSize);
 }
 
-void ServerGame::receiveNamePacket(int offset)
+void ServerGame::ReceiveNamePacket(int offset)
 {
-    PacketHeader* hdr = reinterpret_cast<PacketHeader*>(&m_networkData[offset]);
-    PacketData* dat = reinterpret_cast<PacketData*>(&m_networkData[offset + sizeof(PacketHeader)]);
-    NameInfo* n = reinterpret_cast<NameInfo*>(&dat->buf);
+    PacketHeader* m_header = reinterpret_cast<PacketHeader*>(&m_networkData[offset]);
+    PacketData* m_data = reinterpret_cast<PacketData*>(&m_networkData[offset + sizeof(PacketHeader)]);
+    NameInfo* n = reinterpret_cast<NameInfo*>(&m_data->m_buffer);
 
-    m_nameMap[hdr->sender_id] = n->name;
+    m_nameMap[m_header->m_sender] = n->name;
     /*Player* player = reinterpret_cast<Player*>(EntitySpawner::Instance()->GetEntity(ClassId::Player,
-    hdr->sender_id));
+    m_header->m_sender));
     player->SetName(n->name);*/
 
-    sendNamePacket(hdr->sender_id);
+    SendNamePacket(m_header->m_sender);
 }

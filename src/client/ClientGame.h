@@ -69,63 +69,63 @@ public:
 
 #ifdef _WIN32
 
-    void receiveInitPacket(int offset);
-    void sendInitPacket();
+    void ReceiveInitPacket(int offset);
+    void SendInitPacket();
 
-    void receiveJoinPacket(int offset);
-    void sendJoinPacket(int team);
+    void ReceiveJoinPacket(int offset);
+    void SendJoinPacket(int team);
 
-    // Tell the server this client is ready, this is like an ACK to prevent a race condition
-    void sendReadyPacket();
+    // TeLl the server this client is ready, this is like an ACK to prevent a race condition
+    void SendReadyPacket();
 
-    void receiveStartPacket(int offset);
-    void sendStartPacket();
+    void ReceiveStartPacket(int offset);
+    void SendStartPacket();
 
-    void receiveReadyToSpawnPacket(int offset);
+    void ReceiveReadyToSpawnPacket(int offset);
 
     // The data we want in network_data should have an offset if any
-    void receiveSpawnPacket(int offset);
+    void ReceiveSpawnPacket(int offset);
 
-    void receiveRemovePacket(int offset);
+    void ReceiveRemovePacket(int offset);
 
-    void receiveMovePacket(int offset);
-    void sendMovePacket(MoveType direction);
+    void ReceiveMovePacket(int offset);
+    void SendMovePacket(MoveType direction);
 
-    void receiveTimeStampPacket(int offset);
+    void ReceiveTimeStampPacket(int offset);
 
-    void receiveRotationPacket(int offset);
-    void sendRotationPacket();
+    void ReceiveRotationPacket(int offset);
+    void SendRotationPacket();
 
-    void sendJumpPacket();
+    void SendJumpPacket();
 
-    void sendDancePacket();
-    void receiveDancePacket(int offset);
+    void SendDancePacket();
+    void ReceiveDancePacket(int offset);
 
-    void receiveDeathPacket(int offset);
+    void ReceiveDeathPacket(int offset);
 
-    void receiveRespawnPacket(int offset);
+    void ReceiveRespawnPacket(int offset);
 
-    void receiveScorePacket(int offset);
+    void ReceiveScorePacket(int offset);
 
-    void receiveGameOverPacket(int offset);
+    void ReceiveGameOverPacket(int offset);
 
-    void sendAttackPacket(AttackType t);
-    void receiveAttackPacket(int offset); // do distinct animation for peck and weapon attack later?
+    void SendAttackPacket(AttackType t);
+    void ReceiveAttackPacket(int offset); // do distinct animation for peck and weapon attack later?
 
-    void sendDiscardPacket();
-    void receiveDiscardPacket(int offset); // do animation for weapon discard later?
+    void SendDiscardPacket();
+    void ReceiveDiscardPacket(int offset); // do animation for weapon discard later?
 
-    void sendNamePacket();
-    void receiveNamePacket(int offset);
+    void SendNamePacket();
+    void ReceiveNamePacket(int offset);
 
-    bool hasStarted() { return m_gameStarted; };
+    bool HasStarted() { return m_gameStarted; };
 
-    void decScore(int team, int amount) { m_scores[team] -= amount; }
-    void incScore(int team, int amount) { m_scores[team] += amount; }
+    void DecScore(int team, int amount) { m_scores[team] -= amount; }
+    void IncScore(int team, int amount) { m_scores[team] += amount; }
 
     std::uint8_t m_networkData[g_maxPacketSize];
 
-    void update();
+    void Update();
 #endif
 
     void Initialize();

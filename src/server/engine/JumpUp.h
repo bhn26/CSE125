@@ -10,13 +10,13 @@ public:
 
     JumpUp() { this->type = PowerUpType::JumpUp; }
     ~JumpUp() {}
-    void applyPower(Player* p) override // applies the powerup to the player
+    void ApplyPower(Player* p) override // applies the powerup to the player
     {
         p->SetBonusJump(jump_bonus);
         p->SetPowerUpDuration(jump_bonus_duration);
         p->EquipPower(this);
     };
-    void removePower(Player* p) override
+    void RemovePower(Player* p) override
     {
         p->SetBonusJump(0);
         p->SetPowerUpDuration(0);

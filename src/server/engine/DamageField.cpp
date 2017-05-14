@@ -23,7 +23,7 @@ DamageField::~DamageField()
     delete m_fieldGhostObject;
 }
 
-int DamageField::handleField()
+int DamageField::HandleField()
 {
     m_fieldTtl--;
     int numOverlap = m_fieldGhostObject->getNumOverlappingObjects();

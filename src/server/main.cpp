@@ -9,11 +9,11 @@
 #include "ConfigManager.h"
 #include <iostream>
 
-void serverLoop(void* arg)
+void ServerLoop(void* arg)
 {
     while (true)
     {
-        ServerGame::Instance()->update();
+        ServerGame::Instance()->Update();
     }
 }
 
@@ -21,6 +21,6 @@ int main()
 {
     ConfigManager::Instance()->LoadConfigs("eggs.cfg");
 
-    serverLoop(nullptr);
+    ServerLoop(nullptr);
 }
 

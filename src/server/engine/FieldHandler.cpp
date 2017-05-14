@@ -21,7 +21,7 @@ void FieldHandler::HandleFields()
     while (it != m_activeFields.end())
     {
         // if field is done, remove from queue
-        if ((*it)->handleField())
+        if ((*it)->HandleField())
         {
             auto tempIt = (*it);
             it = m_activeFields.erase(it);

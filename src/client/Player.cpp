@@ -241,10 +241,10 @@ void Player::ProcessMouseMovement(GLfloat xoffset, GLfloat yoffset, GLboolean co
     CalculateCameraFront();
     SetAudioListener();
 
-    // Don't send me stuff unless you're m_alive
+    // Don't Send me stuff unless you're m_alive
     if (++m_tick % 10 == 0 && m_alive)
     {
-        ClientGame::Instance()->sendRotationPacket();
+        ClientGame::Instance()->SendRotationPacket();
         m_tick = 0;
     }
 }
@@ -284,7 +284,7 @@ void Player::ProcessViewMovement(GLfloat xoffset, GLfloat yoffset, GLboolean con
 
     if (++m_tick % 10 == 0)
     {
-        ClientGame::Instance()->sendRotationPacket();
+        ClientGame::Instance()->SendRotationPacket();
         m_tick = 0;
     }
 }

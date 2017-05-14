@@ -22,25 +22,25 @@ public:
     ~ServerNetwork(void);
 
     // send data to all clients
-    void sendToAll(std::uint8_t* packets, int totalSize);
+    void SendToAll(std::uint8_t* packets, int totalSize);
 
     // send data to one client
-    void sendToClient(std::uint8_t* packets, int totalSize, unsigned int clientId);
+    void SendToClient(std::uint8_t* packets, int totalSize, unsigned int clientId);
 
     // receive incoming data
-    int receiveData(unsigned int client_id, std::uint8_t* recvbuf);
+    int ReceiveData(unsigned int client_id, std::uint8_t* recvbuf);
 
     // accept new connections
-    bool acceptNewClient(unsigned int& id);
+    bool AcceptNewClient(unsigned int& id);
 
     // Socket to listen for new connections
-    SOCKET ListenSocket = INVALID_SOCKET;
+    SOCKET m_listenSocket = INVALID_SOCKET;
 
     // Socket to give to the clients
-    SOCKET ClientSocket = INVALID_SOCKET;
+    SOCKET m_clientSocket = INVALID_SOCKET;
 
     // for error checking return values
-    int iResult = 0;
+    int m_result = 0;
 
     // table to keep track of each client's socket
     std::map<unsigned int, SOCKET> m_sessions;

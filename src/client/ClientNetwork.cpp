@@ -10,11 +10,11 @@ ClientNetwork::ClientNetwork(void) : m_connectSocket(INVALID_SOCKET)
     addrinfo *result = nullptr, *ptr = nullptr, hints;
 
     // Initialize Winsock
-    m_iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
+    m_result = WSAStartup(MAKEWORD(2, 2), &wsaData);
 
-    if (m_iResult != 0)
+    if (m_result != 0)
     {
-        printf("WSAStartup failed with error: %d\n", m_iResult);
+        printf("WSAStartup failed with error: %d\n", m_result);
         exit(1);
     }
 
@@ -32,16 +32,16 @@ ClientNetwork::ClientNetwork(void) : m_connectSocket(INVALID_SOCKET)
     if (std::string(m_ip).size() == 0 || std::string(m_port).size() == 0)
     {
         printf("failed to read from config file, using defaults\n");
-        m_iResult = getaddrinfo(DEFAULT_IP, DEFAULT_PORT, &hints, &result);
+        m_result = getaddrinfo(DEFAULT_IP, DEFAULT_PORT, &hints, &result);
     }
     else
     {
-        m_iResult = getaddrinfo(m_ip.c_str(), m_port.c_str(), &hints, &result);
+        m_result = getaddrinfo(m_ip.c_str(), m_port.c_str(), &hints, &result);
     }
 
-    if (m_iResult != 0)
+    if (m_result != 0)
     {
-        printf("getaddrinfo failed with error: %d\n", m_iResult);
+        printf("getaddrinfo failed with error: %d\n", m_result);
         WSACleanup();
         exit(1);
     }
@@ -60,9 +60,9 @@ ClientNetwork::ClientNetwork(void) : m_connectSocket(INVALID_SOCKET)
         }
 
         // Connect to server.
-        m_iResult = connect(m_connectSocket, ptr->ai_addr, (int)ptr->ai_addrlen);
+        m_result = connect(m_connectSocket, ptr->ai_addr, (int)ptr->ai_addrlen);
 
-        if (m_iResult == SOCKET_ERROR)
+        if (m_result == SOCKET_ERROR)
         {
             closesocket(m_connectSocket);
             m_connectSocket = INVALID_SOCKET;
@@ -84,8 +84,8 @@ ClientNetwork::ClientNetwork(void) : m_connectSocket(INVALID_SOCKET)
     // Set the mode of the socket to be nonblocking
     u_long iMode = 1;
 
-    m_iResult = ioctlsocket(m_connectSocket, FIONBIO, &iMode);
-    if (m_iResult == SOCKET_ERROR)
+    m_result = ioctlsocket(m_connectSocket, FIONBIO, &iMode);
+    if (m_result == SOCKET_ERROR)
     {
         printf("ioctlsocket failed with error: %d\n", WSAGetLastError());
         closesocket(m_connectSocket);
@@ -102,11 +102,11 @@ ClientNetwork::~ClientNetwork(void)
 {
 }
 
-int ClientNetwork::receivePackets(std::uint8_t* recvbuf)
+int ClientNetwork::ReceivePackets(std::uint8_t* recvbuf)
 {
-    m_iResult = NetworkServices::receiveMessage(m_connectSocket, recvbuf, g_maxPacketSize);
+    m_result = NetworkServices::Receive(m_connectSocket, recvbuf, g_maxPacketSize);
 
-    if (m_iResult == 0)
+    if (m_result == 0)
     {
         printf("Connection closed.... %d\n", errno);
         closesocket(m_connectSocket);
@@ -114,5 +114,5 @@ int ClientNetwork::receivePackets(std::uint8_t* recvbuf)
         exit(1);
     }
 
-    return m_iResult;
+    return m_result;
 }

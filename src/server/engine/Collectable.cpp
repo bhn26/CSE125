@@ -91,24 +91,24 @@ void Collectable::HandleCollect(Player* collidedPlayer)
     else if (m_type == CollectType::PowerUp)
     {
         // always apply health gain
-        if (m_powerup->getType() == PowerUpType::HealthGain)
+        if (m_powerup->GetType() == PowerUpType::HealthGain)
         {
-            m_powerup->applyPower(collidedPlayer);
+            m_powerup->ApplyPower(collidedPlayer);
             return;
         }
 
         if (collidedPlayer->HasPower())
         {
-            if (m_powerup->getType() == collidedPlayer->GetPower()->getType())
+            if (m_powerup->GetType() == collidedPlayer->GetPower()->GetType())
             {
-                m_powerup->applyPower(collidedPlayer);
+                m_powerup->ApplyPower(collidedPlayer);
             }
             return;
         }
 
-        m_powerup->applyPower(collidedPlayer);
+        m_powerup->ApplyPower(collidedPlayer);
 
-        printf("acquired powerup of type %d\n", m_powerup->getType());
+        printf("acquired powerup of type %d\n", m_powerup->GetType());
     }
 }
 
