@@ -262,7 +262,7 @@ void LobbyState::InitTextures()
         m_join = std::make_unique<Texture>(GL_TEXTURE_2D, "assets/ui/lobby/lobby_join.png");
         m_joinDisabled = std::make_unique<Texture>(GL_TEXTURE_2D, "assets/ui/lobby/lobby_join_disabled.png");
 
-        m_loadScreen = std::make_unique<Texture>(GL_TEXTURE_2D, "assets/ui/m_loading/instructions.png");
+        m_loadScreen = std::make_unique<Texture>(GL_TEXTURE_2D, "assets/ui/loading/instructions.png");
         m_initialized = true;
     }
 }

@@ -169,7 +169,7 @@ void ServerGame::ReceiveFromClients()
                 m_readyClients++;
                 // printf("ready clients: %d\nm_clientId: %d\n", m_readyClients, m_clientId);
                 break;
-            case PacketTypes::SpawnEvent:
+            case PacketTypes::IndSpawnEvent:
                 ReceiveIndSpawnPacket(i + sizeof(PacketHeader));
                 m_spawnedClients++;
                 break;

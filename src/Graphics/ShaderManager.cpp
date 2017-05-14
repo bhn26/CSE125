@@ -29,8 +29,8 @@ bool ShaderManager::LoadShader(const std::string& shaderName)
     }
 
     const static std::string shaderPrefix = std::string("Shader_");
-    const static std::string vertSuffix = std::string("m_Vert");
-    const static std::string fragSuffix = std::string("m_Frag");
+    const static std::string vertSuffix = std::string("_Vert");
+    const static std::string fragSuffix = std::string("_Frag");
     std::string vertShaderPath =
         ConfigManager::Instance()->GetConfigValue(shaderPrefix + shaderName + vertSuffix);
     std::string fragShaderPath =

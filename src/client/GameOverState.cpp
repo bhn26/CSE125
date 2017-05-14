@@ -132,9 +132,9 @@ void ::GOState::InitTextures()
         // Create the different images
         m_bg = std::make_unique<Texture>(GL_TEXTURE_2D, "assets/ui/gameover/gameover.png");
 
-        m_win = std::make_unique<Texture>(GL_TEXTURE_2D, "assets/ui/gameover/m_win.png");
-        m_lose = std::make_unique<Texture>(GL_TEXTURE_2D, "assets/ui/gameover/m_lose.png");
-        m_tied = std::make_unique<Texture>(GL_TEXTURE_2D, "assets/ui/gameover/m_tied.png");
+        m_win = std::make_unique<Texture>(GL_TEXTURE_2D, "assets/ui/gameover/win.png");
+        m_lose = std::make_unique<Texture>(GL_TEXTURE_2D, "assets/ui/gameover/lose.png");
+        m_tied = std::make_unique<Texture>(GL_TEXTURE_2D, "assets/ui/gameover/tied.png");
 
         m_initialized = true;
     }
